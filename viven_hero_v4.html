@@ -743,11 +743,14 @@ html, body {
   font-size: 16px; line-height: 1.8; color: var(--text-secondary);
   border-left: 3px solid var(--accent);
   padding: 4px 0 4px 18px; margin-left: 2px;
-  opacity: 0; transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.s3-answer.show { opacity: 1; transform: translateY(0); }
-.s3-answer b { font-weight: 600; color: var(--text-primary); }
+.s3-chunk {
+  display: block;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.s3-chunk.show { opacity: 1; transform: translateY(0); }
+.s3-chunk b { font-weight: 600; color: var(--text-primary); }
 
 .s3-sources {
   display: flex; align-items: center; gap: 6px;
@@ -874,7 +877,7 @@ html, body {
     <div class="title-card-text-wrap"><span class="tc-word" id="tc2aw0">What</span> <span class="tc-word" id="tc2aw1">if</span> <span class="tc-word" id="tc2aw2">their</span> <span class="tc-word emphasis" id="tc2aw3">Knowledge</span> <span class="tc-word emphasis" id="tc2aw4">could</span> <span class="tc-word emphasis" id="tc2aw5">answer</span> <span class="tc-word emphasis" id="tc2aw6">for</span> <span class="tc-word emphasis" id="tc2aw7">them?</span> </div>
   </div>
   <div class="title-card" id="tc2b">
-    <div class="title-card-text-wrap"><span class="tc-word emphasis" id="tc2bw0">Meet</span> <span class="tc-word emphasis" id="tc2bw1">their</span> <span class="tc-word emphasis" id="tc2bw2">Digital</span> <span class="tc-word emphasis" id="tc2bw3">Twin</span> </div>
+    <div class="title-card-text-wrap"><span class="tc-word emphasis" id="tc2bw0">Meet</span> <span class="tc-word emphasis" id="tc2bw1">Sarah's</span> <span class="tc-word emphasis" id="tc2bw2">Digital</span> <span class="tc-word emphasis" id="tc2bw3">Twin</span> <span class="tc-break"></span><span class="tc-word" id="tc2bw4">Trained</span> <span class="tc-word" id="tc2bw5">on</span> <span class="tc-word" id="tc2bw6">how</span> <span class="tc-word emphasis" id="tc2bw7">she</span> <span class="tc-word emphasis" id="tc2bw8">thinks</span> </div>
   </div>
   <div class="s2-page">
     <div class="s2-profile" id="s2Profile">
@@ -1010,7 +1013,7 @@ const notifs = [
   { type:"msg", sender:"Josh Kim", logo:"slack", channel:"#deal-desk", text:"<span class='slack-mention'>@Sarah Chen</span> Acme is pushing for 10% on the renewal. Is that within the band or do we usually push back?", pos:{top:"14%",right:"10%"}, cls:"" },
   { type:"msg", sender:"Daniel Wu", logo:"gmail", channel:"Email", text:"Do we know what commitments we made during the last Acme renewal? Trying to scope the integration.", pos:{top:"8%",left:"10%"}, cls:"" },
   { type:"msg", sender:"Yuki Tanaka", logo:"gcal", channel:"Calendar", text:"This is due to the client TOMORROW. Does anyone have Sarah's pricing framework?", pos:{top:"48%",right:"10%"}, cls:"notif-urgent" },
-  { type:"msg", sender:"Priya Shah", logo:"slack", channel:"#sales-support", text:"<span class='slack-mention'>@Sarah Chen</span> Checked Confluence and Drive — nothing current on Acme pricing. Latest doc is from 2 years ago.", pos:{top:"58%",left:"8%"}, cls:"" },
+  { type:"msg", sender:"Lena Morris", logo:"slack", channel:"#deal-desk", text:"<span class='slack-mention'>@Sarah Chen</span> trying to finish the discount section but don't know what floor we agreed to internally.", pos:{top:"58%",left:"8%"}, cls:"" },
   { type:"msg", sender:"Josh Kim", logo:"slack", channel:"#deal-desk", text:"Honestly we NEED <span class='slack-mention'>@Sarah Chen</span> !!", pos:{top:"38%",left:"50%",transform:"translateX(-50%)"}, cls:"notif-clincher" },
 ];
 
@@ -1149,7 +1152,7 @@ function runScene1() {
 // SCENE 2 — Digital Twin Answer
 // ============================================================
 const S2 = {
-  question: "How was the Acme deal handled in past? They are asking for 10% discount for renewal.",
+  question: "Sarah — Acme is pushing for 10% on the Q2 renewal. Do we have room on price or should I push back?",
   tags: [
     {key:"Mentioned",val:"Acme"}, {key:"Keyword",val:"discount, renewal, pricing"}, {key:"Date Range",val:"All time"},
   ],
@@ -1165,17 +1168,17 @@ const S2 = {
     {icon:"gmail", label:"Re: Acme SOW Negotiation — Final T..."},
     {icon:"confluence", label:"Sales Playbook — Discount Framework"},
   ],
-  craftingText: "I need to synthesize the discount precedent with Sarah's actual negotiation pattern. The key is that she never offered discounts without a structured trade. Let me frame this as a give/get recommendation.",
+  craftingText: "10% is within the band but we've never moved on price without getting something back. Need to frame this as a structured trade, not a concession.",
   responseIntro: `
-    <h2>What precedent we have on Acme</h2>
-    <p>In past Acme negotiations, we <b>avoided pure discounting</b> because it anchors long-term value too low. Pricing flexibility was always framed as a <b>structured trade</b> — give/get — not a concession. <span class="citation">1</span> <span class="citation">2</span></p>
+    <h2>On Acme and discounting</h2>
+    <p>With Acme, we've always avoided pure discounting — it anchors long-term value too low. Any pricing flexibility we gave was framed as a <b>structured trade</b> — give/get — never a straight concession. <span class="citation">1</span> <span class="citation">2</span></p>
   `,
   responseInsight: `
-    <h2>How I'd handle the 10% ask</h2>
-    <p>10% is within the negotiable band, but I'd still use the <b>structured trade</b> approach — don't concede without getting something back. <span class="citation">6</span></p>
+    <h2>My take on the 10% ask</h2>
+    <p>10% is within the negotiable band, but I'd push back on giving it clean. Don't concede without getting something back. <span class="citation">6</span></p>
   `,
   responseClose: `
-    <div class="s2-insight-v2"><b>Make it conditional:</b> 10% discount only with a multi-year commitment or expansion to 200 seats. We're discounting for long-term value, not to close the quarter. <span class="citation">3</span></div>
+    <div class="s2-insight-v2"><b>Make it conditional:</b> 10% only with a multi-year commitment or expansion to 200 seats. We're discounting for long-term value, not to close the quarter. <span class="citation">3</span></div>
   `,
   timing: { typeSpeed:50, divDelay:1000, thinkDelay:600, reasonDelay:1200, searchDelay:2000, foundDelay:2500, collapseDelay:1800, respDelay:400, streamSpeed:6 },
 };
@@ -1377,7 +1380,7 @@ async function runScene2Inner() {
 
 function runScene2() {
   playTitleCard('tc2a', 8, () => {
-    playTitleCard('tc2b', 4, () => { runScene2Inner(); });
+    playTitleCard('tc2b', 9, () => { runScene2Inner(); });
   });
 }
 
@@ -1388,19 +1391,31 @@ const S3_CARDS = [
   {
     photo: 'anna', name: 'Anna Park', role: 'Director CS', badge: 'Customer Success Twin',
     question: 'How did we handle the Northvane escalation?',
-    answer: '<b>Their renewal was 45 days out and they hadn\'t seen the roadmap.</b> I got their VP Ops on a call with our Head of Product and shared beta access to analytics. That\'s what de-risked it.',
+    chunks: [
+      '<b>Their renewal was 45 days out and they hadn\'t seen the roadmap.</b>',
+      'I got their VP Ops on a call with our Head of Product and shared beta access to analytics.',
+      'That\'s what de-risked it.'
+    ],
     sources: [{icon:'gmail'},{icon:'slack'},{icon:'gcal'},{extra:'+5 Sources'}]
   },
   {
     photo: 'raj', name: 'Raj Krishnan', role: 'Staff Engineer', badge: 'Engineering Twin',
     question: 'Why did we pull the checkout update last week? Sales says customers are complaining.',
-    answer: '<b>Race condition in the payment flow was causing duplicate charges for ~3% of transactions.</b> I rolled it back within 15 minutes. Patch is in v2.4.1, shipping Thursday. That\'s now our playbook for any payment-path regression.',
+    chunks: [
+      '<b>Race condition in the payment flow was causing duplicate charges for ~3% of transactions.</b>',
+      'I rolled it back within 15 minutes. Patch is in v2.4.1, shipping Thursday.',
+      'That\'s now our playbook for any payment-path regression.'
+    ],
     sources: [{icon:'github'},{icon:'slack'},{icon:'confluence'},{extra:'+3 Sources'}]
   },
   {
     photo: 'marcus', name: 'Marcus Liu', role: 'VP Legal', badge: 'Legal Twin',
     question: 'What IP clauses did we negotiate in the Meridian deal?',
-    answer: '<b>Meridian wanted broad IP indemnification for all derivative works.</b> We narrowed it to direct product usage with mutual indemnity for third-party claims. See MSA Section 8.3 — that\'s our template for deals above $500K.',
+    chunks: [
+      '<b>Meridian wanted broad IP indemnification for all derivative works.</b>',
+      'We narrowed it to direct product usage with mutual indemnity for third-party claims.',
+      'See MSA Section 8.3 — that\'s our template for deals above $500K.'
+    ],
     sources: [{icon:'gdrive'},{icon:'gmail'},{icon:'gdocs'},{extra:'+3 Sources'}]
   },
 ];
@@ -1433,20 +1448,22 @@ function runScene3Content() {
         <div class="s3-twin-badge">${card.badge}</div>
       </div>
       <div class="s3-question" id="s3q-${i}">${card.question}</div>
-      <div class="s3-answer" id="s3a-${i}">${card.answer}</div>
+      <div class="s3-answer" id="s3a-${i}" style="display:flex;flex-direction:column;gap:8px;">
+        ${card.chunks.map((chunk, ci) => `<span class="s3-chunk" id="s3c-${i}-${ci}">${chunk}</span>`).join('')}
+      </div>
       <div class="s3-sources" id="s3s-${i}">${card.sources.map(s => s.extra ? `<span class="s3-src-extra">${s.extra}</span>` : `<span class="s3-src-icon">${LOGO[s.icon]}</span>`).join('')}</div>
     `;
     container.appendChild(el);
   });
 
-  // Fast animation: flip in → all inner elements stagger quickly → hold → flip out
+  // Fast animation: flip in → header → question → chunks staggered → sources → flip out
   function animateCard(i, startDelay) {
     st(() => {
       const card = document.getElementById(`s3card-${i}`);
       if (card) card.classList.add('flip-in');
     }, startDelay);
 
-    // Header — immediate after flip lands
+    // Header
     st(() => {
       const h = document.getElementById(`s3h-${i}`);
       if (h) h.classList.add('show');
@@ -1458,31 +1475,33 @@ function runScene3Content() {
       if (q) q.classList.add('show');
     }, startDelay + 500);
 
-    // Answer
-    st(() => {
-      const a = document.getElementById(`s3a-${i}`);
-      if (a) a.classList.add('show');
-    }, startDelay + 900);
+    // Answer chunks — staggered 250ms apart
+    S3_CARDS[i].chunks.forEach((_, ci) => {
+      st(() => {
+        const c = document.getElementById(`s3c-${i}-${ci}`);
+        if (c) c.classList.add('show');
+      }, startDelay + 900 + ci * 250);
+    });
 
-    // Sources
+    // Sources — after last chunk
     st(() => {
       const s = document.getElementById(`s3s-${i}`);
       if (s) s.classList.add('show');
-    }, startDelay + 1200);
+    }, startDelay + 900 + S3_CARDS[i].chunks.length * 250 + 150);
 
     // Flip out (not last)
     if (i < S3_CARDS.length - 1) {
       st(() => {
         const card = document.getElementById(`s3card-${i}`);
         if (card) { card.classList.remove('flip-in'); card.classList.add('flip-out'); }
-      }, startDelay + 4000);
+      }, startDelay + 4200);
     }
   }
 
-  // ~4s visible per card + 0.5s flip gap = ~4.5s cycle
+  // ~4.2s visible per card + 0.5s flip gap = ~4.7s cycle
   animateCard(0, 200);
-  animateCard(1, 4700);
-  animateCard(2, 9200);
+  animateCard(1, 4900);
+  animateCard(2, 9600);
 }
 
 // ============================================================
