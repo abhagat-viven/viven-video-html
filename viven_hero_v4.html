@@ -54,7 +54,7 @@ html, body {
 
 .ambient-bg {
   position: fixed; inset: 0;
-  background: 
+  background:
     radial-gradient(ellipse 80% 60% at 50% 40%, rgba(161,150,235,0.04) 0%, transparent 70%),
     radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59,111,160,0.02) 0%, transparent 60%),
     var(--bg-deep);
@@ -298,8 +298,12 @@ html, body {
   background: var(--bg-card); padding: 2px 7px; border-radius: 4px;
 }
 .notif-text {
-  font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+  font-size: 14px; color: var(--text-primary); line-height: 1.5;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.slack-mention {
+  color: #1264a3; background: rgba(18,100,163,0.1);
+  border-radius: 3px; padding: 0 3px; font-weight: 500;
 }
 .notif-time { display: none; }
 
@@ -818,7 +822,7 @@ html, body {
       <div class="ws-toolbar-left">
         <div class="ws-docs-icon"><svg fill="#4285F4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.727 6.727H14V0h.727L20 5.273v.727h-5.273zM14 8h6v12.545c0 .804-.65 1.455-1.455 1.455H5.455C4.65 22 4 21.35 4 20.545V1.455C4 .65 4.65 0 5.455 0H13v6.545c0 .804.65 1.455 1.455 1.455H14zM7 13h10v1H7v-1zm0 3h10v1H7v-1zm0 3h7v1H7v-1z"/></svg></div>
         <div class="ws-doc-title-bar">
-          <div class="ws-doc-name">Acme Corp — Renewal Strategy</div>
+          <div class="ws-doc-name">Acme Q2 Discount Approval</div>
         </div>
       </div>
       <div class="ws-toolbar-right">
@@ -1003,11 +1007,11 @@ document.addEventListener('keydown', e => {
 // ============================================================
 const notifs = [
   // 5 readable message boxes
-  { type:"msg", sender:"Josh Kim", logo:"slack", channel:"#deal-desk", text:"Acme is pushing for 10% on the renewal. Is that within the band or do we usually push back?", pos:{top:"14%",right:"10%"}, cls:"" },
+  { type:"msg", sender:"Josh Kim", logo:"slack", channel:"#deal-desk", text:"<span class='slack-mention'>@Sarah Chen</span> Acme is pushing for 10% on the renewal. Is that within the band or do we usually push back?", pos:{top:"14%",right:"10%"}, cls:"" },
   { type:"msg", sender:"Daniel Wu", logo:"gmail", channel:"Email", text:"Do we know what commitments we made during the last Acme renewal? Trying to scope the integration.", pos:{top:"8%",left:"10%"}, cls:"" },
   { type:"msg", sender:"Yuki Tanaka", logo:"gcal", channel:"Calendar", text:"This is due to the client TOMORROW. Does anyone have Sarah's pricing framework?", pos:{top:"48%",right:"10%"}, cls:"notif-urgent" },
-  { type:"msg", sender:"Priya Shah", logo:"slack", channel:"#sales-support", text:"Checked Confluence and Drive — nothing current on Acme pricing. Latest doc is from 2 years ago.", pos:{top:"58%",left:"8%"}, cls:"" },
-  { type:"msg", sender:"Josh Kim", logo:"slack", channel:"#deal-desk", text:"Honestly we NEED Sarah !!", pos:{top:"38%",left:"50%",transform:"translateX(-50%)"}, cls:"notif-clincher" },
+  { type:"msg", sender:"Priya Shah", logo:"slack", channel:"#sales-support", text:"<span class='slack-mention'>@Sarah Chen</span> Checked Confluence and Drive — nothing current on Acme pricing. Latest doc is from 2 years ago.", pos:{top:"58%",left:"8%"}, cls:"" },
+  { type:"msg", sender:"Josh Kim", logo:"slack", channel:"#deal-desk", text:"Honestly we NEED <span class='slack-mention'>@Sarah Chen</span> !!", pos:{top:"38%",left:"50%",transform:"translateX(-50%)"}, cls:"notif-clincher" },
 ];
 
 // Swirl icons — spread across screen including middle areas
