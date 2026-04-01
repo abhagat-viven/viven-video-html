@@ -1866,17 +1866,19 @@ async function run3Inner(){
   await sleep(400);$('s3QL1').classList.add('show');
   await sleep(700);$('s3QL2').classList.add('show');
   await sleep(700);$('s3QL3').classList.add('show');
-  await sleep(900);if(s3Resetting)return;
+  await sleep(1400);if(s3Resetting)return;
 
   // Step 2 — Locating data source (Google Sheets pill)
+  await sleep(300);if(s3Resetting)return;
   $('s3Step1').classList.add('dim');$('s3Step2').classList.add('show');
   const gsheetPill=document.createElement('div');gsheetPill.className='s3-pill';
   gsheetPill.innerHTML=`<svg viewBox="0 0 24 24" width="15" height="15"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z" fill="#0F9D58"/></svg><span>Product_Retention_Cohorts.gsheet</span>`;
   $('s3Pills').appendChild(gsheetPill);
   setTimeout(()=>gsheetPill.classList.add('show'),100);
-  await sleep(1600);if(s3Resetting)return;
+  await sleep(2400);if(s3Resetting)return;
 
   // Step 3 — Sandbox init
+  await sleep(300);if(s3Resetting)return;
   $('s3Step2').classList.add('dim');$('s3Step3').classList.add('show');
   $('s3SbInit').classList.add('show');
   await sleep(1400);if(s3Resetting)return;
@@ -1885,6 +1887,7 @@ async function run3Inner(){
   await sleep(1000);if(s3Resetting)return;
 
   // Step 4 — Code execution
+  await sleep(300);if(s3Resetting)return;
   $('s3Step3').classList.add('dim');$('s3Step4').classList.add('show');
   const codeBlock=$('s3CodeBlock');codeBlock.classList.add('show');
   const codeEl=$('s3CodeBody');
@@ -1908,10 +1911,11 @@ async function run3Inner(){
   await sleep(1400);if(s3Resetting)return;
 
   // Step 5 — Building viz
+  await sleep(300);if(s3Resetting)return;
   $('s3Step4').classList.add('dim');$('s3Step5').classList.add('show');
   const words=S3_REASONING.split(' ');
-  for(let i=0;i<words.length;i++){if(s3Resetting)return;$('s3Reasoning').textContent+=(i>0?' ':'')+words[i];await sleep(24+Math.random()*12);}
-  await sleep(800);if(s3Resetting)return;
+  for(let i=0;i<words.length;i++){if(s3Resetting)return;$('s3Reasoning').textContent+=(i>0?' ':'')+words[i];await sleep(40+Math.random()*20);}
+  await sleep(1200);if(s3Resetting)return;
 
   // Collapse thinking
   $('s3ThinkBody').style.display='none';$('s3ThinkLabel').textContent='';
