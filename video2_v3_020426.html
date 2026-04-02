@@ -232,6 +232,7 @@ html, body {
   font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
 }
 .att-name { font-size: 13px; font-weight: 500; color: var(--text-primary); line-height: 1.2; }
+.att-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; line-height: 1.2; }
 
 /* ── Fake cursor ── */
 #fakeCursor {
@@ -287,6 +288,13 @@ html, body {
 .slack-body {
   font-size: 15px; line-height: 1.65; color: var(--text-primary);
   padding-left: 52px;
+}
+.slack-mention {
+  color: var(--gcal-blue);
+  font-weight: 600;
+  background: rgba(26, 115, 232, 0.08);
+  padding: 0 4px;
+  border-radius: 4px;
 }
 
 /* ── Dim overlay ── */
@@ -366,13 +374,7 @@ html, body {
 }
 .s2-deck-dots { display:flex; gap:5px; }
 .s2-deck-dots span { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.2); }
-.s2-deck-ribbon {
-  background:#f3f2f0; border-bottom:1px solid #e2e0dc;
-  padding:5px 16px; display:flex; gap:18px;
-}
-.s2-deck-tab { font-size:11px; color:#706e6b; padding:3px 7px; border-radius:3px; }
-.s2-deck-tab.active { background:#fff; border:1px solid #e2e0dc; color:#c55a11; }
-.s2-deck-body { display:flex; background:#dedede; height:330px; }
+.s2-deck-body { display:flex; background:#dedede; height:354px; }
 .s2-deck-thumbs {
   width:90px; background:#cacaca; padding:10px 7px;
   display:flex; flex-direction:column; gap:8px;
@@ -398,6 +400,10 @@ html, body {
   width:100%; height:100%; background:#fff; border-radius:3px;
   display:flex; flex-direction:column; padding:28px 32px; gap:10px;
   box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+/* No ribbon / no eyebrow — extra top breathing room for headline */
+.s2-slide--hero {
+  padding-top:38px; gap:8px;
 }
 .s2-slide-eyebrow {
   font-size:10px; font-weight:700; color:#c55a11;
@@ -471,8 +477,6 @@ html, body {
   animation:pulse-dot2 2s ease-in-out infinite;
 }
 @keyframes pulse-dot2 { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
-.s2-access { font-size:12px; color:var(--text-tertiary); }
-
 /* Input area */
 .s2-input-area { width:100%; margin-top:8px; opacity:0; }
 .s2-asker { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-left:2px; }
@@ -670,11 +674,18 @@ html, body {
 .s3-save-indicator.saved { color:#b8f5c4; }
 
 .s3-decision-area {
-  margin-top:14px; padding:12px 14px; min-height:52px;
+  margin-top:12px; padding:12px 14px; min-height:88px;
   border:1.5px dashed rgba(197,90,17,0.35); border-radius:8px;
   background:rgba(250,248,245,0.95); font-size:13px; line-height:1.5;
   color:var(--text-primary);
 }
+.s3-decision-list {
+  margin: 0;
+  padding-left: 1.15em;
+  list-style: disc;
+}
+.s3-decision-list li { margin-bottom: 8px; }
+.s3-decision-list li:last-child { margin-bottom: 0; }
 .s3-decision-area .s3-text-cursor {
   display:inline-block; width:2px; height:14px; background:#1a1a1a;
   margin-left:1px; vertical-align:-2px;
@@ -789,17 +800,12 @@ html, body {
 <!-- ── Title Card ── -->
 <div class="title-card" id="titleCard">
   <div class="title-card-text-wrap">
-    <span class="tc-word emphasis" data-line="1">An</span>
-    <span class="tc-word emphasis" data-line="1">important</span>
+    <span class="tc-word emphasis" data-line="1">Important</span>
     <span class="tc-word emphasis" data-line="1">meeting</span>
     <span class="tc-word emphasis" data-line="1">tomorrow.</span>
     <span class="tc-break"></span>
-    <span class="tc-word" data-line="2">Ten</span>
-    <span class="tc-word" data-line="2">open</span>
-    <span class="tc-word emphasis" data-line="2">threads</span>
-    <span class="tc-word" data-line="2">on</span>
-    <span class="tc-word" data-line="2">your</span>
-    <span class="tc-word" data-line="2">mind</span>
+    <span class="tc-word" data-line="2">Questions</span>
+    <span class="tc-word emphasis" data-line="2">unanswered</span>
     <span class="tc-word emphasis" data-line="2">today.</span>
   </div>
 </div>
@@ -933,6 +939,13 @@ html, body {
     <div class="me-title">Launch Update</div>
     <div class="me-datetime">Tuesday, April 7 · 2:00 – 3:00 PM</div>
     <div class="me-divider"></div>
+    <div class="att-row" id="a0">
+      <div class="att-avatar" style="background:#5c6bc0">AW</div>
+      <div>
+        <div class="att-name">Alex Walton · Product</div>
+        <div class="att-sub">Organizer</div>
+      </div>
+    </div>
     <div class="att-row" id="a1">
       <div class="att-avatar" style="background:#1a73e8">JP</div>
       <div><div class="att-name">Jenny Peters · CEO</div></div>
@@ -972,8 +985,20 @@ html, body {
       </div>
     </div>
     <div class="slack-body">
-      Hey Alex 👋 — Jenny's looking for a quick update on the upcoming launch. Keep it clear and simple!
+      Heads up Alex 👋 — <span class="slack-mention">@Jenny (CEO)</span> wants your take before tomorrow. Be sharp on the delay.
     </div>
+  </div>
+</div>
+
+<!-- ── Title Card (Scene 2 intro) ── -->
+<div class="title-card" id="titleCard2">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-s2line="1">Just</span>
+    <span class="tc-word emphasis" data-s2line="1">ask</span>
+    <span class="tc-word emphasis" data-s2line="1">your</span>
+    <span class="tc-word emphasis" data-s2line="1">Leader</span>
+    <span class="tc-break"></span>
+    <span class="tc-word emphasis" data-s2line="2">Directly!</span>
   </div>
 </div>
 
@@ -991,13 +1016,6 @@ html, body {
           <div class="s2-deck-dots"><span></span><span></span><span></span></div>
         </div>
       </div>
-      <div class="s2-deck-ribbon">
-        <span class="s2-deck-tab active">Home</span>
-        <span class="s2-deck-tab">Insert</span>
-        <span class="s2-deck-tab">Design</span>
-        <span class="s2-deck-tab">Transitions</span>
-        <span class="s2-deck-tab">Review</span>
-      </div>
       <div class="s2-deck-body">
         <div class="s2-deck-thumbs">
           <div class="s2-thumb"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
@@ -1006,9 +1024,8 @@ html, body {
           <div class="s2-thumb"><span class="s2-thumb-num">4</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:75%"></div><div class="s2-thumb-mini-line" style="width:50%;margin-top:3px"></div></div></div>
         </div>
         <div class="s2-deck-slide">
-          <div class="s2-slide">
-            <div class="s2-slide-eyebrow">Launch Update &nbsp;·&nbsp; April 7, 2026</div>
-            <div class="s2-slide-h1">DELAY 2 WEEKS</div>
+          <div class="s2-slide s2-slide--hero">
+            <div class="s2-slide-h1">DELAY LAUNCH ?</div>
             <div class="s2-bar" style="width:48%"></div>
             <div class="s2-bars-section">
               <div class="s2-bar-sm" style="width:88%"></div>
@@ -1039,7 +1056,6 @@ html, body {
         <div class="s2-name">Jenny Peters</div>
         <div class="s2-role">Chief Executive Officer</div>
         <div class="s2-badge"><span class="s2-badge-dot"></span>Digital Twin</div>
-        <div class="s2-access">Full executive access</div>
       </div>
 
       <div class="s2-input-area" id="s2InputArea">
@@ -1135,27 +1151,22 @@ html, body {
           <div class="s2-deck-dots"><span></span><span></span><span></span></div>
         </div>
       </div>
-      <div class="s2-deck-ribbon">
-        <span class="s2-deck-tab active">Home</span>
-        <span class="s2-deck-tab">Insert</span>
-        <span class="s2-deck-tab">Design</span>
-        <span class="s2-deck-tab">Transitions</span>
-        <span class="s2-deck-tab">Review</span>
-      </div>
       <div class="s2-deck-body">
         <div class="s2-deck-thumbs">
-          <div class="s2-thumb"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb active"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
           <div class="s2-thumb"><span class="s2-thumb-num">2</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:60%"></div><div class="s2-thumb-mini-line" style="width:88%;margin-top:3px"></div></div></div>
-          <div class="s2-thumb active"><span class="s2-thumb-num">3</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">3</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
           <div class="s2-thumb"><span class="s2-thumb-num">4</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:75%"></div><div class="s2-thumb-mini-line" style="width:50%;margin-top:3px"></div></div></div>
         </div>
         <div class="s2-deck-slide">
-          <div class="s2-slide">
-            <div class="s2-slide-eyebrow">Launch Update &nbsp;·&nbsp; April 7, 2026</div>
-            <div class="s2-slide-h1">DELAY 2 WEEKS</div>
+          <div class="s2-slide s2-slide--hero">
+            <div class="s2-slide-h1">DELAY LAUNCH</div>
             <div class="s2-bar" style="width:48%"></div>
             <div class="s3-decision-area" id="s3DecisionArea">
-              <span id="s3DecisionText"></span>
+              <ul class="s3-decision-list">
+                <li id="s3DecLine1"></li>
+                <li id="s3DecLine2"></li>
+              </ul>
             </div>
             <div class="s2-bars-section" style="margin-top:10px">
               <div class="s2-bar-sm" style="width:88%"></div>
@@ -1269,23 +1280,18 @@ html, body {
       </div>
     </div>
     <div class="slack-body">
-      That went really well! Jenny approved the delay — you were so prepared today.
+      Jenny approved the delay! She loved that you led with the decision instead of burying it in slides. Nice work today 🎉
     </div>
   </div>
 </div>
 
 <div class="title-card" id="titleCard4">
   <div class="title-card-text-wrap">
-    <span class="tc-word emphasis" data-s4line="1">Every</span>
-    <span class="tc-word" data-s4line="1">type</span>
-    <span class="tc-word" data-s4line="1">of</span>
-    <span class="tc-word emphasis" data-s4line="1">expertise.</span>
+    <span class="tc-word emphasis" data-s4line="1">Expert</span>
+    <span class="tc-word emphasis" data-s4line="1">judgement.</span>
     <span class="tc-break"></span>
-    <span class="tc-word emphasis" data-s4line="2">Ready</span>
-    <span class="tc-word" data-s4line="2">when</span>
-    <span class="tc-word" data-s4line="2">you</span>
-    <span class="tc-word emphasis" data-s4line="2">need</span>
-    <span class="tc-word emphasis" data-s4line="2">it.</span>
+    <span class="tc-word" data-s4line="2">On</span>
+    <span class="tc-word emphasis" data-s4line="2">Demand.</span>
   </div>
 </div>
 
@@ -1332,7 +1338,7 @@ function reset1() {
   // Title card
   const tc = $('titleCard');
   tc.classList.remove('visible', 'fade-out');
-  document.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
 
   // Scene
   $('scene1').classList.remove('active');
@@ -1369,9 +1375,9 @@ function run1() {
   const atts   = document.querySelectorAll('.att-row');
 
   // ── Title card timing ──────────────────────────────────────────
-  // line1: 4 words × 0.2s gap = done at 0.6 + 4×0.2 = 1.4s
-  // line2: 7 words × 0.18s gap, starts at 1.4 + 0.6 + 0.2 = 2.2s
-  //        done at 2.2 + 7×0.18 = 3.46s
+  // line1: 3 words × 0.2s gap = done at 0.6 + 3×0.2 = 1.2s
+  // line2: 3 words × 0.18s gap, starts at 2.2s (dim + stagger)
+  //        done at 2.2 + 3×0.18 = 2.74s
   // title hold: 3.46 + 2.0 = 5.46s
   // title fade: 5.46s
   // cal in:     5.46 + 0.9 = 6.36s
@@ -1432,14 +1438,14 @@ function run1() {
   s1tl.to(cursor, { opacity: 0, duration: 0.2 }, 10.06);
 
   // Beat 4 — attendees cascade in
-  // atts start at 10.26, 3 × 0.22s stagger = last one done at ~10.92s
+  // atts start at 10.26, 4 × 0.22s stagger = last one done at ~10.92s
   s1tl.to(atts, {
     opacity: 1, y: 0,
     duration: 0.3, ease: 'power2.out',
     stagger: 0.22
   }, 10.26);
 
-  // Beat 5 — hold briefly, then dismiss (no scroll needed — 3 attendees fit cleanly)
+  // Beat 5 — hold briefly, then dismiss (no scroll needed — 4 attendees fit cleanly)
   s1tl.call(() => {
     meet.classList.remove('visible');
     meet.classList.add('fade-out');
@@ -1479,7 +1485,7 @@ const S2_SOURCES = [
 const S2_REASONING = "The onboarding drop-off is fresh and fixable — launching now risks early churn. A short delay is easier to explain than a bad Month 1 retention number.";
 
 /* {doc} = deck citation — rendered as inline icon in s2StreamResponse */
-const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible.{doc}\n\nThe scope is specific, the fix is targeted, and you have the data to back it up. What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My recommendation{/b}: open with the delay, not with the slide. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
+const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible. The scope is specific, the fix is targeted, and you have the data to back it up.{doc} What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My recommendation{/b}: open with the delay, not with the slide. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
 
 const S2_DECK_CIT_ICON = `<span class="s2-inline-cit" title="Launch_Update.pptx"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 
@@ -1583,6 +1589,10 @@ function reset2() {
   s2StreamScrollLastMs = 0;
   setTimeout(() => { s2Resetting = false; }, 80);
 
+  const tc2 = $('titleCard2');
+  tc2.classList.remove('visible', 'fade-out');
+  tc2.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+
   // Kill GSAP tweens
   gsap.killTweensOf([s2cur, $('s2Deck'), $('s2Profile'), $('s2InputArea'), $('s2ChatFrame')].filter(Boolean));
 
@@ -1638,6 +1648,29 @@ async function run2Inner() {
   const chip = $('s2FileChip');
   const profile = $('s2Profile');
   const inputArea = $('s2InputArea');
+
+  // ── Beat 0: Title card ─────────────────────────────────────────
+  const tc2 = $('titleCard2');
+  tc2.classList.add('visible');
+  await sleep2(400); if (s2Resetting) return;
+  const tc2l1 = tc2.querySelectorAll('[data-s2line="1"]');
+  const tc2l2 = tc2.querySelectorAll('[data-s2line="2"]');
+  for (let i = 0; i < tc2l1.length; i++) {
+    if (s2Resetting) return;
+    tc2l1[i].classList.add('visible');
+    await sleep2(200);
+  }
+  await sleep2(500); if (s2Resetting) return;
+  tc2l1.forEach(w => w.classList.add('dim'));
+  await sleep2(200); if (s2Resetting) return;
+  for (let i = 0; i < tc2l2.length; i++) {
+    if (s2Resetting) return;
+    tc2l2[i].classList.add('visible');
+    await sleep2(190);
+  }
+  await sleep2(2000); if (s2Resetting) return;
+  tc2.classList.add('fade-out');
+  await sleep2(900); if (s2Resetting) return;
 
   // ── Beat 1: Deck fades in ──────────────────────────────────────
   $('scene2').classList.add('active');
@@ -1788,7 +1821,20 @@ function run2() { reset2(); setTimeout(() => run2Inner(), 60); }
 // ═══════════════════════════════════
 let s3Running = false, s3Resetting = false;
 const s3cur = $('s3Cursor');
-const S3_DECISION = 'Decision: Delay launch by 2 weeks — fix onboarding before GA.';
+const S3_BULLET1 = 'Delay launch — fix onboarding before GA.';
+const S3_BULLET2 = 'Weak Week-1 activation leads to bad Month-1 retention.';
+
+async function s3TypeInto(el, text) {
+  if (!el) return;
+  for (let i = 0; i < text.length; i++) {
+    if (s3Resetting) return;
+    const chunk = text.slice(0, i + 1);
+    el.innerHTML = chunk.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+      '<span class="s3-text-cursor"></span>';
+    await sleep2(text[i] === ' ' ? 8 : 22 + Math.random() * 10);
+  }
+  el.textContent = text;
+}
 
 function s3MoveCur(x, y, durMs = 520) {
   return new Promise(resolve => {
@@ -1805,7 +1851,8 @@ function reset3() {
   gsap.killTweensOf([$('s3Deck'), s3cur]);
   $('scene3').classList.remove('active');
   gsap.set($('s3Deck'), { opacity: 0, y: 18, scale: 0.98, clearProps: 'x' });
-  $('s3DecisionText').innerHTML = '';
+  $('s3DecLine1').innerHTML = '';
+  $('s3DecLine2').innerHTML = '';
   const si = $('s3SaveIndicator');
   si.textContent = 'Editing';
   si.className = 's3-save-indicator';
@@ -1815,7 +1862,8 @@ function reset3() {
 async function run3Inner() {
   s3Running = true;
   const deck = $('s3Deck');
-  const decEl = $('s3DecisionText');
+  const li1 = $('s3DecLine1');
+  const li2 = $('s3DecLine2');
   const si = $('s3SaveIndicator');
 
   $('scene3').classList.add('active');
@@ -1824,25 +1872,22 @@ async function run3Inner() {
   gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
   await sleep2(800); if (s3Resetting) return;
 
+  gsap.set(s3cur, { opacity: 0, x: -400, y: -400 });
+
+  await s3TypeInto(li1, S3_BULLET1); if (s3Resetting) return;
+  await sleep2(220); if (s3Resetting) return;
+  await s3TypeInto(li2, S3_BULLET2); if (s3Resetting) return;
+  await sleep2(400); if (s3Resetting) return;
+
   const area = $('s3DecisionArea');
   const ar = area.getBoundingClientRect();
   const sx = ar.left + ar.width * 0.12;
   const sy = ar.top + ar.height * 0.45;
   gsap.set(s3cur, { x: sx + 70, y: sy - 35 });
   gsap.to(s3cur, { opacity: 1, duration: 0.2 });
-  await sleep2(100); if (s3Resetting) return;
+  await sleep2(120); if (s3Resetting) return;
   await s3MoveCur(sx, sy, 560); if (s3Resetting) return;
   await sleep2(280); if (s3Resetting) return;
-
-  for (let i = 0; i < S3_DECISION.length; i++) {
-    if (s3Resetting) return;
-    const chunk = S3_DECISION.slice(0, i + 1);
-    decEl.innerHTML = chunk.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
-      '<span class="s3-text-cursor"></span>';
-    await sleep2(S3_DECISION[i] === ' ' ? 10 : 28 + Math.random() * 12);
-  }
-  decEl.textContent = S3_DECISION;
-  await sleep2(400); if (s3Resetting) return;
 
   const sir = si.getBoundingClientRect();
   const tx = sir.left + sir.width * 0.5;
@@ -1963,6 +2008,10 @@ function switchScene(num) {
   const tc = $('titleCard');
   tc.classList.remove('visible', 'fade-out');
   document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+
+  const tc2 = $('titleCard2');
+  tc2.classList.remove('visible', 'fade-out');
+  tc2.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
 
   if (num === 1) { reset1(); run1(); }
   if (num === 2) { reset2(); run2(); }
