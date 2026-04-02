@@ -327,13 +327,24 @@ html, body {
 /* Doc phase: vertically center the deck */
 #s2DocPhase { align-items:center; }
 
-/* Chat phase: scroll column, fills full space */
+/* Chat phase: centered “stage” — scroll only inside frame */
 #s2ChatPhase {
   width:100%; height:100%;
-  flex-direction:column; overflow-y:auto;
-  align-items:center; padding:8vh 0 120px; scrollbar-width:none;
+  flex-direction:row; overflow:hidden;
+  justify-content:center; align-items:center;
+  padding:24px 16px;
+  background:transparent;
 }
-#s2ChatPhase::-webkit-scrollbar { display:none; }
+.s2-chat-frame {
+  width:min(680px, 94vw);
+  max-height:min(88vh, 920px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:28px 24px 32px;
+  background:transparent;
+  scrollbar-width:none;
+}
+.s2-chat-frame::-webkit-scrollbar { display:none; }
 
 /* ── PPT Deck ── */
 .s2-deck {
@@ -399,7 +410,7 @@ html, body {
 /* Grey placeholder bars */
 .s2-bar { height:10px; background:#e0deda; border-radius:4px; margin:4px 0; }
 .s2-bar-sm { height:8px; background:#e8e5e1; border-radius:3px; margin:3px 0; }
-.s2-bars-section { display:flex; flex-direction:column; gap:2px; margin-top:8px; }
+.s2-bars-section { display:flex; flex-direction:column; gap:4px; margin-top:10px; flex:1; min-height:0; }
 .s2-slide-footer-bar { display:flex; justify-content:center; margin-top:auto; padding-top:12px; border-top:1px solid #ece9e5; }
 
 /* File chip */
@@ -420,7 +431,7 @@ html, body {
 .s2fc-type { font-size:10px; color:#999; font-family:var(--font-mono); text-transform:uppercase; }
 
 /* Chat page */
-.s2-page { width:640px; display:flex; flex-direction:column; align-items:center; z-index:2; }
+.s2-page { width:100%; max-width:640px; display:flex; flex-direction:column; align-items:center; z-index:2; margin:0 auto; }
 
 /* Profile */
 .s2-profile {
@@ -436,11 +447,14 @@ html, body {
 }
 .s2-av-photo {
   width:84px; height:84px; border-radius:50%; object-fit:cover;
+  object-position:center top;
   margin-bottom:16px;
   box-shadow:0 0 0 3px var(--bg-deep),0 0 0 5px rgba(0,0,0,0.08);
 }
 .s2-think-av-photo,.s2-resp-av-photo {
-  width:38px; height:38px; border-radius:50%; object-fit:cover; flex-shrink:0;
+  width:38px; height:38px; border-radius:50%; object-fit:cover;
+  object-position:center 15%;
+  flex-shrink:0;
 }
 .s2-think-av-photo { box-shadow:0 0 0 2px rgba(161,150,235,0.3); }
 .s2-name { font-size:22px; font-weight:700; letter-spacing:-0.3px; margin-bottom:3px; }
@@ -577,20 +591,25 @@ html, body {
 
 /* Response */
 .s2-resp-wrap { margin-top:4px; }
-.s2-resp-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.s2-resp-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
 .s2-resp-av {
   width:38px; height:38px; border-radius:50%;
   background:linear-gradient(135deg,#1a73e8,#1557b0);
   display:flex; align-items:center; justify-content:center;
   font-size:13px; font-weight:700; color:white; flex-shrink:0;
 }
-.s2-resp-name { font-size:14px; font-weight:600; }
-.s2-resp-badge {
-  font-size:10px; font-weight:600; color:#6b5fc7;
-  background:rgba(161,150,235,0.10); border:1px solid rgba(161,150,235,0.18);
-  padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;
+.s2-resp-name { font-size:14px; font-weight:600; line-height:1.3; }
+.s2-response { margin-left:50px; font-size:15px; line-height:1.82; white-space:pre-wrap; }
+.s2-response b { font-weight:600; color:var(--text-primary); }
+.s2-inline-cit {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; border-radius:50%;
+  margin:0 0 0 5px;
+  background:rgba(26,115,232,0.14);
+  vertical-align:middle;
+  flex-shrink:0;
 }
-.s2-response { margin-left:50px; font-size:15px; line-height:1.82; }
+.s2-inline-cit svg { display:block; width:12px; height:14px; }
 .s2-streaming-cursor {
   display:inline-block; width:2px; height:16px; background:#1a1a1a;
   margin-left:2px; vertical-align:text-bottom; animation:blink2 0.8s step-end infinite;
@@ -626,6 +645,141 @@ html, body {
 #scene2.active ~ #fakeCursor { display:none; }
 #scene2.active ~ .slack-popup { display:none !important; }
 #scene2.active ~ .dim-overlay { display:none !important; }
+
+/* ══════════════════════════════════
+   SCENE 3 — Deck update
+══════════════════════════════════ */
+#scene3 {
+  display:none; position:fixed; inset:0; z-index:1;
+  align-items:center; justify-content:center;
+}
+#scene3.active { display:flex; }
+
+#s3DeckWrap {
+  display:flex; align-items:center; justify-content:center;
+  width:100%; height:100%;
+}
+
+.s3-deck-bar .s2-deck-filename { flex:1; }
+.s3-deck-bar .s3-save-indicator {
+  font-size:11px; font-weight:600; color:rgba(255,255,255,0.88);
+  margin-right:12px; letter-spacing:0.02em;
+  min-width:78px; text-align:right; flex-shrink:0;
+}
+.s3-save-indicator.saving { color:#ffe082; }
+.s3-save-indicator.saved { color:#b8f5c4; }
+
+.s3-decision-area {
+  margin-top:14px; padding:12px 14px; min-height:52px;
+  border:1.5px dashed rgba(197,90,17,0.35); border-radius:8px;
+  background:rgba(250,248,245,0.95); font-size:13px; line-height:1.5;
+  color:var(--text-primary);
+}
+.s3-decision-area .s3-text-cursor {
+  display:inline-block; width:2px; height:14px; background:#1a1a1a;
+  margin-left:1px; vertical-align:-2px;
+  animation:blink2 0.8s step-end infinite;
+}
+
+#s3Cursor {
+  position:fixed; z-index:500; pointer-events:none;
+  width:20px; height:20px; opacity:0; top:0; left:0;
+}
+#s3Cursor svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+/* ══════════════════════════════════
+   SCENE 4 — Resolution + tagline
+══════════════════════════════════ */
+#scene4 {
+  display:none; position:fixed; inset:0; z-index:1;
+  align-items:center; justify-content:center;
+  background:var(--bg-deep);
+}
+#scene4.active { display:flex; }
+
+#s4CalWrapper {
+  width:860px;
+  opacity:0; transform:translateY(10px) scale(0.99);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+#s4CalWrapper.show { opacity:1; transform:translateY(0) scale(1); }
+#s4CalWrapper.fade-out-cal {
+  opacity:0; transform:translateY(-8px) scale(0.97); filter:blur(3px);
+  transition:opacity 1s ease, transform 1s ease, filter 1s ease;
+}
+
+#s4QbrBlock {
+  position:relative;
+  transition:background 0.8s ease, box-shadow 0.8s ease, opacity 0.8s ease;
+}
+#s4QbrBlock.done {
+  background:linear-gradient(170deg,#388e3c 0%,#2e7d32 100%) !important;
+  box-shadow:0 4px 18px rgba(56,142,60,0.30) !important;
+  opacity:0.75;
+}
+#s4QbrBlock .meeting-title { position:relative; overflow:hidden; }
+.s4-strike {
+  position:absolute; top:50%; left:0; transform:translateY(-50%);
+  height:1.5px; background:rgba(255,255,255,0.75);
+  width:0; border-radius:1px;
+  transition:width 0.55s cubic-bezier(0.4,0,0.2,1) 0.35s;
+}
+#s4QbrBlock.done .s4-strike { width:100%; }
+.s4-tick {
+  position:absolute; top:7px; right:8px;
+  width:17px; height:17px;
+  background:rgba(255,255,255,0.22);
+  border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:800; color:white;
+  opacity:0; transform:scale(0.4);
+  transition:opacity 0.35s ease 0.6s,
+             transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.6s;
+}
+#s4QbrBlock.done .s4-tick { opacity:1; transform:scale(1); }
+
+#s4SlackPopup {
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%) translateY(32px) scale(0.95);
+  opacity:0;
+  transition:opacity 0.55s ease, transform 0.6s cubic-bezier(0.34,1.2,0.64,1);
+  z-index:50; pointer-events:none;
+  width:500px;
+}
+#s4SlackPopup.visible {
+  opacity:1; transform:translate(-50%,-50%) translateY(0) scale(1);
+}
+#s4SlackPopup.hiding {
+  opacity:0; transform:translate(-50%,-50%) translateY(-14px) scale(0.97);
+  transition:opacity 0.85s ease, transform 0.85s ease;
+}
+
+@keyframes s4-fw-burst {
+  0%   { opacity:1; transform:translate(calc(-50%), calc(-50%)) scale(1.3); }
+  65%  { opacity:1; }
+  100% { opacity:0; transform:translate(calc(-50% + var(--fx)), calc(-50% + var(--fy))) scale(0); }
+}
+.s4-fw-stage {
+  position:absolute; left:50%; top:0;
+  width:0; height:0; pointer-events:none; z-index:6;
+}
+.s4-fw-dot {
+  position:absolute; width:7px; height:7px; border-radius:50%;
+  background:var(--fc); opacity:0;
+}
+.s4-fw-dot.burst {
+  animation:s4-fw-burst 1.05s cubic-bezier(0.2,0.8,0.4,1) var(--fd) forwards;
+}
+
+#titleCard4 {
+  position:fixed; inset:0; z-index:10;
+  display:none; align-items:center; justify-content:center;
+  background:var(--bg-deep);
+  opacity:0; transition:opacity 0.6s ease;
+}
+#titleCard4.active { display:flex; }
+#titleCard4.visible { opacity:1; }
 </style>
 </head>
 <body>
@@ -855,11 +1009,13 @@ html, body {
           <div class="s2-slide">
             <div class="s2-slide-eyebrow">Launch Update &nbsp;·&nbsp; April 7, 2026</div>
             <div class="s2-slide-h1">DELAY 2 WEEKS</div>
-            <div class="s2-bar" style="width:42%"></div>
+            <div class="s2-bar" style="width:48%"></div>
             <div class="s2-bars-section">
-              <div class="s2-slide-bullet"><span class="s2-slide-bullet-arrow">→</span> Recommend 2-week delay before launch</div>
-              <div class="s2-bar-sm" style="width:65%"></div>
-              <div class="s2-bar-sm" style="width:74%"></div>
+              <div class="s2-bar-sm" style="width:88%"></div>
+              <div class="s2-bar-sm" style="width:72%"></div>
+              <div class="s2-bar-sm" style="width:95%"></div>
+              <div class="s2-bar-sm" style="width:58%"></div>
+              <div class="s2-bar" style="width:36%;height:8px;margin-top:6px"></div>
             </div>
             <div class="s2-slide-footer-bar">
               <div class="s2-bar" style="width:38%;height:7px;margin:0"></div>
@@ -874,11 +1030,12 @@ html, body {
     </div>
   </div>
 
-  <!-- Phase 2: Chat -->
+  <!-- Phase 2: Chat — Raj portrait: assets/s2-raj-portrait.jpg (Unsplash) -->
   <div class="s2-phase" id="s2ChatPhase">
+    <div class="s2-chat-frame" id="s2ChatFrame">
     <div class="s2-page" id="s2Page">
       <div class="s2-profile" id="s2Profile">
-        <img class="s2-av-photo" src="https://randomuser.me/api/portraits/men/76.jpg" alt="Raj Kothari">
+        <img class="s2-av-photo" src="assets/s2-raj-portrait.jpg" width="84" height="84" alt="Executive portrait">
         <div class="s2-name">Raj Kothari</div>
         <div class="s2-role">Chief Executive Officer</div>
         <div class="s2-badge"><span class="s2-badge-dot"></span>Digital Twin</div>
@@ -915,7 +1072,7 @@ html, body {
 
         <div class="s2-thinking" id="s2Thinking">
           <div class="s2-think-header">
-            <img class="s2-think-av-photo" src="https://randomuser.me/api/portraits/men/76.jpg" alt="Raj Kothari">
+            <img class="s2-think-av-photo" src="assets/s2-raj-portrait.jpg" width="38" height="38" alt="">
             <div class="s2-think-label">
               <span class="name">Raj Kothari</span>
               <span id="s2ThinkLabel"> is thinking</span>
@@ -948,11 +1105,8 @@ html, body {
 
         <div class="s2-resp-wrap" id="s2RespWrap" style="display:none">
           <div class="s2-resp-header">
-            <img class="s2-resp-av-photo" src="https://randomuser.me/api/portraits/men/76.jpg" alt="Raj Kothari">
-            <div>
-              <div class="s2-resp-name">Raj Kothari</div>
-              <div class="s2-resp-badge">Digital Twin</div>
-            </div>
+            <img class="s2-resp-av-photo" src="assets/s2-raj-portrait.jpg" width="38" height="38" alt="">
+            <div class="s2-resp-name">Raj Kothari</div>
           </div>
           <div class="s2-response" id="s2Response"></div>
           <div class="s2-sources-pill" id="s2SourcesPill">
@@ -964,6 +1118,174 @@ html, body {
         </div>
       </div>
     </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Scene 3 — Deck update (decision + save) ── -->
+<div id="scene3">
+  <div id="s3DeckWrap">
+    <div id="s3Deck" class="s2-deck">
+      <div class="s2-deck-bar s3-deck-bar">
+        <svg class="s2-deck-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="5" y="7" width="5" height="4" rx="1" fill="rgba(255,255,255,0.35)" stroke="none"/></svg>
+        <span class="s2-deck-filename">Launch_Update.pptx</span>
+        <span id="s3SaveIndicator" class="s3-save-indicator">Editing</span>
+        <div class="s2-deck-actions">
+          <div class="s2-deck-share">Share</div>
+          <div class="s2-deck-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="s2-deck-ribbon">
+        <span class="s2-deck-tab active">Home</span>
+        <span class="s2-deck-tab">Insert</span>
+        <span class="s2-deck-tab">Design</span>
+        <span class="s2-deck-tab">Transitions</span>
+        <span class="s2-deck-tab">Review</span>
+      </div>
+      <div class="s2-deck-body">
+        <div class="s2-deck-thumbs">
+          <div class="s2-thumb"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">2</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:60%"></div><div class="s2-thumb-mini-line" style="width:88%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb active"><span class="s2-thumb-num">3</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">4</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:75%"></div><div class="s2-thumb-mini-line" style="width:50%;margin-top:3px"></div></div></div>
+        </div>
+        <div class="s2-deck-slide">
+          <div class="s2-slide">
+            <div class="s2-slide-eyebrow">Launch Update &nbsp;·&nbsp; April 7, 2026</div>
+            <div class="s2-slide-h1">DELAY 2 WEEKS</div>
+            <div class="s2-bar" style="width:48%"></div>
+            <div class="s3-decision-area" id="s3DecisionArea">
+              <span id="s3DecisionText"></span>
+            </div>
+            <div class="s2-bars-section" style="margin-top:10px">
+              <div class="s2-bar-sm" style="width:88%"></div>
+              <div class="s2-bar-sm" style="width:72%"></div>
+              <div class="s2-bar-sm" style="width:58%"></div>
+            </div>
+            <div class="s2-slide-footer-bar">
+              <div class="s2-bar" style="width:38%;height:7px;margin:0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="s3Cursor">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M4 2L16 10L10 11.5L7 18L4 2Z" fill="white" stroke="#333" stroke-width="1.2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- ── Scene 4 — Calendar done + Slack + tagline ── -->
+<div id="scene4">
+  <div class="calendar-wrapper" id="s4CalWrapper">
+    <div class="calendar-header">
+      <span class="calendar-month">April 2026</span>
+    </div>
+    <div class="calendar-grid">
+      <div class="cal-time-col">
+        <div class="cal-time-header"></div>
+        <div class="cal-time-slot">1 PM</div>
+        <div class="cal-time-slot">2 PM</div>
+        <div class="cal-time-slot">3 PM</div>
+        <div class="cal-time-slot">4 PM</div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Mon</span><span class="cal-day-num">6</span></div>
+        <div class="cal-cell"><div class="meeting-block small mb-teal"><div class="meeting-title">Team Standup</div><div class="meeting-time">1:00 – 1:30</div></div></div>
+        <div class="cal-cell"><div class="meeting-block small mb-sage"><div class="meeting-title">Product Sync</div><div class="meeting-time">2:30 – 3:00</div></div></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Tue</span><span class="cal-day-num today">7</span></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="meeting-block qbr" id="s4QbrBlock" style="top:2px;height:calc(152px - 4px)">
+            <div class="meeting-title">Launch Update
+              <span class="s4-strike"></span>
+            </div>
+            <div class="meeting-time">2:00 – 3:00 PM</div>
+            <div class="s4-tick">✓</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Wed</span><span class="cal-day-num">8</span></div>
+        <div class="cal-cell"><div class="meeting-block small mb-grape"><div class="meeting-title">Pipeline Review</div><div class="meeting-time">1:00 – 1:45</div></div></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"><div class="meeting-block small mb-slate"><div class="meeting-title">Design Handoff</div><div class="meeting-time">3:00 – 3:30</div></div></div>
+        <div class="cal-cell"></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Thu</span><span class="cal-day-num">9</span></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"><div class="meeting-block small mb-teal"><div class="meeting-title">Eng Roadmap</div><div class="meeting-time">3:30 – 4:00</div></div></div>
+        <div class="cal-cell"><div class="meeting-block small mb-sage"><div class="meeting-title">1:1 with Lisa</div><div class="meeting-time">4:00 – 4:30</div></div></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Fri</span><span class="cal-day-num">10</span></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"><div class="meeting-block small mb-grape"><div class="meeting-title">Sprint Retro</div><div class="meeting-time">2:00 – 2:45</div></div></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="s4SlackPopup">
+  <div class="s4-fw-stage" id="s4FwStage">
+    <div class="s4-fw-dot" style="--fx:0px;--fy:-66px;--fc:#ffd700;--fd:0s"></div>
+    <div class="s4-fw-dot" style="--fx:32px;--fy:-57px;--fc:#ff6b35;--fd:.04s"></div>
+    <div class="s4-fw-dot" style="--fx:56px;--fy:-34px;--fc:#ff3366;--fd:.02s"></div>
+    <div class="s4-fw-dot" style="--fx:64px;--fy:-4px;--fc:#b06aff;--fd:.06s"></div>
+    <div class="s4-fw-dot" style="--fx:54px;--fy:30px;--fc:#4a9eff;--fd:.03s"></div>
+    <div class="s4-fw-dot" style="--fx:30px;--fy:54px;--fc:#00d4aa;--fd:.05s"></div>
+    <div class="s4-fw-dot" style="--fx:-30px;--fy:54px;--fc:#44d168;--fd:.01s"></div>
+    <div class="s4-fw-dot" style="--fx:-54px;--fy:30px;--fc:#ffe066;--fd:.07s"></div>
+    <div class="s4-fw-dot" style="--fx:-64px;--fy:-4px;--fc:#ffd700;--fd:.03s"></div>
+    <div class="s4-fw-dot" style="--fx:-56px;--fy:-34px;--fc:#ff6b35;--fd:.05s"></div>
+    <div class="s4-fw-dot" style="--fx:-32px;--fy:-57px;--fc:#ff3366;--fd:.02s"></div>
+    <div class="s4-fw-dot" style="--fx:16px;--fy:-68px;--fc:#b06aff;--fd:.06s"></div>
+  </div>
+  <div class="slack-card">
+    <div class="slack-header">
+      <div class="slack-source">
+        <svg width="24" height="24" viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" style="display:block" clip-rule="evenodd" fill-rule="evenodd">
+          <path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/>
+          <path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/>
+          <path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/>
+          <path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/>
+        </svg>
+      </div>
+      <div class="slack-sender-wrap">
+        <div class="slack-sender">Lisa Torres <span style="font-weight:400;color:var(--text-secondary);font-size:13px">(Manager)</span></div>
+      </div>
+    </div>
+    <div class="slack-body">
+      That went really well! Raj approved the delay — you were so prepared today.
+    </div>
+  </div>
+</div>
+
+<div class="title-card" id="titleCard4">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-s4line="1">Every</span>
+    <span class="tc-word" data-s4line="1">type</span>
+    <span class="tc-word" data-s4line="1">of</span>
+    <span class="tc-word emphasis" data-s4line="1">expertise.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word emphasis" data-s4line="2">Ready</span>
+    <span class="tc-word" data-s4line="2">when</span>
+    <span class="tc-word" data-s4line="2">you</span>
+    <span class="tc-word emphasis" data-s4line="2">need</span>
+    <span class="tc-word emphasis" data-s4line="2">it.</span>
   </div>
 </div>
 
@@ -979,6 +1301,8 @@ html, body {
   Scene <span id="sceneNum">1</span> &nbsp;·&nbsp;
   <kbd onclick="switchScene(1)">1</kbd>
   <kbd onclick="switchScene(2)">2</kbd>
+  <kbd onclick="switchScene(3)">3</kbd>
+  <kbd onclick="switchScene(4)">4</kbd>
   &nbsp;·&nbsp;
   <kbd onclick="switchScene(SCENE)">R</kbd> Replay
   &nbsp;·&nbsp;
@@ -1133,7 +1457,16 @@ function run1() {
 // SCENE 2
 // ═══════════════════════════════════
 let s2Running = false, s2Resetting = false;
+let s2StreamScrollLastMs = 0;
 const s2cur = $('s2Cursor');
+
+function s2GentleScrollIntoView(el) {
+  if (s2Resetting || !el || !el.isConnected) return;
+  const now = performance.now();
+  if (now - s2StreamScrollLastMs < 135) return;
+  s2StreamScrollLastMs = now;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+}
 
 const S2Q = "Raj, can you take a look at my launch plan? I particularly want to know your thoughts on the launch delay.";
 
@@ -1145,10 +1478,15 @@ const S2_SOURCES = [
 
 const S2_REASONING = "The onboarding drop-off is fresh and fixable — launching now risks early churn. A short delay is easier to explain than a bad Month 1 retention number.";
 
-const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call.{doc} The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.\n\nA two-week delay is entirely defensible.{doc} The scope is specific, the fix is targeted, and you have the data to back it up. What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\nMy recommendation: open with the delay, not with the slide. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
+/* {doc} = deck citation — rendered as inline icon in s2StreamResponse */
+const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible.{doc}\n\nThe scope is specific, the fix is targeted, and you have the data to back it up. What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My recommendation{/b}: open with the delay, not with the slide. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
+
+const S2_DECK_CIT_ICON = `<span class="s2-inline-cit" title="Launch_Update.pptx"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 
 const S2_PILL_ICONS = {
   slack: `<svg viewBox="0 0 2447.6 2452.5" width="15" height="15" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>`,
+  gdocs: `<svg viewBox="0 0 48 48" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M30 0H8C5.8 0 4 1.8 4 4v40c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4V14L30 0z"/><path fill="#1a6fc4" d="M30 0v14h14z" opacity=".65"/><path fill="white" d="M12 22h24v2.5H12zm0 6.5h24V31H12zm0 6.5h16v2.5H12z"/></svg>`,
+  confluence: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path fill="#0052CC" d="M2.3 16.5c-.4.5-.7 1-.9 1.4-.2.5 0 1 .5 1.3l4.3 2.4c.5.3 1 .1 1.3-.3.6-.9 1.3-1.6 1.9-2.3 2-2 4.1-3 6.3-3 1.7 0 3.3.7 4.7 1.6.4.3 1 .2 1.3-.2l2.8-3.7c.3-.5.2-1.1-.2-1.4-2.2-1.6-4.9-2.5-7.6-2.5-5.4 0-10.1 2.5-14.4 6.7z"/><path fill="#2684FF" d="M21.7 7.5c.4-.5.7-1 .9-1.4.2-.5 0-1-.5-1.3L17.8 2.4c-.5-.3-1-.1-1.3.3-.6.9-1.3 1.6-1.9 2.3-2 2-4.1 3-6.3 3-1.7 0-3.3-.7-4.7-1.6-.4-.3-1-.2-1.3.2L-.5 10.2c-.3.5-.2 1.1.2 1.4 2.2 1.6 4.9 2.5 7.6 2.5 5.4 0 10.1-2.5 14.4-6.6z"/></svg>`,
   gmail: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>`,
 };
 
@@ -1163,27 +1501,90 @@ async function s2TypeText(el, text, speed = 42) {
   }
 }
 
-async function s2StreamText(el, text, speed = 8) {
-  el.textContent = '';
+/** Tokenize `{doc}`, `{b}...{/b}`, and plain text for streaming */
+function tokenizeS2Response(str) {
+  const tokens = [];
+  let i = 0;
+  while (i < str.length) {
+    if (str.startsWith('{doc}', i)) {
+      tokens.push({ type: 'doc' });
+      i += 5;
+      continue;
+    }
+    if (str.startsWith('{b}', i)) {
+      const close = str.indexOf('{/b}', i + 3);
+      if (close === -1) {
+        tokens.push({ type: 'text', text: str.slice(i) });
+        break;
+      }
+      tokens.push({ type: 'bold', text: str.slice(i + 3, close) });
+      i = close + 4;
+      continue;
+    }
+    let next = str.length;
+    const iDoc = str.indexOf('{doc}', i);
+    const iBold = str.indexOf('{b}', i);
+    if (iDoc !== -1) next = Math.min(next, iDoc);
+    if (iBold !== -1) next = Math.min(next, iBold);
+    if (next > i) tokens.push({ type: 'text', text: str.slice(i, next) });
+    i = next;
+  }
+  return tokens;
+}
+
+/** Streams plain text + `{doc}` icons + `{b}...{/b}` bold spans */
+async function s2StreamResponse(el, text, speed = 8) {
+  el.innerHTML = '';
+  const tokens = tokenizeS2Response(text);
   const cur = document.createElement('span');
   cur.className = 's2-streaming-cursor';
-  el.appendChild(cur);
-  const tn = document.createTextNode('');
-  el.insertBefore(tn, cur);
-  for (let i = 0; i < text.length; i++) {
+
+  async function streamPlainChunk(chunk) {
+    if (!chunk) return;
+    const tn = document.createTextNode('');
+    el.appendChild(tn);
+    el.appendChild(cur);
+    for (let i = 0; i < chunk.length; i++) {
+      if (s2Resetting) return;
+      tn.textContent += chunk[i];
+      s2GentleScrollIntoView(el);
+      await sleep2(chunk[i] === ' ' ? speed * 0.3 : speed);
+    }
+    cur.remove();
+  }
+
+  for (const tok of tokens) {
     if (s2Resetting) return;
-    tn.textContent += text[i];
-    await sleep2(text[i] === ' ' ? speed * 0.3 : speed);
+    if (tok.type === 'doc') {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = S2_DECK_CIT_ICON.trim();
+      const icon = tmp.firstElementChild;
+      if (icon) el.appendChild(icon);
+    } else if (tok.type === 'bold') {
+      const b = document.createElement('b');
+      el.appendChild(b);
+      el.appendChild(cur);
+      for (let i = 0; i < tok.text.length; i++) {
+        if (s2Resetting) return;
+        b.textContent += tok.text[i];
+        s2GentleScrollIntoView(el);
+        await sleep2(tok.text[i] === ' ' ? speed * 0.3 : speed);
+      }
+      cur.remove();
+    } else if (tok.type === 'text') {
+      await streamPlainChunk(tok.text);
+    }
   }
   if (cur.parentNode) cur.remove();
 }
 
 function reset2() {
   s2Running = false; s2Resetting = true;
+  s2StreamScrollLastMs = 0;
   setTimeout(() => { s2Resetting = false; }, 80);
 
   // Kill GSAP tweens
-  gsap.killTweensOf([s2cur, $('s2Deck'), $('s2Profile'), $('s2InputArea')]);
+  gsap.killTweensOf([s2cur, $('s2Deck'), $('s2Profile'), $('s2InputArea'), $('s2ChatFrame')].filter(Boolean));
 
   // Phases
   $('s2DocPhase').classList.add('active');
@@ -1198,6 +1599,8 @@ function reset2() {
   chip.classList.remove('show'); gsap.set(chip, { opacity: 0, clearProps: 'left,top' });
 
   // Chat phase
+  const s2f = $('s2ChatFrame');
+  if (s2f) { s2f.scrollTop = 0; gsap.set(s2f, { opacity: 0 }); }
   $('s2ChatPhase').scrollTop = 0;
   $('s2Profile').style.display = '';
   $('s2InputArea').style.display = '';
@@ -1213,6 +1616,8 @@ function reset2() {
   $('s2Div1').classList.remove('show');
   $('s2Thinking').classList.remove('show');
   $('s2ThinkLabel').textContent = ' is thinking';
+  const s2tb = $('s2ThinkBody');
+  if (s2tb) s2tb.style.display = '';
   ['s2Step1', 's2Step2', 's2Step3'].forEach(id => $(id).classList.remove('show', 'dim'));
   $('s2DocReadPill').classList.remove('show');
   ['s2ReadLine1', 's2ReadLine2'].forEach(id => $(id).classList.remove('show'));
@@ -1221,7 +1626,7 @@ function reset2() {
   $('s2ThoughtDone').classList.remove('show'); $('s2ThoughtDone').textContent = '';
   $('s2Div2').classList.remove('show');
   $('s2RespWrap').style.display = 'none';
-  $('s2Response').textContent = '';
+  $('s2Response').innerHTML = '';
 
   // Cursor
   gsap.set(s2cur, { opacity: 0, x: -400, y: -400 });
@@ -1240,34 +1645,32 @@ async function run2Inner() {
   gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
   await sleep2(3200); if (s2Resetting) return;
 
-  // ── Beat 2: Deck shrinks to chip ───────────────────────────────
-  // Position chip first so we can measure it
-  chip.style.left = (window.innerWidth / 2 - 160) + 'px';
-  chip.style.top  = (window.innerHeight * 0.54) + 'px';
+  // ── Beat 2: Deck shrinks to chip (overlap chip fade for smoother handoff) ──
+  chip.style.left = (window.innerWidth / 2 - 170) + 'px';
+  chip.style.top  = (window.innerHeight * 0.48) + 'px';
   chip.classList.add('show'); // display:flex but opacity still 0
 
-  // Measure both after layout
   const deckRect = deck.getBoundingClientRect();
   const chipRect = chip.getBoundingClientRect();
-
-  // GSAP scales from the element's center (50% 50%).
-  // We want the deck's visual center to land on the chip's center.
   const dx = (chipRect.left + chipRect.width / 2)  - (deckRect.left + deckRect.width / 2);
   const dy = (chipRect.top  + chipRect.height / 2) - (deckRect.top  + deckRect.height / 2);
 
+  gsap.to(chip, { opacity: 1, duration: 0.45, delay: 0.34, ease: 'power2.out' });
   gsap.to(deck, {
     x: dx, y: dy, scale: 0.05, opacity: 0,
-    duration: 0.55, ease: 'power2.inOut',
-    onComplete: () => {
-      gsap.to(chip, { opacity: 1, duration: 0.25 });
-    }
+    duration: 0.78, ease: 'power3.inOut',
   });
-  await sleep2(700); if (s2Resetting) return;
+  await sleep2(900); if (s2Resetting) return;
 
-  // ── Beat 3: Switch to chat phase ───────────────────────────────
+  // ── Beat 3: Chat phase + frame fade-in ─────────────────────────
   $('s2DocPhase').classList.remove('active');
   $('s2ChatPhase').classList.add('active');
-  await sleep2(100); if (s2Resetting) return;
+  const s2frame = $('s2ChatFrame');
+  if (s2frame) {
+    gsap.set(s2frame, { opacity: 0 });
+    gsap.to(s2frame, { opacity: 1, duration: 0.28, ease: 'power2.out', delay: 0.05 });
+  }
+  await sleep2(200); if (s2Resetting) return;
 
   // Profile fades in
   gsap.to(profile, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' });
@@ -1344,7 +1747,7 @@ async function run2Inner() {
     if (s2Resetting) return;
     const p = document.createElement('div');
     p.className = 's2-pill';
-    p.innerHTML = `${S2_PILL_ICONS[src.icon]}<span class="count">${src.count}</span> ${src.label}`;
+    p.innerHTML = `${S2_PILL_ICONS[src.icon] || ''}<span class="count">${src.count}</span> ${src.label}`;
     pillsEl.appendChild(p);
     await sleep2(30);
     p.classList.add('show');
@@ -1374,11 +1777,160 @@ async function run2Inner() {
   $('s2RespWrap').style.display = 'block';
   await sleep2(200); if (s2Resetting) return;
 
-  await s2StreamText($('s2Response'), S2_RESPONSE, 8);
+  await s2StreamResponse($('s2Response'), S2_RESPONSE, 8);
   s2Running = false;
 }
 
 function run2() { reset2(); setTimeout(() => run2Inner(), 60); }
+
+// ═══════════════════════════════════
+// SCENE 3 — Deck update
+// ═══════════════════════════════════
+let s3Running = false, s3Resetting = false;
+const s3cur = $('s3Cursor');
+const S3_DECISION = 'Decision: Delay launch by 2 weeks — fix onboarding before GA.';
+
+function s3MoveCur(x, y, durMs = 520) {
+  return new Promise(resolve => {
+    gsap.to(s3cur, {
+      x, y, duration: durMs / 1000, ease: 'power2.inOut',
+      onComplete: resolve
+    });
+  });
+}
+
+function reset3() {
+  s3Running = false; s3Resetting = true;
+  setTimeout(() => { s3Resetting = false; }, 80);
+  gsap.killTweensOf([$('s3Deck'), s3cur]);
+  $('scene3').classList.remove('active');
+  gsap.set($('s3Deck'), { opacity: 0, y: 18, scale: 0.98, clearProps: 'x' });
+  $('s3DecisionText').innerHTML = '';
+  const si = $('s3SaveIndicator');
+  si.textContent = 'Editing';
+  si.className = 's3-save-indicator';
+  gsap.set(s3cur, { opacity: 0, x: -400, y: -400 });
+}
+
+async function run3Inner() {
+  s3Running = true;
+  const deck = $('s3Deck');
+  const decEl = $('s3DecisionText');
+  const si = $('s3SaveIndicator');
+
+  $('scene3').classList.add('active');
+  await sleep2(200); if (s3Resetting) return;
+
+  gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
+  await sleep2(800); if (s3Resetting) return;
+
+  const area = $('s3DecisionArea');
+  const ar = area.getBoundingClientRect();
+  const sx = ar.left + ar.width * 0.12;
+  const sy = ar.top + ar.height * 0.45;
+  gsap.set(s3cur, { x: sx + 70, y: sy - 35 });
+  gsap.to(s3cur, { opacity: 1, duration: 0.2 });
+  await sleep2(100); if (s3Resetting) return;
+  await s3MoveCur(sx, sy, 560); if (s3Resetting) return;
+  await sleep2(280); if (s3Resetting) return;
+
+  for (let i = 0; i < S3_DECISION.length; i++) {
+    if (s3Resetting) return;
+    const chunk = S3_DECISION.slice(0, i + 1);
+    decEl.innerHTML = chunk.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+      '<span class="s3-text-cursor"></span>';
+    await sleep2(S3_DECISION[i] === ' ' ? 10 : 28 + Math.random() * 12);
+  }
+  decEl.textContent = S3_DECISION;
+  await sleep2(400); if (s3Resetting) return;
+
+  const sir = si.getBoundingClientRect();
+  const tx = sir.left + sir.width * 0.5;
+  const ty = sir.top + sir.height * 0.55;
+  await s3MoveCur(tx, ty, 520); if (s3Resetting) return;
+  await sleep2(220); if (s3Resetting) return;
+
+  si.textContent = 'Saving…';
+  si.className = 's3-save-indicator saving';
+  await sleep2(680); if (s3Resetting) return;
+  si.textContent = 'Saved ✓';
+  si.className = 's3-save-indicator saved';
+  gsap.to(s3cur, { opacity: 0, duration: 0.2 });
+  await sleep2(1200); if (s3Resetting) return;
+  s3Running = false;
+}
+
+function run3() { reset3(); setTimeout(() => run3Inner(), 60); }
+
+// ═══════════════════════════════════
+// SCENE 4 — Resolution + tagline
+// ═══════════════════════════════════
+let s4Running = false, s4Resetting = false;
+
+function reset4() {
+  s4Running = false; s4Resetting = true;
+  setTimeout(() => { s4Resetting = false; }, 80);
+  $('scene4').classList.remove('active');
+  $('s4CalWrapper').classList.remove('show', 'fade-out-cal');
+  $('s4QbrBlock').classList.remove('done');
+  $('s4FwStage').querySelectorAll('.s4-fw-dot').forEach(d => d.classList.remove('burst'));
+  const sp = $('s4SlackPopup');
+  sp.classList.remove('visible', 'hiding');
+  const tc4 = $('titleCard4');
+  tc4.classList.remove('active', 'visible');
+  tc4.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+}
+
+async function run4Inner() {
+  if (s4Running) return;
+  s4Running = true;
+  s4Resetting = false;
+
+  $('scene4').classList.add('active');
+  await sleep2(80); if (s4Resetting) return;
+
+  $('s4CalWrapper').classList.add('show');
+  await sleep2(1400); if (s4Resetting) return;
+
+  $('s4QbrBlock').classList.add('done');
+  await sleep2(2000); if (s4Resetting) return;
+
+  $('s4CalWrapper').classList.add('fade-out-cal');
+  await sleep2(700); if (s4Resetting) return;
+
+  $('s4SlackPopup').classList.add('visible');
+  await sleep2(320); if (s4Resetting) return;
+  $('s4FwStage').querySelectorAll('.s4-fw-dot').forEach(d => d.classList.add('burst'));
+  await sleep2(2400); if (s4Resetting) return;
+
+  $('s4SlackPopup').classList.remove('visible');
+  $('s4SlackPopup').classList.add('hiding');
+  await sleep2(950); if (s4Resetting) return;
+
+  const tc = $('titleCard4');
+  tc.classList.add('active');
+  await sleep2(60); tc.classList.add('visible');
+  await sleep2(500); if (s4Resetting) return;
+
+  const line1 = tc.querySelectorAll('[data-s4line="1"]');
+  const line2 = tc.querySelectorAll('[data-s4line="2"]');
+  for (let i = 0; i < line1.length; i++) {
+    if (s4Resetting) return;
+    line1[i].classList.add('visible');
+    await sleep2(210);
+  }
+  await sleep2(600); if (s4Resetting) return;
+  line1.forEach(w => w.classList.add('dim'));
+  await sleep2(200); if (s4Resetting) return;
+  for (let i = 0; i < line2.length; i++) {
+    if (s4Resetting) return;
+    line2[i].classList.add('visible');
+    await sleep2(190);
+  }
+  s4Running = false;
+}
+
+function run4() { reset4(); setTimeout(() => run4Inner(), 60); }
 
 // ═══════════════════════════════════
 // SCENE SWITCHER
@@ -1391,9 +1943,18 @@ function switchScene(num) {
   SCENE = num;
   $('sceneNum').textContent = num;
 
+  gsap.set($('s2Cursor'), { opacity: 0, x: -400, y: -400 });
+  gsap.set($('s3Cursor'), { opacity: 0, x: -400, y: -400 });
+  gsap.set(cursor, { opacity: 0, x: -400, y: -400 });
+
   // Hide all scenes
   $('scene1').classList.remove('active');
   $('scene2').classList.remove('active');
+  $('scene3').classList.remove('active');
+  $('scene4').classList.remove('active');
+
+  if (num !== 3) reset3();
+  if (num !== 4) reset4();
 
   // Clean up scene 1 fixed overlays
   $('meetExpanded').classList.remove('visible', 'fade-out');
@@ -1401,10 +1962,12 @@ function switchScene(num) {
   $('slackPopup').classList.remove('visible');
   const tc = $('titleCard');
   tc.classList.remove('visible', 'fade-out');
-  document.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
 
   if (num === 1) { reset1(); run1(); }
   if (num === 2) { reset2(); run2(); }
+  if (num === 3) { reset3(); run3(); }
+  if (num === 4) { run4(); }
 }
 
 // ═══════════════════════════════════
@@ -1413,6 +1976,8 @@ function switchScene(num) {
 document.addEventListener('keydown', e => {
   if (e.key === '1') switchScene(1);
   if (e.key === '2') switchScene(2);
+  if (e.key === '3') switchScene(3);
+  if (e.key === '4') switchScene(4);
   if (e.key === 'r' || e.key === 'R') switchScene(SCENE);
   if (e.key === 'h' || e.key === 'H') toggleControls();
 });
