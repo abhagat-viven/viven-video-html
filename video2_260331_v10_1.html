@@ -579,18 +579,19 @@ html, body {
 }
 #scene2.active { display: block; }
 
-/* Two full-viewport phases — each centred like Scene 1 */
+/* Two full-viewport phases — top-anchored with modest top inset (Screen Studio framing) */
 .s2-phase {
   display: none; position: absolute; inset: 0;
   justify-content: center; align-items: flex-start;
-  padding-top: 64px;
+  padding-top: 36px;
 }
 .s2-phase.active { display: flex; }
 
 /* Chat phase scrolls internally */
 #s2ChatPhase {
   flex-direction: column; overflow-y: auto;
-  align-items: center; padding: 10vh 0 120px;
+  justify-content: flex-start;
+  align-items: center; padding-top: 36px; padding-bottom: 80px;
   scrollbar-width: none;
 }
 #s2ChatPhase::-webkit-scrollbar { display: none; }
@@ -1352,6 +1353,15 @@ function run1() {
 // SCENE 2
 // ═══════════════════════════════════
 let s2Running=false, s2Resetting=false;
+let s2StreamScrollLastMs = 0;
+/** Throttled + block:nearest so the chat thread does not jump to vertical center while streaming */
+function s2GentleScrollIntoView(el) {
+  if (!el || s2Resetting || !el.isConnected) return;
+  const now = performance.now();
+  if (now - s2StreamScrollLastMs < 135) return;
+  s2StreamScrollLastMs = now;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+}
 
 const S2Q = "Reviewing this before tomorrow. Want your take — specifically on the launch delay proposal.";
 
@@ -1390,7 +1400,7 @@ async function s2StreamHTML(container, html, speed=8) {
           if(s2Resetting) return;
           tn.textContent+=txt[i];
           if(cur.parentNode) cur.remove(); tgt.appendChild(cur);
-          tgt.scrollIntoView&&tgt.scrollIntoView({behavior:'smooth',block:'end'});
+          s2GentleScrollIntoView(tgt);
           await sleep(txt[i]===' '?speed*0.3:speed);
         }
       } else if(child.nodeType===Node.ELEMENT_NODE){
@@ -1407,6 +1417,7 @@ async function s2StreamHTML(container, html, speed=8) {
 
 function reset2() {
   s2Running=false; s2Resetting=true;
+  s2StreamScrollLastMs = 0;
   setTimeout(()=>{s2Resetting=false;},60);
 
   $('s2DocPhase').classList.add('active');
@@ -1627,18 +1638,18 @@ run1();
 .scene-indicator.hidden-ctrl { opacity:0; pointer-events:none; }
 #scene3 { display:none; position:fixed; inset:0; z-index:1; }
 #scene3.active { display:block; }
-.s3-phase { display:none; position:absolute; inset:0; justify-content:center; align-items:flex-start; padding-top:64px; }
+.s3-phase { display:none; position:absolute; inset:0; justify-content:center; align-items:flex-start; padding-top:36px; }
 .s3-phase.active { display:flex; }
-#s3ChatPhase { flex-direction:column; overflow-y:auto; align-items:center; padding:10vh 0 120px; scrollbar-width:none; }
+#s3ChatPhase { flex-direction:column; overflow-y:auto; justify-content:flex-start; align-items:center; padding-top:36px; padding-bottom:80px; scrollbar-width:none; }
 #s3ChatPhase::-webkit-scrollbar { display:none; }
 .s3-page { width:760px; display:flex; flex-direction:column; align-items:center; z-index:2; }
 .s3-team-av {
   width:84px; height:84px; border-radius:50%;
-  background:linear-gradient(135deg,#0f766e,#0d9488);
-  display:flex; align-items:center; justify-content:center;
-  font-size:26px; font-weight:800; color:#fff; letter-spacing:-1px; margin-bottom:16px;
+  margin-bottom:16px; overflow:hidden; flex-shrink:0;
   box-shadow:0 0 0 3px var(--bg-deep),0 0 0 5px rgba(0,0,0,0.08);
+  background:#e8eef5;
 }
+.s3-team-av img { width:100%; height:100%; object-fit:cover; display:block; }
 .s3-profile { display:flex; flex-direction:column; align-items:center; padding-bottom:24px; width:100%; opacity:0; transform:translateY(8px); transition:all 0.65s cubic-bezier(0.4,0,0.2,1); }
 .s3-profile.visible { opacity:1; transform:translateY(0); }
 .s3-profile.hidden { opacity:0!important; max-height:0!important; padding:0!important; margin:0!important; overflow:hidden; pointer-events:none; transition:all 0.4s ease; }
@@ -1675,7 +1686,8 @@ run1();
 .s3-thinking { opacity:0; }
 .s3-thinking.show { animation:fadeIn2 .4s ease forwards; }
 .s3-think-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-.s3-think-av { width:38px; height:38px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#0f766e,#0d9488); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:#fff; letter-spacing:-0.5px; }
+.s3-think-av { width:38px; height:38px; border-radius:50%; flex-shrink:0; overflow:hidden; background:#e8eef5; }
+.s3-think-av img { width:100%; height:100%; object-fit:cover; display:block; }
 .s3-think-label { font-size:15px; color:#888; }
 .s3-think-label .name { font-weight:600; color:#444; }
 .s3-think-body { border-left:2px solid rgba(0,0,0,.07); margin-left:19px; padding-left:26px; }
@@ -1752,11 +1764,12 @@ run1();
 .s3-output-body { background:#fafaf8; padding:10px 16px; font-size:11px; line-height:1.9; color:#555; }
 </style>
 
+<!-- Scene 3 team avatar: analytics dashboard (Unsplash, Unsplash License) — assets/s3-data-analytics.jpg -->
 <div id="scene3">
   <div class="s3-phase active" id="s3ChatPhase">
     <div class="s3-page">
       <div class="s3-profile" id="s3Profile">
-        <div class="s3-team-av">DA</div>
+        <div class="s3-team-av"><img src="assets/s3-data-analytics.jpg" width="84" height="84" alt="Data analytics visualization"></div>
         <div class="s3-name">Data Analytics Team</div>
         <div class="s3-role">Central Analytics · Product Intelligence</div>
         <div class="s3-badge"><span class="s3-badge-dot"></span>Team Twin</div>
@@ -1788,7 +1801,7 @@ run1();
         <div class="s3-divider" id="s3Div1"></div>
         <div class="s3-thinking" id="s3Thinking">
           <div class="s3-think-header">
-            <div class="s3-think-av">DA</div>
+            <div class="s3-think-av"><img src="assets/s3-data-analytics.jpg" width="38" height="38" alt=""></div>
             <div class="s3-think-label"><span class="name">Analytics Team</span><span id="s3ThinkLabel"> is thinking</span><span class="s2-think-dots"><span></span><span></span><span></span></span></div>
           </div>
           <div class="s3-think-body" id="s3ThinkBody">
@@ -1843,7 +1856,7 @@ run1();
         <div class="s3-divider" id="s3Div2"></div>
         <div id="s3RespWrap" style="display:none">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-            <div class="s3-think-av">DA</div>
+            <div class="s3-think-av"><img src="assets/s3-data-analytics.jpg" width="38" height="38" alt=""></div>
             <div>
               <div style="font-size:14px;font-weight:600">Data Analytics Team</div>
               <div style="font-size:10px;font-weight:600;color:#0f766e;background:rgba(15,118,110,.08);border:1px solid rgba(15,118,110,.15);padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;display:inline-block;margin-top:2px">Team Twin</div>
