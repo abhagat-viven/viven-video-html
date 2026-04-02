@@ -934,8 +934,8 @@ html, body {
     <div class="me-datetime">Tuesday, April 7 · 2:00 – 3:00 PM</div>
     <div class="me-divider"></div>
     <div class="att-row" id="a1">
-      <div class="att-avatar" style="background:#1a73e8">RK</div>
-      <div><div class="att-name">Raj Kothari · CEO</div></div>
+      <div class="att-avatar" style="background:#1a73e8">JP</div>
+      <div><div class="att-name">Jenny Peters · CEO</div></div>
     </div>
     <div class="att-row" id="a2">
       <div class="att-avatar" style="background:#2e7d32">MK</div>
@@ -972,7 +972,7 @@ html, body {
       </div>
     </div>
     <div class="slack-body">
-      Hey Alex 👋 — Raj's looking for a quick update on the upcoming launch. Keep it clear and simple!
+      Hey Alex 👋 — Jenny's looking for a quick update on the upcoming launch. Keep it clear and simple!
     </div>
   </div>
 </div>
@@ -1030,13 +1030,13 @@ html, body {
     </div>
   </div>
 
-  <!-- Phase 2: Chat — Raj portrait: assets/s2-raj-portrait.jpg (Unsplash) -->
+  <!-- Phase 2: Chat — Jenny portrait: assets/s2-jenny-peters-portrait.jpg -->
   <div class="s2-phase" id="s2ChatPhase">
     <div class="s2-chat-frame" id="s2ChatFrame">
     <div class="s2-page" id="s2Page">
       <div class="s2-profile" id="s2Profile">
-        <img class="s2-av-photo" src="assets/s2-raj-portrait.jpg" width="84" height="84" alt="Executive portrait">
-        <div class="s2-name">Raj Kothari</div>
+        <img class="s2-av-photo" src="assets/s2-jenny-peters-portrait.jpg" width="84" height="84" alt="Executive portrait">
+        <div class="s2-name">Jenny Peters</div>
         <div class="s2-role">Chief Executive Officer</div>
         <div class="s2-badge"><span class="s2-badge-dot"></span>Digital Twin</div>
         <div class="s2-access">Full executive access</div>
@@ -1072,9 +1072,9 @@ html, body {
 
         <div class="s2-thinking" id="s2Thinking">
           <div class="s2-think-header">
-            <img class="s2-think-av-photo" src="assets/s2-raj-portrait.jpg" width="38" height="38" alt="">
+            <img class="s2-think-av-photo" src="assets/s2-jenny-peters-portrait.jpg" width="38" height="38" alt="">
             <div class="s2-think-label">
-              <span class="name">Raj Kothari</span>
+              <span class="name">Jenny Peters</span>
               <span id="s2ThinkLabel"> is thinking</span>
               <span class="s2-think-dots"><span></span><span></span><span></span></span>
             </div>
@@ -1105,8 +1105,8 @@ html, body {
 
         <div class="s2-resp-wrap" id="s2RespWrap" style="display:none">
           <div class="s2-resp-header">
-            <img class="s2-resp-av-photo" src="assets/s2-raj-portrait.jpg" width="38" height="38" alt="">
-            <div class="s2-resp-name">Raj Kothari</div>
+            <img class="s2-resp-av-photo" src="assets/s2-jenny-peters-portrait.jpg" width="38" height="38" alt="">
+            <div class="s2-resp-name">Jenny Peters</div>
           </div>
           <div class="s2-response" id="s2Response"></div>
           <div class="s2-sources-pill" id="s2SourcesPill">
@@ -1269,7 +1269,7 @@ html, body {
       </div>
     </div>
     <div class="slack-body">
-      That went really well! Raj approved the delay — you were so prepared today.
+      That went really well! Jenny approved the delay — you were so prepared today.
     </div>
   </div>
 </div>
@@ -1468,7 +1468,7 @@ function s2GentleScrollIntoView(el) {
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
 }
 
-const S2Q = "Raj, can you take a look at my launch plan? I particularly want to know your thoughts on the launch delay.";
+const S2Q = "Jenny, can you take a look at my launch plan? I particularly want to know your thoughts on the launch delay.";
 
 const S2_SOURCES = [
   { icon: 'slack', count: '4', label: 'Team Threads' },
@@ -1688,7 +1688,7 @@ async function run2Inner() {
   for (let i = 0; i < S2Q.length; i++) {
     if (s2Resetting) return;
     inputEl.textContent += S2Q[i];
-    if (i === 8) sendBtn.classList.add('active'); // light up send partway through
+    if (i === 10) sendBtn.classList.add('active'); // light up send partway through (after "Jenny, can ")
     await sleep2(S2Q[i] === ' ' ? 12 : 42 + Math.random() * 14 - 7);
   }
   await sleep2(500); if (s2Resetting) return;
