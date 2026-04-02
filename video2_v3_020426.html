@@ -951,10 +951,6 @@ html, body {
       <div><div class="att-name">Jenny Peters · CEO</div></div>
     </div>
     <div class="att-row" id="a2">
-      <div class="att-avatar" style="background:#2e7d32">MK</div>
-      <div><div class="att-name">Marcus Kim · Head of Engineering</div></div>
-    </div>
-    <div class="att-row" id="a3">
       <div class="att-avatar" style="background:#e67c22">LT</div>
       <div><div class="att-name">Lisa Torres · Manager</div></div>
     </div>
@@ -987,18 +983,6 @@ html, body {
     <div class="slack-body">
       Heads up Alex 👋 — <span class="slack-mention">@Jenny (CEO)</span> wants your take before tomorrow. Be sharp on the delay.
     </div>
-  </div>
-</div>
-
-<!-- ── Title Card (Scene 2 intro) ── -->
-<div class="title-card" id="titleCard2">
-  <div class="title-card-text-wrap">
-    <span class="tc-word emphasis" data-s2line="1">Just</span>
-    <span class="tc-word emphasis" data-s2line="1">ask</span>
-    <span class="tc-word emphasis" data-s2line="1">your</span>
-    <span class="tc-word emphasis" data-s2line="1">Leader</span>
-    <span class="tc-break"></span>
-    <span class="tc-word emphasis" data-s2line="2">Directly!</span>
   </div>
 </div>
 
@@ -1103,7 +1087,7 @@ html, body {
                 Launch_Update.pptx
               </div>
               <div id="s2ReadLine1" class="s2-read-line">Scanning launch timeline and readiness notes...</div>
-              <div id="s2ReadLine2" class="s2-read-line">Flagging onboarding drop-off — step 3, week 3</div>
+              <div id="s2ReadLine2" class="s2-read-line">Flagging onboarding drop-off in week 1 activation</div>
             </div>
             <div class="s2-step" id="s2Step2">
               <div class="s2-step-label"><b>Searching</b> user context &amp; prior feedback</div>
@@ -1287,6 +1271,7 @@ html, body {
 
 <div class="title-card" id="titleCard4">
   <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-s4line="1">Access</span>
     <span class="tc-word emphasis" data-s4line="1">Expert</span>
     <span class="tc-word emphasis" data-s4line="1">judgement.</span>
     <span class="tc-break"></span>
@@ -1438,14 +1423,14 @@ function run1() {
   s1tl.to(cursor, { opacity: 0, duration: 0.2 }, 10.06);
 
   // Beat 4 — attendees cascade in
-  // atts start at 10.26, 4 × 0.22s stagger = last one done at ~10.92s
+  // atts start at 10.26, 3 × 0.22s stagger = last one done at ~10.70s
   s1tl.to(atts, {
     opacity: 1, y: 0,
     duration: 0.3, ease: 'power2.out',
     stagger: 0.22
   }, 10.26);
 
-  // Beat 5 — hold briefly, then dismiss (no scroll needed — 4 attendees fit cleanly)
+  // Beat 5 — hold briefly, then dismiss (no scroll needed — 3 attendees fit cleanly)
   s1tl.call(() => {
     meet.classList.remove('visible');
     meet.classList.add('fade-out');
@@ -1479,20 +1464,20 @@ const S2Q = "Jenny, can you take a look at my launch plan? I particularly want t
 const S2_SOURCES = [
   { icon: 'slack', count: '4', label: 'Team Threads' },
   { icon: 'gdocs', count: '3', label: 'Product Notes' },
-  { icon: 'confluence', count: '5', label: 'Engineering Docs' },
+  { icon: 'gmeet', count: '3', label: 'Product reviews' },
 ];
 
 const S2_REASONING = "The onboarding drop-off is fresh and fixable — launching now risks early churn. A short delay is easier to explain than a bad Month 1 retention number.";
 
 /* {doc} = deck citation — rendered as inline icon in s2StreamResponse */
-const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible. The scope is specific, the fix is targeted, and you have the data to back it up.{doc} What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My recommendation{/b}: open with the delay, not with the slide. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
+const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible. The scope is specific, the fix is targeted, and you have the data to back it up.{doc} What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My recommendation{/b}: open with the delay. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
 
 const S2_DECK_CIT_ICON = `<span class="s2-inline-cit" title="Launch_Update.pptx"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 
 const S2_PILL_ICONS = {
   slack: `<svg viewBox="0 0 2447.6 2452.5" width="15" height="15" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>`,
   gdocs: `<svg viewBox="0 0 48 48" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M30 0H8C5.8 0 4 1.8 4 4v40c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4V14L30 0z"/><path fill="#1a6fc4" d="M30 0v14h14z" opacity=".65"/><path fill="white" d="M12 22h24v2.5H12zm0 6.5h24V31H12zm0 6.5h16v2.5H12z"/></svg>`,
-  confluence: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path fill="#0052CC" d="M2.3 16.5c-.4.5-.7 1-.9 1.4-.2.5 0 1 .5 1.3l4.3 2.4c.5.3 1 .1 1.3-.3.6-.9 1.3-1.6 1.9-2.3 2-2 4.1-3 6.3-3 1.7 0 3.3.7 4.7 1.6.4.3 1 .2 1.3-.2l2.8-3.7c.3-.5.2-1.1-.2-1.4-2.2-1.6-4.9-2.5-7.6-2.5-5.4 0-10.1 2.5-14.4 6.7z"/><path fill="#2684FF" d="M21.7 7.5c.4-.5.7-1 .9-1.4.2-.5 0-1-.5-1.3L17.8 2.4c-.5-.3-1-.1-1.3.3-.6.9-1.3 1.6-1.9 2.3-2 2-4.1 3-6.3 3-1.7 0-3.3-.7-4.7-1.6-.4-.3-1-.2-1.3.2L-.5 10.2c-.3.5-.2 1.1.2 1.4 2.2 1.6 4.9 2.5 7.6 2.5 5.4 0 10.1-2.5 14.4-6.6z"/></svg>`,
+  gmeet: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#00832d" d="M17 10.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3.5l4 4v-11l-4 4z"/></svg>`,
   gmail: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>`,
 };
 
@@ -1589,10 +1574,6 @@ function reset2() {
   s2StreamScrollLastMs = 0;
   setTimeout(() => { s2Resetting = false; }, 80);
 
-  const tc2 = $('titleCard2');
-  tc2.classList.remove('visible', 'fade-out');
-  tc2.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
-
   // Kill GSAP tweens
   gsap.killTweensOf([s2cur, $('s2Deck'), $('s2Profile'), $('s2InputArea'), $('s2ChatFrame')].filter(Boolean));
 
@@ -1648,29 +1629,6 @@ async function run2Inner() {
   const chip = $('s2FileChip');
   const profile = $('s2Profile');
   const inputArea = $('s2InputArea');
-
-  // ── Beat 0: Title card ─────────────────────────────────────────
-  const tc2 = $('titleCard2');
-  tc2.classList.add('visible');
-  await sleep2(400); if (s2Resetting) return;
-  const tc2l1 = tc2.querySelectorAll('[data-s2line="1"]');
-  const tc2l2 = tc2.querySelectorAll('[data-s2line="2"]');
-  for (let i = 0; i < tc2l1.length; i++) {
-    if (s2Resetting) return;
-    tc2l1[i].classList.add('visible');
-    await sleep2(200);
-  }
-  await sleep2(500); if (s2Resetting) return;
-  tc2l1.forEach(w => w.classList.add('dim'));
-  await sleep2(200); if (s2Resetting) return;
-  for (let i = 0; i < tc2l2.length; i++) {
-    if (s2Resetting) return;
-    tc2l2[i].classList.add('visible');
-    await sleep2(190);
-  }
-  await sleep2(2000); if (s2Resetting) return;
-  tc2.classList.add('fade-out');
-  await sleep2(900); if (s2Resetting) return;
 
   // ── Beat 1: Deck fades in ──────────────────────────────────────
   $('scene2').classList.add('active');
@@ -1793,13 +1751,13 @@ async function run2Inner() {
   $('s2Step3').classList.add('show');
   await sleep2(300); if (s2Resetting) return;
   $('s2Reasoning').textContent = S2_REASONING;
-  await sleep2(2200); if (s2Resetting) return;
+  await sleep2(4200); if (s2Resetting) return;
   $('s2Step3').classList.add('dim');
 
   // Done
-  $('s2ThinkLabel').textContent = ' thought for 3s';
+  $('s2ThinkLabel').textContent = ' thought for 5s';
   $('s2ThinkBody').style.display = 'none';
-  $('s2ThoughtDone').textContent = 'Thought for 3 seconds';
+  $('s2ThoughtDone').textContent = 'Thought for 5 seconds';
   $('s2ThoughtDone').classList.add('show');
   await sleep2(400); if (s2Resetting) return;
 
@@ -1822,7 +1780,7 @@ function run2() { reset2(); setTimeout(() => run2Inner(), 60); }
 let s3Running = false, s3Resetting = false;
 const s3cur = $('s3Cursor');
 const S3_BULLET1 = 'Delay launch — fix onboarding before GA.';
-const S3_BULLET2 = 'Weak Week-1 activation leads to bad Month-1 retention.';
+const S3_BULLET2 = 'Rebuild activation flow to hit 75% Day-7 retention before launch.';
 
 async function s3TypeInto(el, text) {
   if (!el) return;
@@ -2008,10 +1966,6 @@ function switchScene(num) {
   const tc = $('titleCard');
   tc.classList.remove('visible', 'fade-out');
   document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
-
-  const tc2 = $('titleCard2');
-  tc2.classList.remove('visible', 'fade-out');
-  tc2.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
 
   if (num === 1) { reset1(); run1(); }
   if (num === 2) { reset2(); run2(); }
