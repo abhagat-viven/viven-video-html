@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video 2 — 201 Storylane v1</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@300;400;500;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #f5f3f0;
+  --bg-surface: #ffffff;
+  --bg-card: #faf9f7;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.10);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #9a9a9a;
+  --accent: #a196eb;
+  --accent-green: #2d8a54;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.09);
+  --shadow-accent: 0 0 0 1px rgba(161,150,235,0.15), 0 0 30px rgba(161,150,235,0.06);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --font-main: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --gcal-blue: #1a73e8;
+  --zoom-bg: #1c1c1c;
+  --zoom-tile: #2a2a2a;
+  --zoom-border: rgba(255,255,255,0.08);
+  --teal: #0d9488;
+  --teal-light: rgba(13,148,136,0.10);
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ambient-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26,115,232,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59,111,160,0.02) 0%, transparent 60%),
+    var(--bg-deep);
+  z-index: 0;
+}
+
+.title-card {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bg-deep);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+.title-card.visible { opacity: 1; }
+.title-card.fade-out { opacity: 0; transition: opacity 2s ease; }
+
+.title-card-text-wrap {
+  text-align: center; max-width: 800px;
+  animation: tc-drift 6s ease-in-out infinite;
+}
+@keyframes tc-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.tc-word {
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 48px; font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(26,26,26,0.35);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  margin: 0 4px; line-height: 1.3;
+}
+.tc-word.visible { opacity: 1; transform: translateY(0); }
+.tc-word.emphasis { font-weight: 700; color: rgba(26,26,26,0.9); }
+.tc-break { display: block; height: 8px; }
+.tc-word.dim { opacity: 0.25 !important; transition: opacity 0.8s ease; }
+.tc-word.tc-answered { font-size: 56px; font-weight: 800; }
+
+#scene1, #scene2, #scene3, #scene4 {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 1;
+}
+#scene1.active, #scene3.active { display: block; }
+#scene2.active { display: block; }
+#scene4.active { display: block; }
+
+/* ── Scene 1 Zoom ── */
+#scene1 { background: var(--zoom-bg); }
+.zoom-grid-s1 {
+  position: absolute; inset: 0;
+  padding: max(8px, 4vh) max(8px, 4vw);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(12px);
+}
+.zoom-tile {
+  position: relative;
+  border-radius: 12px;
+  background: var(--zoom-tile);
+  border: 1px solid var(--zoom-border);
+  overflow: hidden;
+}
+.zoom-tile.priya-span { grid-row: 1 / 3; }
+.zoom-av {
+  position: absolute; top: 14px; left: 14px;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+.zoom-live {
+  position: absolute; top: 18px; left: 60px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
+}
+.zoom-name {
+  position: absolute; bottom: 12px; left: 14px;
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+.zoom-role {
+  position: absolute; bottom: 28px; left: 14px;
+  font-size: 11px; color: rgba(255,255,255,0.5);
+}
+.zoom-sharing {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(34,197,94,0.15); color: #22c55e;
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600;
+}
+.zoom-slide-ph {
+  position: absolute; left: 32px; right: 32px; top: 52px; bottom: 48px;
+  margin: 0;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: rgba(255,255,255,0.2);
+  text-align: center; padding: 12px;
+}
+.mic-off {
+  position: absolute; bottom: 12px; right: 12px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 11px;
+}
+.s1-chat-bubble {
+  position: fixed;
+  z-index: 20;
+  max-width: 380px;
+  background: #2d2d2d;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+}
+.s1-chat-bubble .cb-h { font-size: 13px; font-weight: 700; color: #fff; }
+.s1-chat-bubble .cb-r { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
+.s1-chat-bubble .cb-b { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+
+/* Controls */
+.scene-indicator {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-surface); border: 1px solid var(--border-medium);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; color: var(--text-tertiary); z-index: 100;
+  box-shadow: var(--shadow-sm); font-family: var(--font-mono);
+  display: flex; gap: 8px;
+}
+.scene-indicator.hidden-ctrl { opacity: 0; pointer-events: none; }
+.scene-indicator kbd {
+  background: var(--bg-card); border: 1px solid var(--border-subtle);
+  padding: 1px 5px; border-radius: 4px; font-size: 11px; cursor: pointer;
+}
+
+.slack-popup {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -44%) scale(0.96);
+  width: min(500px, 90vw); z-index: 45;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.slack-popup.visible {
+  opacity: 1; transform: translate(-50%, -50%) scale(1);
+}
+.slack-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: 16px; padding: 22px 26px 26px;
+  box-shadow: 0 16px 56px rgba(0,0,0,0.12);
+}
+.slack-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.slack-source {
+  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+  background: #fff; border: 1px solid var(--border-subtle);
+  display: flex; align-items: center; justify-content: center;
+}
+.slack-sender { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.slack-body {
+  font-size: 16px; line-height: 1.65; color: var(--text-primary);
+  padding-left: 52px;
+}
+
+/* Scene 4 layers */
+#s4ZoomEnd {
+  position: fixed; inset: 0; z-index: 40;
+  background: var(--zoom-bg);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+#s4ZoomEnd.on { opacity: 1; pointer-events: auto; }
+#s4ZoomEnd .ended-txt {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px; color: rgba(255,255,255,0.4);
+}
+#s4WarmOverlay {
+  position: fixed; inset: 0; z-index: 39;
+  background: var(--bg-deep);
+  opacity: 0; pointer-events: none;
+}
+#titleCardEnd { z-index: 55; background: var(--bg-deep); }
+</style>
+</head>
+<body>
+
+<div class="ambient-bg"></div>
+
+<!-- Title Scene 1 -->
+<div class="title-card" id="titleCard">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-line="1">Important</span>
+    <span class="tc-word emphasis" data-line="1">call.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word emphasis" data-line="2">Question</span>
+    <span class="tc-word" data-line="2">you</span>
+    <span class="tc-word emphasis" data-line="2">didn't</span>
+    <span class="tc-word" data-line="2">prepare</span>
+    <span class="tc-word" data-line="2">for.</span>
+  </div>
+</div>
+
+<section id="scene1" class="scene">
+  <div class="zoom-grid-s1" id="s1ZoomGrid">
+    <div class="zoom-tile priya-span" id="s1Priya">
+      <div class="zoom-av" style="background:var(--teal)">PS</div>
+      <div class="zoom-live"></div>
+      <div class="zoom-sharing">● Sharing</div>
+      <div class="zoom-role">Delivery Lead · Hartwell Review</div>
+      <div class="zoom-name">Priya Shah</div>
+      <div class="zoom-slide-ph">Activation Review · Hartwell Group</div>
+    </div>
+    <div class="zoom-tile" id="s1James">
+      <div class="zoom-av" style="background:#5c6bc0;top:12px;left:12px">JO</div>
+      <div class="zoom-live"></div>
+      <div class="zoom-role" style="bottom:28px">VP Operations · Hartwell Group</div>
+      <div class="zoom-name">James Okafor</div>
+    </div>
+    <div class="zoom-tile">
+      <div class="zoom-av" style="background:#666;top:12px;left:12px">MT</div>
+      <div class="zoom-role" style="bottom:28px">Participant</div>
+      <div class="zoom-name">Maya Tran</div>
+      <div class="mic-off">🎤</div>
+    </div>
+    <div class="zoom-tile">
+      <div class="zoom-av" style="background:#777;top:12px;left:12px">SK</div>
+      <div class="zoom-role" style="bottom:28px">Participant</div>
+      <div class="zoom-name">Sarah K</div>
+      <div class="mic-off">🎤</div>
+    </div>
+  </div>
+  <div class="s1-chat-bubble" id="s1Bubble" style="right: max(16px, 4vw); bottom: max(16px, 4vh);">
+    <div class="cb-h">James Okafor</div>
+    <div class="cb-r">VP Operations · Hartwell</div>
+    <div class="cb-b">Quick one — how does our activation rate compare to your other customers at the same stage?</div>
+  </div>
+</section>
+
+<style>
+#scene2 { background: transparent; }
+.s2-phase {
+  display: none; position: absolute; inset: 0;
+  justify-content: center; align-items: flex-start;
+  padding-top: 56px;
+  overflow: hidden;
+}
+.s2-phase.active { display: flex; }
+#s2ChatScroll, #s2McpScroll {
+  width: min(680px, 94vw);
+  max-height: min(88vh, 920px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-bottom: 80px;
+}
+#s2ChatScroll::-webkit-scrollbar, #s2McpScroll::-webkit-scrollbar { display: none; }
+.s2-page { width: 100%; display: flex; flex-direction: column; align-items: center; }
+@keyframes pulse-dot2 { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+.s2-team-av {
+  width:84px; height:84px; border-radius:50%; margin-bottom:16px; overflow:hidden;
+  box-shadow:0 0 0 3px var(--bg-deep),0 0 0 5px rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+}
+.s2-team-av img { width:100%; height:100%; object-fit:cover; display:block; }
+.s2-profile { display:flex; flex-direction:column; align-items:center; padding-bottom:24px; width:100%;
+  opacity:0; transform:translateY(8px); transition:all 0.65s cubic-bezier(0.4,0,0.2,1); }
+.s2-profile.visible { opacity:1; transform:translateY(0); }
+.s2-profile.hidden { opacity:0!important; max-height:0!important; padding:0!important; margin:0!important; overflow:hidden!important; pointer-events:none; transition:all 0.4s ease; }
+.s2-name { font-size:22px; font-weight:700; letter-spacing:-0.3px; margin-bottom:3px; }
+.s2-role { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+.s2-badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:#0f766e;
+  background:var(--teal-light); border:1px solid rgba(13,148,136,0.15); padding:5px 14px; border-radius:20px;
+  letter-spacing:.5px; text-transform:uppercase; margin-bottom:5px; }
+.s2-badge-dot { width:6px; height:6px; border-radius:50%; background:#0d9488; animation:pulse-dot2 2s ease-in-out infinite; }
+.s2-profile-context {
+  font-size: 13px; color: var(--text-secondary); text-align: center; max-width: 420px; line-height: 1.5; margin-top: 4px;
+}
+.s2-profile-context b { color: var(--text-primary); font-weight: 600; }
+.s2-customer-strip {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 12px 14px; margin-bottom: 12px;
+  background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.s2-customer-av {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff; letter-spacing: -0.5px;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+}
+.s2-customer-meta { min-width: 0; }
+.s2-customer-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+.s2-customer-name { font-size: 15px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.2px; }
+.s2-input-area { width:100%; margin-top:8px; max-height:500px; overflow:hidden; opacity:0; transform:translateY(8px);
+  transition:opacity 0.5s ease .2s, transform 0.5s ease .2s; }
+.s2-input-area.visible { opacity:1; transform:translateY(0); }
+.s2-input-area.sent { opacity:0; transform:translateY(-8px); max-height:0; margin-top:0; overflow:hidden;
+  transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.45s ease 0.15s, margin-top 0.45s ease 0.15s; }
+.s2-asker-av {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: #fff;
+  box-shadow: 0 0 0 2px rgba(13,148,136,0.25);
+}
+.s2-asker { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.s2-asker-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.s2-asker-name { font-size: 15px; font-weight: 600; }
+.s2-asker-team { font-size: 12px; color: var(--text-tertiary); }
+.s2-asker-customer { font-size: 12px; color: #4f46e5; font-weight: 600; }
+.s2-input-box { width:100%; border:1px solid rgba(0,0,0,.10); border-radius:20px; padding:18px 20px 14px;
+  display:flex; flex-direction:column; gap:10px; background:white; box-shadow:0 2px 20px rgba(0,0,0,.05); }
+.s2-input-text { font-size:17px; min-height:26px; line-height:1.5; color:var(--text-primary); }
+.s2-send { width:38px; height:38px; border-radius:50%; background:#ddd; display:flex; align-items:center; justify-content:center; transition:background .3s,box-shadow .3s; }
+.s2-send.active { background:#0d9488; box-shadow:0 0 16px rgba(13,148,136,.35); }
+.s2-send.clicked { transform:scale(0.9); transition:transform .1s; }
+.s2-content { display:none; width:100%; padding-top:14px; }
+.s2-content.visible { display:block; }
+.s2-sent-wrap { display: none; justify-content: flex-end; margin-bottom: 8px; }
+.s2-sent-wrap.show { display: flex; animation: riseIn2 0.3s ease-out forwards; }
+@keyframes riseIn2 { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.s2-sent-row { display: flex; align-items: flex-end; justify-content: flex-end; gap: 10px; max-width: 100%; }
+.s2-sent-av {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff;
+  box-shadow: 0 0 0 2px rgba(13,148,136,0.2);
+}
+.s2-sent-bubble { background:#f4f4f4; border-radius:18px; padding:14px 20px; max-width:min(85%, 520px); font-size:16px; line-height:1.6; }
+.s2-divider { width:0; height:1px; background:rgba(0,0,0,.08); margin:28px 0; transition:width .7s; }
+.s2-divider.show { width:100%; }
+.s2-thinking { opacity:0; }
+.s2-thinking.show { animation: fadeIn2 0.4s ease forwards; }
+@keyframes fadeIn2 { to{opacity:1} }
+.s2-think-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.s2-think-av { width:38px; height:38px; border-radius:50%; overflow:hidden; flex-shrink:0; background:#e8eef5; }
+.s2-think-av img { width:100%; height:100%; object-fit:cover; }
+.s2-think-label { font-size:15px; color:#888; display:flex; flex-direction:column; gap:4px; }
+.s2-think-label .name { font-weight:600; color:#444; }
+.s2-think-customer-chip {
+  font-size: 12px; font-weight: 600; color: #4f46e5;
+  background: rgba(79,70,229,0.08); border: 1px solid rgba(79,70,229,0.18);
+  padding: 4px 10px; border-radius: 8px; width: fit-content;
+}
+.s2-think-body { border-left:2px solid rgba(0,0,0,.07); margin-left:19px; padding-left:26px; }
+.s2-think-dots { display:inline-flex; gap:3px; margin-left:5px; }
+.s2-think-dots span { width:4px; height:4px; border-radius:50%; background:#bbb; animation:bdot 1.2s ease-in-out infinite; }
+.s2-think-dots span:nth-child(2){animation-delay:.2s} .s2-think-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bdot { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
+.s2-step { opacity:0; transform:translateY(5px); transition:opacity .4s,transform .4s; margin-bottom:16px; }
+.s2-step.show { opacity:1; transform:translateY(0); }
+.s2-step.dim { opacity:.28; }
+.s2-step-label { font-size:13px; color:#888; margin-bottom:6px; font-weight:500; }
+.s2-step-label b { color:#555; }
+.s2-read-line { font-size:11.5px; color:#bbb; margin-top:5px; padding-left:22px; opacity:0; transform:translateX(-4px);
+  transition:opacity .4s,transform .4s; font-family:var(--font-mono); }
+.s2-read-line.show { opacity:1; transform:translateX(0); }
+.s2-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.s2-pill { display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:9px;
+  background:rgba(255,255,255,.7); border:1px solid rgba(0,0,0,.08); font-size:12.5px; color:#666; font-weight:500;
+  opacity:0; transform:translateY(4px); transition:opacity .3s,transform .3s; }
+.s2-pill.show { opacity:1; transform:translateY(0); }
+.s2-reasoning { font-size:13px; line-height:1.65; color:#666; min-height:1.2em; }
+.s2-sandbox-status { display:flex; align-items:center; gap:8px; font-size:13px; color:#666; margin-top:6px; padding-left:4px; opacity:0; transition:opacity 0.4s ease; }
+.s2-sandbox-status.show { opacity:1; }
+.s2-sb-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.s2-sb-dot.orange { background:#f59e0b; }
+.s2-sb-dot.green { background:#22c55e; }
+.s2-code-block { margin-top:8px; border:1px solid rgba(0,0,0,0.10); border-radius:8px; overflow:hidden; font-family:var(--font-mono);
+  opacity:0; transition:opacity 0.4s ease; }
+.s2-code-block.show { opacity:1; }
+.s2-code-header { background:#f5f3f0; padding:6px 14px; border-bottom:1px solid rgba(0,0,0,0.08); }
+.s2-lang { font-size:11px; color:#999; letter-spacing:.4px; }
+.s2-code-body { background:#fafaf8; padding:12px 16px; font-size:11.5px; line-height:1.9; color:#555; white-space:pre; }
+.s2-code-body .st { color:#059669; }
+.s2-code-body .fn { color:#1d4ed8; }
+.s2-output-block { margin-top:8px; border:1px solid rgba(0,0,0,0.08); border-radius:8px; overflow:hidden; font-family:var(--font-mono);
+  opacity:0; transition:opacity 0.4s ease; }
+.s2-output-block.show { opacity:1; }
+.s2-output-header { background:#f5f3f0; padding:5px 14px; font-size:11px; color:#999; border-bottom:1px solid rgba(0,0,0,0.07); }
+.s2-output-body { background:#fafaf8; padding:10px 16px; font-size:11px; line-height:1.9; color:#555; }
+.s2-chart-wrap { width:100%; background:#fff; border-radius:16px; border:1px solid var(--border-subtle);
+  box-shadow:0 4px 24px rgba(0,0,0,.07); padding:28px 32px 24px; opacity:0; transform:translateY(10px); transition:opacity .6s,transform .6s; }
+.s2-chart-wrap.visible { opacity:1; transform:translateY(0); }
+.s2-chart-title { font-size:13px; font-weight:700; margin-bottom:4px; }
+.s2-chart-subtitle { font-size:11px; color:var(--text-tertiary); margin-bottom:16px; font-family:var(--font-mono); letter-spacing:.4px; }
+.s2-chart-legend { display:flex; gap:20px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+.s2-legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:#555; }
+.s2-legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.s2-callout { margin-top:16px; padding:12px 16px; background:rgba(224,92,92,.06); border-left:3px solid #e05c5c;
+  border-radius:0 8px 8px 0; font-size:13px; line-height:1.6; color:#555; opacity:0; transition:opacity .5s; }
+.s2-callout.visible { opacity:1; }
+.s2-callout b { color:#e05c5c; font-weight:700; }
+.s2-mcp-wrap { width:100%; max-width: 560px; margin-top: 16px; }
+.s2-mcp-status {
+  background: rgba(255,255,255,0.7); border: 1px solid var(--border-subtle); border-radius: 12px;
+  padding: 10px 14px; font-size: 12px; font-family: var(--font-mono); color: #555;
+}
+.s2-mcp-line { margin-top: 8px; opacity: 0; transition: opacity 0.35s; }
+.s2-mcp-line.show { opacity: 1; }
+.s2-mcp-line.indent { padding-left: 18px; color: #666; }
+.s2-mcp-line.done { color: #22c55e; font-weight: 600; }
+.s2-mcp-chart-mini .s2-chart-wrap { padding: 16px 18px; margin-bottom: 12px; }
+#s2Cursor {
+  position: fixed; z-index: 200; width: 20px; height: 20px;
+  left: 0; top: 0;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+/* Scene 3 layout */
+#scene3 { background: var(--zoom-bg); }
+.zoom-grid-s3 {
+  position: absolute; inset: 0;
+  padding: max(8px, 4vh) max(8px, 4vw);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 8px;
+  opacity: 0;
+}
+.zoom-grid-s3 .priya-main { grid-row: 1 / 4; }
+.zoom-slide-real {
+  position: absolute; left: 28px; right: 28px; top: 52px; bottom: 20px;
+  background: #fff; border-radius: 8px; padding: 20px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  animation: s3pulse 2s ease-in-out infinite;
+}
+@keyframes s3pulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 2px rgba(34,197,94,0.5); }
+  50% { box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 2px rgba(34,197,94,0.15); }
+}
+.s3-slide-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 14px; }
+.s3-bar-row { margin-bottom: 10px; }
+.s3-bar-label { font-size: 10px; color: #888; margin-bottom: 4px; }
+.s3-bar-track { height: 14px; background: #eee; border-radius: 4px; overflow: hidden; }
+.s3-bar-fill { height: 100%; border-radius: 4px; width: 0; transition: width 0.5s ease; will-change: width; }
+.s3-slide-foot { font-size: 11px; color: #666; margin-top: 12px; }
+</style>
+
+<section id="scene2">
+  <div class="s2-phase active" id="s2PhaseTwin">
+    <div id="s2ChatScroll">
+      <div class="s2-page">
+        <div class="s2-profile" id="s2Profile">
+          <div class="s2-team-av"><img src="assets/s3-data-analytics.jpg" width="84" height="84" alt=""></div>
+          <div class="s2-name">Data Analytics Team</div>
+          <div class="s2-role">Team Twin</div>
+          <div class="s2-badge"><span class="s2-badge-dot"></span>Team Twin</div>
+          <p class="s2-profile-context">Answering Priya's question about <b>Hartwell Group</b> — your team is the <b>customer</b>; cohorts labeled &ldquo;all customers&rdquo; are everyone else in the benchmark.</p>
+        </div>
+        <div class="s2-input-area" id="s2InputArea">
+          <div class="s2-customer-strip" id="s2CustomerStrip">
+            <div class="s2-customer-av" title="Hartwell Group">HG</div>
+            <div class="s2-customer-meta">
+              <div class="s2-customer-label">Customer account</div>
+              <div class="s2-customer-name">Hartwell Group</div>
+            </div>
+          </div>
+          <div class="s2-asker">
+            <div class="s2-asker-av" title="Priya Shah">PS</div>
+            <div class="s2-asker-text">
+              <span class="s2-asker-name">Priya Shah</span>
+              <span class="s2-asker-team">Delivery Lead · Viven</span>
+              <span class="s2-asker-customer">Question about customer: Hartwell Group</span>
+            </div>
+          </div>
+          <div class="s2-input-box">
+            <div class="s2-input-text" id="s2InputText"></div>
+            <div style="display:flex;justify-content:flex-end">
+              <div class="s2-send" id="s2SendBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="15" height="15" color="#fff">
+                  <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="s2-content" id="s2Content">
+          <div class="s2-sent-wrap" id="s2SentWrap">
+            <div class="s2-sent-row">
+              <div class="s2-sent-bubble" id="s2SentText"></div>
+              <div class="s2-sent-av" title="Priya Shah">PS</div>
+            </div>
+          </div>
+          <div class="s2-divider" id="s2Div1"></div>
+          <div class="s2-thinking" id="s2Thinking">
+            <div class="s2-think-header">
+              <div class="s2-think-av"><img src="assets/s3-data-analytics.jpg" width="38" height="38" alt="Data Analytics Team"></div>
+              <div class="s2-think-label">
+                <div><span class="name">Data Analytics Team</span><span id="s2ThinkLabel"> is thinking</span>
+                <span class="s2-think-dots"><span></span><span></span><span></span></span></div>
+                <div class="s2-think-customer-chip">Customer: Hartwell Group</div>
+              </div>
+            </div>
+            <div class="s2-think-body" id="s2ThinkBody">
+              <div class="s2-step" id="s2Step1">
+                <div class="s2-step-label"><b>Understanding query</b></div>
+                <div id="s2QL1" class="s2-read-line">Customer = Hartwell Group — 90-day activation window for benchmarking</div>
+                <div id="s2QL2" class="s2-read-line">Comparing Hartwell Group vs P25 / P50 / P75 (all other customers)</div>
+                <div id="s2QL3" class="s2-read-line">Scoping to Week-1 activation rate as primary metric</div>
+              </div>
+              <div class="s2-step" id="s2Step2">
+                <div class="s2-step-label"><b>Locating data source</b></div>
+                <div class="s2-pills" id="s2Pills"></div>
+              </div>
+              <div class="s2-step" id="s2Step3">
+                <div class="s2-step-label"><b>Initialising compute environment</b></div>
+                <div class="s2-sandbox-status" id="s2SbInit"><span class="s2-sb-dot orange"></span>Initialising sandbox...</div>
+                <div class="s2-sandbox-status" id="s2SbReady" style="display:none"><span class="s2-sb-dot green"></span>Sandbox ready in 2.8s</div>
+              </div>
+              <div class="s2-step" id="s2Step4">
+                <div class="s2-step-label"><b>Calculating activation delta</b></div>
+                <div class="s2-code-block" id="s2CodeBlock">
+                  <div class="s2-code-header"><span class="s2-lang">python</span></div>
+                  <div class="s2-code-body" id="s2CodeBody"></div>
+                </div>
+                <div class="s2-output-block" id="s2OutputBlock" style="display:none">
+                  <div class="s2-output-header">Output</div>
+                  <div class="s2-output-body" id="s2OutputBody"></div>
+                </div>
+              </div>
+              <div class="s2-step" id="s2Step5">
+                <div class="s2-step-label"><b>Building visualization</b></div>
+                <div class="s2-reasoning" id="s2Reasoning"></div>
+              </div>
+            </div>
+          </div>
+          <div class="s2-divider" id="s2Div2"></div>
+          <div id="s2RespWrap" style="display:none;width:100%">
+            <div class="s2-chart-wrap" id="s2ChartWrap">
+              <div class="s2-chart-title">Week-1 Activation Rate — Hartwell Group vs All Customers</div>
+              <div class="s2-chart-subtitle">6-QUARTER TREND · % USERS ACTIVE IN FIRST 7 DAYS</div>
+              <div class="s2-chart-legend">
+                <div class="s2-legend-item"><div class="s2-legend-dot" style="background:#5b8dee"></div>Median (all customers)</div>
+                <div class="s2-legend-item"><div class="s2-legend-dot" style="background:#e05c5c"></div>Hartwell Group <span style="color:var(--text-tertiary);font-weight:500">(customer)</span></div>
+              </div>
+              <canvas id="s2ChartCanvas" width="620" height="280"></canvas>
+              <div class="s2-callout" id="s2Callout"><b>Hartwell sits at P28</b> — 13pp below median. Accounts that complete SSO config in Week 1 activate at 2.1× the rate of those who don't. 3 of 5 Hartwell workspaces are not SSO-configured.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="s2-phase" id="s2PhaseMcp">
+    <div id="s2McpScroll">
+      <div class="s2-page s2-mcp-wrap">
+        <div class="s2-mcp-chart-mini">
+          <div class="s2-chart-wrap visible" id="s2McpChartCard">
+            <div class="s2-chart-title">Week-1 Activation Rate — Hartwell Group vs All Customers</div>
+            <canvas id="s2McpCanvas" width="520" height="220"></canvas>
+          </div>
+        </div>
+        <div class="s2-input-area visible" id="s2McpInputArea" style="opacity:0">
+          <div class="s2-input-box">
+            <div class="s2-input-text" id="s2McpInputText"></div>
+            <div style="display:flex;justify-content:flex-end">
+              <div class="s2-send" id="s2McpSendBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="15" height="15" color="#fff">
+                  <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="s2-mcp-status" id="s2McpStatus" style="display:none;margin-top:14px">
+          <div class="s2-mcp-line" id="s2McpL0"></div>
+          <div class="s2-mcp-line indent" id="s2McpL1"></div>
+          <div class="s2-mcp-line indent" id="s2McpL2"></div>
+          <div class="s2-mcp-line done" id="s2McpL3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="scene3">
+  <div class="zoom-grid-s3" id="s3ZoomGrid">
+    <div class="zoom-tile priya-main" id="s3Priya">
+      <div class="zoom-av" style="background:var(--teal)">PS</div>
+      <div class="zoom-live"></div>
+      <div class="zoom-sharing">● Sharing</div>
+      <div class="zoom-role">Delivery Lead · Hartwell Review</div>
+      <div class="zoom-name">Priya Shah</div>
+      <div class="zoom-slide-real" id="s3SlideCard">
+        <div class="s3-slide-title">Activation Benchmark</div>
+        <div class="s3-bar-row"><div class="s3-bar-label">Hartwell 34%</div><div class="s3-bar-track"><div class="s3-bar-fill" id="s3Bar1" style="background:#e05c5c"></div></div></div>
+        <div class="s3-bar-row"><div class="s3-bar-label">Median 47%</div><div class="s3-bar-track"><div class="s3-bar-fill" id="s3Bar2" style="background:#9e9e9e"></div></div></div>
+        <div class="s3-bar-row"><div class="s3-bar-label">Top Q 63%</div><div class="s3-bar-track"><div class="s3-bar-fill" id="s3Bar3" style="background:#5b8dee"></div></div></div>
+        <div class="s3-slide-foot">SSO config gap — 3 of 5 workspaces</div>
+      </div>
+    </div>
+    <div class="zoom-tile"><div class="zoom-av" style="background:#5c6bc0;top:12px;left:12px">JO</div><div class="zoom-live"></div><div class="zoom-role" style="bottom:28px">VP Operations · Hartwell Group</div><div class="zoom-name">James Okafor</div></div>
+    <div class="zoom-tile"><div class="zoom-av" style="background:#666;top:12px;left:12px">MT</div><div class="zoom-role" style="bottom:28px">Participant</div><div class="zoom-name">Maya Tran</div><div class="mic-off">×</div></div>
+    <div class="zoom-tile"><div class="zoom-av" style="background:#777;top:12px;left:12px">SK</div><div class="zoom-role" style="bottom:28px">Participant</div><div class="zoom-name">Sarah K</div><div class="mic-off">×</div></div>
+  </div>
+  <div class="s1-chat-bubble" id="s3Bubble" style="right: max(16px, 4vw); bottom: max(16px, 4vh);">
+    <div class="cb-h">James Okafor</div>
+    <div class="cb-r">VP Operations · Hartwell</div>
+    <div class="cb-b">My Recommendation: Start discussion with Delay. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.</div>
+  </div>
+</section>
+
+<section id="scene4"></section>
+
+<div id="s2Cursor">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M4 2L16 10L10 11.5L7 18L4 2Z" fill="white" stroke="#333" stroke-width="1.2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="scene-indicator" id="controls">
+  Scene <span id="sceneNum">1</span> &nbsp;·&nbsp;
+  <kbd onclick="switchScene(1)">1</kbd>
+  <kbd onclick="switchScene(2)">2</kbd>
+  <kbd onclick="switchScene(3)">3</kbd>
+  <kbd onclick="switchScene(4)">4</kbd>
+  &nbsp;·&nbsp;
+  <kbd onclick="switchScene(SCENE)">R</kbd> Replay
+  &nbsp;·&nbsp;
+  <kbd onclick="toggleControls()">H</kbd>
+</div>
+
+<div class="slack-popup" id="slackPopup">
+  <div class="slack-card">
+    <div class="slack-header">
+      <div class="slack-source">
+        <svg width="24" height="24" viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" style="display:block" clip-rule="evenodd" fill-rule="evenodd">
+          <path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/>
+          <path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/>
+          <path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/>
+          <path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/>
+        </svg>
+      </div>
+      <div>
+        <div class="slack-sender">Lisa Torres <span style="font-weight:400;color:var(--text-secondary);font-size:13px">(Manager)</span></div>
+      </div>
+    </div>
+    <div class="slack-body">
+      Priya that was sharp. Hartwell just confirmed the renewal. Nice work today 🎉
+    </div>
+  </div>
+</div>
+
+<div id="s4ZoomEnd"><div class="ended-txt">This meeting has ended</div></div>
+<div id="s4WarmOverlay"></div>
+
+<div class="title-card" id="titleCardEnd">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-endline="1">Every</span>
+    <span class="tc-word emphasis" data-endline="1">question.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word emphasis tc-answered" data-endline="2">Answered.</span>
+  </div>
+</div>
+
+<script>
+let SCENE = 1;
+const timeouts = [];
+function st(fn, delay) { timeouts.push(setTimeout(fn, delay)); }
+function clearAllTimeouts() { timeouts.forEach(clearTimeout); timeouts.length = 0; }
+function sleep(ms) { return new Promise(r => { const t = setTimeout(r, ms); timeouts.push(t); }); }
+const $ = id => document.getElementById(id);
+
+function chatScrollDown(id) {
+  const el = $(id); if (!el) return;
+  gsap.to(el, { scrollTop: el.scrollHeight, duration: 0.65, ease: 'power2.out' });
+}
+
+function toggleControls() { $('controls').classList.toggle('hidden-ctrl'); }
+
+const GDOC_SVG = `<svg viewBox="0 0 48 48" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M30 0H8C5.8 0 4 1.8 4 4v40c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4V14L30 0z"/><path fill="#1a6fc4" d="M30 0v14h14z" opacity=".65"/></svg>`;
+const DB_SVG = `<svg viewBox="0 0 24 24" width="15" height="15"><ellipse cx="12" cy="6" rx="8" ry="3" fill="#6366f1"/><path d="M4 6v4c0 1.7 3.6 3 8 3s8-1.3 8-3V6" fill="#818cf8"/><path d="M4 11v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4" fill="#6366f1"/></svg>`;
+const GDRIVE_PILL = `<svg viewBox="0 0 24 24" width="15" height="15"><path d="M4.433 22l-2.433-4.21 6-10.393 2.433 4.21z" fill="#0F9D58"/><path d="M15.567 22H4.433L8.866 14.393h12.701z" fill="#00832D"/><path d="M15.567 22l2.433-4.21-6-10.393L9.567 11.6z" fill="#FBB900"/><path d="M12 7.603l-2.434-4.21h4.867z" fill="#EA4335"/></svg>`;
+const SLACK_PILL = `<svg viewBox="0 0 2447.6 2452.5" width="15" height="15" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>`;
+
+const S2Q = "Hartwell Group Week-1 activation vs customer median — 90 days post-onboarding";
+const S2_REASONING = "Hartwell at P28 — 13pp below median. Pattern matches accounts with incomplete SSO configuration. Annotating trend across 6 quarters.";
+const S2_MCQ = "@gdoc update Slide 4 with this chart and the SSO activation insight";
+
+function gTo(target, vars) {
+  return new Promise(resolve => { gsap.to(target, { ...vars, onComplete: resolve }); });
+}
+
+const QUARTERS = ["Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24"];
+const MEDIAN_LINE = [51, 52, 50, 49, 48, 47];
+const HARTWELL_LINE = [55, 52, 47, 42, 38, 34];
+
+function drawChart201(canvas, progress) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const P = { top: 24, right: 24, bottom: 36, left: 44 };
+  const CW = W - P.left - P.right, CH = H - P.top - P.bottom;
+  const n = QUARTERS.length;
+  const pts = Math.max(0, Math.min(n - 1, Math.round(progress * (n - 1))));
+  const minY = 0, maxY = 80;
+  function xp(i) { return P.left + (i / (n - 1)) * CW; }
+  function yp(v) { return P.top + (1 - (v - minY) / (maxY - minY)) * CH; }
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)'; ctx.lineWidth = 1;
+  [0, 20, 40, 60, 80].forEach(v => {
+    const y = yp(v);
+    ctx.beginPath(); ctx.moveTo(P.left, y); ctx.lineTo(P.left + CW, y); ctx.stroke();
+    ctx.fillStyle = '#bbb'; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(v + '%', P.left - 6, y + 3.5);
+  });
+  ctx.fillStyle = '#999'; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center';
+  QUARTERS.forEach((w, i) => ctx.fillText(w, xp(i), H - P.bottom + 14));
+  if (progress > 2 / (n - 1)) {
+    const xA = xp(3);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(xA, P.top); ctx.lineTo(xA, P.top + CH); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#5b8dee'; ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  for (let i = 0; i <= pts; i++) { i === 0 ? ctx.moveTo(xp(i), yp(MEDIAN_LINE[i])) : ctx.lineTo(xp(i), yp(MEDIAN_LINE[i])); }
+  ctx.stroke();
+  ctx.strokeStyle = '#e05c5c'; ctx.setLineDash([]);
+  ctx.beginPath();
+  for (let i = 0; i <= pts; i++) { i === 0 ? ctx.moveTo(xp(i), yp(HARTWELL_LINE[i])) : ctx.lineTo(xp(i), yp(HARTWELL_LINE[i])); }
+  ctx.stroke();
+  for (let i = 0; i <= pts; i++) {
+    ctx.beginPath(); ctx.arc(xp(i), yp(MEDIAN_LINE[i]), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#5b8dee'; ctx.lineWidth = 2; ctx.stroke();
+  }
+  for (let i = 0; i <= pts; i++) {
+    ctx.beginPath(); ctx.arc(xp(i), yp(HARTWELL_LINE[i]), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#e05c5c'; ctx.lineWidth = 2; ctx.stroke();
+  }
+  if (progress >= 0.98) {
+    ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#e05c5c'; ctx.fillText('34%', xp(n - 1) + 8, yp(HARTWELL_LINE[n - 1]) - 4);
+    ctx.fillStyle = '#5b8dee'; ctx.fillText('47%', xp(n - 1) + 8, yp(MEDIAN_LINE[n - 1]) + 14);
+  }
+}
+
+let s1Tweens = [];
+let s2Running = false, s2Resetting = false;
+let s3Running = false, s3Resetting = false;
+let s4Running = false, s4Resetting = false;
+
+const s2cur = $('s2Cursor');
+function s2ShowCursor(x, y) { s2cur.style.left = x + 'px'; s2cur.style.top = y + 'px'; s2cur.style.opacity = '1'; }
+function s2HideCursor() { s2cur.style.opacity = '0'; }
+function s2MoveCursor(x, y, dur, cb) {
+  const start = performance.now();
+  const fx = parseFloat(s2cur.style.left) || x, fy = parseFloat(s2cur.style.top) || y;
+  function step(now) {
+    const t = Math.min((now - start) / dur, 1), e = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    s2cur.style.left = (fx + (x - fx) * e) + 'px'; s2cur.style.top = (fy + (y - fy) * e) + 'px';
+    if (t < 1) requestAnimationFrame(step); else if (cb) cb();
+  }
+  requestAnimationFrame(step);
+}
+
+async function s2StreamHTML(container, html, speed = 8) {
+  const tmp = document.createElement('div'); tmp.innerHTML = html;
+  const cur = document.createElement('span'); cur.className = 's2-stream-cursor';
+  async function walk(src, tgt) {
+    for (const child of src.childNodes) {
+      if (s2Resetting) return;
+      if (child.nodeType === Node.TEXT_NODE) {
+        const txt = child.textContent; const tn = document.createTextNode(''); tgt.appendChild(tn);
+        for (let i = 0; i < txt.length; i++) {
+          if (s2Resetting) return;
+          tn.textContent += txt[i];
+          if (cur.parentNode) cur.remove(); tgt.appendChild(cur);
+          await sleep(txt[i] === ' ' ? speed * 0.3 : speed);
+        }
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        const el = document.createElement(child.tagName.toLowerCase());
+        for (const a of child.attributes) el.setAttribute(a.name, a.value);
+        tgt.appendChild(el);
+        await walk(child, el);
+      }
+    }
+  }
+  await walk(tmp, container);
+  if (cur.parentNode) cur.remove();
+}
+
+function killS1() {
+  s1Tweens.forEach(t => t.kill());
+  s1Tweens = [];
+}
+
+function reset1() {
+  killS1();
+  $('scene1').classList.remove('active');
+  $('titleCard').classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  gsap.set('#s1ZoomGrid', { opacity: 0, y: 12 });
+  gsap.set('#s1Bubble', { opacity: 0, y: 14, scale: 0.96 });
+}
+
+function run1() {
+  reset1();
+  const tc = $('titleCard');
+  const line1 = document.querySelectorAll('#titleCard .tc-word[data-line="1"]');
+  const line2 = document.querySelectorAll('#titleCard .tc-word[data-line="2"]');
+  st(() => tc.classList.add('visible'), 100);
+  let d = 600;
+  line1.forEach((w, i) => st(() => w.classList.add('visible'), d + i * 200));
+  d += line1.length * 200 + 600;
+  st(() => line1.forEach(w => w.classList.add('dim')), d);
+  d += 200;
+  line2.forEach((w, i) => st(() => w.classList.add('visible'), d + i * 180));
+  const titleHold = d + line2.length * 180 + 2500;
+  st(() => tc.classList.add('fade-out'), titleHold);
+  const zoomStart = titleHold + 900;
+  st(() => {
+    $('scene1').classList.add('active');
+    s1Tweens.push(gsap.to('#s1ZoomGrid', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }));
+  }, zoomStart);
+  st(() => {
+    s1Tweens.push(gsap.to('#s1Bubble', { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power2.out' }));
+  }, zoomStart + 1800);
+}
+
+function reset2() {
+  s2Running = false; s2Resetting = true;
+  setTimeout(() => { s2Resetting = false; }, 60);
+  gsap.killTweensOf('#s2PhaseTwin'); gsap.killTweensOf('#s2PhaseMcp'); gsap.killTweensOf('#s2McpInputArea');
+  gsap.set('#s2Profile', { clearProps: 'opacity,transform' });
+  $('s2PhaseTwin').classList.add('active'); $('s2PhaseMcp').classList.remove('active');
+  gsap.set('#s2PhaseTwin', { opacity: 1 }); gsap.set('#s2PhaseMcp', { opacity: 1 });
+  gsap.set('#s2McpInputArea', { clearProps: 'opacity' });
+  $('s2ChatScroll').scrollTop = 0; $('s2McpScroll').scrollTop = 0;
+  $('s2Profile').classList.remove('visible', 'hidden');
+  $('s2InputArea').classList.remove('visible', 'sent');
+  $('s2InputText').textContent = '';
+  $('s2SendBtn').classList.remove('active', 'clicked');
+  $('s2Content').classList.remove('visible');
+  $('s2SentWrap').classList.remove('show'); $('s2SentText').textContent = '';
+  $('s2Div1').classList.remove('show');
+  $('s2Thinking').classList.remove('show');
+  $('s2ThinkLabel').textContent = ' is thinking';
+  $('s2ThinkBody').style.display = '';
+  const dots = $('s2Thinking').querySelector('.s2-think-dots');
+  if (dots) dots.style.display = '';
+  ['s2Step1', 's2Step2', 's2Step3', 's2Step4', 's2Step5'].forEach(id => $(id).classList.remove('show', 'dim'));
+  ['s2QL1', 's2QL2', 's2QL3'].forEach(id => $(id).classList.remove('show'));
+  $('s2Pills').innerHTML = ''; $('s2Reasoning').textContent = '';
+  ['s2SbInit', 's2SbReady'].forEach(id => {
+    const el = $(id); if (!el) return;
+    el.classList.remove('show'); el.style.display = id === 's2SbReady' ? 'none' : '';
+  });
+  $('s2CodeBlock').classList.remove('show'); $('s2CodeBody').innerHTML = '';
+  const ob = $('s2OutputBlock'); ob.classList.remove('show'); ob.style.display = 'none';
+  $('s2Div2').classList.remove('show');
+  $('s2RespWrap').style.display = 'none';
+  $('s2ChartWrap').classList.remove('visible'); $('s2Callout').classList.remove('visible');
+  const c1 = $('s2ChartCanvas'), c2 = $('s2McpCanvas');
+  [c1, c2].forEach(cv => { if (cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height); });
+  $('s2McpInputArea').classList.remove('sent'); $('s2McpInputArea').style.opacity = '0';
+  $('s2McpInputText').textContent = '';
+  $('s2McpSendBtn').classList.remove('active', 'clicked');
+  $('s2McpStatus').style.display = 'none';
+  ['s2McpL0', 's2McpL1', 's2McpL2', 's2McpL3'].forEach(id => { const e = $(id); e.classList.remove('show'); e.innerHTML = ''; });
+  s2HideCursor();
+}
+
+async function s2AnimateMainChart() {
+  const cv = $('s2ChartCanvas');
+  for (let f = 0; f <= 60; f++) {
+    if (s2Resetting) return;
+    drawChart201(cv, f / 60);
+    await sleep(18);
+  }
+}
+
+async function run2Inner() {
+  if (s2Running) return;
+  s2Running = true; s2Resetting = false;
+  $('scene2').classList.add('active');
+  await sleep(200); if (s2Resetting) return;
+  $('s2Profile').classList.add('visible');
+  $('s2InputArea').classList.add('visible');
+  await sleep(900); if (s2Resetting) return;
+  const el = $('s2InputText');
+  for (let i = 0; i < S2Q.length; i++) {
+    if (s2Resetting) return;
+    el.textContent = S2Q.substring(0, i + 1);
+    if (i >= Math.floor(S2Q.length * 0.88)) $('s2SendBtn').classList.add('active');
+    await sleep(34 + Math.random() * 16);
+  }
+  await sleep(360); if (s2Resetting) return;
+  const sb = $('s2SendBtn'), sbr = sb.getBoundingClientRect();
+  s2ShowCursor(sbr.left - 55, sbr.top + 28);
+  s2MoveCursor(sbr.left + sbr.width / 2 - 4, sbr.top + sbr.height / 2 - 4, 480);
+  await sleep(580); if (s2Resetting) return;
+  sb.classList.add('clicked'); await sleep(110); if (s2Resetting) return;
+  sb.classList.remove('clicked'); s2HideCursor();
+  await sleep(280); if (s2Resetting) return;
+  $('s2Profile').classList.add('hidden');
+  $('s2InputArea').classList.add('sent');
+  await sleep(500); if (s2Resetting) return;
+  $('s2Content').classList.add('visible');
+  $('s2SentText').textContent = S2Q;
+  $('s2SentWrap').classList.add('show');
+  await sleep(700); if (s2Resetting) return;
+  $('s2Div1').classList.add('show');
+  await sleep(600); if (s2Resetting) return;
+  $('s2Thinking').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  await sleep(500); if (s2Resetting) return;
+  $('s2Step1').classList.add('show');
+  await sleep(400); $('s2QL1').classList.add('show');
+  await sleep(700); $('s2QL2').classList.add('show');
+  await sleep(700); $('s2QL3').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  await sleep(1400); if (s2Resetting) return;
+  $('s2Step1').classList.add('dim'); $('s2Step2').classList.add('show');
+  const pills = [
+    { h: `${DB_SVG}<span class="count">847 accounts</span> Customer Activation DB` },
+    { h: `${GDRIVE_PILL}<span class="count">Q2 2023 – Q3 2024</span> Cohort Reports` },
+    { h: `${SLACK_PILL}<span class="count">12 threads</span> #customer-analytics` }
+  ];
+  pills.forEach((p, i) => {
+    const d = document.createElement('div'); d.className = 's2-pill'; d.innerHTML = p.h;
+    $('s2Pills').appendChild(d);
+    st(() => d.classList.add('show'), i * 180);
+  });
+  await sleep(2600); if (s2Resetting) return;
+  $('s2Step2').classList.add('dim'); $('s2Step3').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  $('s2SbInit').classList.add('show');
+  await sleep(1200); if (s2Resetting) return;
+  $('s2SbReady').style.display = 'flex';
+  await sleep(80); $('s2SbReady').classList.add('show');
+  await sleep(1000); if (s2Resetting) return;
+  $('s2Step3').classList.add('dim'); $('s2Step4').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  $('s2CodeBlock').classList.add('show');
+  const codeLines = [
+    `<span class="st">df</span> = load_cohort_data(customer=<span class="st">"hartwell_group"</span>, window=<span class="st">90</span>)`,
+    `<span class="st">benchmark</span> = load_all_customers(metric=<span class="st">"week1_activation"</span>, window=<span class="st">90</span>)`,
+    `<span class="st">result</span> = <span class="fn">compare_percentiles</span>(df, benchmark, metric=<span class="st">"week1_act_rate"</span>)`,
+    `print(result.to_string())`
+  ];
+  for (let i = 0; i < codeLines.length; i++) {
+    if (s2Resetting) return;
+    $('s2CodeBody').innerHTML += codeLines[i] + '\n';
+    chatScrollDown('s2ChatScroll');
+    await sleep(320);
+  }
+  await sleep(800); if (s2Resetting) return;
+  $('s2OutputBlock').style.display = 'block';
+  $('s2OutputBody').innerHTML = 'account           week1_act   percentile<br>Hartwell Group    34%         <span style="color:#e05c5c;font-weight:700">P28</span><br>All customers     47% (med)   P50<br>Top quartile      63%         P75<br><span style="color:#e05c5c;font-weight:600">← P28</span>';
+  await sleep(50); $('s2OutputBlock').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  await sleep(1400); if (s2Resetting) return;
+  $('s2Step4').classList.add('dim'); $('s2Step5').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  const words = S2_REASONING.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    if (s2Resetting) return;
+    $('s2Reasoning').textContent += (i > 0 ? ' ' : '') + words[i];
+    if (i % 6 === 0) chatScrollDown('s2ChatScroll');
+    await sleep(40 + Math.random() * 20);
+  }
+  await sleep(1200); if (s2Resetting) return;
+  $('s2ThinkBody').style.display = 'none';
+  $('s2ThinkLabel').textContent = '';
+  if ($('s2Thinking').querySelector('.s2-think-dots')) $('s2Thinking').querySelector('.s2-think-dots').style.display = 'none';
+  await sleep(400); if (s2Resetting) return;
+  $('s2Div2').classList.add('show');
+  chatScrollDown('s2ChatScroll');
+  await sleep(500); if (s2Resetting) return;
+  $('s2RespWrap').style.display = 'block';
+  $('s2ChartWrap').classList.add('visible');
+  await sleep(400); if (s2Resetting) return;
+  await s2AnimateMainChart(); if (s2Resetting) return;
+  chatScrollDown('s2ChatScroll');
+  await sleep(500);
+  $('s2Callout').classList.add('visible');
+  chatScrollDown('s2ChatScroll');
+  await sleep(1200); if (s2Resetting) return;
+  await gTo('#s2PhaseTwin', { opacity: 0, duration: 0.35 });
+  $('s2PhaseTwin').classList.remove('active');
+  $('s2PhaseMcp').classList.add('active');
+  gsap.set('#s2PhaseMcp', { opacity: 0 });
+  await gTo('#s2PhaseMcp', { opacity: 1, duration: 0.4 });
+  drawChart201($('s2McpCanvas'), 1);
+  await sleep(400); if (s2Resetting) return;
+  await gTo('#s2McpInputArea', { opacity: 1, duration: 0.45 });
+  const mEl = $('s2McpInputText');
+  for (let i = 0; i < S2_MCQ.length; i++) {
+    if (s2Resetting) return;
+    mEl.textContent = S2_MCQ.substring(0, i + 1);
+    if (i > 10) $('s2McpSendBtn').classList.add('active');
+    await sleep(32 + Math.random() * 12);
+  }
+  await sleep(350); if (s2Resetting) return;
+  const msb = $('s2McpSendBtn'), mr = msb.getBoundingClientRect();
+  s2ShowCursor(mr.left - 50, mr.top + 24);
+  s2MoveCursor(mr.left + mr.width / 2 - 4, mr.top + mr.height / 2 - 4, 420);
+  await sleep(500); if (s2Resetting) return;
+  msb.classList.add('clicked'); await sleep(100); if (s2Resetting) return;
+  msb.classList.remove('clicked'); s2HideCursor();
+  await sleep(250); if (s2Resetting) return;
+  $('s2McpInputArea').classList.add('sent');
+  await sleep(400); if (s2Resetting) return;
+  $('s2McpStatus').style.display = 'block';
+  $('s2McpL0').innerHTML = GDOC_SVG + ' Connecting to presentation...';
+  $('s2McpL0').classList.add('show');
+  await sleep(600); if (s2Resetting) return;
+  $('s2McpL1').textContent = '→ Writing chart to Slide 4';
+  $('s2McpL1').classList.add('show');
+  await sleep(600); if (s2Resetting) return;
+  $('s2McpL2').textContent = '→ Adding activation callout';
+  $('s2McpL2').classList.add('show');
+  await sleep(600); if (s2Resetting) return;
+  $('s2McpL3').textContent = '✓ Slide 4 updated';
+  $('s2McpL3').classList.add('show');
+  await sleep(800); if (s2Resetting) return;
+  s2Running = false;
+}
+
+function run2() { reset2(); run2Inner(); }
+
+function reset3() {
+  s3Running = false; s3Resetting = true;
+  setTimeout(() => { s3Resetting = false; }, 60);
+  gsap.killTweensOf('#s3ZoomGrid'); gsap.killTweensOf('#s3Bubble');
+  $('scene3').classList.remove('active');
+  gsap.set('#s3ZoomGrid', { opacity: 0 });
+  gsap.set('#s3Bubble', { opacity: 0, y: 14, scale: 0.96 });
+  ['s3Bar1', 's3Bar2', 's3Bar3'].forEach((id, i) => { const b = $(id); if (b) b.style.width = '0%'; });
+}
+
+async function run3Inner() {
+  if (s3Running) return;
+  s3Running = true; s3Resetting = false;
+  $('scene3').classList.add('active');
+  await gTo('#s3ZoomGrid', { opacity: 1, duration: 0.6 });
+  await sleep(200); if (s3Resetting) return;
+  st(() => { $('s3Bar1').style.width = '34%'; }, 0);
+  st(() => { $('s3Bar2').style.width = '47%'; }, 200);
+  st(() => { $('s3Bar3').style.width = '63%'; }, 400);
+  await sleep(1800); if (s3Resetting) return;
+  await gTo('#s3Bubble', { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power2.out' });
+  await sleep(2000); if (s3Resetting) return;
+  s3Running = false;
+}
+
+function run3() { reset3(); run3Inner(); }
+
+function reset4() {
+  s4Running = false; s4Resetting = true;
+  setTimeout(() => { s4Resetting = false; }, 60);
+  gsap.killTweensOf('#s4ZoomEnd'); gsap.killTweensOf('#s4WarmOverlay');
+  $('s4ZoomEnd').classList.remove('on');
+  gsap.set('#s4ZoomEnd', { opacity: 0 });
+  gsap.set('#s4WarmOverlay', { opacity: 0 });
+  $('titleCardEnd').classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCardEnd .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  $('slackPopup').classList.remove('visible');
+}
+
+async function run4Inner() {
+  if (s4Running) return;
+  s4Running = true; s4Resetting = false;
+  $('scene4').classList.add('active');
+  $('s4ZoomEnd').classList.add('on');
+  gsap.set('#s4ZoomEnd', { opacity: 1 });
+  await sleep(1000); if (s4Resetting) return;
+  await Promise.all([
+    gTo('#s4ZoomEnd', { opacity: 0, duration: 0.8 }),
+    gTo('#s4WarmOverlay', { opacity: 1, duration: 0.8 })
+  ]);
+  $('s4ZoomEnd').classList.remove('on');
+  await sleep(300); if (s4Resetting) return;
+  $('slackPopup').classList.add('visible');
+  await sleep(3500); if (s4Resetting) return;
+  $('slackPopup').classList.remove('visible');
+  await sleep(400); if (s4Resetting) return;
+  const tc = $('titleCardEnd');
+  tc.classList.add('visible');
+  const line1 = document.querySelectorAll('#titleCardEnd .tc-word[data-endline="1"]');
+  const line2 = document.querySelectorAll('#titleCardEnd .tc-word[data-endline="2"]');
+  await sleep(400); if (s4Resetting) return;
+  line1.forEach((w, i) => st(() => w.classList.add('visible'), i * 220));
+  const d = line1.length * 220 + 500;
+  line2.forEach((w, i) => st(() => w.classList.add('visible'), d + i * 240));
+  s4Running = false;
+}
+
+function run4() { reset4(); run4Inner(); }
+
+function switchScene(num) {
+  clearAllTimeouts();
+  s2Running = false; s2Resetting = true;
+  s3Running = false; s3Resetting = true;
+  s4Running = false; s4Resetting = true;
+  setTimeout(() => { s2Resetting = s3Resetting = s4Resetting = false; }, 60);
+  SCENE = num;
+  $('sceneNum').textContent = num;
+  killS1();
+  reset1();
+  reset2();
+  reset3();
+  reset4();
+  $('scene1').classList.remove('active');
+  $('scene2').classList.remove('active');
+  $('scene3').classList.remove('active');
+  $('scene4').classList.remove('active');
+  $('titleCard').classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  $('titleCardEnd').classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCardEnd .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  $('slackPopup').classList.remove('visible');
+  if (num === 1) run1();
+  if (num === 2) run2();
+  if (num === 3) run3();
+  if (num === 4) run4();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === '1') switchScene(1);
+  if (e.key === '2') switchScene(2);
+  if (e.key === '3') switchScene(3);
+  if (e.key === '4') switchScene(4);
+  if (e.key === 'h' || e.key === 'H') toggleControls();
+  if (e.key === ' ' || e.key === 'r' || e.key === 'R') { e.preventDefault(); switchScene(SCENE); }
+});
+
+window.addEventListener('load', () => switchScene(1));
+</script>
+</body>
+</html>

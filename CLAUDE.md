@@ -14,6 +14,24 @@ The preview server runs from a worktree, not the main directory:
 - Worktree: `/Users/akashbhagat/viven-video-html/.claude/worktrees/goofy-liskov/`
 - After every edit, sync: `cp /Users/akashbhagat/viven-video-html/video2_260331_v10_1.html /Users/akashbhagat/viven-video-html/.claude/worktrees/goofy-liskov/video2_260331_v10_1.html`
 - Preview URL: `http://localhost:3456/video2_260331_v10_1.html`
+- **201 v1 (storylane):** sync `cp /Users/akashbhagat/viven-video-html/viven-video-html/video2_201_v1_020426.html /Users/akashbhagat/viven-video-html/.claude/worktrees/goofy-liskov/video2_201_v1_020426.html`
+- **201 v1 preview:** `http://localhost:3456/video2_201_v1_020426.html`
+
+---
+
+## video2_201_v1_020426.html — Storylane WIP
+
+Working copy for a **new storylane**, built scene-by-scene. Started as a clone of `video2_v3_020426.html` (same single-file pattern: inline CSS/HTML/JS, GSAP, keyboard `switchScene(1–4)`).
+
+Architecture matches the v10 doc below unless this file diverges: `reset[N]` / `run[N]Inner` / `run[N]`, `st()` for timeouts, scene 3→4 push + drag ghost where applicable.
+
+### Scene Map (update as the story is rebuilt)
+| Key | Scene | Story Beat |
+|-----|-------|------------|
+| 1 | Calendar | TBD — revise from v3 clone |
+| 2 | Chat + deck | TBD |
+| 3 | AI analysis | TBD |
+| 4 | Chart → deck | TBD |
 
 ---
 

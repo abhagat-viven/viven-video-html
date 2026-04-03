@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Viven — 101</title>
+<title>Viven — 201 v1 (storylane)</title>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@300;400;500;700&display=swap');
@@ -457,12 +457,12 @@ html, body {
   margin-bottom:16px;
   box-shadow:0 0 0 3px var(--bg-deep),0 0 0 5px rgba(0,0,0,0.08);
 }
-.s2-resp-av-photo {
+.s2-think-av-photo,.s2-resp-av-photo {
   width:38px; height:38px; border-radius:50%; object-fit:cover;
   object-position:center 15%;
   flex-shrink:0;
-  box-shadow:0 0 0 2px rgba(161,150,235,0.3);
 }
+.s2-think-av-photo { box-shadow:0 0 0 2px rgba(161,150,235,0.3); }
 .s2-name { font-size:22px; font-weight:700; letter-spacing:-0.3px; margin-bottom:3px; }
 .s2-role { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
 .s2-badge {
@@ -539,6 +539,20 @@ html, body {
 .s2-thinking { opacity:0; }
 .s2-thinking.show { animation:fadeIn2 0.4s ease forwards; }
 @keyframes fadeIn2 { to{opacity:1} }
+.s2-think-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.s2-think-av {
+  width:38px; height:38px; border-radius:50%;
+  background:linear-gradient(135deg,#1a73e8,#1557b0);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:white; flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(161,150,235,0.3);
+}
+.s2-think-label { font-size:15px; color:#888; }
+.s2-think-label .name { font-weight:600; color:#444; }
+.s2-think-dots { display:inline-flex; gap:3px; margin-left:5px; }
+.s2-think-dots span { width:4px; height:4px; border-radius:50%; background:#bbb; animation:bdot 1.2s ease-in-out infinite; }
+.s2-think-dots span:nth-child(2){animation-delay:.2s} .s2-think-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bdot { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
 .s2-think-body { border-left:2px solid rgba(0,0,0,0.07); margin-left:19px; padding-left:26px; }
 .s2-step { opacity:0; transform:translateY(5px); transition:opacity 0.4s ease,transform 0.4s ease; margin-bottom:18px; }
 .s2-step.show { opacity:1; transform:translateY(0); }
@@ -576,6 +590,8 @@ html, body {
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   animation:shimmer-wave 2s linear infinite;
 }
+.s2-thought-done { font-size:13px; color:#aaa; margin-left:45px; margin-top:10px; opacity:0; }
+.s2-thought-done.show { animation:fadeIn2 0.4s ease forwards; }
 
 /* Response */
 .s2-resp-wrap { margin-top:4px; }
@@ -788,13 +804,9 @@ html, body {
     <span class="tc-word emphasis" data-line="1">meeting</span>
     <span class="tc-word emphasis" data-line="1">tomorrow.</span>
     <span class="tc-break"></span>
-    <span class="tc-word" data-line="2">One</span>
-    <span class="tc-word" data-line="2">big</span>
-    <span class="tc-word emphasis" data-line="2">worry</span>
-    <span class="tc-word" data-line="2">on</span>
-    <span class="tc-word" data-line="2">your</span>
-    <span class="tc-word" data-line="2">mind</span>
-    <span class="tc-word emphasis" data-line="2">Today</span>
+    <span class="tc-word" data-line="2">Questions</span>
+    <span class="tc-word emphasis" data-line="2">unanswered</span>
+    <span class="tc-word emphasis" data-line="2">today.</span>
   </div>
 </div>
 
@@ -997,7 +1009,7 @@ html, body {
         </div>
         <div class="s2-deck-slide">
           <div class="s2-slide s2-slide--hero">
-            <div class="s2-slide-h1">DELAY LAUNCH 2 WEEKS??</div>
+            <div class="s2-slide-h1">DELAY LAUNCH ?</div>
             <div class="s2-bar" style="width:48%"></div>
             <div class="s2-bars-section">
               <div class="s2-bar-sm" style="width:88%"></div>
@@ -1059,6 +1071,14 @@ html, body {
         <div class="s2-divider" id="s2Div1"></div>
 
         <div class="s2-thinking" id="s2Thinking">
+          <div class="s2-think-header">
+            <img class="s2-think-av-photo" src="assets/s2-jenny-peters-portrait.jpg" width="38" height="38" alt="">
+            <div class="s2-think-label">
+              <span class="name">Jenny Peters</span>
+              <span id="s2ThinkLabel"> is thinking</span>
+              <span class="s2-think-dots"><span></span><span></span><span></span></span>
+            </div>
+          </div>
           <div class="s2-think-body" id="s2ThinkBody">
             <div class="s2-step" id="s2Step1">
               <div class="s2-step-label"><b>Reading</b> your deck</div>
@@ -1079,6 +1099,9 @@ html, body {
             </div>
           </div>
         </div>
+
+        <div class="s2-thought-done" id="s2ThoughtDone"></div>
+        <div class="s2-divider" id="s2Div2"></div>
 
         <div class="s2-resp-wrap" id="s2RespWrap" style="display:none">
           <div class="s2-resp-header">
@@ -1121,7 +1144,7 @@ html, body {
         </div>
         <div class="s2-deck-slide">
           <div class="s2-slide s2-slide--hero">
-            <div class="s2-slide-h1">DELAY LAUNCH 2 WEEKS</div>
+            <div class="s2-slide-h1">DELAY LAUNCH</div>
             <div class="s2-bar" style="width:48%"></div>
             <div class="s3-decision-area" id="s3DecisionArea">
               <ul class="s3-decision-list">
@@ -1447,7 +1470,7 @@ const S2_SOURCES = [
 const S2_REASONING = "The onboarding drop-off is fresh and fixable — launching now risks early churn. A short delay is easier to explain than a bad Month 1 retention number.";
 
 /* {doc} = deck citation — rendered as inline icon in s2StreamResponse */
-const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible. The scope is specific, the fix is targeted, and you have the data to back it up.{doc} What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My Recommendation:{/b} Start discussion with Delay. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
+const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible. The scope is specific, the fix is targeted, and you have the data to back it up.{doc} What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My recommendation{/b}: open with the delay. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
 
 const S2_DECK_CIT_ICON = `<span class="s2-inline-cit" title="Launch_Update.pptx"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 
@@ -1583,6 +1606,7 @@ function reset2() {
   $('s2SentText').textContent = '';
   $('s2Div1').classList.remove('show');
   $('s2Thinking').classList.remove('show');
+  $('s2ThinkLabel').textContent = ' is thinking';
   const s2tb = $('s2ThinkBody');
   if (s2tb) s2tb.style.display = '';
   ['s2Step1', 's2Step2', 's2Step3'].forEach(id => $(id).classList.remove('show', 'dim'));
@@ -1590,6 +1614,8 @@ function reset2() {
   ['s2ReadLine1', 's2ReadLine2'].forEach(id => $(id).classList.remove('show'));
   $('s2Pills').innerHTML = '';
   $('s2Reasoning').textContent = '';
+  $('s2ThoughtDone').classList.remove('show'); $('s2ThoughtDone').textContent = '';
+  $('s2Div2').classList.remove('show');
   $('s2RespWrap').style.display = 'none';
   $('s2Response').innerHTML = '';
 
@@ -1600,6 +1626,7 @@ function reset2() {
 async function run2Inner() {
   s2Running = true;
   const deck = $('s2Deck');
+  const chip = $('s2FileChip');
   const profile = $('s2Profile');
   const inputArea = $('s2InputArea');
 
@@ -1609,9 +1636,22 @@ async function run2Inner() {
   gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
   await sleep2(3200); if (s2Resetting) return;
 
-  // ── Beat 2: Deck fades out (no shrink-to-chip — straight into chat) ──
-  gsap.to(deck, { opacity: 0, y: -10, duration: 0.5, ease: 'power2.in' });
-  await sleep2(450); if (s2Resetting) return;
+  // ── Beat 2: Deck shrinks to chip (overlap chip fade for smoother handoff) ──
+  chip.style.left = (window.innerWidth / 2 - 170) + 'px';
+  chip.style.top  = (window.innerHeight * 0.48) + 'px';
+  chip.classList.add('show'); // display:flex but opacity still 0
+
+  const deckRect = deck.getBoundingClientRect();
+  const chipRect = chip.getBoundingClientRect();
+  const dx = (chipRect.left + chipRect.width / 2)  - (deckRect.left + deckRect.width / 2);
+  const dy = (chipRect.top  + chipRect.height / 2) - (deckRect.top  + deckRect.height / 2);
+
+  gsap.to(chip, { opacity: 1, duration: 0.45, delay: 0.34, ease: 'power2.out' });
+  gsap.to(deck, {
+    x: dx, y: dy, scale: 0.05, opacity: 0,
+    duration: 0.78, ease: 'power3.inOut',
+  });
+  await sleep2(900); if (s2Resetting) return;
 
   // ── Beat 3: Chat phase + frame fade-in ─────────────────────────
   $('s2DocPhase').classList.remove('active');
@@ -1714,12 +1754,16 @@ async function run2Inner() {
   await sleep2(4200); if (s2Resetting) return;
   $('s2Step3').classList.add('dim');
 
-  // Collapse thinking steps before response
+  // Done
+  $('s2ThinkLabel').textContent = ' thought for 5s';
   $('s2ThinkBody').style.display = 'none';
+  $('s2ThoughtDone').textContent = 'Thought for 5 seconds';
+  $('s2ThoughtDone').classList.add('show');
   await sleep2(400); if (s2Resetting) return;
 
   // ── Beat 8: Response ───────────────────────────────────────────
-  await sleep2(400); if (s2Resetting) return;
+  $('s2Div2').classList.add('show');
+  await sleep2(800); if (s2Resetting) return;
 
   $('s2RespWrap').style.display = 'block';
   await sleep2(200); if (s2Resetting) return;
@@ -1860,7 +1904,7 @@ async function run4Inner() {
   $('s4SlackPopup').classList.add('visible');
   await sleep2(320); if (s4Resetting) return;
   $('s4FwStage').querySelectorAll('.s4-fw-dot').forEach(d => d.classList.add('burst'));
-  await sleep2(3500); if (s4Resetting) return;
+  await sleep2(2400); if (s4Resetting) return;
 
   $('s4SlackPopup').classList.remove('visible');
   $('s4SlackPopup').classList.add('hiding');
