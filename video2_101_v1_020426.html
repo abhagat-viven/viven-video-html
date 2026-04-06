@@ -354,6 +354,16 @@ html, body {
 }
 .s2-chat-frame::-webkit-scrollbar { display:none; }
 
+/* Stack doc phase above chat for invisible layout measurement */
+#s2DocPhase.active { z-index: 2; }
+#s2ChatPhase.active { z-index: 1; }
+/* Measure attachment target while deck stays visible on top */
+#s2ChatPhase.s2-layout-measure {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* ── PPT Deck ── */
 .s2-deck {
   width:800px; background:#faf9f6; border-radius:14px;
@@ -692,6 +702,15 @@ html, body {
   animation:blink2 0.8s step-end infinite;
 }
 
+/* brightness pulse — thumb has overflow:hidden so box-shadow would clip */
+#s3PrimaryThumb.s3-thumb-ping {
+  animation: s3-thumb-ping 0.75s ease-out 0.12s 2;
+}
+@keyframes s3-thumb-ping {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.14); }
+}
+
 #s3Cursor {
   position:fixed; z-index:500; pointer-events:none;
   width:20px; height:20px; opacity:0; top:0; left:0;
@@ -791,6 +810,10 @@ html, body {
 }
 #titleCard4.active { display:flex; }
 #titleCard4.visible { opacity:1; }
+/* Match scene 1 title card subtle drift */
+#titleCard4 .title-card-text-wrap {
+  animation: tc-drift 6s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
@@ -1137,7 +1160,7 @@ html, body {
       </div>
       <div class="s2-deck-body">
         <div class="s2-deck-thumbs">
-          <div class="s2-thumb active"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb active" id="s3PrimaryThumb"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
           <div class="s2-thumb"><span class="s2-thumb-num">2</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:60%"></div><div class="s2-thumb-mini-line" style="width:88%;margin-top:3px"></div></div></div>
           <div class="s2-thumb"><span class="s2-thumb-num">3</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
           <div class="s2-thumb"><span class="s2-thumb-num">4</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:75%"></div><div class="s2-thumb-mini-line" style="width:50%;margin-top:3px"></div></div></div>
@@ -1332,7 +1355,7 @@ function reset1() {
   gsap.set($('calWrapper'), { opacity: 0, y: 16, scale: 0.98, clearProps: 'filter' });
   gsap.set($('m-qbr'), { opacity: 0, scale: 0.92 });
 
-  // Meeting card — use CSS class approach (centred modal)
+  // Meeting card — clear both visible and fade-out so replay never sticks half-hidden
   $('meetExpanded').classList.remove('visible', 'fade-out');
 
   // Attendees
@@ -1359,20 +1382,12 @@ function run1() {
   const slack  = $('slackPopup');
   const atts   = document.querySelectorAll('.att-row');
 
-  // ── Title card timing ──────────────────────────────────────────
-  // line1: 3 words × 0.2s gap = done at 0.6 + 3×0.2 = 1.2s
-  // line2: 3 words × 0.18s gap, starts at 2.2s (dim + stagger)
-  //        done at 2.2 + 3×0.18 = 2.74s
-  // title hold: 3.46 + 2.0 = 5.46s
-  // title fade: 5.46s
-  // cal in:     5.46 + 0.9 = 6.36s
-  // qbr pop:    6.36 + 1.2 = 7.56s
-  // cursor:     6.36 + 2.8 = 9.16s
-  // click:      9.16 + 0.7 = 9.86s
-  // atts:       9.86 + 0.4 = 10.26s
-  // scroll cursor: 10.26 + 1.8 = 12.06s
-  // close meet: 12.06 + 2.8 = 14.86s
-  // slack:      14.86 + 1.1 = 15.96s
+  // ── Title card timing (GSAP timeline seconds) ─────────────────
+  // line1 words: 0.6 + i*0.2  |  line2: starts 2.2s, staggered via delayedCall
+  // title fade-out: 5.46s  |  scene1 active + cal tween from 6.36–7.1
+  // qbr pop: from 7.56s  |  cursor move from 9.16s  |  click/modal: 9.86s
+  // attendees stagger from 10.26s  |  modal dismiss: 12.0s  |  dim+blur cal: 12.5s
+  // slack popup: 13.4s
 
   s1tl = gsap.timeline();
 
@@ -1454,9 +1469,22 @@ const s2cur = $('s2Cursor');
 function s2GentleScrollIntoView(el) {
   if (s2Resetting || !el || !el.isConnected) return;
   const now = performance.now();
-  if (now - s2StreamScrollLastMs < 135) return;
+  if (now - s2StreamScrollLastMs < 165) return;
   s2StreamScrollLastMs = now;
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+}
+
+/** Lay out chat UI invisibly (deck doc phase stays on top) to align the file chip with #s2InputChip. */
+function s2MeasureInputChipRect() {
+  const chatPhase = $('s2ChatPhase');
+  const inputChip = $('s2InputChip');
+  chatPhase.classList.add('active', 's2-layout-measure');
+  inputChip.classList.add('show');
+  void chatPhase.offsetHeight;
+  const rect = inputChip.getBoundingClientRect();
+  inputChip.classList.remove('show');
+  chatPhase.classList.remove('active', 's2-layout-measure');
+  return rect;
 }
 
 const S2Q = "Jenny, can you take a look at my launch plan? I particularly want to know your thoughts on the launch delay.";
@@ -1579,7 +1607,7 @@ function reset2() {
 
   // Phases
   $('s2DocPhase').classList.add('active');
-  $('s2ChatPhase').classList.remove('active');
+  $('s2ChatPhase').classList.remove('active', 's2-layout-measure');
   $('scene2').classList.remove('active');
 
   // Deck — snap back to initial hidden state (CSS transform removed, all via GSAP)
@@ -1618,6 +1646,7 @@ function reset2() {
   $('s2Div2').classList.remove('show');
   $('s2RespWrap').style.display = 'none';
   $('s2Response').innerHTML = '';
+  $('s2SourcesPill').classList.remove('show');
 
   // Cursor
   gsap.set(s2cur, { opacity: 0, x: -400, y: -400 });
@@ -1637,9 +1666,18 @@ async function run2Inner() {
   await sleep2(3200); if (s2Resetting) return;
 
   // ── Beat 2: Deck shrinks to chip (overlap chip fade for smoother handoff) ──
-  chip.style.left = (window.innerWidth / 2 - 170) + 'px';
-  chip.style.top  = (window.innerHeight * 0.48) + 'px';
-  chip.classList.add('show'); // display:flex but opacity still 0
+  const anchor = s2MeasureInputChipRect();
+  chip.classList.add('show');
+  gsap.set(chip, { opacity: 0 });
+  const chipW = chip.offsetWidth || 220;
+  const chipH = chip.offsetHeight || 52;
+  if (anchor.width > 0 || anchor.height > 0) {
+    chip.style.left = (anchor.left + anchor.width / 2 - chipW / 2) + 'px';
+    chip.style.top = (anchor.top + anchor.height / 2 - chipH / 2) + 'px';
+  } else {
+    chip.style.left = (window.innerWidth / 2 - 170) + 'px';
+    chip.style.top = (window.innerHeight * 0.48) + 'px';
+  }
 
   const deckRect = deck.getBoundingClientRect();
   const chipRect = chip.getBoundingClientRect();
@@ -1717,6 +1755,7 @@ async function run2Inner() {
 
   // ── Beat 7: Thinking ───────────────────────────────────────────
   $('s2Thinking').classList.add('show');
+  const s2ThinkT0 = performance.now();
   await sleep2(600); if (s2Resetting) return;
 
   // Step 1
@@ -1754,10 +1793,12 @@ async function run2Inner() {
   await sleep2(4200); if (s2Resetting) return;
   $('s2Step3').classList.add('dim');
 
-  // Done
-  $('s2ThinkLabel').textContent = ' thought for 5s';
+  // Done — label matches elapsed wall time
+  const thinkSecs = Math.max(1, Math.round((performance.now() - s2ThinkT0) / 1000));
+  $('s2ThinkLabel').textContent = ` thought for ${thinkSecs}s`;
   $('s2ThinkBody').style.display = 'none';
-  $('s2ThoughtDone').textContent = 'Thought for 5 seconds';
+  $('s2ThoughtDone').textContent =
+    thinkSecs === 1 ? 'Thought for 1 second' : `Thought for ${thinkSecs} seconds`;
   $('s2ThoughtDone').classList.add('show');
   await sleep2(400); if (s2Resetting) return;
 
@@ -1769,6 +1810,8 @@ async function run2Inner() {
   await sleep2(200); if (s2Resetting) return;
 
   await s2StreamResponse($('s2Response'), S2_RESPONSE, 8);
+  if (s2Resetting) return;
+  $('s2SourcesPill').classList.add('show');
   s2Running = false;
 }
 
@@ -1814,6 +1857,8 @@ function reset3() {
   const si = $('s3SaveIndicator');
   si.textContent = 'Editing';
   si.className = 's3-save-indicator';
+  const s3thumb = $('s3PrimaryThumb');
+  if (s3thumb) s3thumb.classList.remove('s3-thumb-ping');
   gsap.set(s3cur, { opacity: 0, x: -400, y: -400 });
 }
 
@@ -1830,10 +1875,16 @@ async function run3Inner() {
   gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
   await sleep2(800); if (s3Resetting) return;
 
+  const s3thumb = $('s3PrimaryThumb');
+  if (s3thumb) {
+    s3thumb.classList.add('s3-thumb-ping');
+    setTimeout(() => { if (!s3Resetting && s3thumb) s3thumb.classList.remove('s3-thumb-ping'); }, 1900);
+  }
+
   gsap.set(s3cur, { opacity: 0, x: -400, y: -400 });
 
   await s3TypeInto(li1, S3_BULLET1); if (s3Resetting) return;
-  await sleep2(220); if (s3Resetting) return;
+  await sleep2(420); if (s3Resetting) return;
   await s3TypeInto(li2, S3_BULLET2); if (s3Resetting) return;
   await sleep2(400); if (s3Resetting) return;
 
@@ -1855,6 +1906,13 @@ async function run3Inner() {
 
   si.textContent = 'Saving…';
   si.className = 's3-save-indicator saving';
+  const cr = s3cur.getBoundingClientRect();
+  const rpl = document.createElement('div');
+  rpl.className = 'click-ripple';
+  rpl.style.left = (cr.left + cr.width * 0.35) + 'px';
+  rpl.style.top = (cr.top + cr.height * 0.35) + 'px';
+  document.body.appendChild(rpl);
+  setTimeout(() => rpl.remove(), 600);
   await sleep2(680); if (s3Resetting) return;
   si.textContent = 'Saved ✓';
   si.className = 's3-save-indicator saved';
@@ -1893,13 +1951,13 @@ async function run4Inner() {
   await sleep2(80); if (s4Resetting) return;
 
   $('s4CalWrapper').classList.add('show');
-  await sleep2(1400); if (s4Resetting) return;
+  await sleep2(1680); if (s4Resetting) return;
 
   $('s4QbrBlock').classList.add('done');
-  await sleep2(2000); if (s4Resetting) return;
+  await sleep2(2300); if (s4Resetting) return;
 
   $('s4CalWrapper').classList.add('fade-out-cal');
-  await sleep2(700); if (s4Resetting) return;
+  await sleep2(620); if (s4Resetting) return;
 
   $('s4SlackPopup').classList.add('visible');
   await sleep2(320); if (s4Resetting) return;
