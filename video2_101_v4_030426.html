@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viven — 101</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@300;400;500;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #f5f3f0;
+  --bg-surface: #ffffff;
+  --bg-card: #faf9f7;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.10);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #9a9a9a;
+  --accent: #a196eb;
+  --accent-green: #2d8a54;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.09);
+  --shadow-accent: 0 0 0 1px rgba(161,150,235,0.15), 0 0 30px rgba(161,150,235,0.06);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --font-main: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --gcal-blue: #1a73e8;
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ambient-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26,115,232,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59,111,160,0.02) 0%, transparent 60%),
+    var(--bg-deep);
+  z-index: 0;
+}
+
+/* ── Title Card ── */
+.title-card {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bg-deep);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+.title-card.visible { opacity: 1; }
+.title-card.fade-out { opacity: 0; transition: opacity 2s ease; }
+
+.title-card-text-wrap {
+  text-align: center; max-width: 800px;
+  animation: tc-drift 6s ease-in-out infinite;
+}
+@keyframes tc-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.tc-word {
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 48px; font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(26,26,26,0.35);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  margin: 0 4px; line-height: 1.3;
+}
+.tc-word.visible { opacity: 1; transform: translateY(0); }
+.tc-word.emphasis { font-weight: 700; color: rgba(26,26,26,0.9); }
+.tc-break { display: block; height: 8px; }
+.tc-word.dim { opacity: 0.25 !important; transition: opacity 0.8s ease; }
+
+/* ── Scene container ── */
+.scene {
+  display: none; width: 100%; height: 100%;
+  position: relative; z-index: 1;
+  align-items: center; justify-content: center;
+}
+.scene.active { display: flex; }
+
+/* ── Calendar ── */
+.calendar-wrapper {
+  width: 860px;
+  /* Initial state managed by GSAP — set invisible */
+  opacity: 0;
+}
+
+.calendar-header {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 20px; padding: 0 4px;
+}
+.calendar-month {
+  font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 48px repeat(5, 1fr);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-accent);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.cal-time-col { display: flex; flex-direction: column; border-right: 1px solid var(--border-subtle); }
+.cal-time-header { height: 44px; border-bottom: 1px solid var(--border-subtle); }
+.cal-time-slot {
+  height: 76px; display: flex; align-items: flex-start;
+  justify-content: center; padding-top: 5px;
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);
+}
+
+.cal-day-col { display: flex; flex-direction: column; border-right: 1px solid var(--border-subtle); }
+.cal-day-col:last-child { border-right: none; }
+
+.cal-day-header {
+  height: 44px; display: flex; align-items: center;
+  justify-content: center; gap: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.cal-day-name {
+  font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--text-tertiary);
+}
+.cal-day-num { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.cal-day-num.today {
+  background: var(--gcal-blue); color: #fff;
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+
+.cal-cell {
+  height: 76px; position: relative;
+  border-bottom: 1px solid var(--border-subtle); padding: 2px;
+}
+.cal-cell:last-child { border-bottom: none; }
+
+/* Meeting blocks */
+.meeting-block {
+  position: absolute; left: 3px; right: 3px;
+  border-radius: 6px; padding: 5px 8px;
+}
+
+/* QBR / launch meeting — Google Calendar blue gradient */
+.meeting-block.qbr {
+  top: 2px; height: calc(152px - 4px);
+  background: linear-gradient(170deg, #1a73e8 0%, #1557b0 100%);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(26,115,232,0.28);
+  z-index: 2; cursor: pointer;
+  /* Initial state managed by GSAP */
+  opacity: 0;
+}
+.meeting-block.qbr:hover { filter: brightness(1.05); }
+.meeting-title { font-size: 11px; font-weight: 600; line-height: 1.3; }
+.meeting-time { font-family: var(--font-mono); font-size: 9px; opacity: 0.8; margin-top: 2px; }
+
+/* Small meeting blocks — all neutral grey */
+.meeting-block.small {
+  top: 2px; height: calc(76px - 4px);
+  border-left: 3px solid #bbb;
+  background: #f0f0ee;
+}
+.meeting-block.small .meeting-title { font-size: 10px; font-weight: 500; color: #888; }
+.meeting-block.small .meeting-time { color: #aaa; }
+.mb-teal, .mb-sage, .mb-grape, .mb-slate { background: #f0f0ee; border-color: #bbb; }
+.mb-teal .meeting-title, .mb-sage .meeting-title,
+.mb-grape .meeting-title, .mb-slate .meeting-title { color: #888; }
+
+/* ── Expanded Meeting Card ── */
+.meeting-expanded {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: 420px; background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 56px rgba(0,0,0,0.16);
+  overflow: hidden;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  z-index: 20;
+}
+.meeting-expanded.visible {
+  opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto;
+}
+.meeting-expanded.fade-out {
+  opacity: 0; transform: translate(-50%, -50%) scale(0.95);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.me-topbar {
+  height: 8px;
+  background: linear-gradient(90deg, #1a73e8 0%, #1557b0 100%);
+}
+.me-body { padding: 24px 28px 28px; }
+.me-title {
+  font-size: 19px; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 3px; letter-spacing: -0.3px;
+}
+.me-datetime {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-tertiary); margin-bottom: 20px;
+}
+.me-divider { height: 1px; background: var(--border-subtle); margin-bottom: 16px; }
+
+.att-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 7px 0; border-bottom: 1px solid var(--border-subtle);
+  /* Initial state managed by GSAP */
+  opacity: 0;
+}
+.att-row:last-child { border-bottom: none; }
+.att-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.att-name { font-size: 13px; font-weight: 500; color: var(--text-primary); line-height: 1.2; }
+.att-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; line-height: 1.2; }
+
+/* ── Fake cursor ── */
+#fakeCursor {
+  position: fixed; z-index: 100; pointer-events: none;
+  width: 20px; height: 20px;
+  /* Position and opacity managed entirely by GSAP */
+  opacity: 0; top: 0; left: 0;
+}
+#fakeCursor svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+/* Click ripple */
+.click-ripple {
+  position: fixed; z-index: 99;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(26,115,232,0.2);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  animation: ripple-out 0.5s ease forwards;
+}
+@keyframes ripple-out {
+  from { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  to   { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* ── Slack Popup — centred ── */
+.slack-popup {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -44%) scale(0.96);
+  width: 500px; z-index: 30;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.slack-popup.visible {
+  opacity: 1; transform: translate(-50%, -50%) scale(1);
+}
+
+.slack-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: 16px; padding: 22px 26px 26px;
+  box-shadow: 0 16px 56px rgba(0,0,0,0.12);
+}
+.slack-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
+}
+.slack-source {
+  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+  background: #fff; border: 1px solid var(--border-subtle);
+  display: flex; align-items: center; justify-content: center;
+}
+.slack-sender-wrap { flex: 1; }
+.slack-sender { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.slack-body {
+  font-size: 15px; line-height: 1.65; color: var(--text-primary);
+  padding-left: 52px;
+}
+.slack-mention {
+  color: var(--gcal-blue);
+  font-weight: 600;
+  background: rgba(26, 115, 232, 0.08);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+/* ── Dim overlay ── */
+.dim-overlay {
+  position: fixed; inset: 0;
+  background: rgba(245,243,240,0.82);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s ease; z-index: 15;
+}
+.dim-overlay.visible { opacity: 1; }
+
+/* ── Controls ── */
+.scene-indicator {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-surface); border: 1px solid var(--border-medium);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; color: var(--text-tertiary); z-index: 100;
+  box-shadow: var(--shadow-sm); font-family: var(--font-mono);
+  display: flex; gap: 8px; align-items: center;
+}
+.scene-indicator kbd {
+  background: var(--bg-card); border: 1px solid var(--border-subtle);
+  padding: 1px 5px; border-radius: 4px; font-size: 11px; cursor: pointer;
+}
+
+/* ══════════════════════════════════
+   SCENE 2
+══════════════════════════════════ */
+#scene2 { display:none; position:fixed; inset:0; z-index:1; }
+#scene2.active { display:block; }
+
+.s2-phase {
+  display:none; position:absolute; inset:0;
+  justify-content:center; align-items:center;
+}
+.s2-phase.active { display:flex; }
+
+/* Doc phase: vertically center the deck */
+#s2DocPhase { align-items:center; }
+
+/* Chat phase: centered “stage” — scroll only inside frame */
+#s2ChatPhase {
+  width:100%; height:100%;
+  flex-direction:row; overflow:hidden;
+  justify-content:center; align-items:center;
+  padding:24px 16px;
+  background:transparent;
+}
+.s2-chat-frame {
+  width:min(680px, 94vw);
+  max-height:min(88vh, 920px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:28px 24px 32px;
+  background:transparent;
+  scrollbar-width:none;
+}
+.s2-chat-frame::-webkit-scrollbar { display:none; }
+
+/* ── PPT Deck ── */
+.s2-deck {
+  width:800px; background:#faf9f6; border-radius:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.12),0 4px 16px rgba(0,0,0,0.06);
+  overflow:hidden; opacity:0;
+}
+.s2-deck-bar {
+  background:linear-gradient(90deg,#c55a11 0%,#e8711a 100%);
+  padding:11px 18px; display:flex; align-items:center; gap:10px;
+}
+.s2-deck-icon { width:20px; height:20px; flex-shrink:0; }
+.s2-deck-filename { font-size:13px; font-weight:500; color:rgba(255,255,255,0.9); flex:1; }
+.s2-deck-actions { display:flex; align-items:center; gap:10px; }
+.s2-deck-share {
+  font-size:11px; font-weight:500; color:rgba(255,255,255,0.85);
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3);
+  padding:3px 10px; border-radius:4px;
+}
+.s2-deck-dots { display:flex; gap:5px; }
+.s2-deck-dots span { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.2); }
+.s2-deck-body { display:flex; background:#dedede; height:354px; }
+.s2-deck-thumbs {
+  width:90px; background:#cacaca; padding:10px 7px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.s2-thumb {
+  width:76px; height:52px; background:#e6e6e6; border-radius:2px;
+  border:2px solid transparent; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:5px; gap:3px; flex-shrink:0;
+}
+.s2-thumb.active { border-color:#c55a11; background:#fff; }
+.s2-thumb-num {
+  position:absolute; top:2px; left:3px;
+  font-size:7px; color:#aaa; font-family:var(--font-mono);
+}
+.s2-thumb-mini { width:100%; display:flex; flex-direction:column; gap:3px; padding:4px 6px; }
+.s2-thumb-mini-line { height:2px; background:#c8c8c8; border-radius:1px; }
+.s2-thumb.active .s2-thumb-mini-line { background:#e8a878; }
+.s2-deck-slide { flex:1; display:flex; align-items:center; justify-content:center; padding:14px 18px; }
+
+/* Slide content */
+.s2-slide {
+  width:100%; height:100%; background:#fff; border-radius:3px;
+  display:flex; flex-direction:column; padding:28px 32px; gap:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+/* No ribbon / no eyebrow — extra top breathing room for headline */
+.s2-slide--hero {
+  padding-top:38px; gap:8px;
+}
+.s2-slide-eyebrow {
+  font-size:10px; font-weight:700; color:#c55a11;
+  text-transform:uppercase; letter-spacing:1.2px;
+}
+.s2-slide-h1 {
+  font-size:38px; font-weight:800; color:#c55a11;
+  line-height:1.1; letter-spacing:-0.5px;
+}
+/* Grey placeholder bars */
+.s2-bar { height:10px; background:#e0deda; border-radius:4px; margin:4px 0; }
+.s2-bar-sm { height:8px; background:#e8e5e1; border-radius:3px; margin:3px 0; }
+.s2-bars-section { display:flex; flex-direction:column; gap:4px; margin-top:10px; flex:1; min-height:0; }
+.s2-slide-footer-bar { display:flex; justify-content:center; margin-top:auto; padding-top:12px; border-top:1px solid #ece9e5; }
+
+/* File chip */
+.s2-file-chip {
+  display:none; align-items:center; gap:10px;
+  background:#f0efed; border:1px solid #dedad6;
+  border-radius:9px; padding:9px 14px;
+  opacity:0; position:fixed; z-index:10;
+}
+.s2-file-chip.show { display:flex; }
+.s2fc-icon {
+  width:32px; height:36px;
+  background:linear-gradient(160deg,#c55a11,#e8711a);
+  border-radius:4px; display:flex; align-items:center; justify-content:center;
+}
+.s2fc-icon svg { width:14px; height:14px; }
+.s2fc-name { font-size:12px; font-weight:600; color:#1a1a1a; }
+.s2fc-type { font-size:10px; color:#999; font-family:var(--font-mono); text-transform:uppercase; }
+
+/* Chat page */
+.s2-page { width:100%; max-width:640px; display:flex; flex-direction:column; align-items:center; z-index:2; margin:0 auto; }
+
+/* Profile */
+.s2-profile {
+  display:flex; flex-direction:column; align-items:center;
+  padding-bottom:20px; width:100%; opacity:0;
+}
+.s2-av-initials {
+  width:84px; height:84px; border-radius:50%;
+  background:linear-gradient(135deg,#1a73e8 0%,#1557b0 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; font-weight:700; color:white; margin-bottom:16px;
+  box-shadow:0 0 0 3px var(--bg-deep),0 0 0 5px rgba(0,0,0,0.08);
+}
+.s2-av-photo {
+  width:84px; height:84px; border-radius:50%; object-fit:cover;
+  object-position:center top;
+  margin-bottom:16px;
+  box-shadow:0 0 0 3px var(--bg-deep),0 0 0 5px rgba(0,0,0,0.08);
+}
+.s2-resp-av-photo {
+  width:38px; height:38px; border-radius:50%; object-fit:cover;
+  object-position:center 15%;
+  flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(161,150,235,0.3);
+}
+.s2-name { font-size:22px; font-weight:700; letter-spacing:-0.3px; margin-bottom:3px; }
+.s2-role { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+.s2-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:600; color:#6b5fc7;
+  background:rgba(161,150,235,0.10); border:1px solid rgba(161,150,235,0.18);
+  padding:5px 14px; border-radius:20px; letter-spacing:0.5px; text-transform:uppercase;
+  margin-bottom:5px;
+}
+.s2-badge-dot {
+  width:6px; height:6px; border-radius:50%; background:#a196eb;
+  animation:pulse-dot2 2s ease-in-out infinite;
+}
+@keyframes pulse-dot2 { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+/* Input area */
+.s2-input-area { width:100%; margin-top:8px; opacity:0; }
+.s2-asker { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-left:2px; }
+.s2-asker-av {
+  width:30px; height:30px; border-radius:50%; background:#4db6ac;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; color:#fff; flex-shrink:0;
+}
+.s2-asker-name { font-size:14px; font-weight:600; }
+.s2-asker-team { font-size:12px; color:var(--text-tertiary); margin-left:4px; }
+.s2-input-box {
+  width:100%; border:1px solid rgba(0,0,0,0.10); border-radius:20px;
+  padding:18px 20px 14px; display:flex; flex-direction:column; gap:10px;
+  background:white; box-shadow:0 2px 20px rgba(0,0,0,0.05);
+}
+.s2-input-chip {
+  display:none; align-items:center; gap:8px;
+  background:#f0efed; border:1px solid #dedad6;
+  border-radius:7px; padding:7px 11px; width:fit-content;
+}
+.s2-input-chip.show { display:flex; }
+.s2ic-icon {
+  width:24px; height:28px; background:linear-gradient(160deg,#c55a11,#e8711a);
+  border-radius:3px; display:flex; align-items:center; justify-content:center;
+}
+.s2ic-icon svg { width:11px; height:11px; }
+.s2ic-name { font-size:12px; font-weight:600; color:#1a1a1a; }
+.s2ic-type { font-size:10px; color:#999; font-family:var(--font-mono); text-transform:uppercase; }
+.s2-input-text { font-size:17px; min-height:26px; line-height:1.5; color:var(--text-primary); }
+.s2-input-controls { display:flex; align-items:center; justify-content:space-between; }
+.s2-input-right { display:flex; align-items:center; gap:8px; }
+.s2-model { font-size:12px; color:#aaa; display:flex; align-items:center; gap:4px; }
+.s2-send {
+  width:38px; height:38px; border-radius:50%; background:#ddd;
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.3s ease, box-shadow 0.3s ease;
+}
+.s2-send.active { background:#a196eb; box-shadow:0 0 16px rgba(161,150,235,0.35); }
+.s2-send.clicked { transform:scale(0.9); transition:transform 0.1s ease; }
+.s2-send svg { width:15px; height:15px; color:white; }
+
+/* Fake cursor scene 2 */
+#s2Cursor { position:fixed; z-index:200; pointer-events:none; width:20px; height:20px; opacity:0; top:0; left:0; }
+#s2Cursor svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+/* Sent bubble */
+.s2-content { display:none; width:100%; padding-top:14px; }
+.s2-content.visible { display:block; }
+.s2-sent-wrap { display:none; justify-content:flex-end; margin-bottom:4px; }
+.s2-sent-wrap.show { display:flex; animation:riseIn2 0.3s ease-out forwards; }
+@keyframes riseIn2 { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.s2-sent-bubble {
+  background:#f4f4f4; border-radius:18px; padding:14px 20px;
+  max-width:85%; font-size:15px; line-height:1.6;
+}
+.s2-divider { width:0; height:1px; background:rgba(0,0,0,0.08); margin:28px 0; transition:width 0.7s ease; }
+.s2-divider.show { width:100%; }
+
+/* Thinking */
+.s2-thinking { opacity:0; }
+.s2-thinking.show { animation:fadeIn2 0.4s ease forwards; }
+@keyframes fadeIn2 { to{opacity:1} }
+.s2-think-body { border-left:2px solid rgba(0,0,0,0.07); margin-left:19px; padding-left:26px; }
+.s2-step { opacity:0; transform:translateY(5px); transition:opacity 0.4s ease,transform 0.4s ease; margin-bottom:18px; }
+.s2-step.show { opacity:1; transform:translateY(0); }
+.s2-step.dim { opacity:0.28; }
+.s2-step-label { font-size:13px; color:#888; margin-bottom:7px; font-weight:500; }
+.s2-step-label b { color:#555; }
+.s2-doc-read-pill {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(30,77,140,0.07); border:1px solid rgba(30,77,140,0.15);
+  padding:7px 12px; border-radius:8px; font-size:12.5px; color:#1e4d8c;
+  opacity:0; transition:opacity 0.4s ease; margin-bottom:6px;
+}
+.s2-doc-read-pill.show { opacity:1; }
+.s2-doc-read-pill svg { width:14px; height:14px; flex-shrink:0; }
+.s2-read-line {
+  font-size:12px; color:#bbb; margin-top:5px; padding-left:22px;
+  opacity:0; transform:translateX(-4px);
+  transition:opacity 0.4s ease,transform 0.4s ease; font-family:var(--font-mono);
+}
+.s2-read-line.show { opacity:1; transform:translateX(0); }
+.s2-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.s2-pill {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:7px 13px; border-radius:9px; background:rgba(255,255,255,0.7);
+  border:1px solid rgba(0,0,0,0.08); font-size:12.5px; color:#666; font-weight:500;
+  opacity:0; transform:translateY(4px); transition:opacity 0.3s ease,transform 0.3s ease;
+}
+.s2-pill.show { opacity:1; transform:translateY(0); }
+.s2-pill .count { font-weight:700; color:#333; }
+@keyframes shimmer-wave { 0%{background-position:150% center} 100%{background-position:-150% center} }
+.s2-reasoning {
+  font-size:13.5px; line-height:1.7; margin-top:4px;
+  background:linear-gradient(90deg,#c0c0c0 0%,#c0c0c0 15%,#f0f0f0 38%,#888 55%,#c0c0c0 75%,#c0c0c0 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:shimmer-wave 2s linear infinite;
+}
+
+/* Response */
+.s2-resp-wrap { margin-top:4px; }
+.s2-resp-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.s2-resp-av {
+  width:38px; height:38px; border-radius:50%;
+  background:linear-gradient(135deg,#1a73e8,#1557b0);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:white; flex-shrink:0;
+}
+.s2-resp-name { font-size:14px; font-weight:600; line-height:1.3; }
+.s2-response { margin-left:50px; font-size:15px; line-height:1.82; white-space:pre-wrap; }
+.s2-response b { font-weight:600; color:var(--text-primary); }
+.s2-inline-cit {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; border-radius:50%;
+  margin:0 0 0 5px;
+  background:rgba(26,115,232,0.14);
+  vertical-align:middle;
+  flex-shrink:0;
+}
+.s2-inline-cit svg { display:block; width:12px; height:14px; }
+.s2-streaming-cursor {
+  display:inline-block; width:2px; height:16px; background:#1a1a1a;
+  margin-left:2px; vertical-align:text-bottom; animation:blink2 0.8s step-end infinite;
+}
+@keyframes blink2 { 50%{opacity:0} }
+
+/* Inline citation icon */
+.s2-cite-icon {
+  display:inline-flex; align-items:center; vertical-align:middle;
+  margin:0 3px; position:relative; top:-1px;
+}
+.s2-cite-icon svg { display:block; }
+
+/* Slide text bullet (replaces a grey bar) */
+.s2-slide-bullet {
+  font-size:12.5px; color:#2a2a2a; display:flex; align-items:center; gap:5px;
+  padding:1px 0; line-height:1.4;
+}
+.s2-slide-bullet-arrow { color:#c55a11; font-weight:700; font-size:11px; }
+
+/* Sources pill */
+.s2-sources-pill {
+  display:flex; align-items:center; gap:6px;
+  margin-top:18px; margin-left:50px;
+  opacity:0; transition:opacity 0.5s ease;
+}
+.s2-sources-pill.show { opacity:1; }
+.s2-src-icon { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.s2-src-icon svg { width:22px; height:22px; }
+.s2-src-count { font-size:14px; color:#aaa; font-weight:500; margin-left:2px; }
+
+/* Hide scene 1 overlays when scene 2 active */
+#scene2.active ~ #fakeCursor { display:none; }
+#scene2.active ~ .slack-popup { display:none !important; }
+#scene2.active ~ .dim-overlay { display:none !important; }
+
+/* ══════════════════════════════════
+   SCENE 3 — Deck update
+══════════════════════════════════ */
+#scene3 {
+  display:none; position:fixed; inset:0; z-index:1;
+  align-items:center; justify-content:center;
+}
+#scene3.active { display:flex; }
+
+#s3DeckWrap {
+  display:flex; align-items:center; justify-content:center;
+  width:100%; height:100%;
+}
+
+.s3-deck-bar .s2-deck-filename { flex:1; }
+.s3-deck-bar .s3-save-indicator {
+  font-size:11px; font-weight:600; color:rgba(255,255,255,0.88);
+  margin-right:12px; letter-spacing:0.02em;
+  min-width:78px; text-align:right; flex-shrink:0;
+}
+.s3-save-indicator.saving { color:#ffe082; }
+.s3-save-indicator.saved { color:#b8f5c4; }
+
+.s3-decision-area {
+  margin-top:12px; padding:12px 14px; min-height:88px;
+  border:1.5px dashed rgba(197,90,17,0.35); border-radius:8px;
+  background:rgba(250,248,245,0.95); font-size:13px; line-height:1.5;
+  color:var(--text-primary);
+}
+.s3-decision-list {
+  margin: 0;
+  padding-left: 1.15em;
+  list-style: disc;
+}
+.s3-decision-list li { margin-bottom: 8px; }
+.s3-decision-list li:last-child { margin-bottom: 0; }
+.s3-decision-area .s3-text-cursor {
+  display:inline-block; width:2px; height:14px; background:#1a1a1a;
+  margin-left:1px; vertical-align:-2px;
+  animation:blink2 0.8s step-end infinite;
+}
+
+#s3Cursor {
+  position:fixed; z-index:500; pointer-events:none;
+  width:20px; height:20px; opacity:0; top:0; left:0;
+}
+#s3Cursor svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+/* ══════════════════════════════════
+   SCENE 4 — Resolution + tagline
+══════════════════════════════════ */
+#scene4 {
+  display:none; position:fixed; inset:0; z-index:1;
+  align-items:center; justify-content:center;
+  background:var(--bg-deep);
+}
+#scene4.active { display:flex; }
+
+#s4CalWrapper {
+  width:860px;
+  opacity:0; transform:translateY(10px) scale(0.99);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+#s4CalWrapper.show { opacity:1; transform:translateY(0) scale(1); }
+#s4CalWrapper.fade-out-cal {
+  opacity:0; transform:translateY(-8px) scale(0.97); filter:blur(3px);
+  transition:opacity 1s ease, transform 1s ease, filter 1s ease;
+}
+
+#s4QbrBlock {
+  position:relative;
+  transition:background 0.8s ease, box-shadow 0.8s ease, opacity 0.8s ease;
+}
+#s4QbrBlock.done {
+  background:linear-gradient(170deg,#388e3c 0%,#2e7d32 100%) !important;
+  box-shadow:0 4px 18px rgba(56,142,60,0.30) !important;
+  opacity:0.75;
+}
+#s4QbrBlock .meeting-title { position:relative; overflow:hidden; }
+.s4-strike {
+  position:absolute; top:50%; left:0; transform:translateY(-50%);
+  height:1.5px; background:rgba(255,255,255,0.75);
+  width:0; border-radius:1px;
+  transition:width 0.55s cubic-bezier(0.4,0,0.2,1) 0.35s;
+}
+#s4QbrBlock.done .s4-strike { width:100%; }
+.s4-tick {
+  position:absolute; top:7px; right:8px;
+  width:17px; height:17px;
+  background:rgba(255,255,255,0.22);
+  border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:800; color:white;
+  opacity:0; transform:scale(0.4);
+  transition:opacity 0.35s ease 0.6s,
+             transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.6s;
+}
+#s4QbrBlock.done .s4-tick { opacity:1; transform:scale(1); }
+
+#s4SlackPopup {
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%) translateY(32px) scale(0.95);
+  opacity:0;
+  transition:opacity 0.55s ease, transform 0.6s cubic-bezier(0.34,1.2,0.64,1);
+  z-index:50; pointer-events:none;
+  width:500px;
+}
+#s4SlackPopup.visible {
+  opacity:1; transform:translate(-50%,-50%) translateY(0) scale(1);
+}
+#s4SlackPopup.hiding {
+  opacity:0; transform:translate(-50%,-50%) translateY(-14px) scale(0.97);
+  transition:opacity 0.85s ease, transform 0.85s ease;
+}
+
+@keyframes s4-fw-burst {
+  0%   { opacity:1; transform:translate(calc(-50%), calc(-50%)) scale(1.3); }
+  65%  { opacity:1; }
+  100% { opacity:0; transform:translate(calc(-50% + var(--fx)), calc(-50% + var(--fy))) scale(0); }
+}
+.s4-fw-stage {
+  position:absolute; left:50%; top:0;
+  width:0; height:0; pointer-events:none; z-index:6;
+}
+.s4-fw-dot {
+  position:absolute; width:7px; height:7px; border-radius:50%;
+  background:var(--fc); opacity:0;
+}
+.s4-fw-dot.burst {
+  animation:s4-fw-burst 1.05s cubic-bezier(0.2,0.8,0.4,1) var(--fd) forwards;
+}
+
+#titleCard4 {
+  position:fixed; inset:0; z-index:10;
+  display:none; align-items:center; justify-content:center;
+  background:var(--bg-deep);
+  opacity:0; transition:opacity 0.6s ease;
+}
+#titleCard4.active { display:flex; }
+#titleCard4.visible { opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="ambient-bg"></div>
+
+<!-- ── Title Card ── -->
+<div class="title-card" id="titleCard">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-line="1">Important</span>
+    <span class="tc-word emphasis" data-line="1">meeting</span>
+    <span class="tc-word emphasis" data-line="1">tomorrow.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word" data-line="2">One</span>
+    <span class="tc-word" data-line="2">big</span>
+    <span class="tc-word emphasis" data-line="2">worry</span>
+    <span class="tc-word" data-line="2">on</span>
+    <span class="tc-word" data-line="2">your</span>
+    <span class="tc-word" data-line="2">mind</span>
+    <span class="tc-word emphasis" data-line="2">today.</span>
+  </div>
+</div>
+
+<!-- ── Scene 1 ── -->
+<section class="scene" id="scene1">
+  <div class="calendar-wrapper" id="calWrapper">
+    <div class="calendar-header">
+      <span class="calendar-month">April 2026</span>
+    </div>
+    <div class="calendar-grid">
+      <!-- Time col -->
+      <div class="cal-time-col">
+        <div class="cal-time-header"></div>
+        <div class="cal-time-slot">1 PM</div>
+        <div class="cal-time-slot">2 PM</div>
+        <div class="cal-time-slot">3 PM</div>
+        <div class="cal-time-slot">4 PM</div>
+      </div>
+
+      <!-- Mon -->
+      <div class="cal-day-col">
+        <div class="cal-day-header">
+          <span class="cal-day-name">Mon</span>
+          <span class="cal-day-num">6</span>
+        </div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-teal">
+            <div class="meeting-title">Team Standup</div>
+            <div class="meeting-time">1:00 – 1:30</div>
+          </div>
+        </div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-sage">
+            <div class="meeting-title">Product Sync</div>
+            <div class="meeting-time">2:30 – 3:00</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+
+      <!-- Tue — TODAY -->
+      <div class="cal-day-col">
+        <div class="cal-day-header">
+          <span class="cal-day-name">Tue</span>
+          <span class="cal-day-num today">7</span>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="meeting-block qbr" id="m-qbr">
+            <div class="meeting-title">Launch Update</div>
+            <div class="meeting-time">2:00 – 3:00 PM</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+
+      <!-- Wed -->
+      <div class="cal-day-col">
+        <div class="cal-day-header">
+          <span class="cal-day-name">Wed</span>
+          <span class="cal-day-num">8</span>
+        </div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-grape">
+            <div class="meeting-title">Pipeline Review</div>
+            <div class="meeting-time">1:00 – 1:45</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-slate">
+            <div class="meeting-title">Design Handoff</div>
+            <div class="meeting-time">3:00 – 3:30</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+      </div>
+
+      <!-- Thu -->
+      <div class="cal-day-col">
+        <div class="cal-day-header">
+          <span class="cal-day-name">Thu</span>
+          <span class="cal-day-num">9</span>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-teal">
+            <div class="meeting-title">Eng Roadmap</div>
+            <div class="meeting-time">3:30 – 4:00</div>
+          </div>
+        </div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-sage">
+            <div class="meeting-title">1:1 with Lisa</div>
+            <div class="meeting-time">4:00 – 4:30</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fri -->
+      <div class="cal-day-col">
+        <div class="cal-day-header">
+          <span class="cal-day-name">Fri</span>
+          <span class="cal-day-num">10</span>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="meeting-block small mb-grape">
+            <div class="meeting-title">Sprint Retro</div>
+            <div class="meeting-time">2:00 – 2:45</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dim overlay -->
+<div class="dim-overlay" id="dimOverlay"></div>
+
+<!-- Expanded meeting card -->
+<div class="meeting-expanded" id="meetExpanded">
+  <div class="me-topbar"></div>
+  <div class="me-body">
+    <div class="me-title">Launch Update</div>
+    <div class="me-datetime">Tuesday, April 7 · 2:00 – 3:00 PM</div>
+    <div class="me-divider"></div>
+    <div class="att-row" id="a0">
+      <div class="att-avatar" style="background:#5c6bc0">AW</div>
+      <div>
+        <div class="att-name">Alex Walton · Product</div>
+        <div class="att-sub">Organizer</div>
+      </div>
+    </div>
+    <div class="att-row" id="a1">
+      <div class="att-avatar" style="background:#1a73e8">JP</div>
+      <div><div class="att-name">Jenny Peters · CEO</div></div>
+    </div>
+    <div class="att-row" id="a2">
+      <div class="att-avatar" style="background:#e67c22">LT</div>
+      <div><div class="att-name">Lisa Torres · Manager</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Fake cursor -->
+<div id="fakeCursor">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M4 2L16 10L10 11.5L7 18L4 2Z" fill="white" stroke="#333" stroke-width="1.2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- Slack popup -->
+<div class="slack-popup" id="slackPopup">
+  <div class="slack-card">
+    <div class="slack-header">
+      <div class="slack-source">
+        <svg width="24" height="24" viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" style="display:block" clip-rule="evenodd" fill-rule="evenodd">
+          <path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/>
+          <path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/>
+          <path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/>
+          <path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/>
+        </svg>
+      </div>
+      <div class="slack-sender-wrap">
+        <div class="slack-sender">Lisa Torres <span style="font-weight:400;color:var(--text-secondary);font-size:13px">(Manager)</span></div>
+      </div>
+    </div>
+    <div class="slack-body">
+      Hey Alex — you fully prepped for Jenny tomorrow? I have a feeling it's going to be a tough room.
+    </div>
+  </div>
+</div>
+
+<!-- ── Scene 2 ── -->
+<div id="scene2">
+
+  <!-- Phase 1: Deck -->
+  <div class="s2-phase active" id="s2DocPhase">
+    <div id="s2Deck" class="s2-deck">
+      <div class="s2-deck-bar">
+        <svg class="s2-deck-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="5" y="7" width="5" height="4" rx="1" fill="rgba(255,255,255,0.35)" stroke="none"/></svg>
+        <span class="s2-deck-filename">Launch_Update.pptx</span>
+        <div class="s2-deck-actions">
+          <div class="s2-deck-share">Share</div>
+          <div class="s2-deck-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="s2-deck-body">
+        <div class="s2-deck-thumbs">
+          <div class="s2-thumb"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">2</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:60%"></div><div class="s2-thumb-mini-line" style="width:88%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb active"><span class="s2-thumb-num">3</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">4</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:75%"></div><div class="s2-thumb-mini-line" style="width:50%;margin-top:3px"></div></div></div>
+        </div>
+        <div class="s2-deck-slide">
+          <div class="s2-slide s2-slide--hero">
+            <div class="s2-slide-h1">DELAY LAUNCH 2 WEEKS??</div>
+            <div class="s2-bar" style="width:48%"></div>
+            <div class="s2-bars-section">
+              <div class="s2-bar-sm" style="width:88%"></div>
+              <div class="s2-bar-sm" style="width:72%"></div>
+              <div class="s2-bar-sm" style="width:95%"></div>
+              <div class="s2-bar-sm" style="width:58%"></div>
+              <div class="s2-bar" style="width:36%;height:8px;margin-top:6px"></div>
+            </div>
+            <div class="s2-slide-footer-bar">
+              <div class="s2-bar" style="width:38%;height:7px;margin:0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="s2FileChip" class="s2-file-chip">
+      <div class="s2fc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <div><div class="s2fc-name">Launch_Update.pptx</div><div class="s2fc-type">PPTX · 1.4 MB</div></div>
+    </div>
+  </div>
+
+  <!-- Phase 2: Chat — Jenny portrait: assets/s2-jenny-peters-portrait.jpg -->
+  <div class="s2-phase" id="s2ChatPhase">
+    <div class="s2-chat-frame" id="s2ChatFrame">
+    <div class="s2-page" id="s2Page">
+      <div class="s2-profile" id="s2Profile">
+        <img class="s2-av-photo" src="assets/s2-jenny-peters-portrait.jpg" width="84" height="84" alt="Executive portrait">
+        <div class="s2-name">Jenny Peters</div>
+        <div class="s2-role">Chief Executive Officer</div>
+        <div class="s2-badge"><span class="s2-badge-dot"></span>Digital Twin</div>
+      </div>
+
+      <div class="s2-input-area" id="s2InputArea">
+        <div class="s2-asker">
+          <div class="s2-asker-av">AW</div>
+          <span class="s2-asker-name">Alex</span>
+          <span class="s2-asker-team">· Product</span>
+        </div>
+        <div class="s2-input-box">
+          <div class="s2-input-chip" id="s2InputChip">
+            <div class="s2ic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div><div class="s2ic-name">Launch_Update.pptx</div><div class="s2ic-type">PPTX</div></div>
+          </div>
+          <div class="s2-input-text" id="s2InputText"></div>
+          <div class="s2-input-controls">
+            <div></div>
+            <div class="s2-input-right">
+              <div class="s2-model"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Auto</div>
+              <div class="s2-send" id="s2SendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s2-content" id="s2Content">
+        <div class="s2-sent-wrap" id="s2SentWrap">
+          <div class="s2-sent-bubble" id="s2SentText"></div>
+        </div>
+        <div class="s2-divider" id="s2Div1"></div>
+
+        <div class="s2-thinking" id="s2Thinking">
+          <div class="s2-think-body" id="s2ThinkBody">
+            <div class="s2-step" id="s2Step1">
+              <div class="s2-step-label"><b>Reading</b> your deck</div>
+              <div id="s2DocReadPill" class="s2-doc-read-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                Launch_Update.pptx
+              </div>
+              <div id="s2ReadLine1" class="s2-read-line">Scanning launch timeline and readiness notes...</div>
+              <div id="s2ReadLine2" class="s2-read-line">Flagging onboarding drop-off in week 1 activation</div>
+            </div>
+            <div class="s2-step" id="s2Step2">
+              <div class="s2-step-label"><b>Searching</b> user context &amp; prior feedback</div>
+              <div class="s2-pills" id="s2Pills"></div>
+            </div>
+            <div class="s2-step" id="s2Step3">
+              <div class="s2-step-label"><b>Reasoning</b> through the launch decision</div>
+              <div class="s2-reasoning" id="s2Reasoning"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="s2-resp-wrap" id="s2RespWrap" style="display:none">
+          <div class="s2-resp-header">
+            <img class="s2-resp-av-photo" src="assets/s2-jenny-peters-portrait.jpg" width="38" height="38" alt="">
+            <div class="s2-resp-name">Jenny Peters</div>
+          </div>
+          <div class="s2-response" id="s2Response"></div>
+          <div class="s2-sources-pill" id="s2SourcesPill">
+            <div class="s2-src-icon"><svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg></div>
+            <div class="s2-src-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M30 0H8C5.8 0 4 1.8 4 4v40c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4V14L30 0z"/><path fill="#1a6fc4" d="M30 0v14h14z" opacity=".65"/><path fill="white" d="M12 22h24v2.5H12zm0 6.5h24V31H12zm0 6.5h16v2.5H12z"/></svg></div>
+            <div class="s2-src-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#0052CC" d="M2.3 16.5c-.4.5-.7 1-.9 1.4-.2.5 0 1 .5 1.3l4.3 2.4c.5.3 1 .1 1.3-.3.6-.9 1.3-1.6 1.9-2.3 2-2 4.1-3 6.3-3 1.7 0 3.3.7 4.7 1.6.4.3 1 .2 1.3-.2l2.8-3.7c.3-.5.2-1.1-.2-1.4-2.2-1.6-4.9-2.5-7.6-2.5-5.4 0-10.1 2.5-14.4 6.7z"/><path fill="#2684FF" d="M21.7 7.5c.4-.5.7-1 .9-1.4.2-.5 0-1-.5-1.3L17.8 2.4c-.5-.3-1-.1-1.3.3-.6.9-1.3 1.6-1.9 2.3-2 2-4.1 3-6.3 3-1.7 0-3.3-.7-4.7-1.6-.4-.3-1-.2-1.3.2L-.5 10.2c-.3.5-.2 1.1.2 1.4 2.2 1.6 4.9 2.5 7.6 2.5 5.4 0 10.1-2.5 14.4-6.6z"/></svg></div>
+            <span class="s2-src-count">+3 Sources</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Scene 3 — Deck update (decision + save) ── -->
+<div id="scene3">
+  <div id="s3DeckWrap">
+    <div id="s3Deck" class="s2-deck">
+      <div class="s2-deck-bar s3-deck-bar">
+        <svg class="s2-deck-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="5" y="7" width="5" height="4" rx="1" fill="rgba(255,255,255,0.35)" stroke="none"/></svg>
+        <span class="s2-deck-filename">Launch_Update.pptx</span>
+        <span id="s3SaveIndicator" class="s3-save-indicator">Editing</span>
+        <div class="s2-deck-actions">
+          <div class="s2-deck-share">Share</div>
+          <div class="s2-deck-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="s2-deck-body">
+        <div class="s2-deck-thumbs">
+          <div class="s2-thumb active"><span class="s2-thumb-num">1</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:80%"></div><div class="s2-thumb-mini-line" style="width:95%;margin-top:3px"></div><div class="s2-thumb-mini-line" style="width:65%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">2</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:60%"></div><div class="s2-thumb-mini-line" style="width:88%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">3</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:72%"></div><div class="s2-thumb-mini-line" style="width:55%;margin-top:3px"></div></div></div>
+          <div class="s2-thumb"><span class="s2-thumb-num">4</span><div class="s2-thumb-mini"><div class="s2-thumb-mini-line" style="width:75%"></div><div class="s2-thumb-mini-line" style="width:50%;margin-top:3px"></div></div></div>
+        </div>
+        <div class="s2-deck-slide">
+          <div class="s2-slide s2-slide--hero">
+            <div class="s2-slide-h1">DELAY LAUNCH 2 WEEKS</div>
+            <div class="s2-bar" style="width:48%"></div>
+            <div class="s3-decision-area" id="s3DecisionArea">
+              <ul class="s3-decision-list">
+                <li id="s3DecLine1"></li>
+                <li id="s3DecLine2"></li>
+              </ul>
+            </div>
+            <div class="s2-bars-section" style="margin-top:10px">
+              <div class="s2-bar-sm" style="width:88%"></div>
+              <div class="s2-bar-sm" style="width:72%"></div>
+              <div class="s2-bar-sm" style="width:58%"></div>
+            </div>
+            <div class="s2-slide-footer-bar">
+              <div class="s2-bar" style="width:38%;height:7px;margin:0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="s3Cursor">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M4 2L16 10L10 11.5L7 18L4 2Z" fill="white" stroke="#333" stroke-width="1.2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- ── Scene 4 — Calendar done + Slack + tagline ── -->
+<div id="scene4">
+  <div class="calendar-wrapper" id="s4CalWrapper">
+    <div class="calendar-header">
+      <span class="calendar-month">April 2026</span>
+    </div>
+    <div class="calendar-grid">
+      <div class="cal-time-col">
+        <div class="cal-time-header"></div>
+        <div class="cal-time-slot">1 PM</div>
+        <div class="cal-time-slot">2 PM</div>
+        <div class="cal-time-slot">3 PM</div>
+        <div class="cal-time-slot">4 PM</div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Mon</span><span class="cal-day-num">6</span></div>
+        <div class="cal-cell"><div class="meeting-block small mb-teal"><div class="meeting-title">Team Standup</div><div class="meeting-time">1:00 – 1:30</div></div></div>
+        <div class="cal-cell"><div class="meeting-block small mb-sage"><div class="meeting-title">Product Sync</div><div class="meeting-time">2:30 – 3:00</div></div></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Tue</span><span class="cal-day-num today">7</span></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="meeting-block qbr" id="s4QbrBlock" style="top:2px;height:calc(152px - 4px)">
+            <div class="meeting-title">Launch Update
+              <span class="s4-strike"></span>
+            </div>
+            <div class="meeting-time">2:00 – 3:00 PM</div>
+            <div class="s4-tick">✓</div>
+          </div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Wed</span><span class="cal-day-num">8</span></div>
+        <div class="cal-cell"><div class="meeting-block small mb-grape"><div class="meeting-title">Pipeline Review</div><div class="meeting-time">1:00 – 1:45</div></div></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"><div class="meeting-block small mb-slate"><div class="meeting-title">Design Handoff</div><div class="meeting-time">3:00 – 3:30</div></div></div>
+        <div class="cal-cell"></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Thu</span><span class="cal-day-num">9</span></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"><div class="meeting-block small mb-teal"><div class="meeting-title">Eng Roadmap</div><div class="meeting-time">3:30 – 4:00</div></div></div>
+        <div class="cal-cell"><div class="meeting-block small mb-sage"><div class="meeting-title">1:1 with Lisa</div><div class="meeting-time">4:00 – 4:30</div></div></div>
+      </div>
+      <div class="cal-day-col">
+        <div class="cal-day-header"><span class="cal-day-name">Fri</span><span class="cal-day-num">10</span></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"><div class="meeting-block small mb-grape"><div class="meeting-title">Sprint Retro</div><div class="meeting-time">2:00 – 2:45</div></div></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="s4SlackPopup">
+  <div class="s4-fw-stage" id="s4FwStage">
+    <div class="s4-fw-dot" style="--fx:0px;--fy:-66px;--fc:#ffd700;--fd:0s"></div>
+    <div class="s4-fw-dot" style="--fx:32px;--fy:-57px;--fc:#ff6b35;--fd:.04s"></div>
+    <div class="s4-fw-dot" style="--fx:56px;--fy:-34px;--fc:#ff3366;--fd:.02s"></div>
+    <div class="s4-fw-dot" style="--fx:64px;--fy:-4px;--fc:#b06aff;--fd:.06s"></div>
+    <div class="s4-fw-dot" style="--fx:54px;--fy:30px;--fc:#4a9eff;--fd:.03s"></div>
+    <div class="s4-fw-dot" style="--fx:30px;--fy:54px;--fc:#00d4aa;--fd:.05s"></div>
+    <div class="s4-fw-dot" style="--fx:-30px;--fy:54px;--fc:#44d168;--fd:.01s"></div>
+    <div class="s4-fw-dot" style="--fx:-54px;--fy:30px;--fc:#ffe066;--fd:.07s"></div>
+    <div class="s4-fw-dot" style="--fx:-64px;--fy:-4px;--fc:#ffd700;--fd:.03s"></div>
+    <div class="s4-fw-dot" style="--fx:-56px;--fy:-34px;--fc:#ff6b35;--fd:.05s"></div>
+    <div class="s4-fw-dot" style="--fx:-32px;--fy:-57px;--fc:#ff3366;--fd:.02s"></div>
+    <div class="s4-fw-dot" style="--fx:16px;--fy:-68px;--fc:#b06aff;--fd:.06s"></div>
+  </div>
+  <div class="slack-card">
+    <div class="slack-header">
+      <div class="slack-source">
+        <svg width="24" height="24" viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" style="display:block" clip-rule="evenodd" fill-rule="evenodd">
+          <path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/>
+          <path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/>
+          <path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/>
+          <path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/>
+        </svg>
+      </div>
+      <div class="slack-sender-wrap">
+        <div class="slack-sender">Lisa Torres <span style="font-weight:400;color:var(--text-secondary);font-size:13px">(Manager)</span></div>
+      </div>
+    </div>
+    <div class="slack-body">
+      You handled that really well. Glad we walked in with a clear call.
+    </div>
+  </div>
+</div>
+
+<div class="title-card" id="titleCard4">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-s4line="1">The</span>
+    <span class="tc-word emphasis" data-s4line="1">right</span>
+    <span class="tc-word emphasis" data-s4line="1">call.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word" data-s4line="2">Before</span>
+    <span class="tc-word" data-s4line="2">you</span>
+    <span class="tc-word" data-s4line="2">walk</span>
+    <span class="tc-word" data-s4line="2">into</span>
+    <span class="tc-word emphasis" data-s4line="2">the</span>
+    <span class="tc-word emphasis" data-s4line="2">room.</span>
+  </div>
+</div>
+
+<!-- Scene 2 cursor -->
+<div id="s2Cursor">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M4 2L16 10L10 11.5L7 18L4 2Z" fill="white" stroke="#333" stroke-width="1.2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- Controls -->
+<div class="scene-indicator" id="controls">
+  Scene <span id="sceneNum">1</span> &nbsp;·&nbsp;
+  <kbd onclick="switchScene(1)">1</kbd>
+  <kbd onclick="switchScene(2)">2</kbd>
+  <kbd onclick="switchScene(3)">3</kbd>
+  <kbd onclick="switchScene(4)">4</kbd>
+  &nbsp;·&nbsp;
+  <kbd onclick="switchScene(SCENE)">R</kbd> Replay
+  &nbsp;·&nbsp;
+  <kbd onclick="toggleControls()">H</kbd>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// GLOBALS
+// ═══════════════════════════════════
+let SCENE = 1;
+const $ = id => document.getElementById(id);
+const cursor = $('fakeCursor');
+
+// ═══════════════════════════════════
+// SCENE 1
+// ═══════════════════════════════════
+
+let s1tl = null; // active GSAP timeline for scene 1
+
+function reset1() {
+  // Kill any running timeline
+  if (s1tl) { s1tl.kill(); s1tl = null; }
+  gsap.killTweensOf([cursor, $('calWrapper'), $('m-qbr'), $('meetExpanded'), $('slackPopup'), $('dimOverlay')]);
+  gsap.killTweensOf('.att-row');
+
+  // Title card
+  const tc = $('titleCard');
+  tc.classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+
+  // Scene
+  $('scene1').classList.remove('active');
+
+  // Calendar — instant snap to hidden
+  gsap.set($('calWrapper'), { opacity: 0, y: 16, scale: 0.98, clearProps: 'filter' });
+  gsap.set($('m-qbr'), { opacity: 0, scale: 0.92 });
+
+  // Meeting card — use CSS class approach (centred modal)
+  $('meetExpanded').classList.remove('visible', 'fade-out');
+
+  // Attendees
+  gsap.set('.att-row', { opacity: 0, y: 6 });
+
+  // Overlays
+  $('dimOverlay').classList.remove('visible');
+  $('slackPopup').classList.remove('visible');
+
+  // Cursor — off-screen instantly
+  gsap.set(cursor, { opacity: 0, x: -400, y: -400 });
+}
+
+function run1() {
+  reset1();
+
+  const tc     = $('titleCard');
+  const line1  = [...document.querySelectorAll('.tc-word[data-line="1"]')];
+  const line2  = [...document.querySelectorAll('.tc-word[data-line="2"]')];
+  const cal    = $('calWrapper');
+  const qbr    = $('m-qbr');
+  const meet   = $('meetExpanded');
+  const dim    = $('dimOverlay');
+  const slack  = $('slackPopup');
+  const atts   = document.querySelectorAll('.att-row');
+
+  // ── Title card timing ──────────────────────────────────────────
+  // line1: 3 words × 0.2s gap = done at 0.6 + 3×0.2 = 1.2s
+  // line2: 3 words × 0.18s gap, starts at 2.2s (dim + stagger)
+  //        done at 2.2 + 3×0.18 = 2.74s
+  // title hold: 3.46 + 2.0 = 5.46s
+  // title fade: 5.46s
+  // cal in:     5.46 + 0.9 = 6.36s
+  // qbr pop:    6.36 + 1.2 = 7.56s
+  // cursor:     6.36 + 2.8 = 9.16s
+  // click:      9.16 + 0.7 = 9.86s
+  // atts:       9.86 + 0.4 = 10.26s
+  // scroll cursor: 10.26 + 1.8 = 12.06s
+  // close meet: 12.06 + 2.8 = 14.86s
+  // slack:      14.86 + 1.1 = 15.96s
+
+  s1tl = gsap.timeline();
+
+  // Beat 1 — title card
+  s1tl.call(() => tc.classList.add('visible'), [], 0.1);
+
+  line1.forEach((w, i) =>
+    s1tl.call(() => w.classList.add('visible'), [], 0.6 + i * 0.2)
+  );
+  s1tl.call(() => {
+    line1.forEach(w => w.classList.add('dim'));
+    line2.forEach((w, i) => gsap.delayedCall(i * 0.18, () => w.classList.add('visible')));
+  }, [], 2.2);
+  s1tl.call(() => tc.classList.add('fade-out'), [], 5.46);
+
+  // Beat 2 — calendar slides in
+  s1tl
+    .call(() => $('scene1').classList.add('active'), [], 6.36)
+    .to(cal, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out' }, 6.4)
+    .to(qbr, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' }, 7.56);
+
+  // Beat 3 — cursor appears, moves to QBR, clicks
+  s1tl.call(() => {
+    const rect = qbr.getBoundingClientRect();
+    const tx = rect.left + rect.width * 0.4;
+    const ty = rect.top + rect.height * 0.3;
+    // Place cursor slightly above+right of target, then tween in
+    gsap.set(cursor, { x: tx + 80, y: ty - 40 });
+    gsap.to(cursor, { opacity: 1, duration: 0.2 });
+    gsap.to(cursor, { x: tx, y: ty, duration: 0.6, ease: 'power2.inOut', delay: 0.05 });
+  }, [], 9.16);
+
+  s1tl.call(() => {
+    const rect = qbr.getBoundingClientRect();
+    const tx = rect.left + rect.width * 0.4;
+    const ty = rect.top + rect.height * 0.3;
+    // Ripple
+    const r = document.createElement('div');
+    r.className = 'click-ripple';
+    r.style.left = tx + 'px'; r.style.top = ty + 'px';
+    document.body.appendChild(r);
+    setTimeout(() => r.remove(), 600);
+    // Expand modal (CSS class handles centred transform)
+    dim.classList.add('visible');
+    meet.classList.add('visible');
+  }, [], 9.86);
+
+  s1tl.to(cursor, { opacity: 0, duration: 0.2 }, 10.06);
+
+  // Beat 4 — attendees cascade in
+  // atts start at 10.26, 3 × 0.22s stagger = last one done at ~10.70s
+  s1tl.to(atts, {
+    opacity: 1, y: 0,
+    duration: 0.3, ease: 'power2.out',
+    stagger: 0.22
+  }, 10.26);
+
+  // Beat 5 — hold briefly, then dismiss (no scroll needed — 3 attendees fit cleanly)
+  s1tl.call(() => {
+    meet.classList.remove('visible');
+    meet.classList.add('fade-out');
+  }, [], 12.0);
+
+  s1tl.call(() => {
+    dim.classList.remove('visible');
+    gsap.to(cal, { opacity: 0.12, filter: 'blur(4px)', scale: 0.97, duration: 0.9, ease: 'power2.out' });
+  }, [], 12.5);
+
+  s1tl.call(() => slack.classList.add('visible'), [], 13.4);
+}
+
+// ═══════════════════════════════════
+// SCENE 2
+// ═══════════════════════════════════
+let s2Running = false, s2Resetting = false;
+let s2StreamScrollLastMs = 0;
+const s2cur = $('s2Cursor');
+
+function s2GentleScrollIntoView(el) {
+  if (s2Resetting || !el || !el.isConnected) return;
+  const now = performance.now();
+  if (now - s2StreamScrollLastMs < 135) return;
+  s2StreamScrollLastMs = now;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+}
+
+const S2Q = "Jenny, I'm presenting the launch plan to you tomorrow. What's the strongest way to frame the delay for the room?";
+
+const S2_SOURCES = [
+  { icon: 'slack', count: '4', label: 'Team Threads' },
+  { icon: 'gdocs', count: '3', label: 'Product Notes' },
+  { icon: 'gmeet', count: '3', label: 'Product reviews' },
+];
+
+const S2_REASONING = "The onboarding drop-off is fresh and fixable — launching now risks early churn. A short delay is easier to explain than a bad Month 1 retention number.";
+
+/* {doc} = deck citation — rendered as inline icon in s2StreamResponse */
+const S2_RESPONSE = "Looked at your deck — the delay recommendation is the right call. The onboarding drop-off you flagged on slide 3 is exactly the kind of friction that tanks Month 1 retention, and that's the metric I watch most closely in those first 30 days.{doc}\n\nA two-week delay is entirely defensible. The scope is specific, the fix is targeted, and you have the data to back it up.{doc} What I'd push back on is walking into this meeting framing it as a question — own the decision before you walk in the door.\n\n{b}My Recommendation:{/b} Start discussion with Delay. State it as a decision you've made, then walk through the fix plan. That's the stronger position — it shows you've already done the hard thinking.";
+
+const S2_DECK_CIT_ICON = `<span class="s2-inline-cit" title="Launch_Update.pptx"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#1a73e8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+
+const S2_PILL_ICONS = {
+  slack: `<svg viewBox="0 0 2447.6 2452.5" width="15" height="15" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>`,
+  gdocs: `<svg viewBox="0 0 48 48" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M30 0H8C5.8 0 4 1.8 4 4v40c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4V14L30 0z"/><path fill="#1a6fc4" d="M30 0v14h14z" opacity=".65"/><path fill="white" d="M12 22h24v2.5H12zm0 6.5h24V31H12zm0 6.5h16v2.5H12z"/></svg>`,
+  gmeet: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#00832d" d="M17 10.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3.5l4 4v-11l-4 4z"/></svg>`,
+  gmail: `<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>`,
+};
+
+function sleep2(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function s2TypeText(el, text, speed = 42) {
+  el.textContent = '';
+  for (let i = 0; i < text.length; i++) {
+    if (s2Resetting) return;
+    el.textContent += text[i];
+    await sleep2(text[i] === ' ' ? speed * 0.3 : speed + Math.random() * 14 - 7);
+  }
+}
+
+/** Tokenize `{doc}`, `{b}...{/b}`, and plain text for streaming */
+function tokenizeS2Response(str) {
+  const tokens = [];
+  let i = 0;
+  while (i < str.length) {
+    if (str.startsWith('{doc}', i)) {
+      tokens.push({ type: 'doc' });
+      i += 5;
+      continue;
+    }
+    if (str.startsWith('{b}', i)) {
+      const close = str.indexOf('{/b}', i + 3);
+      if (close === -1) {
+        tokens.push({ type: 'text', text: str.slice(i) });
+        break;
+      }
+      tokens.push({ type: 'bold', text: str.slice(i + 3, close) });
+      i = close + 4;
+      continue;
+    }
+    let next = str.length;
+    const iDoc = str.indexOf('{doc}', i);
+    const iBold = str.indexOf('{b}', i);
+    if (iDoc !== -1) next = Math.min(next, iDoc);
+    if (iBold !== -1) next = Math.min(next, iBold);
+    if (next > i) tokens.push({ type: 'text', text: str.slice(i, next) });
+    i = next;
+  }
+  return tokens;
+}
+
+/** Streams plain text + `{doc}` icons + `{b}...{/b}` bold spans */
+async function s2StreamResponse(el, text, speed = 8) {
+  el.innerHTML = '';
+  const tokens = tokenizeS2Response(text);
+  const cur = document.createElement('span');
+  cur.className = 's2-streaming-cursor';
+
+  async function streamPlainChunk(chunk) {
+    if (!chunk) return;
+    const tn = document.createTextNode('');
+    el.appendChild(tn);
+    el.appendChild(cur);
+    for (let i = 0; i < chunk.length; i++) {
+      if (s2Resetting) return;
+      tn.textContent += chunk[i];
+      s2GentleScrollIntoView(el);
+      await sleep2(chunk[i] === ' ' ? speed * 0.3 : speed);
+    }
+    cur.remove();
+  }
+
+  for (const tok of tokens) {
+    if (s2Resetting) return;
+    if (tok.type === 'doc') {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = S2_DECK_CIT_ICON.trim();
+      const icon = tmp.firstElementChild;
+      if (icon) el.appendChild(icon);
+    } else if (tok.type === 'bold') {
+      const b = document.createElement('b');
+      el.appendChild(b);
+      el.appendChild(cur);
+      for (let i = 0; i < tok.text.length; i++) {
+        if (s2Resetting) return;
+        b.textContent += tok.text[i];
+        s2GentleScrollIntoView(el);
+        await sleep2(tok.text[i] === ' ' ? speed * 0.3 : speed);
+      }
+      cur.remove();
+    } else if (tok.type === 'text') {
+      await streamPlainChunk(tok.text);
+    }
+  }
+  if (cur.parentNode) cur.remove();
+}
+
+function reset2() {
+  s2Running = false; s2Resetting = true;
+  s2StreamScrollLastMs = 0;
+  setTimeout(() => { s2Resetting = false; }, 80);
+
+  // Kill GSAP tweens
+  gsap.killTweensOf([s2cur, $('s2Deck'), $('s2Profile'), $('s2InputArea'), $('s2ChatFrame')].filter(Boolean));
+
+  // Phases
+  $('s2DocPhase').classList.add('active');
+  $('s2ChatPhase').classList.remove('active');
+  $('scene2').classList.remove('active');
+
+  // Deck — snap back to initial hidden state (CSS transform removed, all via GSAP)
+  gsap.set($('s2Deck'), { opacity: 0, y: 18, scale: 0.98, x: 0 });
+
+  // Chip
+  const chip = $('s2FileChip');
+  chip.classList.remove('show'); gsap.set(chip, { opacity: 0, clearProps: 'left,top' });
+
+  // Chat phase
+  const s2f = $('s2ChatFrame');
+  if (s2f) { s2f.scrollTop = 0; gsap.set(s2f, { opacity: 0 }); }
+  $('s2ChatPhase').scrollTop = 0;
+  $('s2Profile').style.display = '';
+  $('s2InputArea').style.display = '';
+  gsap.set($('s2Profile'), { opacity: 0, y: 10 });
+  gsap.set($('s2InputArea'), { opacity: 0, y: 8 });
+  $('s2InputChip').classList.remove('show');
+  $('s2InputText').textContent = '';
+  $('s2SendBtn').classList.remove('active', 'clicked');
+
+  $('s2Content').classList.remove('visible');
+  $('s2SentWrap').classList.remove('show');
+  $('s2SentText').textContent = '';
+  $('s2Div1').classList.remove('show');
+  $('s2Thinking').classList.remove('show');
+  const s2tb = $('s2ThinkBody');
+  if (s2tb) s2tb.style.display = '';
+  ['s2Step1', 's2Step2', 's2Step3'].forEach(id => $(id).classList.remove('show', 'dim'));
+  $('s2DocReadPill').classList.remove('show');
+  ['s2ReadLine1', 's2ReadLine2'].forEach(id => $(id).classList.remove('show'));
+  $('s2Pills').innerHTML = '';
+  $('s2Reasoning').textContent = '';
+  $('s2RespWrap').style.display = 'none';
+  $('s2Response').innerHTML = '';
+
+  // Cursor
+  gsap.set(s2cur, { opacity: 0, x: -400, y: -400 });
+}
+
+async function run2Inner() {
+  s2Running = true;
+  const deck = $('s2Deck');
+  const profile = $('s2Profile');
+  const inputArea = $('s2InputArea');
+
+  // ── Beat 1: Deck fades in ──────────────────────────────────────
+  $('scene2').classList.add('active');
+  await sleep2(200);
+  gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
+  await sleep2(3200); if (s2Resetting) return;
+
+  // ── Beat 2: Deck fades out (no shrink-to-chip — straight into chat) ──
+  gsap.to(deck, { opacity: 0, y: -10, duration: 0.5, ease: 'power2.in' });
+  await sleep2(450); if (s2Resetting) return;
+
+  // ── Beat 3: Chat phase + frame fade-in ─────────────────────────
+  $('s2DocPhase').classList.remove('active');
+  $('s2ChatPhase').classList.add('active');
+  const s2frame = $('s2ChatFrame');
+  if (s2frame) {
+    gsap.set(s2frame, { opacity: 0 });
+    gsap.to(s2frame, { opacity: 1, duration: 0.28, ease: 'power2.out', delay: 0.05 });
+  }
+  await sleep2(200); if (s2Resetting) return;
+
+  // Profile fades in
+  gsap.to(profile, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' });
+  await sleep2(800); if (s2Resetting) return;
+
+  // Input area fades in
+  $('s2InputChip').classList.add('show');
+  gsap.to(inputArea, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+  await sleep2(600); if (s2Resetting) return;
+
+  // ── Beat 4: Type the question ──────────────────────────────────
+  // Activate send button once we have some text
+  const inputEl = $('s2InputText');
+  const sendBtn = $('s2SendBtn');
+  for (let i = 0; i < S2Q.length; i++) {
+    if (s2Resetting) return;
+    inputEl.textContent += S2Q[i];
+    if (i === 10) sendBtn.classList.add('active'); // light up send partway through (after "Jenny, can ")
+    await sleep2(S2Q[i] === ' ' ? 12 : 42 + Math.random() * 14 - 7);
+  }
+  await sleep2(500); if (s2Resetting) return;
+
+  // ── Beat 5: Cursor clicks send ─────────────────────────────────
+  const sendRect = sendBtn.getBoundingClientRect();
+  const sx = sendRect.left + sendRect.width / 2;
+  const sy = sendRect.top  + sendRect.height / 2;
+  gsap.set(s2cur, { x: sx + 60, y: sy - 30 });
+  gsap.to(s2cur, { opacity: 1, duration: 0.2 });
+  await sleep2(80); if (s2Resetting) return;
+  gsap.to(s2cur, { x: sx, y: sy, duration: 0.55, ease: 'power2.inOut' });
+  await sleep2(620); if (s2Resetting) return;
+
+  // Click animation
+  sendBtn.classList.add('clicked');
+  setTimeout(() => sendBtn.classList.remove('clicked'), 150);
+  await sleep2(200); if (s2Resetting) return;
+  gsap.to(s2cur, { opacity: 0, duration: 0.2 });
+
+  // ── Beat 6: Input + profile fade out, sent bubble appears ────────
+  gsap.to(inputArea, { opacity: 0, y: -8, duration: 0.35, ease: 'power2.in' });
+  gsap.to(profile,   { opacity: 0, y: -6, duration: 0.3,  ease: 'power2.in', delay: 0.05,
+    onComplete: () => { profile.style.display = 'none'; inputArea.style.display = 'none'; }
+  });
+  await sleep2(300); if (s2Resetting) return;
+
+  $('s2Content').classList.add('visible');
+  $('s2SentText').textContent = S2Q;
+  $('s2SentWrap').classList.add('show');
+  await sleep2(400); if (s2Resetting) return;
+
+  $('s2Div1').classList.add('show');
+  await sleep2(800); if (s2Resetting) return;
+
+  // ── Beat 7: Thinking ───────────────────────────────────────────
+  $('s2Thinking').classList.add('show');
+  await sleep2(600); if (s2Resetting) return;
+
+  // Step 1
+  $('s2Step1').classList.add('show');
+  await sleep2(500); if (s2Resetting) return;
+  $('s2DocReadPill').classList.add('show');
+  await sleep2(700); if (s2Resetting) return;
+  $('s2ReadLine1').classList.add('show');
+  await sleep2(1000); if (s2Resetting) return;
+  $('s2ReadLine2').classList.add('show');
+  await sleep2(1100); if (s2Resetting) return;
+  $('s2Step1').classList.add('dim');
+
+  // Step 2
+  $('s2Step2').classList.add('show');
+  await sleep2(400); if (s2Resetting) return;
+  const pillsEl = $('s2Pills');
+  for (const src of S2_SOURCES) {
+    if (s2Resetting) return;
+    const p = document.createElement('div');
+    p.className = 's2-pill';
+    p.innerHTML = `${S2_PILL_ICONS[src.icon] || ''}<span class="count">${src.count}</span> ${src.label}`;
+    pillsEl.appendChild(p);
+    await sleep2(30);
+    p.classList.add('show');
+    await sleep2(200);
+  }
+  await sleep2(600); if (s2Resetting) return;
+  $('s2Step2').classList.add('dim');
+
+  // Step 3 — reasoning shimmer
+  $('s2Step3').classList.add('show');
+  await sleep2(300); if (s2Resetting) return;
+  $('s2Reasoning').textContent = S2_REASONING;
+  await sleep2(4200); if (s2Resetting) return;
+  $('s2Step3').classList.add('dim');
+
+  // Collapse thinking steps before response
+  $('s2ThinkBody').style.display = 'none';
+  await sleep2(400); if (s2Resetting) return;
+
+  // ── Beat 8: Response ───────────────────────────────────────────
+  await sleep2(400); if (s2Resetting) return;
+
+  $('s2RespWrap').style.display = 'block';
+  await sleep2(200); if (s2Resetting) return;
+
+  await s2StreamResponse($('s2Response'), S2_RESPONSE, 8);
+  s2Running = false;
+}
+
+function run2() { reset2(); setTimeout(() => run2Inner(), 60); }
+
+// ═══════════════════════════════════
+// SCENE 3 — Deck update
+// ═══════════════════════════════════
+let s3Running = false, s3Resetting = false;
+const s3cur = $('s3Cursor');
+const S3_BULLET1 = 'Delay launch — fix onboarding before GA.';
+const S3_BULLET2 = 'Rebuild activation flow to hit 75% Day-7 retention before launch.';
+
+async function s3TypeInto(el, text) {
+  if (!el) return;
+  for (let i = 0; i < text.length; i++) {
+    if (s3Resetting) return;
+    const chunk = text.slice(0, i + 1);
+    el.innerHTML = chunk.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+      '<span class="s3-text-cursor"></span>';
+    await sleep2(text[i] === ' ' ? 8 : 22 + Math.random() * 10);
+  }
+  el.textContent = text;
+}
+
+function s3MoveCur(x, y, durMs = 520) {
+  return new Promise(resolve => {
+    gsap.to(s3cur, {
+      x, y, duration: durMs / 1000, ease: 'power2.inOut',
+      onComplete: resolve
+    });
+  });
+}
+
+function reset3() {
+  s3Running = false; s3Resetting = true;
+  setTimeout(() => { s3Resetting = false; }, 80);
+  gsap.killTweensOf([$('s3Deck'), s3cur]);
+  $('scene3').classList.remove('active');
+  gsap.set($('s3Deck'), { opacity: 0, y: 18, scale: 0.98, clearProps: 'x' });
+  $('s3DecLine1').innerHTML = '';
+  $('s3DecLine2').innerHTML = '';
+  const si = $('s3SaveIndicator');
+  si.textContent = 'Editing';
+  si.className = 's3-save-indicator';
+  gsap.set(s3cur, { opacity: 0, x: -400, y: -400 });
+}
+
+async function run3Inner() {
+  s3Running = true;
+  const deck = $('s3Deck');
+  const li1 = $('s3DecLine1');
+  const li2 = $('s3DecLine2');
+  const si = $('s3SaveIndicator');
+
+  $('scene3').classList.add('active');
+  await sleep2(200); if (s3Resetting) return;
+
+  gsap.to(deck, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' });
+  await sleep2(800); if (s3Resetting) return;
+
+  gsap.set(s3cur, { opacity: 0, x: -400, y: -400 });
+
+  await s3TypeInto(li1, S3_BULLET1); if (s3Resetting) return;
+  await sleep2(220); if (s3Resetting) return;
+  await s3TypeInto(li2, S3_BULLET2); if (s3Resetting) return;
+  await sleep2(400); if (s3Resetting) return;
+
+  const area = $('s3DecisionArea');
+  const ar = area.getBoundingClientRect();
+  const sx = ar.left + ar.width * 0.12;
+  const sy = ar.top + ar.height * 0.45;
+  gsap.set(s3cur, { x: sx + 70, y: sy - 35 });
+  gsap.to(s3cur, { opacity: 1, duration: 0.2 });
+  await sleep2(120); if (s3Resetting) return;
+  await s3MoveCur(sx, sy, 560); if (s3Resetting) return;
+  await sleep2(280); if (s3Resetting) return;
+
+  const sir = si.getBoundingClientRect();
+  const tx = sir.left + sir.width * 0.5;
+  const ty = sir.top + sir.height * 0.55;
+  await s3MoveCur(tx, ty, 520); if (s3Resetting) return;
+  await sleep2(220); if (s3Resetting) return;
+
+  si.textContent = 'Saving…';
+  si.className = 's3-save-indicator saving';
+  await sleep2(680); if (s3Resetting) return;
+  si.textContent = 'Saved ✓';
+  si.className = 's3-save-indicator saved';
+  gsap.to(s3cur, { opacity: 0, duration: 0.2 });
+  await sleep2(1200); if (s3Resetting) return;
+  s3Running = false;
+}
+
+function run3() { reset3(); setTimeout(() => run3Inner(), 60); }
+
+// ═══════════════════════════════════
+// SCENE 4 — Resolution + tagline
+// ═══════════════════════════════════
+let s4Running = false, s4Resetting = false;
+
+function reset4() {
+  s4Running = false; s4Resetting = true;
+  setTimeout(() => { s4Resetting = false; }, 80);
+  $('scene4').classList.remove('active');
+  $('s4CalWrapper').classList.remove('show', 'fade-out-cal');
+  $('s4QbrBlock').classList.remove('done');
+  $('s4FwStage').querySelectorAll('.s4-fw-dot').forEach(d => d.classList.remove('burst'));
+  const sp = $('s4SlackPopup');
+  sp.classList.remove('visible', 'hiding');
+  const tc4 = $('titleCard4');
+  tc4.classList.remove('active', 'visible');
+  tc4.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+}
+
+async function run4Inner() {
+  if (s4Running) return;
+  s4Running = true;
+  s4Resetting = false;
+
+  $('scene4').classList.add('active');
+  await sleep2(80); if (s4Resetting) return;
+
+  $('s4CalWrapper').classList.add('show');
+  await sleep2(1400); if (s4Resetting) return;
+
+  $('s4QbrBlock').classList.add('done');
+  await sleep2(2000); if (s4Resetting) return;
+
+  $('s4CalWrapper').classList.add('fade-out-cal');
+  await sleep2(700); if (s4Resetting) return;
+
+  $('s4SlackPopup').classList.add('visible');
+  await sleep2(320); if (s4Resetting) return;
+  $('s4FwStage').querySelectorAll('.s4-fw-dot').forEach(d => d.classList.add('burst'));
+  await sleep2(6000); if (s4Resetting) return;
+
+  $('s4SlackPopup').classList.remove('visible');
+  $('s4SlackPopup').classList.add('hiding');
+  await sleep2(950); if (s4Resetting) return;
+
+  const tc = $('titleCard4');
+  tc.classList.add('active');
+  await sleep2(60); tc.classList.add('visible');
+  await sleep2(500); if (s4Resetting) return;
+
+  const line1 = tc.querySelectorAll('[data-s4line="1"]');
+  const line2 = tc.querySelectorAll('[data-s4line="2"]');
+  for (let i = 0; i < line1.length; i++) {
+    if (s4Resetting) return;
+    line1[i].classList.add('visible');
+    await sleep2(210);
+  }
+  await sleep2(600); if (s4Resetting) return;
+  line1.forEach(w => w.classList.add('dim'));
+  await sleep2(200); if (s4Resetting) return;
+  for (let i = 0; i < line2.length; i++) {
+    if (s4Resetting) return;
+    line2[i].classList.add('visible');
+    await sleep2(190);
+  }
+  s4Running = false;
+}
+
+function run4() { reset4(); setTimeout(() => run4Inner(), 60); }
+
+// ═══════════════════════════════════
+// SCENE SWITCHER
+// ═══════════════════════════════════
+function switchScene(num) {
+  if (s1tl) { s1tl.kill(); s1tl = null; }
+  s2Resetting = true; s2Running = false;
+  setTimeout(() => { s2Resetting = false; }, 80);
+  gsap.globalTimeline.clear();
+  SCENE = num;
+  $('sceneNum').textContent = num;
+
+  gsap.set($('s2Cursor'), { opacity: 0, x: -400, y: -400 });
+  gsap.set($('s3Cursor'), { opacity: 0, x: -400, y: -400 });
+  gsap.set(cursor, { opacity: 0, x: -400, y: -400 });
+
+  // Hide all scenes
+  $('scene1').classList.remove('active');
+  $('scene2').classList.remove('active');
+  $('scene3').classList.remove('active');
+  $('scene4').classList.remove('active');
+
+  if (num !== 3) reset3();
+  if (num !== 4) reset4();
+
+  // Clean up scene 1 fixed overlays
+  $('meetExpanded').classList.remove('visible', 'fade-out');
+  $('dimOverlay').classList.remove('visible');
+  $('slackPopup').classList.remove('visible');
+  const tc = $('titleCard');
+  tc.classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+
+  if (num === 1) { reset1(); run1(); }
+  if (num === 2) { reset2(); run2(); }
+  if (num === 3) { reset3(); run3(); }
+  if (num === 4) { run4(); }
+}
+
+// ═══════════════════════════════════
+// KEYBOARD + UI
+// ═══════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === '1') switchScene(1);
+  if (e.key === '2') switchScene(2);
+  if (e.key === '3') switchScene(3);
+  if (e.key === '4') switchScene(4);
+  if (e.key === 'r' || e.key === 'R') switchScene(SCENE);
+  if (e.key === 'h' || e.key === 'H') toggleControls();
+});
+
+function toggleControls() {
+  const c = $('controls');
+  c.style.opacity = c.style.opacity === '0' ? '1' : '0';
+}
+
+// ═══════════════════════════════════
+// AUTOPLAY
+// ═══════════════════════════════════
+window.addEventListener('load', () => switchScene(1));
+</script>
+</body>
+</html>
