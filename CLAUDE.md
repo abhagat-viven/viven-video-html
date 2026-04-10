@@ -98,13 +98,15 @@ The intended flow (Option A — auto-chains):
 ## Hero Video Files (viven_hero_v*.html)
 
 ### Current File
-`viven_hero_v8.html` — current working file with Courtney's second round of copy changes.
+`viven_hero_v8.html` — hero baseline with Courtney's second round of copy changes.
+
+**M&A working file:** `viven_mna_v1.html` — copy of v8; edit this file for the M&A variant.
 
 ### Scene Structure (v8)
 | Key | Scene | Purpose |
 |-----|-------|---------|
 | 1 | Bottleneck | Sarah offline, team stuck on Acme Q2 Discount Approval doc |
-| 2 | Digital Twin | "What If Sarah's Expertise Was Available / Even When She's Not?" → Twin answers Josh's question |
+| 2 | Digital Twin | `viven_mna_v1`: "What If Sarah's Expertise Stayed? / Even After they've Moved On?" → Twin answers Josh's question |
 | 3 | Channel-flip | CS, Engineering, Legal Twins — chunked answer reveal |
 | 4 | Network | SVG knowledge network (under redesign) |
 
@@ -117,7 +119,7 @@ The intended flow (Option A — auto-chains):
 
 ### Title Card Word Count (must match span count exactly)
 - tc1: 8 words
-- tc2a: 10 words — "What If Sarah's Expertise Was Available / Even When She's Not?"
+- tc2a: 10 words — "What If Sarah's Expertise Stayed? / Even After they've Moved On?" (`viven_mna_v1.html`; hero v8 may differ)
 - tc2b: 5 words — "Meet Sarah's Viven Digital Twin" (single line, no subtitle)
 - tc3: 6 words
 - tc4: 7 words
