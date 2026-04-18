@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video 3 — 100426</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@300;400;500;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #f5f3f0;
+  --bg-surface: #ffffff;
+  --bg-card: #faf9f7;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.10);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #9a9a9a;
+  --accent: #a196eb;
+  --teal: #0d9488;
+  --gcal-blue: #1a73e8;
+  --font-main: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.09);
+  --shadow-accent: 0 0 0 1px rgba(161,150,235,0.15), 0 0 30px rgba(161,150,235,0.06);
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ambient-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26,115,232,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59,111,160,0.02) 0%, transparent 60%),
+    var(--bg-deep);
+  z-index: 0;
+}
+
+#scene1, #scene2, #scene3, #scene4, #scene5 {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 1;
+}
+#scene1.active, #scene2.active, #scene3.active, #scene4.active, #scene5.active {
+  display: block;
+}
+#scene4 { pointer-events: none; }
+#scene4.active { pointer-events: auto; }
+
+.title-card {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bg-deep);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+.title-card.visible { opacity: 1; }
+.title-card.fade-out { opacity: 0; transition: opacity 2s ease; }
+
+.title-card-text-wrap {
+  text-align: center; max-width: 900px;
+  padding: 0 max(24px, 4vw);
+  animation: tc-drift 6s ease-in-out infinite;
+}
+@keyframes tc-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.tc-word {
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 48px; font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(26,26,26,0.35);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  margin: 0 4px; line-height: 1.35;
+}
+.tc-word.visible { opacity: 1; transform: translateY(0); }
+.tc-word.emphasis { font-weight: 700; color: rgba(26,26,26,0.9); }
+.tc-break { display: block; height: 8px; }
+.tc-word.dim { opacity: 0.25 !important; transition: opacity 0.8s ease; }
+
+#titleCard .title-card-text-wrap {
+  max-width: 1160px;
+  padding: 0 max(12px, 2vw);
+}
+#titleCard .tc-word[data-line="2"] {
+  margin: 0 3px;
+}
+
+#titleCardEnd {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Same warm wash as Scene 4 Slack layer — reads continuous when card fades in on top */
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26, 115, 232, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59, 111, 160, 0.02) 0%, transparent 60%),
+    var(--bg-deep);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+#titleCardEnd.visible { opacity: 1; pointer-events: auto; }
+#titleCardEnd .title-card-text-wrap { animation: tc-drift 6s ease-in-out infinite; }
+
+/* Scene 4: Zoom return + meeting end + Slack */
+#s4Beat1 {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+#s4JamesTile.s4-james-soft {
+  border-color: rgba(34, 197, 94, 0.32);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.12);
+}
+
+#scene4 .zoom-grid {
+  gap: 0;
+  padding: 4px 10px 4px 4px;
+}
+#scene4 .participant-tile {
+  padding: 6px 5px;
+}
+
+#scene4 .ppt-main {
+  padding: clamp(8px, 1.2vw, 14px) clamp(10px, 1.6vw, 16px);
+}
+#scene4 .ppt-slide {
+  padding: clamp(10px, 1.4vw, 18px) clamp(12px, 1.8vw, 20px);
+  min-height: 0;
+  flex: 1;
+}
+
+.s4-slide-insight {
+  margin: 6px 0 4px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(26, 26, 26, 0.62);
+  font-weight: 500;
+  max-width: 42em;
+}
+.s4-slide-chart-wrap {
+  width: 100%;
+  max-width: 100%;
+  margin: 4px auto 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#s4SlideCanvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 800 / 320;
+}
+.s4-slide-caption {
+  font-size: 9px;
+  color: #888;
+  margin-top: 6px;
+  text-align: center;
+  line-height: 1.35;
+  flex-shrink: 0;
+}
+
+#s4ChatBubble.chat-bubble {
+  position: absolute;
+  z-index: 25;
+  /* Left of James tile: larger right inset shifts bubble toward center / away from viewport edge */
+  right: min(42%, 420px);
+  top: 27%;
+  bottom: auto;
+  left: auto;
+  max-width: min(300px, 30vw);
+  width: min(300px, 30vw);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  will-change: transform, opacity;
+  pointer-events: auto;
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
+}
+#scene4.s4-chat-focus #s4DesktopBg {
+  opacity: 0.42;
+}
+#scene4.s4-chat-focus #s4Menubar,
+#scene4.s4-chat-focus #s4Dock {
+  opacity: 0.38;
+}
+#scene4.s4-chat-focus .zw-titlebar {
+  opacity: 0.4;
+}
+#scene4.s4-chat-focus .tile-presenter,
+#scene4.s4-chat-focus .participant-tile:not(#s4JamesTile) {
+  opacity: 0.34;
+}
+#scene4.s4-chat-focus #s4JamesTile {
+  opacity: 1;
+  border-color: rgba(34, 197, 94, 0.88);
+  box-shadow:
+    0 0 0 2px rgba(34, 197, 94, 0.45),
+    0 0 28px rgba(34, 197, 94, 0.38);
+}
+#scene4.s4-chat-focus #s4ChatBubble.chat-bubble {
+  border-color: rgba(161, 150, 235, 0.65);
+  box-shadow:
+    0 14px 44px rgba(0, 0, 0, 0.14),
+    0 0 0 1px rgba(161, 150, 235, 0.55),
+    0 0 22px rgba(161, 150, 235, 0.5),
+    0 0 52px rgba(161, 150, 235, 0.28);
+}
+#scene4.s4-chat-focus #s4ChatBubble.chat-bubble::after {
+  border-left-color: rgba(161, 150, 235, 0.35);
+}
+#s4ChatBubble.chat-bubble::before {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #fff;
+  z-index: 2;
+}
+#s4ChatBubble.chat-bubble::after {
+  content: '';
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 9px solid rgba(0, 0, 0, 0.08);
+  z-index: 1;
+}
+
+.s4-slack-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+}
+.s4-slack-layer.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.s4-warm-fill {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26, 115, 232, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59, 111, 160, 0.02) 0%, transparent 60%),
+    var(--bg-deep);
+}
+
+.s4-slack-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(28px) scale(0.95);
+  width: min(500px, 90vw);
+  z-index: 45;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s ease, transform 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.s4-slack-popup.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+.s4-slack-card-outer {
+  position: relative;
+}
+.s4-slack-sparks {
+  position: absolute;
+  inset: -14px -18px -18px -18px;
+  pointer-events: none;
+  z-index: 1;
+}
+.s4-slack-card {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: 16px;
+  padding: 22px 26px 26px;
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.12);
+}
+.s4-spark {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+}
+.s4-spark:nth-child(3n + 1) { color: #ecb22e; background: #ecb22e; }
+.s4-spark:nth-child(3n + 2) { color: #a196eb; background: #a196eb; }
+.s4-spark:nth-child(3n) { color: #14b8a6; background: #14b8a6; }
+@keyframes s4-spark-pop {
+  0% { opacity: 0; transform: scale(0); }
+  18% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: translate(var(--pop, 0px), var(--poy, 0px)) scale(0.35); }
+}
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark {
+  animation: s4-spark-pop 0.58s ease-out forwards;
+}
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(1) { animation-delay: 0ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(2) { animation-delay: 45ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(3) { animation-delay: 90ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(4) { animation-delay: 20ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(5) { animation-delay: 65ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(6) { animation-delay: 110ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(7) { animation-delay: 35ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(8) { animation-delay: 80ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(9) { animation-delay: 125ms; }
+.s4-slack-card-outer.s4-slack-celebrate .s4-spark:nth-child(10) { animation-delay: 55ms; }
+.s4-slack-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.s4-slack-logo-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.s4-slack-logo-wrap svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.s4-slack-names {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+.s4-slack-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.s4-slack-role {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+.s4-slack-body {
+  margin-top: 14px;
+  padding-left: 52px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--text-primary);
+}
+
+.scene-indicator {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-surface); border: 1px solid var(--border-medium);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; color: var(--text-tertiary); z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-family: var(--font-mono);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.scene-indicator.hidden-ctrl { opacity: 0; pointer-events: none; }
+.scene-indicator kbd {
+  background: var(--bg-card); border: 1px solid var(--border-subtle);
+  padding: 1px 5px; border-radius: 4px; font-size: 11px; cursor: pointer;
+}
+
+/* ═══ Scene 2: macOS desktop + Zoom ═══ */
+#scene2 { pointer-events: none; }
+#scene2.active { pointer-events: auto; }
+
+.desktop-bg {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(145deg, #dde5f0 0%, #e0d8eb 40%, #ece4da 100%);
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+.mac-menubar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 60;
+  font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+.mac-menubar-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.mac-apple {
+  flex-shrink: 0;
+  opacity: 0.9;
+  display: block;
+}
+.mac-app-name { font-weight: 700; }
+.mac-menus {
+  display: flex;
+  gap: 18px;
+  color: rgba(0,0,0,0.85);
+  font-weight: 400;
+}
+.mac-menubar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mac-menubar-right svg { opacity: 0.75; flex-shrink: 0; }
+.mac-clock {
+  font-size: 12px;
+  color: rgba(0,0,0,0.75);
+  font-weight: 500;
+}
+
+.mac-dock {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 18px;
+  padding: 5px 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  z-index: 60;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.dock-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+.dock-icon svg,
+.dock-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+.dock-icon-tile-chrome {
+  background: #fff;
+  padding: 6px;
+}
+.dock-icon-tile-zoom {
+  background: #2d8cff;
+  padding: 7px;
+}
+.dock-icon-tile-ppt {
+  background: #fff;
+  padding: 7px;
+}
+.dock-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  margin-top: 3px;
+  opacity: 0;
+}
+.dock-item.is-active .dock-dot { opacity: 1; }
+
+.s2-zoom-shell {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  z-index: 10;
+  width: min(940px, 86vw);
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.zoom-window-wrap {
+  position: relative;
+  width: 100%;
+  pointer-events: auto;
+}
+#s2ZoomWindow.zoom-window,
+#s4ZoomWindow.zoom-window {
+  width: 100%;
+  background: #1c1c1c;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.20), 0 0 0 1px rgba(0,0,0,0.12);
+  will-change: transform, opacity;
+}
+
+.zw-titlebar {
+  height: 38px;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  position: relative;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+.zw-traffic { display: flex; gap: 8px; align-items: center; }
+.zw-dot { width: 12px; height: 12px; border-radius: 50%; }
+.zw-dot.r { background: #ff5f57; }
+.zw-dot.y { background: #febc2e; }
+.zw-dot.g { background: #28c840; }
+.zw-meeting-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.zw-rec { display: flex; align-items: center; gap: 6px; }
+.zw-rec-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e05c5c;
+  animation: zw-rec-pulse 2s ease-in-out infinite;
+}
+@keyframes zw-rec-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+.zw-rec-txt { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+.zoom-grid {
+  display: grid;
+  grid-template-columns: 2.4fr 0.7fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 3px;
+  padding: 4px 8px 4px 4px;
+  height: calc(min(940px, 86vw, 100vw - 32px) * 0.56);
+}
+
+.tile-presenter {
+  grid-row: 1 / 4;
+  position: relative;
+  background: #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+.ppt-outer {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 4px;
+  bottom: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  animation: ppt-share-glow 2.8s ease-in-out infinite;
+}
+@keyframes ppt-share-glow {
+  0%, 100% {
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.35),
+      0 0 0 1.5px rgba(232,113,26,0.25);
+  }
+  50% {
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.35),
+      0 0 0 1.5px rgba(232,113,26,0.45);
+  }
+}
+
+.ppt-app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #faf9f6;
+  min-height: 0;
+}
+.ppt-bar {
+  flex-shrink: 0;
+  height: 26px;
+  background: linear-gradient(90deg, #c55a11 0%, #e8711a 100%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+.ppt-bar svg { width: 12px; height: 12px; flex-shrink: 0; }
+.ppt-filename {
+  flex: 1;
+  font-size: 11px;
+  color: rgba(255,255,255,0.95);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ppt-bar-dots { display: flex; gap: 4px; }
+.ppt-bar-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+
+.ppt-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #dcdcdc;
+}
+
+.ppt-main {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dcdcdc;
+}
+
+.ppt-slide {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  padding: clamp(16px, 2.2vw, 28px) clamp(20px, 2.8vw, 36px);
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+.ppt-slide-h1 {
+  font-size: clamp(17px, 1.65vw, 22px);
+  font-weight: 800;
+  color: #c55a11;
+  letter-spacing: -0.35px;
+  line-height: 1.18;
+}
+.ppt-bar-lg {
+  height: 8px;
+  width: 48%;
+  background: #e0deda;
+  border-radius: 4px;
+  margin-top: 14px;
+}
+.ppt-bars-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+}
+.ppt-bar-sm {
+  height: 6px;
+  background: #e8e5e1;
+  border-radius: 3px;
+  margin: 4px 0;
+}
+.ppt-bar-sm.w85 { width: 85%; }
+.ppt-bar-sm.w70 { width: 70%; }
+.ppt-bar-sm.w92 { width: 92%; }
+.ppt-bar-sm.w55 { width: 55%; }
+.ppt-bar-sm.w65 { width: 65%; }
+.ppt-bar-sm.w35 { width: 35%; margin-top: 10px; }
+.ppt-slide-foot {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #ece9e5;
+  display: flex;
+  justify-content: center;
+}
+.ppt-slide-foot .ppt-foot-bar {
+  width: 38%;
+  height: 6px;
+  background: #e8e5e1;
+  border-radius: 3px;
+}
+
+.participant-tile {
+  position: relative;
+  background: #2a2a2a;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  transition: border-color 0.4s ease, opacity 0.45s ease, box-shadow 0.45s ease;
+}
+.pt-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.pt-photo-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.pt-photo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.08);
+  display: block;
+}
+.pt-live-dot {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 1.5px rgba(34,197,94,0.35);
+}
+.pt-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 7px;
+  text-align: center;
+  line-height: 1.2;
+}
+.pt-title {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin-top: 2px;
+  line-height: 1.25;
+}
+.pt-mic-off {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: rgba(255,255,255,0.5);
+}
+
+#s2ChatBubble.chat-bubble {
+  position: absolute;
+  z-index: 26;
+  right: min(26%, 240px);
+  /* ~25% higher than previous 27% anchor */
+  top: calc(27% * 0.75);
+  bottom: auto;
+  left: auto;
+  max-width: min(340px, 34vw);
+  width: min(340px, 34vw);
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  will-change: transform, opacity;
+  pointer-events: auto;
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
+}
+#scene2.s2-chat-focus .desktop-bg {
+  opacity: 0.42;
+}
+#scene2.s2-chat-focus .mac-menubar,
+#scene2.s2-chat-focus .mac-dock {
+  opacity: 0.38;
+}
+#scene2.s2-chat-focus .zw-titlebar {
+  opacity: 0.4;
+}
+#scene2.s2-chat-focus.s2-focus-james .tile-presenter,
+#scene2.s2-chat-focus.s2-focus-james .participant-tile:not(#james-tile) {
+  opacity: 0.34;
+}
+#scene2.s2-chat-focus.s2-focus-james #james-tile {
+  opacity: 1;
+  border-color: rgba(34, 197, 94, 0.88);
+  box-shadow:
+    0 0 0 2px rgba(34, 197, 94, 0.45),
+    0 0 28px rgba(34, 197, 94, 0.38);
+}
+#scene2.s2-chat-focus.s2-focus-zoey .tile-presenter,
+#scene2.s2-chat-focus.s2-focus-zoey .participant-tile:not(#zoey-tile) {
+  opacity: 0.34;
+}
+#scene2.s2-chat-focus.s2-focus-zoey #zoey-tile {
+  opacity: 1;
+  border-color: rgba(34, 197, 94, 0.88);
+  box-shadow:
+    0 0 0 2px rgba(34, 197, 94, 0.45),
+    0 0 28px rgba(34, 197, 94, 0.38);
+}
+#scene2.s2-chat-focus:not(.s2-focus-james):not(.s2-focus-zoey) .tile-presenter,
+#scene2.s2-chat-focus:not(.s2-focus-james):not(.s2-focus-zoey) .participant-tile {
+  opacity: 0.34;
+}
+#scene2.s2-chat-focus #s2ChatBubble.chat-bubble {
+  border-color: rgba(161, 150, 235, 0.65);
+  box-shadow:
+    0 14px 44px rgba(0,0,0,0.14),
+    0 0 0 1px rgba(161, 150, 235, 0.55),
+    0 0 22px rgba(161, 150, 235, 0.5),
+    0 0 52px rgba(161, 150, 235, 0.28);
+}
+#scene2.s2-chat-focus #s2ChatBubble.chat-bubble::after {
+  border-left-color: rgba(161, 150, 235, 0.35);
+}
+#s2ZoeyReply.zoey-reply {
+  position: absolute;
+  z-index: 25;
+  right: min(26%, 240px);
+  left: auto;
+  top: calc((27% * 0.75) + 128px);
+  bottom: auto;
+  max-width: min(340px, 34vw);
+  width: min(340px, 34vw);
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  will-change: transform, opacity;
+  pointer-events: auto;
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
+}
+#s2ZoeyReply.zoey-reply .cb-head {
+  flex-wrap: nowrap;
+}
+#s2ZoeyReply.zoey-reply .cb-meta {
+  flex-wrap: nowrap;
+  align-items: baseline;
+}
+#scene2.s2-chat-focus #s2ZoeyReply.zoey-reply {
+  border-color: rgba(13, 148, 136, 0.5);
+  box-shadow:
+    0 14px 44px rgba(0,0,0,0.10),
+    0 0 0 1px rgba(13, 148, 136, 0.4),
+    0 0 18px rgba(13, 148, 136, 0.25);
+}
+#scene2.s2-chat-focus #s2ZoeyReply.zoey-reply::after {
+  border-left-color: rgba(13, 148, 136, 0.35);
+}
+#s2ZoeyReply.zoey-reply::before {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #fff;
+  z-index: 2;
+}
+#s2ZoeyReply.zoey-reply::after {
+  content: '';
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 9px solid rgba(0,0,0,0.08);
+  z-index: 1;
+}
+#s2ChatBubble.chat-bubble::before {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #fff;
+  z-index: 2;
+}
+#s2ChatBubble.chat-bubble::after {
+  content: '';
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 9px solid rgba(0,0,0,0.08);
+  z-index: 1;
+}
+.cb-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cb-photo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+.cb-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+.cb-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.cb-role {
+  font-size: 12px;
+  color: #6b6b6b;
+}
+.cb-body {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #1a1a1a;
+}
+
+/* ═══ Scene 3: cloned video2 Scene 2 chat phase (.s2-*) + video3-only blocks ═══ */
+#scene3 {
+  pointer-events: none;
+  background: transparent;
+}
+#scene3.active { pointer-events: auto; }
+
+/* Match video2 #s2ChatPhase — centered stage, scroll inside frame only */
+#s3ChatPhase {
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+#scene3 .s2-phase {
+  display: none;
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+}
+#scene3 .s2-phase.active { display: flex; }
+
+#scene3 .s2-chat-frame {
+  width: min(680px, 94vw);
+  max-height: min(92vh, 960px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  padding: 28px 24px 52px;
+  background: transparent;
+  opacity: 0;
+  pointer-events: auto;
+  transform-origin: 50% 0%;
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+#scene3 .s2-page {
+  width: 100%;
+  max-width: 640px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+#scene3 #s3Profile,
+#scene3 #s3InputSection {
+  flex-shrink: 0;
+}
+
+.s2-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 20px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease;
+  overflow: hidden;
+}
+#scene3 .s2-profile.hidden {
+  opacity: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none;
+}
+.s2-av-initials {
+  width: 84px; height: 84px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 700; color: white; margin-bottom: 16px;
+  box-shadow: 0 0 0 3px var(--bg-deep), 0 0 0 5px rgba(0,0,0,0.08);
+}
+.s2-name { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 3px; }
+#scene3 .s2-profile .s2-badge { margin-top: 10px; }
+.s2-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: #6b5fc7;
+  background: rgba(161,150,235,0.10); border: 1px solid rgba(161,150,235,0.18);
+  padding: 5px 14px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.s2-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #a196eb;
+  animation: pulse-dot2 2s ease-in-out infinite;
+}
+@keyframes pulse-dot2 { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+
+.s2-input-area { width: 100%; margin-top: 8px; opacity: 0; transform: translateY(6px); }
+
+.s2-input-box {
+  width: 100%; border: 1px solid rgba(0,0,0,0.10); border-radius: 20px;
+  padding: 18px 20px 14px; display: flex; flex-direction: column; gap: 10px;
+  background: white; box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+#scene3 .s2-input-box.collapsed {
+  opacity: 0; transform: translateY(-8px); max-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  min-height: 0; overflow: hidden; pointer-events: none;
+  border: none; box-shadow: none;
+  transition: opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, transform 0.4s ease;
+}
+.s2-input-text { font-size: 17px; min-height: 26px; line-height: 1.5; color: var(--text-primary); }
+.s2-input-controls { display: flex; align-items: center; justify-content: space-between; }
+.s2-input-right { display: flex; align-items: center; gap: 8px; }
+.s2-model { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 4px; }
+.s2-send {
+  width: 38px; height: 38px; border-radius: 50%; background: #ddd;
+  border: none; cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+#scene3 .s2-send:not(.active) svg { color: rgba(0,0,0,0.38); }
+.s2-send.active { background: #a196eb; box-shadow: 0 0 16px rgba(161,150,235,0.35); }
+.s2-send.active svg { color: #fff; }
+.s2-send.clicked { transform: scale(0.9); transition: transform 0.1s ease; }
+.s2-send svg { width: 15px; height: 15px; }
+
+.s2-content { display: none; width: 100%; padding-top: 14px; }
+.s2-content.visible { display: block; }
+#scene3 .s2-content {
+  flex-direction: column;
+  align-items: stretch;
+  align-self: stretch;
+  width: 100%;
+  min-height: 0;
+}
+#scene3 .s2-content.visible {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  padding-top: 16px;
+}
+#scene3 #s3SentWrap {
+  flex-shrink: 0;
+}
+.s3-analysis-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 640px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+/* Let flex + chat-frame height cap the pane (no extra vh cap) so chart + headers aren’t squeezed.
+   Extra bottom padding: insight can sit in lower third; scroll for full chart first. */
+#scene3 #s3AnalysisScroll {
+  padding-top: 12px;
+  padding-bottom: clamp(72px, 16vh, 180px);
+  box-sizing: border-box;
+}
+#s3AnalysisScroll::-webkit-scrollbar {
+  display: none;
+}
+.s2-sent-wrap { display: none; justify-content: flex-end; margin-bottom: 4px; }
+.s2-sent-wrap.show { display: flex; animation: riseIn2 0.3s ease-out forwards; }
+#scene3 .s2-sent-wrap.show { margin-bottom: 18px; }
+@keyframes riseIn2 { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.s2-sent-bubble {
+  background: #f4f4f4; border-radius: 18px; padding: 14px 20px;
+  max-width: 85%; font-size: 15px; line-height: 1.6;
+}
+
+.s2-divider { width: 0; height: 1px; background: rgba(0,0,0,0.08); margin: 28px 0; transition: width 0.7s ease; }
+.s2-divider.show { width: 100%; }
+#s3RespDivider.s3-panel-hidden { display: none !important; margin: 0; height: 0; overflow: hidden; }
+
+.s2-thinking { opacity: 0; }
+.s2-thinking.show { animation: fadeIn2 0.4s ease forwards; }
+@keyframes fadeIn2 { to { opacity: 1; } }
+
+#scene3 #s3Thinking .s2-think-body {
+  margin-top: 0;
+  padding-top: 4px;
+  padding-bottom: 8px;
+}
+
+.s2-think-body { border-left: 2px solid rgba(0,0,0,0.07); margin-left: 19px; padding-left: 26px; margin-top: 14px; }
+#scene3 #s3Thinking .s2-step {
+  opacity: 1;
+  transform: none;
+  margin-bottom: 22px;
+  transition: opacity 0.5s;
+}
+.s2-step.dim { opacity: 0.28; }
+.s2-step-label { font-size: 13px; color: #888; margin-bottom: 7px; font-weight: 500; }
+.s2-step-label b { color: #555; }
+
+.s3-step-line {
+  font-size: 12px; color: #bbb; line-height: 1.6; opacity: 0;
+  margin-top: 5px;
+  font-family: var(--font-mono);
+}
+.s3-step-line.visible { opacity: 1; transition: opacity 0.35s; }
+
+.s2-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.s2-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 13px; border-radius: 9px; background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0.08); font-size: 12.5px; color: #666; font-weight: 500;
+  opacity: 0; transform: translateY(4px); transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.s2-pill.show { opacity: 1; transform: translateY(0); }
+#scene3 .s2-pill .count { font-weight: 700; color: #333; }
+#scene3 .s2-pill > svg {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.s3-code-block {
+  background: #1e1e1e; border-radius: 10px; overflow: hidden;
+  margin-top: 8px; font-family: var(--font-mono); font-size: 11px;
+  opacity: 0; transition: opacity 0.4s;
+}
+.s3-code-block.show { opacity: 1; }
+.s3-code-header {
+  padding: 6px 12px; background: #2a2a2a;
+  color: rgba(255,255,255,0.5); font-size: 10px;
+}
+.s3-code-body {
+  padding: 10px 14px; color: #d4d4d4; line-height: 1.6;
+  white-space: pre; overflow-x: auto;
+}
+.s3-code-line { opacity: 0; }
+.s3-code-line.visible { opacity: 1; }
+
+.s3-output-block {
+  background: #faf9f7;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px; margin-top: 6px; overflow: hidden;
+  font-family: var(--font-mono); font-size: 11px;
+  opacity: 0;
+}
+.s3-output-block.visible { opacity: 1; transition: opacity 0.4s; }
+/* Scene 3: breathing room between code block and Output so they read as separate cards */
+#scene3 .s3-code-block + .s3-output-block {
+  margin-top: 14px;
+}
+.s3-output-header {
+  padding: 5px 12px; background: rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 10px; color: var(--text-tertiary); font-weight: 600;
+}
+.s3-output-body {
+  padding: 8px 14px; line-height: 1.7; color: var(--text-secondary);
+  white-space: pre;
+}
+.s3-output-body .hl { color: #7c6fd4; font-weight: 700; }
+
+.s3-chart-wrap {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 26px 24px 22px;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transition: opacity 0.5s;
+  margin-top: 8px;
+  overflow: visible;
+}
+.s3-chart-wrap.visible { opacity: 1; }
+.s3-chart-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; line-height: 1.35; }
+.s3-chart-sub {
+  font-size: 10px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+.s3-chart-legend { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 14px; font-size: 12px; color: #555; }
+.s3-chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.s3-lg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+#s3ChartCanvas {
+  display: block;
+  width: 100%;
+  max-width: min(620px, 100%);
+  height: auto;
+}
+
+/* Viven accent callout (positive metric) */
+.s3-callout {
+  margin-top: 16px; padding: 12px 16px;
+  width: 100%;
+  background: rgba(161,150,235,0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  font-size: 13px; line-height: 1.6; color: #555;
+  opacity: 0; transition: opacity 0.5s;
+}
+.s3-callout.visible { opacity: 1; }
+.s3-callout b,
+.s3-callout strong { color: #6b5fc7; font-weight: 700; }
+
+#s3FakeCursor {
+  position: fixed;
+  width: 24px;
+  height: 28px;
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.18));
+}
+#s3FakeCursor svg { display: block; width: 24px; height: 28px; }
+.s3-panel-hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="s3FakeCursor" aria-hidden="true">
+  <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M3 2L3 21L9.5 14.5L12.5 24.5L15.5 22.5L12.5 12.5L20.5 9.5L3 2Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.25" stroke-linejoin="round"/>
+  </svg>
+</div>
+<div class="ambient-bg" aria-hidden="true"></div>
+
+<div class="title-card" id="titleCard">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-line="1">Important</span>
+    <span class="tc-word emphasis" data-line="1">call.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word emphasis" data-line="2">One</span>
+    <span class="tc-word" data-line="2">question</span>
+    <span class="tc-word" data-line="2">you</span>
+    <span class="tc-word emphasis" data-line="2">didn't</span>
+    <span class="tc-word" data-line="2">prepare</span>
+    <span class="tc-word" data-line="2">for.</span>
+  </div>
+</div>
+
+<div class="title-card" id="titleCardEnd" aria-hidden="true">
+  <div class="title-card-text-wrap">
+    <span class="tc-word emphasis" data-endline="1">The</span>
+    <span class="tc-word emphasis" data-endline="1">right</span>
+    <span class="tc-word emphasis" data-endline="1">answer.</span>
+    <span class="tc-break"></span>
+    <span class="tc-word emphasis" data-endline="2">Right</span>
+    <span class="tc-word emphasis" data-endline="2">when</span>
+    <span class="tc-word emphasis" data-endline="2">it</span>
+    <span class="tc-word emphasis" data-endline="2">matters.</span>
+  </div>
+</div>
+
+<section id="scene1" aria-label="Scene 1"></section>
+
+<section id="scene2" aria-label="Scene 2">
+  <div class="desktop-bg" aria-hidden="true"></div>
+
+  <header class="mac-menubar">
+    <div class="mac-menubar-left">
+      <svg class="mac-apple" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      <span class="mac-app-name">Zoom</span>
+      <nav class="mac-menus" aria-label="Menu">
+        <span>File</span><span>Edit</span><span>View</span><span>Meeting</span>
+      </nav>
+    </div>
+    <div class="mac-menubar-right">
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="none" aria-hidden="true"><path d="M2 12c2-4 6-6 10-6s8 2 10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg width="18" height="10" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="2" y="2" width="18" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="4" width="12" height="4" rx="0.5" fill="currentColor" opacity="0.35"/></svg>
+      <span class="mac-clock">Thu 10 Apr &nbsp;10:41 AM</span>
+    </div>
+  </header>
+
+  <div class="s2-zoom-shell">
+  <div class="zoom-window-wrap">
+  <div id="s2ZoomWindow" class="zoom-window">
+    <div class="zw-titlebar">
+      <div class="zw-traffic">
+        <span class="zw-dot r" aria-hidden="true"></span>
+        <span class="zw-dot y" aria-hidden="true"></span>
+        <span class="zw-dot g" aria-hidden="true"></span>
+      </div>
+      <span class="zw-meeting-title">Hartwell Group — Q3 Review</span>
+      <div class="zw-rec">
+        <span class="zw-rec-dot" aria-hidden="true"></span>
+        <span class="zw-rec-txt">REC</span>
+      </div>
+    </div>
+    <div class="zoom-grid">
+      <div class="tile-presenter">
+        <div class="ppt-outer">
+          <div class="ppt-app">
+            <div class="ppt-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="5" y="7" width="5" height="4" rx="1" fill="rgba(255,255,255,0.35)" stroke="none"/></svg>
+              <span class="ppt-filename">Hartwell_Quarterly_Business_Review.pptx</span>
+              <div class="ppt-bar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            </div>
+            <div class="ppt-body">
+              <div class="ppt-main">
+                <div class="ppt-slide">
+                  <div class="ppt-slide-h1">Hartwell Quarterly Business Review</div>
+                  <div class="ppt-bar-lg"></div>
+                  <div class="ppt-bars-sm">
+                    <div class="ppt-bar-sm w85"></div>
+                    <div class="ppt-bar-sm w70"></div>
+                    <div class="ppt-bar-sm w92"></div>
+                    <div class="ppt-bar-sm w55"></div>
+                    <div class="ppt-bar-sm w65"></div>
+                    <div class="ppt-bar-sm w35"></div>
+                  </div>
+                  <div class="ppt-slide-foot"><div class="ppt-foot-bar"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="participant-tile" id="james-tile">
+        <div class="pt-inner">
+          <div class="pt-photo-wrap">
+            <img class="pt-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" width="52" height="52" alt="">
+          </div>
+          <div class="pt-name">James Okafor</div>
+          <div class="pt-title">Customer · Hartwell</div>
+        </div>
+      </div>
+
+      <div class="participant-tile" id="zoey-tile">
+        <div class="pt-inner">
+          <div class="pt-photo-wrap">
+            <img class="pt-photo" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" width="52" height="52" alt="">
+          </div>
+          <div class="pt-name">Zoey Sullivan</div>
+          <div class="pt-title">Account Executive · Acme</div>
+        </div>
+      </div>
+
+      <div class="participant-tile">
+        <div class="pt-inner">
+          <div class="pt-photo-wrap">
+            <img class="pt-photo" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" width="52" height="52" alt="">
+          </div>
+          <div class="pt-name">Sarah Kim</div>
+          <div class="pt-title">Sales Head · Acme</div>
+        </div>
+        <div class="pt-mic-off" aria-hidden="true">×</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div id="s2ChatBubble" class="chat-bubble">
+    <div class="cb-head">
+      <img class="cb-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" width="28" height="28" alt="">
+      <div class="cb-meta">
+        <span class="cb-name">James Okafor</span>
+        <span class="cb-role">VP Operations · Hartwell</span>
+      </div>
+    </div>
+    <p class="cb-body">Zoey — how does our adoption compare to other companies like us at this stage?</p>
+  </div>
+
+  <div id="s2ZoeyReply" class="chat-bubble zoey-reply">
+    <div class="cb-head">
+      <img class="cb-photo" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" width="28" height="28" alt="">
+      <div class="cb-meta">
+        <span class="cb-name">Zoey Sullivan</span>
+        <span class="cb-role">Account Executive · Acme</span>
+      </div>
+    </div>
+    <p class="cb-body">I'll check right now</p>
+  </div>
+  </div>
+
+  <nav class="mac-dock" aria-label="Dock">
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-chrome" title="Google Chrome">
+        <img src="assets/dock/googlechrome.svg" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item is-active">
+      <div class="dock-icon dock-icon-tile-zoom" title="Zoom">
+        <img src="assets/dock/zoom.svg" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-ppt" title="Microsoft PowerPoint">
+        <img src="assets/dock/Microsoft_Office_PowerPoint_(2019–2025).svg" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+  </nav>
+</section>
+
+<section id="scene3" aria-label="Scene 3">
+  <!-- Cloned from video2_101 Scene 2 chat phase: .s2-phase / .s2-chat-frame / .s2-page -->
+  <div id="s3ChatPhase" class="s2-phase active">
+    <div id="s3ChatFrame" class="s2-chat-frame">
+      <div id="s3Page" class="s2-page">
+        <div id="s3Profile" class="s2-profile">
+          <div class="s2-av-initials" aria-hidden="true">DA</div>
+          <div class="s2-name">Data Analytics Team</div>
+          <div class="s2-badge"><span class="s2-badge-dot"></span> Team Twin</div>
+        </div>
+
+        <div id="s3InputSection" class="s2-input-area">
+          <div id="s3InputBox" class="s2-input-box">
+            <div class="s2-input-text" id="s3InputText"></div>
+            <div class="s2-input-controls">
+              <div></div>
+              <div class="s2-input-right">
+                <div class="s2-model"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Auto</div>
+                <button type="button" id="s3SendBtn" class="s2-send" aria-label="Send">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s3Content" class="s2-content">
+          <div id="s3SentWrap" class="s2-sent-wrap">
+            <div id="s3SentText" class="s2-sent-bubble"></div>
+          </div>
+
+          <div id="s3AnalysisScroll" class="s3-analysis-scroll">
+            <div id="s3Thinking" class="s2-thinking">
+              <div id="s3ThinkBody" class="s2-think-body">
+                <div id="s3Step1" class="s2-step">
+                  <div class="s2-step-label s3-step-label-slot" id="s3LabelStep1"></div>
+                  <div class="s3-step-line" data-i="0">├ Customer = Hartwell Group — 6-month adoption window</div>
+                  <div class="s3-step-line" data-i="1">├ Benchmarking against financial services peer cohort</div>
+                  <div class="s3-step-line" data-i="2">└ Metric: monthly active user rate</div>
+                </div>
+                <div id="s3Step2" class="s2-step">
+                  <div class="s2-step-label s3-step-label-slot" id="s3LabelStep2"></div>
+                  <div class="s2-pills" id="s3PillsRow"></div>
+                </div>
+                <div id="s3Step4" class="s2-step">
+                  <div class="s2-step-label s3-step-label-slot" id="s3LabelStep4"></div>
+                  <div id="s3CodeBlock" class="s3-code-block">
+                    <div class="s3-code-header">python</div>
+                    <div id="s3CodeBody" class="s3-code-body"></div>
+                  </div>
+                  <div id="s3OutputBlock" class="s3-output-block">
+                    <div class="s3-output-header">Output</div>
+                    <div id="s3OutputBody" class="s3-output-body"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="s3RespDivider" class="s2-divider s3-panel-hidden"></div>
+
+            <div id="s3ChartWrap" class="s3-chart-wrap">
+              <div class="s3-chart-title">Monthly Adoption — Hartwell Group vs Peer Median</div>
+              <div class="s3-chart-sub">Financial services · 6-month tenure cohort</div>
+              <div class="s3-chart-legend">
+                <span><i class="s3-lg-dot" style="background:#5b8dee"></i> Hartwell Group</span>
+                <span><i class="s3-lg-dot" style="background:#e05c5c"></i> Peer median <span style="color:#999">(benchmark)</span></span>
+              </div>
+              <canvas id="s3ChartCanvas" width="620" height="260"></canvas>
+            </div>
+
+            <div id="s3Callout" class="s3-callout">
+              <strong>Hartwell ranks 74th percentile</strong> across financial services accounts at the same stage. Adoption is 16 points above peer median and accelerating.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="scene4" aria-label="Scene 4">
+  <div id="s4Beat1">
+    <div id="s4DesktopBg" class="desktop-bg s4-desk-el" aria-hidden="true"></div>
+
+    <header id="s4Menubar" class="mac-menubar s4-desk-el">
+      <div class="mac-menubar-left">
+        <svg class="mac-apple" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+        <span class="mac-app-name">Zoom</span>
+        <nav class="mac-menus" aria-label="Menu">
+          <span>File</span><span>Edit</span><span>View</span><span>Meeting</span>
+        </nav>
+      </div>
+      <div class="mac-menubar-right">
+        <svg width="16" height="12" viewBox="0 0 24 18" fill="none" aria-hidden="true"><path d="M2 12c2-4 6-6 10-6s8 2 10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg width="18" height="10" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="2" y="2" width="18" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="4" width="12" height="4" rx="0.5" fill="currentColor" opacity="0.35"/></svg>
+        <span class="mac-clock">Thu 10 Apr &nbsp;10:41 AM</span>
+      </div>
+    </header>
+
+    <div class="s2-zoom-shell">
+      <div class="zoom-window-wrap">
+        <div id="s4ZoomWindow" class="zoom-window">
+          <div class="zw-titlebar">
+            <div class="zw-traffic">
+              <span class="zw-dot r" aria-hidden="true"></span>
+              <span class="zw-dot y" aria-hidden="true"></span>
+              <span class="zw-dot g" aria-hidden="true"></span>
+            </div>
+            <span class="zw-meeting-title">Hartwell Group — Q3 Review</span>
+            <div class="zw-rec">
+              <span class="zw-rec-dot" aria-hidden="true"></span>
+              <span class="zw-rec-txt">REC</span>
+            </div>
+          </div>
+          <div class="zoom-grid">
+            <div class="tile-presenter">
+              <div class="ppt-outer">
+                <div class="ppt-app">
+                  <div class="ppt-bar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="5" y="7" width="5" height="4" rx="1" fill="rgba(255,255,255,0.35)" stroke="none"/></svg>
+                    <span class="ppt-filename">Hartwell_Quarterly_Business_Review.pptx</span>
+                    <div class="ppt-bar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="ppt-body">
+                    <div class="ppt-main">
+                      <div class="ppt-slide">
+                        <div class="ppt-slide-h1">Adoption Benchmark</div>
+                        <p class="s4-slide-insight" id="s4SlideInsight">Hartwell is tracking above the peer median for similar-stage financial services accounts.</p>
+                        <div class="s4-slide-chart-wrap">
+                          <canvas id="s4SlideCanvas" width="800" height="320" aria-hidden="true"></canvas>
+                        </div>
+                        <div class="s4-slide-caption">Hartwell: 74th percentile · Peer median: 58%</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="participant-tile" id="s4JamesTile">
+              <div class="pt-inner">
+                <div class="pt-photo-wrap">
+                  <img class="pt-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" width="52" height="52" alt="">
+                </div>
+                <div class="pt-name">James Okafor</div>
+                <div class="pt-title">Customer · Hartwell</div>
+              </div>
+            </div>
+
+            <div class="participant-tile">
+              <div class="pt-inner">
+                <div class="pt-photo-wrap">
+                  <img class="pt-photo" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" width="52" height="52" alt="">
+                </div>
+                <div class="pt-name">Zoey Sullivan</div>
+                <div class="pt-title">Account Executive · Acme</div>
+              </div>
+            </div>
+
+            <div class="participant-tile">
+              <div class="pt-inner">
+                <div class="pt-photo-wrap">
+                  <img class="pt-photo" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" width="52" height="52" alt="">
+                </div>
+                <div class="pt-name">Sarah Kim</div>
+                <div class="pt-title">Sales Head · Acme</div>
+              </div>
+              <div class="pt-mic-off" aria-hidden="true">×</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="s4ChatBubble" class="chat-bubble">
+      <div class="cb-head">
+        <img class="cb-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" width="28" height="28" alt="">
+        <div class="cb-meta">
+          <span class="cb-name">James Okafor</span>
+          <span class="cb-role">Customer · Hartwell</span>
+        </div>
+      </div>
+      <p class="cb-body">This is exactly what I was looking for.</p>
+    </div>
+
+    <nav id="s4Dock" class="mac-dock s4-desk-el" aria-label="Dock">
+      <div class="dock-item">
+        <div class="dock-icon dock-icon-tile-chrome" title="Google Chrome">
+          <img src="assets/dock/googlechrome.svg" width="48" height="48" alt="">
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+      <div class="dock-item is-active">
+        <div class="dock-icon dock-icon-tile-zoom" title="Zoom">
+          <img src="assets/dock/zoom.svg" width="48" height="48" alt="">
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+      <div class="dock-item">
+        <div class="dock-icon dock-icon-tile-ppt" title="Microsoft PowerPoint">
+          <img src="assets/dock/Microsoft_Office_PowerPoint_(2019–2025).svg" width="48" height="48" alt="">
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+    </nav>
+  </div>
+
+  <div id="s4SlackLayer" class="s4-slack-layer">
+    <div class="s4-warm-fill" aria-hidden="true"></div>
+    <div id="s4SlackPopup" class="s4-slack-popup">
+      <div id="s4SlackCardOuter" class="s4-slack-card-outer">
+        <div class="s4-slack-sparks" aria-hidden="true">
+          <span class="s4-spark" style="--pop:0;--poy:-24px;left:calc(50% - 3.5px);top:-5px"></span>
+          <span class="s4-spark" style="--pop:20px;--poy:-16px;right:10%;top:-4px"></span>
+          <span class="s4-spark" style="--pop:22px;--poy:0px;right:-5px;top:42%"></span>
+          <span class="s4-spark" style="--pop:18px;--poy:18px;right:8%;bottom:-4px"></span>
+          <span class="s4-spark" style="--pop:0;--poy:24px;left:calc(50% - 3.5px);bottom:-5px"></span>
+          <span class="s4-spark" style="--pop:-18px;--poy:16px;left:10%;bottom:-4px"></span>
+          <span class="s4-spark" style="--pop:-22px;--poy:0px;left:-5px;top:38%"></span>
+          <span class="s4-spark" style="--pop:-18px;--poy:-16px;left:8%;top:-4px"></span>
+          <span class="s4-spark" style="--pop:-8px;--poy:-22px;left:28%;top:-5px"></span>
+          <span class="s4-spark" style="--pop:10px;--poy:20px;right:26%;bottom:-5px"></span>
+        </div>
+        <div class="s4-slack-card">
+        <div class="s4-slack-head">
+          <div class="s4-slack-logo-wrap" aria-hidden="true">
+            <svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>
+          </div>
+          <div class="s4-slack-names">
+            <span class="s4-slack-name">Sarah Kim</span>
+            <span class="s4-slack-role">(Sales Head · Acme)</span>
+          </div>
+        </div>
+        <p class="s4-slack-body">Hartwell just expanded to 3 more departments. Nice work 🎉</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="scene5" aria-label="Scene 5"></section>
+
+<div class="scene-indicator" id="controls">
+  Scene <span id="sceneNum">1</span> &nbsp;·&nbsp;
+  <kbd onclick="switchScene(1)">1</kbd>
+  <kbd onclick="switchScene(2)">2</kbd>
+  <kbd onclick="switchScene(3)">3</kbd>
+  <kbd onclick="switchScene(4)">4</kbd>
+  <kbd onclick="switchScene(5)">5</kbd>
+  &nbsp;·&nbsp;
+  <kbd onclick="switchScene(SCENE)">R</kbd> Replay
+  &nbsp;·&nbsp;
+  <kbd onclick="togglePlayback()">P</kbd> Pause / Play
+  &nbsp;·&nbsp;
+  <kbd onclick="toggleControls()">H</kbd>
+</div>
+
+<script>
+const timeouts = [];
+function st(fn, delay) { timeouts.push(setTimeout(fn, delay)); }
+function clearAllTimeouts() { timeouts.forEach(clearTimeout); timeouts.length = 0; }
+
+const unpauseResolvers = [];
+let playbackPaused = false;
+
+async function waitIfPaused() {
+  while (playbackPaused) {
+    await new Promise(r => { unpauseResolvers.push(r); });
+  }
+}
+
+async function sleep(ms) {
+  const chunk = 50;
+  let left = ms;
+  while (left > 0) {
+    await waitIfPaused();
+    const step = Math.min(chunk, left);
+    await new Promise(r => {
+      const t = setTimeout(() => { r(); }, step);
+      timeouts.push(t);
+    });
+    left -= step;
+  }
+}
+
+function pausePlayback() {
+  if (playbackPaused) return;
+  playbackPaused = true;
+  if (typeof gsap !== 'undefined') gsap.globalTimeline.pause();
+}
+
+function resumePlayback() {
+  playbackPaused = false;
+  const rs = unpauseResolvers.splice(0);
+  rs.forEach(r => { try { r(); } catch (e) {} });
+  if (typeof gsap !== 'undefined') gsap.globalTimeline.resume();
+}
+
+function togglePlayback() {
+  if (playbackPaused) resumePlayback();
+  else pausePlayback();
+}
+
+const $ = id => document.getElementById(id);
+
+let SCENE = 1;
+let s1Resetting = false;
+let s2Resetting = false;
+let s3Resetting = false;
+let s4Resetting = false;
+let s5Resetting = false;
+
+const S3_QUESTION = 'Hartwell Group adoption rate vs similar-stage accounts in financial services — last 6 months';
+const S3_MONTHS = ['Nov \'25', 'Dec \'25', 'Jan \'26', 'Feb \'26', 'Mar \'26', 'Apr \'26'];
+const S3_HARTWELL = [42, 48, 56, 63, 69, 74];
+const S3_PEERS = [40, 44, 48, 52, 55, 58];
+const S3_CODE_LINES = [
+  'df = load_account_data(',
+  '  customer="hartwell",',
+  '  window=180',
+  ')',
+  'peers = load_peer_cohort(',
+  '  industry="fin_svcs",',
+  '  tenure="6_month"',
+  ')',
+  'result = compute_pctile(',
+  '  df, peers,',
+  '  metric="mau_rate"',
+  ')',
+  'print(result.summary())'
+];
+const S3_STEP2_SOURCES = [
+  { key: 'sheets', count: '3', label: 'Google Sheets' },
+  { key: 'slack', count: '4', label: 'Slack threads' },
+  { key: 'confluence', count: '2', label: 'Confluence' }
+];
+
+const S3_PILL_ICONS = {
+  sheets: '<svg viewBox="0 0 48 48" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#0F9D58" d="M30 4H10C7.8 4 6 5.8 6 8v32c0 2.2 1.8 4 4 4h28c2.2 0 4-1.8 4-4V14L30 4z"/><path fill="#188038" d="M30 4v10h10"/><path fill="#fff" fill-opacity=".92" d="M14 21h20v2.8H14zm0 6.5h20V30H14zm0 6.5h14v2.8H14z"/></svg>',
+  slack: '<svg viewBox="0 0 2447.6 2452.5" width="15" height="15" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd" aria-hidden="true"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>',
+  confluence: '<svg viewBox="-.02 .04 256.07 245.94" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#2684FF" d="m9.11 187.79c-2.64 4.3-5.63 9.34-7.99 13.33a8.13 8.13 0 0 0 2.67 11.88l53.03 32.69a8.13 8.13 0 0 0 11.27-2.75c2.14-3.56 4.85-8.17 7.76-13.09 21.02-34.47 42.32-30.25 80.37-12.16l52.6 24.94a8.13 8.13 0 0 0 10.97-4.07l25.25-56.93a8.13 8.13 0 0 0-4.58-10.66c-11.09-5.22-33.16-15.49-52.94-25.17-71.95-34.71-132.66-32.42-179.12 42.99z"/><path fill="#0052CC" d="m246.88 58.38c2.67-4.3 5.66-9.33 7.99-13.32a8.13 8.13 0 0 0-2.86-11.07l-52.95-32.69a8.13 8.13 0 0 0-11.28 2.87c-2.09 3.56-4.85 8.17-7.76 13.09-21.1 34.63-42.2 30.41-80.29 12.32l-52.55-24.95a8.13 8.13 0 0 0-10.98 3.88l-25.25 57.09a8.19 8.19 0 0 0 3.88 10.69c11.13 5.23 33.2 15.49 52.94 25.18 71.76 34.7 132.66 32.42 179.09-43z"/></svg>'
+};
+
+const S4_CHART_DIMS = { w: 800, h: 320 };
+
+function s3BuildPillsRow() {
+  const row = $('s3PillsRow');
+  if (!row) return;
+  row.innerHTML = '';
+  S3_STEP2_SOURCES.forEach(src => {
+    const p = document.createElement('span');
+    p.className = 's2-pill';
+    p.innerHTML = `${S3_PILL_ICONS[src.key] || ''}<span class="count">${src.count}</span> ${src.label}`;
+    row.appendChild(p);
+  });
+}
+
+let s3ScrollLastMs = 0;
+function s3GentleScrollIntoView(el) {
+  if (s3Resetting || !el || !el.isConnected) return;
+  const now = performance.now();
+  if (now - s3ScrollLastMs < 135) return;
+  s3ScrollLastMs = now;
+  const sc = $('s3AnalysisScroll');
+  if (!sc || !el.closest('#s3AnalysisScroll')) return;
+  const pad = 14;
+  const cRect = sc.getBoundingClientRect();
+  const eRect = el.getBoundingClientRect();
+  let next = sc.scrollTop;
+  if (eRect.top < cRect.top + pad) next += eRect.top - cRect.top - pad;
+  else if (eRect.bottom > cRect.bottom - pad) next += eRect.bottom - cRect.bottom + pad;
+  const maxScroll = Math.max(0, sc.scrollHeight - sc.clientHeight);
+  sc.scrollTo({ top: Math.max(0, Math.min(maxScroll, next)), behavior: 'smooth' });
+}
+
+function drawS3Chart(canvas, progress, showAnnot, dims) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = dims && dims.w ? dims.w : 620;
+  const H = dims && dims.h ? dims.h : 260;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = {
+    l: Math.round(46 * W / 620),
+    r: Math.round(108 * W / 620),
+    t: Math.round(22 * H / 260),
+    b: Math.round(40 * H / 260)
+  };
+  const gw = W - pad.l - pad.r;
+  const gh = H - pad.t - pad.b;
+  const xAt = i => pad.l + (i / 5) * gw;
+  const yAt = v => pad.t + (1 - v / 100) * gh;
+
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+  ctx.lineWidth = 1;
+  for (let p = 0; p <= 100; p += 20) {
+    const y = yAt(p);
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(W - pad.r, y);
+    ctx.stroke();
+  }
+
+  const fsAxis = Math.max(10, Math.round(10 * W / 620));
+  const fsMonth = Math.max(11, Math.round(11 * W / 620));
+  ctx.font = `${fsAxis}px Inter, system-ui, sans-serif`;
+  ctx.fillStyle = '#bbb';
+  ctx.textAlign = 'right';
+  for (let p = 0; p <= 100; p += 20) {
+    ctx.fillText(p + '%', pad.l - Math.round(6 * W / 620), yAt(p) + 3);
+  }
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#999';
+  ctx.font = `${fsMonth}px Inter, system-ui, sans-serif`;
+  const monthY = H - Math.round(12 * H / 260);
+  S3_MONTHS.forEach((m, i) => {
+    ctx.fillText(m, xAt(i), monthY);
+  });
+
+  const clipW = gw * Math.max(0, Math.min(1, progress));
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(pad.l, pad.t - 4, clipW, gh + 12);
+  ctx.clip();
+
+  const lw = Math.min(3.2, 2.5 * (W / 620));
+  const ptR = Math.max(3.5, 4 * (W / 620));
+  function lineSeries(data, color, dashed) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lw;
+    ctx.setLineDash(dashed || []);
+    ctx.moveTo(xAt(0), yAt(data[0]));
+    for (let i = 1; i < 6; i++) ctx.lineTo(xAt(i), yAt(data[i]));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    for (let i = 0; i < 6; i++) {
+      const cx = xAt(i), cy = yAt(data[i]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, ptR, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = Math.min(2.4, 2 * (W / 620));
+      ctx.stroke();
+    }
+  }
+
+  lineSeries(S3_HARTWELL, '#5b8dee', []);
+  lineSeries(S3_PEERS, '#e05c5c', [6, 4]);
+
+  ctx.restore();
+
+  if (showAnnot && progress >= 0.999) {
+    const lx = xAt(5) + Math.round(8 * W / 620);
+    const yH = yAt(S3_HARTWELL[5]), yP = yAt(S3_PEERS[5]);
+    const fa = Math.max(11, Math.round(11 * W / 620));
+    ctx.font = `bold ${fa}px Inter, system-ui, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#5b8dee';
+    ctx.fillText('Hartwell: 74%', lx, yH - Math.round(6 * H / 260));
+    ctx.fillStyle = '#e05c5c';
+    ctx.fillText('Peers: 58%', lx, yP + Math.round(16 * H / 260));
+  }
+}
+
+async function animateS3Chart() {
+  const canvas = $('s3ChartCanvas');
+  const t0 = performance.now();
+  const dur = 1500;
+  return new Promise(resolve => {
+    function frame(now) {
+      if (s3Resetting) { resolve(); return; }
+      const p = Math.min((now - t0) / dur, 1);
+      drawS3Chart(canvas, p, false);
+      if (p < 1) requestAnimationFrame(frame);
+      else {
+        drawS3Chart(canvas, 1, true);
+        resolve();
+      }
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+function toggleControls() { $('controls').classList.toggle('hidden-ctrl'); }
+
+function reset1() {
+  $('scene1').classList.remove('active');
+  $('titleCard').classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+}
+
+async function run1Inner() {
+  const tc = $('titleCard');
+  const words = document.querySelectorAll('#titleCard .tc-word');
+  const line1 = document.querySelectorAll('#titleCard .tc-word[data-line="1"]');
+
+  await sleep(100);
+  if (s1Resetting) return;
+  tc.classList.add('visible');
+
+  await sleep(800);
+  if (s1Resetting) return;
+  for (let i = 0; i < words.length; i++) {
+    if (s1Resetting) return;
+    words[i].classList.add('visible');
+    if (i < words.length - 1) await sleep(180);
+  }
+
+  await sleep(2500);
+  if (s1Resetting) return;
+  line1.forEach(w => w.classList.add('dim'));
+
+  await sleep(1500);
+  if (s1Resetting) return;
+  tc.classList.add('fade-out');
+}
+
+function run1() {
+  reset1();
+  run1Inner();
+}
+
+function reset2() {
+  s2Resetting = true;
+  gsap.killTweensOf('#s2ZoomWindow');
+  gsap.killTweensOf('#james-tile');
+  gsap.killTweensOf('#zoey-tile');
+  gsap.killTweensOf('#s2ChatBubble');
+  gsap.killTweensOf('#s2ZoeyReply');
+  gsap.set('#s2ZoomWindow', { opacity: 0, y: 16, scale: 0.97, transformOrigin: '50% 50%' });
+  gsap.set('#james-tile', { borderColor: 'transparent' });
+  gsap.set('#zoey-tile', { borderColor: 'transparent' });
+  gsap.set('#s2ChatBubble', { opacity: 0, x: 10, y: 8, scale: 0.96, transformOrigin: '50% 50%' });
+  gsap.set('#s2ZoeyReply', { opacity: 0, x: 10, y: 8, scale: 0.96, transformOrigin: '50% 50%' });
+  $('scene2').classList.remove('s2-chat-focus', 's2-focus-james', 's2-focus-zoey', 'active');
+  st(() => { s2Resetting = false; }, 60);
+}
+
+async function run2Inner() {
+  if (s2Resetting) return;
+  $('scene2').classList.remove('s2-chat-focus', 's2-focus-james', 's2-focus-zoey');
+  gsap.set('#s2ZoomWindow', { opacity: 0, y: 16, scale: 0.97, transformOrigin: '50% 50%' });
+  gsap.set('#james-tile', { borderColor: 'transparent' });
+  gsap.set('#zoey-tile', { borderColor: 'transparent' });
+  gsap.set('#s2ChatBubble', { opacity: 0, x: 10, y: 8, scale: 0.96, transformOrigin: '50% 50%' });
+  gsap.set('#s2ZoeyReply', { opacity: 0, x: 10, y: 8, scale: 0.96, transformOrigin: '50% 50%' });
+
+  await sleep(200);
+  if (s2Resetting) return;
+
+  await new Promise(resolve => {
+    gsap.to('#s2ZoomWindow', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.65,
+      ease: 'power2.out',
+      onComplete: resolve
+    });
+  });
+  if (s2Resetting) return;
+
+  await sleep(2000);
+  if (s2Resetting) return;
+
+  await sleep(2400);
+  if (s2Resetting) return;
+
+  await new Promise(resolve => {
+    gsap.to('#s2ChatBubble', {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+      onStart: () => {
+        const s2 = $('scene2');
+        s2.classList.add('s2-chat-focus', 's2-focus-james');
+      },
+      onComplete: resolve
+    });
+  });
+  if (s2Resetting) return;
+
+  await sleep(2500);
+  if (s2Resetting) return;
+
+  gsap.set('#s2ZoeyReply', { opacity: 0, x: 10, y: 8, scale: 0.96 });
+  await new Promise(resolve => {
+    gsap.to('#s2ZoeyReply', {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      duration: 0.45,
+      ease: 'power2.out',
+      onStart: () => {
+        const s2 = $('scene2');
+        s2.classList.remove('s2-focus-james');
+        s2.classList.add('s2-focus-zoey');
+      },
+      onComplete: resolve
+    });
+  });
+  if (s2Resetting) return;
+
+  await sleep(3000);
+  if (s2Resetting) return;
+  $('scene2').classList.remove('s2-focus-zoey');
+
+  await sleep(1800);
+  if (s2Resetting) return;
+}
+
+function run2() {
+  reset2();
+  $('scene2').classList.add('active');
+  s2Resetting = false;
+  run2Inner();
+}
+
+function reset3() {
+  s3Resetting = true;
+  gsap.killTweensOf([
+    '#s3ChatFrame', '#s3Profile', '#s3InputSection', '#s3InputBox',
+    '#s3ThinkBody', '#s3FakeCursor', '#s3ChartWrap', '#s3Callout', '#s3PillsRow .s2-pill'
+  ]);
+  gsap.set('#s3FakeCursor', { opacity: 0, clearProps: 'left,top' });
+  gsap.set('#s3ChatFrame', { opacity: 0, y: 12, scale: 0.98, transformOrigin: '50% 0%' });
+  const s3f = $('s3ChatFrame');
+  if (s3f) s3f.scrollTop = 0;
+  const s3as = $('s3AnalysisScroll');
+  if (s3as) s3as.scrollTop = 0;
+  s3ScrollLastMs = 0;
+
+  const c = $('s3ChartCanvas');
+  if (c && c.getContext) {
+    const ctx = c.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, c.width, c.height);
+  }
+
+  $('s3Profile').classList.remove('hidden');
+  if ($('s3InputSection')) {
+    $('s3InputSection').style.opacity = '';
+    $('s3InputSection').style.transform = '';
+  }
+  $('s3InputBox').classList.remove('collapsed');
+  $('s3SendBtn').classList.remove('active', 'clicked');
+  $('s3InputText').textContent = '';
+  $('s3SentText').textContent = '';
+  $('s3Content').classList.remove('visible');
+  $('s3SentWrap').classList.remove('show');
+  $('s3Thinking').classList.remove('show');
+  $('s3RespDivider').classList.add('s3-panel-hidden');
+  $('s3RespDivider').classList.remove('show');
+  $('s3ThinkBody').style.display = '';
+  $('s3ThinkBody').style.opacity = '1';
+
+  ['s3LabelStep1', 's3LabelStep2', 's3LabelStep4'].forEach(id => {
+    const el = $(id);
+    if (el) el.innerHTML = '';
+  });
+  const pr = $('s3PillsRow');
+  if (pr) pr.innerHTML = '';
+
+  document.querySelectorAll('#s3Step1 .s3-step-line').forEach(el => el.classList.remove('visible'));
+  $('s3CodeBody').innerHTML = '';
+  $('s3OutputBody').innerHTML = '';
+  $('s3CodeBlock').classList.remove('show');
+  $('s3OutputBlock').classList.remove('visible');
+
+  ['s3Step1', 's3Step2', 's3Step4'].forEach(id => {
+    const el = $(id);
+    if (el) el.classList.remove('dim');
+  });
+
+  $('s3ChartWrap').classList.remove('visible');
+  $('s3Callout').classList.remove('visible');
+  gsap.set('#s3ChartWrap', { clearProps: 'opacity,transform' });
+  gsap.set('#s3Callout', { clearProps: 'opacity,transform' });
+
+  gsap.set('#s3Profile', { opacity: 0, y: 8 });
+  gsap.set('#s3InputSection', { opacity: 0, y: 6 });
+
+  $('scene3').classList.remove('active');
+}
+
+async function run3Inner(opts) {
+  await sleep(40);
+  if (s3Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s3ChatFrame', {
+      opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out', onComplete: r
+    });
+  });
+  if (s3Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s3Profile', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', onComplete: r });
+  });
+  if (s3Resetting) return;
+  s3GentleScrollIntoView($('s3Profile'));
+
+  await sleep(200);
+  if (s3Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s3InputSection', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', onComplete: r });
+  });
+  if (s3Resetting) return;
+  s3GentleScrollIntoView($('s3InputBox'));
+  await sleep(200);
+  if (s3Resetting) return;
+
+  $('s3InputText').textContent = '';
+  const q = S3_QUESTION;
+  for (let i = 0; i < q.length; i++) {
+    if (s3Resetting) return;
+    $('s3InputText').textContent += q[i];
+    if (i >= 14) $('s3SendBtn').classList.add('active');
+    if (i > 0 && i % 36 === 0) s3GentleScrollIntoView($('s3InputText'));
+    await sleep(Math.max(20, 35 + Math.floor(Math.random() * 21) - 10));
+  }
+  if (s3Resetting) return;
+  $('s3SendBtn').classList.add('active');
+  await sleep(200);
+  if (s3Resetting) return;
+
+  const btn = $('s3SendBtn').getBoundingClientRect();
+  const cur = $('s3FakeCursor');
+  gsap.set(cur, { opacity: 1, left: btn.left - 120, top: btn.top + window.scrollY - 20 });
+  await new Promise(r => {
+    gsap.to(cur, {
+      left: btn.left + btn.width / 2 - 2,
+      top: btn.top + window.scrollY + btn.height / 2 - 2,
+      duration: 0.4,
+      ease: 'power2.inOut',
+      onComplete: r
+    });
+  });
+  if (s3Resetting) return;
+
+  $('s3SendBtn').classList.add('clicked');
+  await sleep(100);
+  if (s3Resetting) return;
+  $('s3SendBtn').classList.remove('clicked');
+  gsap.set(cur, { opacity: 0 });
+
+  $('s3InputBox').classList.add('collapsed');
+  $('s3SentText').textContent = S3_QUESTION;
+  $('s3Content').classList.add('visible');
+  $('s3SentWrap').classList.add('show');
+  await sleep(400);
+  if (s3Resetting) return;
+  s3GentleScrollIntoView($('s3SentText'));
+  await sleep(200);
+  if (s3Resetting) return;
+
+  $('s3Profile').classList.add('hidden');
+  await sleep(400);
+  if (s3Resetting) return;
+
+  $('s3Thinking').classList.add('show');
+  await sleep(200);
+  if (s3Resetting) return;
+  s3GentleScrollIntoView($('s3ThinkBody'));
+
+  $('s3LabelStep1').innerHTML = '<b>Understanding</b> query';
+  const lines1 = document.querySelectorAll('#s3Step1 .s3-step-line');
+  for (let i = 0; i < lines1.length; i++) {
+    if (s3Resetting) return;
+    lines1[i].classList.add('visible');
+    s3GentleScrollIntoView(lines1[i]);
+    await sleep(300);
+  }
+  await sleep(200);
+  if (s3Resetting) return;
+  $('s3Step1').classList.add('dim');
+
+  $('s3LabelStep2').innerHTML = '<b>Locating</b> data sources';
+  s3BuildPillsRow();
+  const pills = document.querySelectorAll('#s3PillsRow .s2-pill');
+  gsap.killTweensOf(pills);
+  gsap.set(pills, { opacity: 0, y: 10 });
+  await new Promise(r => {
+    gsap.to(pills, {
+      opacity: 1,
+      y: 0,
+      duration: 0.42,
+      stagger: 0.11,
+      ease: 'power2.out',
+      onComplete: r
+    });
+  });
+  if (s3Resetting) return;
+  pills.forEach(p => p.classList.add('show'));
+  s3GentleScrollIntoView($('s3PillsRow'));
+  await sleep(220);
+  if (s3Resetting) return;
+  $('s3Step2').classList.add('dim');
+
+  $('s3LabelStep4').innerHTML = '<b>Computing</b> benchmark';
+  const codeEl = $('s3CodeBody');
+  S3_CODE_LINES.forEach(line => {
+    const div = document.createElement('div');
+    div.className = 's3-code-line';
+    div.textContent = line;
+    codeEl.appendChild(div);
+  });
+  $('s3CodeBlock').classList.add('show');
+  const cLines = codeEl.querySelectorAll('.s3-code-line');
+  for (let i = 0; i < cLines.length; i++) {
+    if (s3Resetting) return;
+    cLines[i].classList.add('visible');
+    s3GentleScrollIntoView(cLines[i]);
+    await sleep(300);
+  }
+  if (s3Resetting) return;
+
+  $('s3OutputBody').innerHTML = 'account          adopt  pctile\nHartwell Group   74%    <span class="hl">P74</span>\nPeer median      58%    P50\nTop quartile     82%    P75';
+  $('s3OutputBlock').classList.add('visible');
+  s3GentleScrollIntoView($('s3OutputBlock'));
+  await sleep(600);
+  if (s3Resetting) return;
+  $('s3Step4').classList.add('dim');
+
+  await new Promise(r => {
+    gsap.to('#s3ThinkBody', {
+      opacity: 0,
+      duration: 0.45,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        $('s3ThinkBody').style.display = 'none';
+        const sc = $('s3AnalysisScroll');
+        if (sc) sc.scrollTop = 0;
+        r();
+      }
+    });
+  });
+  if (s3Resetting) return;
+  await sleep(120);
+  if (s3Resetting) return;
+
+  $('s3RespDivider').classList.remove('s3-panel-hidden');
+  $('s3RespDivider').classList.add('show');
+  gsap.killTweensOf(['#s3ChartWrap', '#s3Callout']);
+  gsap.set('#s3ChartWrap', { opacity: 0, y: 16 });
+  $('s3ChartWrap').classList.add('visible');
+  await new Promise(r => {
+    gsap.to('#s3ChartWrap', {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power2.out',
+      onComplete: r
+    });
+  });
+  if (s3Resetting) return;
+  await sleep(280);
+  if (s3Resetting) return;
+
+  await animateS3Chart();
+  if (s3Resetting) return;
+  await sleep(500);
+  if (s3Resetting) return;
+
+  gsap.set('#s3Callout', { opacity: 0, y: 12 });
+  $('s3Callout').classList.add('visible');
+  await new Promise(r => {
+    gsap.to('#s3Callout', {
+      opacity: 1,
+      y: 0,
+      duration: 0.55,
+      ease: 'power2.out',
+      onComplete: r
+    });
+  });
+  if (s3Resetting) return;
+  await sleep(1200);
+  if (s3Resetting) return;
+}
+
+function run3() {
+  reset3();
+  $('scene3').classList.add('active');
+  s3Resetting = false;
+  run3Inner({ fromS2: false });
+}
+
+function reset4() {
+  s4Resetting = true;
+  gsap.killTweensOf([
+    '#s4DesktopBg', '#s4Menubar', '#s4Dock', '#s4ZoomWindow',
+    '#s4SlackLayer', '#s4SlackPopup', '#s4ChatBubble', '#s4JamesTile'
+  ]);
+  const beat1 = $('s4Beat1');
+  if (beat1) beat1.style.display = '';
+  $('scene4').classList.remove('s4-chat-focus');
+  gsap.set(['#s4DesktopBg', '#s4Menubar', '#s4Dock'], { opacity: 0 });
+  gsap.set('#s4ZoomWindow', { opacity: 0, y: 16, scale: 0.97, transformOrigin: '50% 50%' });
+  gsap.set('#s4ChatBubble', { opacity: 0, x: 10, y: 8, scale: 0.96, transformOrigin: '50% 50%' });
+  const jt = $('s4JamesTile');
+  if (jt) {
+    jt.classList.remove('s4-james-soft');
+    gsap.set(jt, { clearProps: 'borderColor' });
+  }
+  const sl = $('s4SlackLayer');
+  if (sl) {
+    sl.classList.remove('visible');
+    gsap.set(sl, { opacity: 0 });
+  }
+  const sp = $('s4SlackPopup');
+  if (sp) sp.classList.remove('visible');
+  const s4outer = $('s4SlackCardOuter');
+  if (s4outer) s4outer.classList.remove('s4-slack-celebrate');
+  const c = $('s4SlideCanvas');
+  if (c && c.getContext) {
+    const ctx = c.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, c.width, c.height);
+  }
+  $('scene4').classList.remove('active');
+}
+
+async function run4Inner(opts) {
+  const fromS3 = opts && opts.fromS3;
+  await sleep(fromS3 ? 40 : 80);
+  if (s4Resetting) return;
+
+  const cvs = $('s4SlideCanvas');
+  if (cvs) drawS3Chart(cvs, 1, true, S4_CHART_DIMS);
+
+  $('scene4').classList.remove('s4-chat-focus');
+  gsap.set('#s4ChatBubble', { opacity: 0, x: 10, y: 8, scale: 0.96, transformOrigin: '50% 50%' });
+
+  const jt = $('s4JamesTile');
+  if (jt) jt.classList.add('s4-james-soft');
+
+  gsap.set(['#s4DesktopBg', '#s4Menubar', '#s4Dock'], { opacity: 0 });
+  gsap.set('#s4ZoomWindow', { opacity: 0, y: 16, scale: 0.97, transformOrigin: '50% 50%' });
+  if ($('s4SlackLayer')) {
+    $('s4SlackLayer').classList.remove('visible');
+    gsap.set('#s4SlackLayer', { opacity: 0 });
+  }
+  if ($('s4SlackPopup')) $('s4SlackPopup').classList.remove('visible');
+  const s4celebrateReset = $('s4SlackCardOuter');
+  if (s4celebrateReset) s4celebrateReset.classList.remove('s4-slack-celebrate');
+  if ($('s4Beat1')) $('s4Beat1').style.display = '';
+
+  await new Promise(r => {
+    gsap.to(['#s4DesktopBg', '#s4Menubar', '#s4Dock'], {
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.out',
+      onComplete: r
+    });
+  });
+  if (s4Resetting) return;
+
+  await sleep(200);
+  if (s4Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s4ZoomWindow', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.65,
+      ease: 'power2.out',
+      onComplete: r
+    });
+  });
+  if (s4Resetting) return;
+
+  await sleep(50);
+  await sleep(1350);
+  if (s4Resetting) return;
+
+  gsap.to('#s4JamesTile', {
+    borderColor: 'rgba(34, 197, 94, 0.85)',
+    duration: 0.35,
+    ease: 'power2.out'
+  });
+  await sleep(250);
+  if (s4Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s4ChatBubble', {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+      onStart: () => { $('scene4').classList.add('s4-chat-focus'); },
+      onComplete: r
+    });
+  });
+  if (s4Resetting) return;
+
+  await sleep(4200);
+  if (s4Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s4ChatBubble', {
+      opacity: 0,
+      scale: 0.96,
+      duration: 0.5,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        $('scene4').classList.remove('s4-chat-focus');
+        gsap.set('#s4JamesTile', { borderColor: 'rgba(34, 197, 94, 0.32)' });
+        r();
+      }
+    });
+  });
+  if (s4Resetting) return;
+
+  await sleep(200);
+  if (s4Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s4ZoomWindow', {
+      opacity: 0,
+      scale: 0.97,
+      duration: 0.5,
+      ease: 'power2.inOut',
+      onComplete: r
+    });
+  });
+  if (s4Resetting) return;
+
+  await new Promise(r => {
+    gsap.to(['#s4DesktopBg', '#s4Menubar', '#s4Dock'], {
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power2.inOut',
+      onComplete: r
+    });
+  });
+  if (s4Resetting) return;
+
+  const beat1 = $('s4Beat1');
+  if (beat1) beat1.style.display = 'none';
+
+  await sleep(400);
+  if (s4Resetting) return;
+
+  await new Promise(r => {
+    gsap.to('#s4SlackLayer', {
+      opacity: 1,
+      duration: 0.55,
+      ease: 'power2.out',
+      onComplete: r
+    });
+  });
+  $('s4SlackLayer').classList.add('visible');
+  if (s4Resetting) return;
+
+  await sleep(400);
+  if (s4Resetting) return;
+  $('s4SlackPopup').classList.add('visible');
+  const s4outer = $('s4SlackCardOuter');
+  if (s4outer) {
+    s4outer.classList.remove('s4-slack-celebrate');
+    void s4outer.offsetWidth;
+    s4outer.classList.add('s4-slack-celebrate');
+  }
+  if (s4Resetting) return;
+
+  await sleep(5500);
+  if (s4Resetting) return;
+}
+
+function run4() {
+  reset4();
+  $('scene4').classList.add('active');
+  s4Resetting = false;
+  run4Inner({ fromS3: false });
+}
+
+function reset5() {
+  s5Resetting = true;
+  gsap.killTweensOf('#titleCardEnd');
+  const tc = $('titleCardEnd');
+  if (tc) {
+    tc.classList.remove('visible');
+    tc.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('#titleCardEnd .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+  }
+  $('scene5').classList.remove('active');
+}
+
+async function run5Inner() {
+  if (s5Resetting) return;
+  const tc = $('titleCardEnd');
+  const line1 = document.querySelectorAll('#titleCardEnd .tc-word[data-endline="1"]');
+  const line2 = document.querySelectorAll('#titleCardEnd .tc-word[data-endline="2"]');
+
+  /* 0ms — title card fades in (opacity 0→1, 0.8s), same pattern as #titleCard */
+  tc.classList.add('visible');
+  tc.setAttribute('aria-hidden', 'false');
+
+  await sleep(800);
+  if (s5Resetting) return;
+  line1[0]?.classList.add('visible');
+  await sleep(200);
+  if (s5Resetting) return;
+  line1[1]?.classList.add('visible');
+  await sleep(200);
+  if (s5Resetting) return;
+  line1[2]?.classList.add('visible');
+
+  /* 1700ms cumulative — hold before line 2 */
+  await sleep(500);
+  if (s5Resetting) return;
+
+  await sleep(1000);
+  if (s5Resetting) return;
+  line2[0]?.classList.add('visible');
+  await sleep(220);
+  if (s5Resetting) return;
+  line2[1]?.classList.add('visible');
+  await sleep(220);
+  if (s5Resetting) return;
+  line2[2]?.classList.add('visible');
+  await sleep(220);
+  if (s5Resetting) return;
+  line2[3]?.classList.add('visible');
+
+  await sleep(1000);
+  if (s5Resetting) return;
+  line1.forEach(w => w.classList.add('dim'));
+}
+
+function run5() {
+  reset5();
+  $('scene5').classList.add('active');
+  s5Resetting = false;
+  run5Inner();
+}
+
+function switchScene(num) {
+  clearAllTimeouts();
+  resumePlayback();
+  s1Resetting = true;
+  s2Resetting = true;
+  s3Resetting = true;
+  s4Resetting = true;
+  s5Resetting = true;
+
+  SCENE = num;
+  $('sceneNum').textContent = num;
+
+  reset1();
+  reset2();
+  reset3();
+  reset4();
+  reset5();
+
+  $('scene1').classList.remove('active');
+  $('scene2').classList.remove('active');
+  $('scene3').classList.remove('active');
+  $('scene4').classList.remove('active');
+  $('scene5').classList.remove('active');
+
+  $('titleCard').classList.remove('visible', 'fade-out');
+  document.querySelectorAll('#titleCard .tc-word').forEach(w => w.classList.remove('visible', 'dim'));
+
+  s1Resetting = false;
+  s2Resetting = false;
+  s3Resetting = false;
+  s4Resetting = false;
+  s5Resetting = false;
+
+  if (num === 1) run1();
+  if (num === 2) run2();
+  if (num === 3) run3();
+  if (num === 4) run4();
+  if (num === 5) run5();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === '1') switchScene(1);
+  if (e.key === '2') switchScene(2);
+  if (e.key === '3') switchScene(3);
+  if (e.key === '4') switchScene(4);
+  if (e.key === '5') switchScene(5);
+  if (e.key === 'h' || e.key === 'H') toggleControls();
+  if (e.key === 'p' || e.key === 'P') { e.preventDefault(); togglePlayback(); }
+  if (e.key === ' ' || e.key === 'r' || e.key === 'R') { e.preventDefault(); switchScene(SCENE); }
+});
+</script>
+</body>
+</html>
