@@ -1,0 +1,3916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video 4 — 07052026 · Scene 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #f5f3f0;
+  --bg-surface: #ffffff;
+  --bg-card: #faf9f7;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.10);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #9a9a9a;
+  --accent: #a196eb;
+  --accent-dark: #8b7ed6;
+  --accent-green: #22c55e;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.09);
+  --shadow-accent: 0 0 0 1px rgba(161,150,235,0.15), 0 0 30px rgba(161,150,235,0.06);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --font-main: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Slack palette */
+  --slack-topbar: #350d36;
+  --slack-rail: #3F0E40;
+  --slack-sidebar: #4A154B;
+  --slack-sidebar-text: rgba(255,255,255,0.78);
+  --slack-sidebar-text-dim: rgba(255,255,255,0.55);
+  --slack-active-bg: rgba(255, 255, 255, 0.13);
+  --slack-badge: #CD2553;
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes ambient-drift {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%       { transform: scale(1.02) translate(-6px, -4px); }
+}
+.ambient-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 22% 18%, rgba(186, 214, 240, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 85% 92%, rgba(168, 198, 230, 0.50) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 55% at 60% 50%, rgba(220, 234, 246, 0.55) 0%, transparent 70%),
+    linear-gradient(135deg, #eaf2f9 0%, #e3edf6 45%, #dde8f4 100%);
+  z-index: 0;
+  animation: ambient-drift 18s ease-in-out infinite;
+}
+.ambient-grain {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+#scene1 {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 1;
+}
+#scene1.active { display: block; }
+
+/* ═══ Scene 1: macOS desktop + Slack ═══ */
+
+.mac-menubar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 60;
+  font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.mac-menubar-left { display: flex; align-items: center; gap: 18px; }
+.mac-apple { flex-shrink: 0; opacity: 0.9; display: block; }
+.mac-app-name { font-weight: 700; }
+.mac-menus {
+  display: flex; gap: 18px;
+  color: rgba(0,0,0,0.85);
+  font-weight: 400;
+}
+.mac-menubar-right { display: flex; align-items: center; gap: 12px; }
+.mac-menubar-right svg { opacity: 0.75; flex-shrink: 0; }
+.mac-clock { font-size: 12px; color: rgba(0,0,0,0.75); font-weight: 500; }
+
+.mac-dock {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 18px;
+  padding: 5px 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  z-index: 60;
+}
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.dock-icon {
+  width: 48px; height: 48px;
+  border-radius: 11px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+.dock-icon svg,
+.dock-icon img {
+  width: 100%; height: 100%;
+  display: block;
+  object-fit: contain;
+}
+.dock-icon-tile-chrome { background: #fff; padding: 6px; }
+.dock-icon-tile-slack { background: #fff; padding: 8px; }
+.dock-icon-tile-notes { padding: 0; background: transparent; border-radius: 13px; }
+.dock-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  margin-top: 3px;
+  opacity: 0;
+}
+.dock-item.is-active .dock-dot { opacity: 1; }
+
+.s1-shell-wrap {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  z-index: 10;
+  width: min(940px, 86vw);
+  max-width: calc(100vw - 32px);
+  pointer-events: none;
+}
+
+#slackShell { opacity: 0; }
+
+.slack-shell {
+  width: 100%;
+  height: min(620px, calc(min(940px, 86vw) * 0.66));
+  background: var(--bg-surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 80px rgba(0,0,0,0.20),
+    0 0 0 1px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+  font-family: var(--font-main);
+  pointer-events: auto;
+}
+
+.slack-topbar {
+  flex-shrink: 0;
+  height: 44px;
+  background: var(--slack-topbar);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 12px;
+  position: relative;
+}
+.slack-traffic { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.slack-traffic-dot { width: 12px; height: 12px; border-radius: 50%; }
+.slack-traffic-dot.r { background: #ff5f57; }
+.slack-traffic-dot.y { background: #febc2e; }
+.slack-traffic-dot.g { background: #28c840; }
+
+.slack-search-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.slack-search-pill {
+  width: min(520px, 60%);
+  height: 26px;
+  background: rgba(0,0,0,0.18);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+}
+.slack-search-pill svg { width: 13px; height: 13px; opacity: 0.75; }
+
+.slack-topbar-right {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.slack-topbar-right svg { width: 16px; height: 16px; display: block; }
+
+.slack-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* Icon rail */
+.slack-rail {
+  width: 68px;
+  background: var(--slack-rail);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 14px;
+  gap: 4px;
+}
+.rail-workspace {
+  width: 40px; height: 40px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #2EB67D 0%, #1A8C66 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+.rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  width: 52px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.7);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.rail-item.active {
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+.rail-item svg { width: 18px; height: 18px; }
+.rail-spacer { flex: 1; }
+.rail-theme {
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 8px;
+}
+.rail-theme svg { width: 18px; height: 18px; }
+.rail-avatar {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #c084fc 0%, #a78bfa 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+}
+.rail-avatar::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  border: 2px solid var(--slack-rail);
+  bottom: -3px; right: -3px;
+}
+
+/* Sidebar */
+.slack-sidebar {
+  width: 232px;
+  background: linear-gradient(180deg,
+    #4A154B 0%,
+    #5b1d5d 45%,
+    #7a3076 100%);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--slack-sidebar-text);
+}
+.sb-workspace {
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sb-workspace-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+.sb-workspace-name svg { width: 11px; height: 11px; opacity: 0.85; }
+.sb-workspace-pencil {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.sb-workspace-pencil svg { width: 13px; height: 13px; }
+
+.sb-scroll {
+  flex: 1;
+  overflow: hidden;
+  padding: 10px 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sb-section-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slack-sidebar-text-dim);
+}
+.sb-section-head svg { width: 10px; height: 10px; }
+
+.sb-list { display: flex; flex-direction: column; }
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 16px;
+  height: 28px;
+  font-size: 14.5px;
+  color: var(--slack-sidebar-text);
+  font-weight: 400;
+  position: relative;
+}
+.sb-item .sb-prefix {
+  width: 14px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  flex-shrink: 0;
+}
+.sb-item .sb-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sb-item .sb-badge {
+  background: var(--slack-badge);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1.4;
+}
+.sb-item .sb-lock svg { width: 12px; height: 12px; opacity: 0.65; }
+
+.sb-item.active {
+  background: var(--slack-active-bg);
+  color: #fff;
+  font-weight: 700;
+  margin: 0 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.sb-item.active .sb-prefix { color: #fff; }
+
+/* Sidebar skeleton bars (dark-sidebar appropriate) */
+.sb-item.is-skel { padding: 6px 16px; height: 28px; align-items: center; }
+.sb-skel {
+  display: block;
+  height: 9px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 4px;
+}
+.sb-skel.w70 { width: 70%; }
+.sb-skel.w62 { width: 62%; }
+.sb-skel.w60 { width: 60%; }
+.sb-skel.w55 { width: 55%; }
+.sb-skel.w48 { width: 48%; }
+
+/* DM rows */
+.sb-dm-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.55);
+  flex-shrink: 0;
+  margin-left: 3px;
+}
+.sb-dm-dot.online { background: var(--accent-green); border-color: var(--accent-green); }
+
+.sb-item.bold-unread { color: #fff; font-weight: 700; }
+
+#sbPeterBadge {
+  opacity: 0;
+  transform: scale(0.6);
+  transform-origin: center;
+}
+
+/* Main content */
+.slack-main {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.slack-main-head {
+  flex-shrink: 0;
+  height: 56px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  gap: 8px;
+}
+.smh-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1d1c1d;
+  letter-spacing: -0.2px;
+}
+.smh-title .smh-prefix { color: #1d1c1d; opacity: 0.65; font-weight: 600; }
+.smh-title svg { width: 11px; height: 11px; opacity: 0.6; }
+.smh-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+.slack-main-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 26px 0;
+  overflow-y: auto;
+  opacity: 1;
+}
+.main-state.hidden { display: none; }
+#skelState.main-state { padding: 22px 26px 8px; }
+
+/* Skeleton state */
+.skel-row {
+  display: flex;
+  gap: 14px;
+  padding: 13px 0;
+}
+.skel-avatar {
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  background: #ECECEC;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.skel-avatar.has-photo { background: transparent; }
+.skel-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.skel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 4px;
+}
+.skel-name {
+  height: 11px;
+  width: 96px;
+  background: #E2E2E2;
+  border-radius: 3px;
+}
+.skel-line {
+  height: 9px;
+  background: #ECECEC;
+  border-radius: 3px;
+}
+.skel-line.w100 { width: 100%; }
+.skel-line.w92 { width: 92%; }
+.skel-line.w80 { width: 80%; }
+.skel-line.w72 { width: 72%; }
+.skel-line.w60 { width: 60%; }
+.skel-line.w48 { width: 48%; }
+.skel-line.w35 { width: 35%; }
+.skel-line.w26 { width: 26%; }
+.skel-line.w85 { width: 85%; }
+.skel-line.w42 { width: 42%; }
+
+/* Slack input — taller, no skeleton bar inside */
+.slack-input {
+  flex-shrink: 0;
+  margin: 6px 22px 18px;
+  border: 1px solid rgba(0,0,0,0.16);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  min-height: 92px;
+  overflow: hidden;
+}
+.slack-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  flex: 1;
+}
+.slack-input-plus {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0,0,0,0.55);
+  flex-shrink: 0;
+  font-size: 15px;
+  line-height: 1;
+}
+.slack-input-placeholder {
+  flex: 1;
+  font-size: 14px;
+  color: rgba(0,0,0,0.32);
+}
+.slack-input-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px 8px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  color: rgba(0,0,0,0.42);
+}
+.slack-input-toolbar .tb-glyph {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.slack-input-toolbar .tb-glyph svg { width: 14px; height: 14px; opacity: 0.65; }
+.slack-input-toolbar .tb-divider {
+  width: 1px; height: 16px;
+  background: rgba(0,0,0,0.08);
+  margin: 0 4px;
+}
+.slack-input-toolbar .tb-spacer { flex: 1; }
+.slack-input-toolbar .tb-send {
+  width: 28px; height: 26px;
+  border-radius: 5px;
+  background: rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0,0,0,0.5);
+}
+.slack-input-toolbar .tb-send svg { width: 13px; height: 13px; }
+
+/* DM state */
+#dmState { opacity: 0; }
+
+#dmState.main-state:not(.hidden) {
+  /* Anchor messages at the bottom; skeleton history fills above. */
+  padding: 18px 26px 14px;
+  justify-content: flex-end;
+}
+.dm-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 0 1 auto;
+  max-height: 52%;
+  min-height: 0;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,1) 65%, rgba(255,255,255,0.95) 100%);
+          mask-image: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,1) 65%, rgba(255,255,255,0.95) 100%);
+}
+.dm-history .skel-row { padding: 10px 0; }
+
+.dm-day-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: #616061;
+  font-weight: 600;
+}
+.dm-day-divider::before,
+.dm-day-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.10);
+}
+.dm-day-divider span {
+  padding: 2px 10px;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 999px;
+  background: #fff;
+  font-family: var(--font-main);
+}
+
+.dm-msg {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0 6px;
+  flex-shrink: 0;
+}
+#peterMsg2.dm-msg--pending {
+  max-height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.dm-avatar {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+}
+.dm-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.dm-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dm-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.dm-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1d1c1d;
+  letter-spacing: -0.1px;
+}
+.dm-time {
+  font-size: 12px;
+  color: #616061;
+  font-family: var(--font-mono);
+}
+.dm-body {
+  font-size: 16px;
+  line-height: 1.55;
+  color: #1d1c1d;
+  max-width: 640px;
+}
+.dm-body strong { font-weight: 700; }
+.dm-body br { display: block; content: ""; margin-top: 4px; }
+.dm-word {
+  display: inline-block;
+  opacity: 0;
+}
+
+.sb-avatar-img {
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-left: 1px;
+}
+
+/* Scene indicator */
+.scene-indicator {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-surface); border: 1px solid var(--border-medium);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; color: var(--text-tertiary); z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-family: var(--font-mono);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.scene-indicator.hidden-ctrl { opacity: 0; pointer-events: none; }
+.scene-indicator kbd {
+  background: var(--bg-card); border: 1px solid var(--border-subtle);
+  padding: 1px 5px; border-radius: 4px; font-size: 11px; cursor: pointer;
+}
+
+/* ═══ Scene 2: Old Way — split screen Google Doc + Apple Notes ═══ */
+
+#scene2 { position: fixed; inset: 0; display: none; z-index: 1; }
+#scene2.active { display: block; }
+
+.s2-stage {
+  position: fixed;
+  inset: 28px 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 0 5vw;
+  filter: saturate(0.72) brightness(0.97);
+}
+#scene2.is-cool .s2-stage,
+#scene2.is-cool #s2Kicker {
+  filter: saturate(0.72) brightness(0.97);
+}
+#scene3.is-warm-entry .s3-window {
+  filter: saturate(1.05);
+}
+#p20WarmFlash {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg-deep);
+  opacity: 0; pointer-events: none;
+}
+
+.s2-kicker {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: max(15vh, calc(14px + 50vh - 302px));
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-tertiary);
+  padding: 6px 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.s2-toast {
+  position: fixed;
+  top: max(15vh, 24px);
+  right: max(15vw, 24px);
+  z-index: 20;
+  width: 360px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(250,250,250,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center center;
+}
+.s2-toast.is-pressed { transform: scale(0.97); }
+.s2-toast-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.s2-toast-icon img { display: block; width: 38px; height: 38px; object-fit: cover; }
+.s2-toast-copy { flex: 1; min-width: 0; }
+.s2-toast-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.s2-toast-title { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.s2-toast-time { font-size: 13px; color: var(--text-tertiary); flex-shrink: 0; }
+.s2-toast-body {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: #444;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#s2FakeCursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 24px; height: 28px;
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0;
+}
+#s2FakeCursor svg { display: block; width: 24px; height: 28px; }
+
+/* Shared mac titlebar for s2 windows */
+.s2-mac-titlebar {
+  height: 28px;
+  background: #ECEDEE;
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+.s2-mac-dot { width: 12px; height: 12px; border-radius: 50%; }
+.s2-mac-dot.r { background: #FF5F57; }
+.s2-mac-dot.y { background: #FEBC2E; }
+.s2-mac-dot.g { background: #28C840; }
+
+/* Left window: Google Doc */
+.s2-doc-window {
+  position: relative;
+  width: 540px;
+  height: 540px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 18px 60px rgba(20, 20, 60, 0.18), 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.s2-doc-toolbar {
+  display: flex; align-items: center;
+  padding: 14px 22px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+.s2-doc-toolbar-left {
+  display: flex; align-items: center; gap: 12px;
+  min-width: 0;
+}
+.s2-docs-icon { width: 22px; height: 22px; flex-shrink: 0; }
+.s2-doc-name {
+  font-size: 15px; font-weight: 600; letter-spacing: -0.2px; color: #1f1f1f;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.s2-doc-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 28px 40px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #1f1f1f;
+}
+.s2-doc-line { margin-bottom: 6px; }
+.s2-ts {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-right: 6px;
+}
+.s2-spk { font-weight: 600; }
+
+/* Right window: Apple Notes */
+.s2-notes-window {
+  position: relative;
+  width: 380px;
+  height: 460px;
+  background: #fffdf5;
+  border-radius: 12px;
+  box-shadow: 0 18px 60px rgba(20, 20, 60, 0.18), 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.s2-notes-header {
+  background: #fdf6df;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 14px 18px;
+  flex-shrink: 0;
+}
+.s2-notes-title-row { display: flex; align-items: center; gap: 8px; }
+.s2-notes-icon { width: 18px; height: 18px; flex-shrink: 0; color: #d2a73a; }
+.s2-notes-title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; color: #2a2a2a; }
+
+.s2-notes-body {
+  flex: 1;
+  padding: 22px 24px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #2a2a2a;
+}
+.s2-notes-line { margin-bottom: 10px; }
+
+.s2-notes-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 17px;
+  background: #2a2a2a;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: s2Caret 1s step-end infinite;
+}
+@keyframes s2Caret { 50% { opacity: 0; } }
+
+.s2-stat-pill {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 26px;
+  padding: 11px 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.s2-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  color: rgba(255,255,255,0.95);
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(6px);
+}
+.s2-stat-sep {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  color: rgba(255,255,255,0.35);
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* ---------- SCENE 3 — Viven Meetings Agent ---------- */
+
+#scene3 {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 1;
+  background: transparent;
+  padding: 56px;
+  --s3-sidebar-bg: #f7f7f7;
+  --s3-sidebar-text: #2a2a2a;
+  --s3-sidebar-muted: #6b6b6b;
+  --s3-sidebar-active-bg: rgba(0,0,0,0.05);
+  --s3-toggle-blue: #4f46e5;
+  --s3-bubble-user-bg: #efedfb;
+  --s3-bubble-user-text: #1a1a1a;
+  --s3-twin-card-bg: #fafafa;
+  --s3-card-border: rgba(0,0,0,0.07);
+  --s3-divider: rgba(0,0,0,0.08);
+}
+#scene3.active { display: block; }
+
+.s3-window {
+  position: absolute;
+  inset: 56px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 1px 3px rgba(0,0,0,0.05),
+    0 8px 32px rgba(0,0,0,0.09);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.s3-window-titlebar {
+  height: 36px;
+  flex-shrink: 0;
+  background: #f1efeb;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 8px;
+}
+.s3-window-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.s3-window-dot.red { background: #ff5f57; }
+.s3-window-dot.yellow { background: #febc2e; }
+.s3-window-dot.green { background: #28c840; }
+
+#scene3,
+#scene3 * {
+  scrollbar-width: none;
+}
+#scene3::-webkit-scrollbar,
+#scene3 *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.s3-app-shell {
+  flex: 1;
+  display: flex;
+  background: #ffffff;
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ---- Sidebar ---- */
+.s3-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--s3-sidebar-bg);
+  border-right: 1px solid var(--s3-divider);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px 14px;
+  font-size: 13px;
+  transition: width 0.35s ease, padding 0.35s ease;
+  overflow: hidden;
+}
+.s3-logo-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 6px 18px;
+}
+.s3-logo-mark {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.s3-logo-mark img { width: 22px; height: 22px; display: block; object-fit: contain; }
+.s3-logo-text {
+  font-size: 14px; font-weight: 600;
+  color: var(--s3-sidebar-text);
+  letter-spacing: -0.1px;
+  flex: 1;
+}
+.s3-logo-toggle {
+  width: 18px; height: 18px;
+  color: var(--s3-sidebar-muted);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.s3-nav {
+  display: flex; flex-direction: column;
+  gap: 2px;
+}
+.s3-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--s3-sidebar-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: default;
+  letter-spacing: -0.1px;
+}
+.s3-nav-item.active {
+  background: var(--s3-sidebar-active-bg);
+  font-weight: 600;
+}
+.s3-nav-icon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  color: var(--s3-sidebar-text);
+  opacity: 0.85;
+}
+
+.s3-sidebar-spacer { flex: 1; }
+
+.s3-profile {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 8px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+.s3-profile-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #d8c9b6;
+}
+.s3-profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.s3-profile-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.s3-profile-name { font-size: 12.5px; font-weight: 600; color: var(--s3-sidebar-text); }
+.s3-profile-email { font-size: 11px; color: var(--s3-sidebar-muted); }
+.s3-profile-caret {
+  width: 14px; height: 14px;
+  color: var(--s3-sidebar-muted);
+  flex-shrink: 0;
+}
+
+/* ---- Collapsed sidebar (detail view) ---- */
+.s3-app-shell.is-detail .s3-sidebar {
+  width: 52px;
+  padding: 14px 6px;
+}
+.s3-app-shell.is-detail .s3-logo-row {
+  padding: 4px 0 18px;
+  justify-content: center;
+}
+.s3-app-shell.is-detail .s3-nav-item {
+  padding: 8px 0;
+  justify-content: center;
+  gap: 0;
+  font-size: 0;
+  color: transparent;
+}
+.s3-app-shell.is-detail .s3-logo-text,
+.s3-app-shell.is-detail .s3-logo-toggle,
+.s3-app-shell.is-detail .s3-profile-meta,
+.s3-app-shell.is-detail .s3-profile-caret {
+  display: none;
+}
+.s3-app-shell.is-detail .s3-profile {
+  justify-content: center;
+  padding: 6px 0;
+  gap: 0;
+}
+
+/* ---- Main column ---- */
+.s3-main {
+  flex: 1;
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  min-width: 0;
+}
+.s3-view {
+  position: absolute; inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  overflow-y: auto;
+  padding: 28px 48px 40px;
+}
+.s3-view.active { opacity: 1; visibility: visible; }
+
+/* ---- Meetings list (Beat 1) ---- */
+.s3-page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px;
+}
+.s3-page-title {
+  font-size: 24px; font-weight: 700;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+}
+.s3-page-actions { display: flex; align-items: center; gap: 18px; }
+.s3-toggle-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+.s3-toggle {
+  position: relative;
+  width: 30px; height: 18px;
+  border-radius: 999px;
+  background: var(--s3-toggle-blue);
+  flex-shrink: 0;
+}
+.s3-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.s3-toggle.off { background: rgba(0,0,0,0.18); }
+.s3-toggle.off::after { right: auto; left: 2px; }
+.s3-record-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: default;
+}
+.s3-record-btn svg { width: 14px; height: 14px; opacity: 0.8; }
+
+.s3-section-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin: 6px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--s3-divider);
+  letter-spacing: 0.1px;
+}
+
+.s3-meeting-row {
+  display: flex; align-items: center;
+  padding: 12px 8px;
+  border-radius: 8px;
+  gap: 14px;
+  transition: background 0.15s ease;
+}
+.s3-meeting-row.is-hover,
+.s3-meeting-row:hover { background: rgba(0,0,0,0.03); }
+.s3-meeting-cal-icon {
+  width: 16px; height: 16px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.s3-meeting-info { flex: 1; min-width: 0; }
+.s3-meeting-name {
+  font-size: 13.5px; font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+.s3-meeting-meta {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.s3-meeting-meta svg { width: 12px; height: 12px; opacity: 0.7; }
+
+.s3-meeting-controls {
+  display: flex; align-items: center; gap: 14px;
+  flex-shrink: 0;
+}
+.s3-invite-toggle {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.s3-join-btn {
+  padding: 5px 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex; align-items: center; gap: 6px;
+}
+.s3-join-btn svg { width: 10px; height: 10px; opacity: 0.6; }
+.s3-row-chevron {
+  width: 16px; height: 16px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.s3-pagination {
+  display: flex; justify-content: flex-end;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 12px 8px 18px;
+}
+.s3-pagination span { display: flex; align-items: center; gap: 4px; }
+.s3-pagination svg { width: 12px; height: 12px; opacity: 0.6; }
+
+/* ---- Meeting detail (Beats 2 + 3) ---- */
+.s3-detail-header {
+  display: flex; align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--s3-divider);
+}
+.s3-back-arrow {
+  width: 18px; height: 18px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.s3-detail-headline { flex: 1; min-width: 0; }
+.s3-detail-title-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.s3-detail-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.s3-info-icon {
+  width: 14px; height: 14px;
+  color: var(--text-tertiary);
+}
+.s3-detail-sub {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+.s3-avatar-stack { display: flex; align-items: center; }
+.s3-avatar-init {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 600;
+  background: #e5e5e5;
+  color: #6b6b6b;
+  margin-left: -6px;
+  border: 2px solid #fff;
+  letter-spacing: 0;
+  font-family: var(--font-main);
+}
+.s3-avatar-init:first-child { margin-left: 0; }
+.s3-avatar-extra {
+  background: #d8d2ee !important;
+  color: #4a3f8a !important;
+  font-weight: 600;
+}
+
+.s3-detail-actions {
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.s3-completed-pill {
+  padding: 4px 12px;
+  border: 1px solid rgba(161,150,235,0.45);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #4a3f8a;
+  background: rgba(161,150,235,0.06);
+  letter-spacing: -0.1px;
+}
+.s3-export-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(161,150,235,0.12);
+  display: grid; place-items: center;
+  color: #4a3f8a;
+  flex-shrink: 0;
+}
+.s3-export-btn svg { width: 14px; height: 14px; }
+
+.s3-tabs {
+  display: flex; gap: 6px;
+  padding: 12px 0 0;
+  margin-bottom: 18px;
+}
+.s3-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 14px 12px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: default;
+  letter-spacing: -0.1px;
+}
+.s3-tab.active {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom-color: #1a1a1a;
+}
+.s3-tab.is-hover { background: rgba(0,0,0,0.03); border-radius: 8px 8px 0 0; }
+.s3-tab svg { width: 14px; height: 14px; }
+
+.s3-detail-body {
+  position: relative;
+  height: calc(100% - 130px);
+}
+.s3-pane {
+  position: absolute; inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  overflow-y: auto;
+}
+.s3-pane.active { opacity: 1; visibility: visible; }
+
+/* ---- Summary pane ---- */
+.s3-section-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+.s3-summary-block {
+  background: var(--s3-twin-card-bg);
+  border: 1px solid var(--s3-card-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: 26px;
+}
+.s3-bullets {
+  list-style: none;
+  margin: 0 0 26px;
+  padding: 0;
+}
+.s3-bullets li {
+  position: relative;
+  padding: 0 0 10px 18px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-primary);
+}
+.s3-bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  color: var(--text-secondary);
+}
+.s3-bullets b { font-weight: 600; }
+.s3-bullet-skel { padding-left: 18px; }
+.s3-bullet-skel::before { display: none; }
+
+/* ---- Chat pane ---- */
+.s3-pane#s3ChatPane {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 12px;
+}
+.s3-chat-stream {
+  flex: 1;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 18px;
+  padding: 8px 4px 16px;
+}
+.s3-bubble-user-wrap {
+  align-self: flex-end;
+  display: flex; flex-direction: column;
+  align-items: flex-end;
+  max-width: 78%;
+}
+.s3-bubble-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.s3-bubble-user {
+  background: var(--s3-bubble-user-bg);
+  color: var(--s3-bubble-user-text);
+  padding: 11px 16px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.s3-work-log {
+  align-self: stretch;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--s3-card-border);
+  border-radius: 12px;
+  background: #faf9f7;
+}
+.s3-work-header {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-tertiary);
+  margin-bottom: 2px;
+}
+.s3-work-line {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-tertiary);
+  opacity: 0.55;
+}
+.s3-work-line.is-active {
+  opacity: 1;
+  color: var(--text-primary);
+}
+.s3-work-line.is-done {
+  opacity: 0.75;
+  color: var(--text-secondary);
+}
+.s3-work-check {
+  flex-shrink: 0;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  color: transparent;
+  margin-top: 1px;
+}
+.s3-work-line.is-done .s3-work-check {
+  border-color: var(--accent-green);
+  background: rgba(34,197,94,0.12);
+  color: var(--accent-green);
+}
+.s3-work-line.is-active .s3-work-check {
+  border-color: var(--accent);
+  background: rgba(161,150,235,0.15);
+}
+.s3-work-surface {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  min-width: 108px;
+  flex-shrink: 0;
+}
+.s3-work-verb {
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+.s3-work-line.is-active .s3-work-verb {
+  color: var(--accent);
+  animation: s3VerbShimmer 1.2s ease-in-out infinite;
+}
+.s3-work-line.is-done .s3-work-verb {
+  color: var(--text-secondary);
+  animation: none;
+}
+@keyframes s3VerbShimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.s3-entity-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-dark, #8b7ed6);
+  background: rgba(161,150,235,0.1);
+  border: 1px solid rgba(161,150,235,0.25);
+  border-radius: 5px;
+  padding: 0 6px;
+  margin: 0 1px;
+  line-height: 1.5;
+  vertical-align: baseline;
+}
+.s3-entity-pill--app {
+  color: #4a6fa5;
+  background: rgba(74,111,165,0.08);
+  border-color: rgba(74,111,165,0.2);
+}
+
+.s3-twin-response {
+  align-self: stretch;
+  display: flex; flex-direction: column;
+  gap: 10px;
+}
+.s3-twin-card {
+  border: 1px solid var(--s3-card-border);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+.s3-twin-head {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.s3-twin-avatar {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #d8c9b6 url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop&crop=face') center/cover no-repeat;
+  flex-shrink: 0;
+}
+.s3-twin-name { font-weight: 500; color: var(--text-primary); font-size: 12.5px; }
+.s3-twin-body {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  padding: 4px 0 0;
+}
+.s3-twin-body b { font-weight: 600; }
+
+.s3-input-bar {
+  position: relative;
+  display: flex; align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--s3-card-border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.s3-input-text {
+  font-size: 13.5px;
+  color: var(--text-primary);
+  white-space: pre;
+  font-family: inherit;
+}
+.s3-input-caret {
+  display: inline-block;
+  width: 1.5px; height: 16px;
+  background: #2a2a2a;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: s2Caret 1s step-end infinite;
+  opacity: 0;
+}
+.s3-input-bar.is-typing .s3-input-caret { opacity: 1; }
+.s3-input-bar.is-typing .s3-input-placeholder { display: none; }
+.s3-input-text:not(:empty) ~ .s3-input-placeholder { display: none; }
+.s3-input-placeholder {
+  font-size: 13.5px;
+  color: var(--text-tertiary);
+  flex: 1;
+}
+.s3-input-text { flex: 0 1 auto; }
+.s3-send-btn {
+  margin-left: auto;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: grid; place-items: center;
+  border: none;
+  color: #fff;
+  flex-shrink: 0;
+  transition: transform 0.12s ease;
+}
+.s3-send-btn svg { width: 14px; height: 14px; }
+.s3-send-btn.clicked { transform: scale(0.88); }
+
+.s3-composer {
+  align-self: center;
+  width: 100%;
+  max-width: 720px;
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid var(--s3-card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.s3-chips-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.045);
+  border-bottom: 1px solid var(--s3-card-border);
+}
+.s3-chip {
+  padding: 5px 12px;
+  border: 1px solid var(--s3-card-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  cursor: default;
+}
+.s3-composer .s3-input-bar {
+  background: #ffffff;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 12px 14px;
+}
+
+/* ---- Transcript panel (detail view only) ---- */
+.s3-transcript {
+  width: 0;
+  flex-shrink: 0;
+  border-left: 1px solid var(--s3-divider);
+  background: #ffffff;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: width 0.35s ease;
+  box-shadow: -10px 0 24px -14px rgba(0, 0, 0, 0.18);
+}
+.s3-app-shell.is-detail .s3-transcript { width: 300px; }
+.s3-transcript-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--s3-divider);
+}
+.s3-transcript-icon { color: var(--text-secondary); width: 16px; height: 16px; flex-shrink: 0; }
+.s3-transcript-icon svg { width: 16px; height: 16px; }
+.s3-transcript-title { font-size: 13.5px; font-weight: 600; flex: 1; }
+.s3-transcript-close { color: var(--text-tertiary); width: 14px; height: 14px; cursor: default; }
+.s3-transcript-close svg { width: 14px; height: 14px; }
+.s3-transcript-list {
+  flex: 1; overflow-y: auto;
+  padding: 12px 16px 18px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.s3-tx-item { display: flex; flex-direction: column; gap: 4px; }
+.s3-tx-meta { display: flex; align-items: baseline; gap: 8px; }
+.s3-tx-name { font-size: 12.5px; font-weight: 600; color: var(--accent); }
+.s3-tx-time { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.s3-tx-body { font-size: 12px; color: var(--text-primary); margin: 0; line-height: 1.5; }
+
+.s3-tx-name-skel { display: inline-block; width: 70px; height: 9px; border-radius: 4px; background: rgba(0,0,0,0.08); }
+.s3-tx-time-skel { display: inline-block; width: 36px; height: 8px; border-radius: 4px; background: rgba(0,0,0,0.05); }
+.s3-skel-line { display: block; height: 9px; border-radius: 5px; background: rgba(0,0,0,0.06); margin-top: 5px; }
+.s3-skel-line.w55 { width: 55%; }
+.s3-skel-line.w60 { width: 60%; }
+.s3-skel-line.w65 { width: 65%; }
+.s3-skel-line.w70 { width: 70%; }
+.s3-skel-line.w80 { width: 80%; }
+.s3-skel-line.w85 { width: 85%; }
+.s3-skel-line.w90 { width: 90%; }
+.s3-skel-line.w92 { width: 92%; }
+.s3-skel-line.w95 { width: 95%; }
+
+/* ---- Fake cursor ---- */
+#s3FakeCursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 24px; height: 28px;
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0;
+}
+#s3FakeCursor svg { display: block; width: 24px; height: 28px; }
+
+/* ---------- SCENE 4 — Payoff + title card ---------- */
+#scene4 {
+  position: fixed; inset: 0; display: none; z-index: 1;
+  background: transparent;
+}
+#scene4.active { display: block; }
+
+#scene4, #scene4 * { scrollbar-width: none; }
+#scene4::-webkit-scrollbar, #scene4 *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+#scene4 .main-state { scroll-behavior: smooth; }
+#scene4 .s4-chat-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100%;
+}
+
+.s4-msg-list { display: flex; flex-direction: column; gap: 18px; }
+
+.s4-typing-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 0;
+}
+.s4-typing-avatar {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.s4-typing-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.s4-typing-dots {
+  display: flex; align-items: center; gap: 4px;
+  padding: 10px 14px;
+  background: #f0efed;
+  border-radius: 12px;
+}
+.s4-typing-dots span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  animation: s4DotPulse 1.1s ease-in-out infinite;
+}
+.s4-typing-dots span:nth-child(2) { animation-delay: 0.18s; }
+.s4-typing-dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes s4DotPulse {
+  0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+.s4-reply-header { margin-bottom: 6px; }
+.s4-bullet {
+  display: block;
+  opacity: 0;
+  margin-bottom: 4px;
+}
+.s4-summary-pill {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 999px;
+  padding: 4px 10px;
+  opacity: 0;
+}
+
+#s0TitleCard,
+#s4TitleCard {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bg-deep);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+#s0TitleCard { z-index: 120; background: #f5f3f0; }
+#s0TitleCard.visible,
+#s4TitleCard.visible { opacity: 1; }
+#s0TitleCard .title-card-text-wrap,
+#s4TitleCard .title-card-text-wrap {
+  text-align: center; max-width: 800px;
+  padding: 0 max(12px, 2vw);
+}
+#s4TitleCard .title-card-text-wrap { max-width: 1000px; }
+#s0TitleCard .tc-word,
+#s4TitleCard .tc-word {
+  display: inline-block;
+  font-family: 'Roboto', -apple-system, sans-serif;
+  font-size: 48px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  --tc-final-opacity: 1;
+  --tc-final-color: rgba(26,26,26,0.9);
+  --tc-final-weight: 500;
+  color: var(--tc-final-color);
+  font-weight: var(--tc-final-weight);
+  opacity: 0;
+  margin: 0 4px; line-height: 1.3;
+}
+#s0TitleCard .tc-word.visible,
+#s4TitleCard .tc-word.visible {
+  opacity: var(--tc-final-opacity);
+  color: var(--tc-final-color);
+  font-weight: var(--tc-final-weight);
+  animation: tc-word-p1-reveal 0.22s ease-out forwards;
+}
+@keyframes tc-word-p1-reveal {
+  0%   { opacity: 0; color: rgba(26,26,26,0.45); }
+  45%  { opacity: 0.4; color: rgba(26,26,26,0.45); }
+  100% { opacity: var(--tc-final-opacity); color: var(--tc-final-color); }
+}
+#s0TitleCard .tc-word.emphasis,
+#s4TitleCard .tc-word.emphasis {
+  --tc-final-opacity: 1;
+  --tc-final-color: rgba(26,26,26,0.9);
+  --tc-final-weight: 700;
+}
+#s0TitleCard .tc-word.dim,
+#s4TitleCard .tc-word.dim {
+  --tc-final-opacity: 0.6;
+  --tc-final-color: rgba(26,26,26,0.9);
+  --tc-final-weight: 400;
+}
+#s4TitleCard .tc-word.emphasis.dimmed { color: rgba(26,26,26,0.3); transition: color 0.6s ease, opacity 0.5s ease, transform 0.5s ease; }
+#s0TitleCard .tc-break,
+#s4TitleCard .tc-break { display: block; height: 8px; }
+
+</style>
+</head>
+<body>
+
+<div class="ambient-bg" aria-hidden="true"></div>
+<div class="ambient-grain" aria-hidden="true"></div>
+<div id="p20WarmFlash" aria-hidden="true"></div>
+
+<section id="scene1" aria-label="Scene 1 — Slack skeleton">
+
+  <div id="s0TitleCard" aria-hidden="true">
+    <div class="title-card-text-wrap">
+      <span class="tc-word emphasis" data-line="1">Meetings</span>
+      <span class="tc-word dim" data-line="1">are</span>
+      <span class="tc-word emphasis" data-line="1">human.</span>
+      <span class="tc-break"></span>
+      <span class="tc-word dim" data-line="2">Your</span>
+      <span class="tc-word emphasis" data-line="2">memory</span>
+      <span class="tc-word emphasis" data-line="2">isn't.</span>
+    </div>
+  </div>
+
+  <header class="mac-menubar" aria-label="macOS menubar">
+    <div class="mac-menubar-left">
+      <svg class="mac-apple" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      <span class="mac-app-name">Slack</span>
+      <nav class="mac-menus" aria-label="Menu">
+        <span>File</span><span>Edit</span><span>View</span><span>Workspace</span>
+      </nav>
+    </div>
+    <div class="mac-menubar-right">
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="none" aria-hidden="true"><path d="M2 12c2-4 6-6 10-6s8 2 10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg width="18" height="10" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="2" y="2" width="18" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="4" width="12" height="4" rx="0.5" fill="currentColor" opacity="0.35"/></svg>
+      <span class="mac-clock">Thu 7 May &nbsp;9:41 AM</span>
+    </div>
+  </header>
+
+  <div class="s1-shell-wrap">
+    <div id="slackShell" class="slack-shell">
+
+      <div class="slack-topbar">
+        <div class="slack-traffic" aria-hidden="true">
+          <span class="slack-traffic-dot r"></span>
+          <span class="slack-traffic-dot y"></span>
+          <span class="slack-traffic-dot g"></span>
+        </div>
+        <div class="slack-search-wrap">
+          <div class="slack-search-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search Acme Inc</span>
+          </div>
+        </div>
+        <div class="slack-topbar-right" aria-hidden="true">
+          <svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>
+        </div>
+      </div>
+
+      <div class="slack-body">
+
+        <aside class="slack-sidebar" aria-label="Channels">
+          <div class="sb-workspace">
+            <span class="sb-workspace-name">
+              Acme Inc
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+            <span class="sb-workspace-pencil" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4z"/></svg>
+            </span>
+          </div>
+
+          <div class="sb-scroll">
+
+            <div class="sb-section">
+              <div class="sb-section-head">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+                Channels
+              </div>
+              <div class="sb-list">
+                <div id="sbProject" class="sb-item active">
+                  <span class="sb-prefix">#</span>
+                  <span class="sb-label">project-atlas</span>
+                </div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w70"></span></div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w55"></span></div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w62"></span></div>
+              </div>
+            </div>
+
+            <div class="sb-section">
+              <div class="sb-section-head">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+                Direct Messages
+              </div>
+              <div class="sb-list">
+                <div id="sbPeter" class="sb-item">
+                  <img class="sb-avatar-img" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face" alt="" width="18" height="18">
+                  <span class="sb-label">Peter Langford</span>
+                  <span id="sbPeterBadge" class="sb-badge" aria-hidden="true">1</span>
+                </div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w60"></span></div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w48"></span></div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <section class="slack-main" aria-label="Channel content">
+          <header id="mainHead" class="slack-main-head">
+            <span id="mainHeadProject" class="smh-title">
+              <span class="smh-prefix">#</span>
+              <span>project-atlas</span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+            <span id="mainHeadPeter" class="smh-title" style="display:none;">
+              <img class="smh-avatar" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face" alt="" width="22" height="22">
+              <span>Peter Langford</span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+          </header>
+
+          <div class="slack-main-body">
+
+            <div id="skelState" class="main-state">
+              <div class="skel-row">
+                <div class="skel-avatar has-photo">
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=face" alt="" width="36" height="36">
+                </div>
+                <div class="skel-content">
+                  <div class="skel-name"></div>
+                  <div class="skel-line w92"></div>
+                  <div class="skel-line w60"></div>
+                </div>
+              </div>
+              <div class="skel-row">
+                <div class="skel-avatar has-photo">
+                  <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face" alt="" width="36" height="36">
+                </div>
+                <div class="skel-content">
+                  <div class="skel-name"></div>
+                  <div class="skel-line w72"></div>
+                  <div class="skel-line w35"></div>
+                </div>
+              </div>
+              <div class="skel-row">
+                <div class="skel-avatar has-photo">
+                  <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&h=120&fit=crop&crop=face" alt="" width="36" height="36">
+                </div>
+                <div class="skel-content">
+                  <div class="skel-name"></div>
+                  <div class="skel-line w100"></div>
+                  <div class="skel-line w80"></div>
+                  <div class="skel-line w48"></div>
+                </div>
+              </div>
+              <div class="skel-row">
+                <div class="skel-avatar has-photo">
+                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop&crop=face" alt="" width="36" height="36">
+                </div>
+                <div class="skel-content">
+                  <div class="skel-name"></div>
+                  <div class="skel-line w60"></div>
+                  <div class="skel-line w26"></div>
+                </div>
+              </div>
+              <div class="skel-row">
+                <div class="skel-avatar has-photo">
+                  <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&h=120&fit=crop&crop=face" alt="" width="36" height="36">
+                </div>
+                <div class="skel-content">
+                  <div class="skel-name"></div>
+                  <div class="skel-line w85"></div>
+                  <div class="skel-line w42"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="dmState" class="main-state hidden">
+              <div class="dm-history" aria-hidden="true">
+                <div class="skel-row">
+                  <div class="skel-avatar"></div>
+                  <div class="skel-content">
+                    <div class="skel-name"></div>
+                    <div class="skel-line w80"></div>
+                    <div class="skel-line w48"></div>
+                  </div>
+                </div>
+                <div class="skel-row">
+                  <div class="skel-avatar"></div>
+                  <div class="skel-content">
+                    <div class="skel-name"></div>
+                    <div class="skel-line w92"></div>
+                    <div class="skel-line w60"></div>
+                    <div class="skel-line w35"></div>
+                  </div>
+                </div>
+                <div class="skel-row">
+                  <div class="skel-avatar"></div>
+                  <div class="skel-content">
+                    <div class="skel-name"></div>
+                    <div class="skel-line w72"></div>
+                    <div class="skel-line w26"></div>
+                  </div>
+                </div>
+                <div class="skel-row">
+                  <div class="skel-avatar"></div>
+                  <div class="skel-content">
+                    <div class="skel-name"></div>
+                    <div class="skel-line w100"></div>
+                    <div class="skel-line w48"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dm-day-divider" aria-hidden="true"><span>Today</span></div>
+
+              <div id="peterMsg1" class="dm-msg">
+                <div class="dm-avatar" aria-hidden="true">
+                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                </div>
+                <div class="dm-content">
+                  <div class="dm-meta">
+                    <span class="dm-name">Peter Langford</span>
+                    <span class="dm-time">9:41 AM</span>
+                  </div>
+                  <p class="dm-body">Hi Kim — Need your help urgently.</p>
+                </div>
+              </div>
+
+              <div id="peterMsg2" class="dm-msg">
+                <div class="dm-avatar" aria-hidden="true">
+                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                </div>
+                <div class="dm-content">
+                  <div class="dm-meta">
+                    <span class="dm-name">Peter Langford</span>
+                    <span class="dm-time">9:42 AM</span>
+                  </div>
+                  <p class="dm-body"><span class="dm-word">What</span> <span class="dm-word">strategic</span> <span class="dm-word">alignments</span> <span class="dm-word">were</span> <span class="dm-word">agreed</span> <span class="dm-word">upon</span> <span class="dm-word">in</span> <span class="dm-word">yesterday's</span> <span class="dm-word">meeting?</span><br><span class="dm-word">Need</span> <span class="dm-word">it</span> <span class="dm-word"><strong>ASAP</strong></span> <span class="dm-word">for</span> <span class="dm-word">CEO</span> <span class="dm-word">🙏</span></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="slack-input" aria-hidden="true">
+            <div class="slack-input-row">
+              <div class="slack-input-plus">+</div>
+              <span class="slack-input-placeholder" id="inputPlaceholder">Message #project-atlas</span>
+            </div>
+            <div class="slack-input-toolbar">
+              <span class="tb-glyph"><b>B</b></span>
+              <span class="tb-glyph"><i>I</i></span>
+              <span class="tb-glyph"><u>U</u></span>
+              <span class="tb-divider"></span>
+              <span class="tb-glyph">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05L12.25 20.24a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83L13.41 7"/></svg>
+              </span>
+              <span class="tb-glyph">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+              </span>
+              <span class="tb-glyph">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6M5 12l7-7 7 7"/></svg>
+              </span>
+              <span class="tb-spacer"></span>
+              <span class="tb-send" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              </span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="mac-dock" aria-label="Dock">
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-chrome" title="Google Chrome">
+        <img src="assets/dock/googlechrome.svg" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item is-active">
+      <div class="dock-icon dock-icon-tile-slack" title="Slack">
+        <svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd" aria-hidden="true"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-notes" title="Apple Notes">
+        <img src="assets/dock/apple-notes.png" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+  </nav>
+</section>
+
+<section id="scene2" aria-label="Scene 2 — The Old Way">
+
+  <header class="mac-menubar" aria-label="macOS menubar">
+    <div class="mac-menubar-left">
+      <svg class="mac-apple" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      <span class="mac-app-name">Google Chrome</span>
+      <nav class="mac-menus" aria-label="Menu">
+        <span>File</span><span>Edit</span><span>View</span><span>History</span><span>Bookmarks</span>
+      </nav>
+    </div>
+    <div class="mac-menubar-right">
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="none" aria-hidden="true"><path d="M2 12c2-4 6-6 10-6s8 2 10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg width="18" height="10" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="2" y="2" width="18" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="4" width="12" height="4" rx="0.5" fill="currentColor" opacity="0.35"/></svg>
+      <span class="mac-clock">Thu 7 May &nbsp;9:41 AM</span>
+    </div>
+  </header>
+
+  <div id="s2Kicker" class="s2-kicker" aria-hidden="true">THE OLD WAY</div>
+
+  <div class="s2-stage">
+
+    <div id="s2Doc" class="s2-doc-window">
+      <div class="s2-mac-titlebar" aria-hidden="true">
+        <span class="s2-mac-dot r"></span>
+        <span class="s2-mac-dot y"></span>
+        <span class="s2-mac-dot g"></span>
+      </div>
+      <div class="s2-doc-toolbar">
+        <div class="s2-doc-toolbar-left">
+          <span class="s2-docs-icon" aria-hidden="true">
+            <svg viewBox="0 0 47 65" xmlns="http://www.w3.org/2000/svg"><path d="M29.375 0H4.408A4.397 4.397 0 0 0 .025 4.382L0 60.617A4.397 4.397 0 0 0 4.382 65H42.42a4.41 4.41 0 0 0 4.405-4.382V17.5L29.375 0z" fill="#4285f4"/><path d="m30.563 16.293 16.262 16.232V17.5l-16.262-1.207z" fill="#1967d2"/><path d="M29.375 0v13.118A4.382 4.382 0 0 0 33.757 17.5h13.068L29.375 0z" fill="#a1c2fa"/><path d="M11.692 47.5h23.442v-2.882H11.692V47.5zm0-8.5h23.442v-2.883H11.692V39zm0-11.382v2.883h23.442v-2.883H11.692z" fill="#fff"/></svg>
+          </span>
+          <span class="s2-doc-name">Transcript - Strategy Call</span>
+        </div>
+      </div>
+      <div id="s2DocBody" class="s2-doc-body">
+        <p class="s2-doc-line"><span class="s2-ts">[00:02:14]</span> <span class="s2-spk">David Park:</span> So moving on to the strategic alignment piece, I think we need to revisit what we agreed on last quarter regarding the</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:02:38]</span> <span class="s2-spk">Sarah Kim:</span> Right, and I had some thoughts on that. The customer feedback from Q1 suggests we should be more aggressive on the enterprise</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:03:01]</span> <span class="s2-spk">Peter Langford:</span> Hold on — before we go there, can we circle back on the budget allocation? I spoke with finance and they</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:03:22]</span> <span class="s2-spk">David Park:</span> Sure, but I want to make sure we don't lose the thread on the strategic</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:03:45]</span> <span class="s2-spk">Maria Chen:</span> I agree with David. We spent the last three meetings going back and forth on budget and we still haven't landed on the key</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:04:10]</span> <span class="s2-spk">Sarah Kim:</span> OK so to summarize where we are — we've got three open items: the enterprise pricing model, the Q3 headcount plan, and</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:04:34]</span> <span class="s2-spk">James Liu:</span> Sorry, can I jump in? The engineering timeline for the integration is actually going to affect all three of those</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:04:58]</span> <span class="s2-spk">Peter Langford:</span> Right. OK so let's try to structure this. What are the actual decisions we need to walk away with today?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:05:15]</span> <span class="s2-spk">David Park:</span> I think the big ones are: one, do we go with the tiered pricing or flat rate for enterprise. Two,</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:05:40]</span> <span class="s2-spk">Rachel Torres:</span> And three, the partnership terms with Meridian — that's been sitting for weeks</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:05:55]</span> <span class="s2-spk">Sarah Kim:</span> Four, the customer reference program. We need three enterprise case studies before the launch and we don't have a single one</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:06:12]</span> <span class="s2-spk">Peter Langford:</span> OK that's a lot. Let's try to get through at least the first two today and</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:06:30]</span> <span class="s2-spk">Maria Chen:</span> Agreed. So on the tiered pricing — I've been looking at the competitive analysis and</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:06:52]</span> <span class="s2-spk">James Liu:</span> Actually Maria, before you go into the competitive analysis — the technical constraints might limit what pricing tiers we can even support. The billing</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:07:14]</span> <span class="s2-spk">Maria Chen:</span> OK but I think that's an implementation detail, not a strategic one. The question is what do we WANT the model to look like and</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:07:35]</span> <span class="s2-spk">David Park:</span> I agree with Maria. Let's separate the strategy from the execution. We can figure out the technical pieces after</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:07:51]</span> <span class="s2-spk">Rachel Torres:</span> But that's exactly what happened last time. We agreed on a strategy and then engineering came back three weeks later saying it wasn't feasible</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:08:10]</span> <span class="s2-spk">James Liu:</span> That's exactly my point. If we don't factor in the platform limitations now we're going to end up re-doing this entire</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:08:28]</span> <span class="s2-spk">Peter Langford:</span> OK everyone — let's not relitigate the Q1 situation. James, can you give us the constraints in two minutes and then we move to a decision?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:08:45]</span> <span class="s2-spk">James Liu:</span> Sure. So the main issue is the metering infrastructure. Right now we can meter on three dimensions: seats, API calls, and storage. If we want to add usage-based tiers on top of that, we'd need</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:09:12]</span> <span class="s2-spk">Sarah Kim:</span> Wait, I thought we already had usage-based metering from the Nexus integration?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:09:25]</span> <span class="s2-spk">James Liu:</span> That was deprecated in March. The Nexus team pivoted to event-based tracking but it's not production ready until</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:09:42]</span> <span class="s2-spk">David Park:</span> So how does that affect the three-tier model we were considering?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:09:55]</span> <span class="s2-spk">James Liu:</span> Basically we can do two tiers at launch — Starter and Enterprise — and add the mid-tier once the metering is</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:10:14]</span> <span class="s2-spk">Maria Chen:</span> That actually simplifies things. Two tiers is cleaner from a messaging standpoint anyway. Competitive analysis shows</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:10:38]</span> <span class="s2-spk">Rachel Torres:</span> But the mid-market customers are the ones pushing hardest for self-serve. If we don't have a mid-tier, we're going to lose them to</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:10:55]</span> <span class="s2-spk">Peter Langford:</span> What's the revenue at stake with mid-market? Do we have numbers?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:11:08]</span> <span class="s2-spk">Sarah Kim:</span> I can pull the pipeline data. Off the top of my head it's about 30% of our inbound over the last two quarters</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:11:24]</span> <span class="s2-spk">David Park:</span> That's significant. We can't just write that off</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:11:35]</span> <span class="s2-spk">Maria Chen:</span> Agreed, but if we delay launch to build three tiers we're looking at what — another eight weeks? James?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:11:50]</span> <span class="s2-spk">James Liu:</span> Minimum six to eight weeks, yes. And that's assuming we don't hit any issues with the</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:12:05]</span> <span class="s2-spk">Peter Langford:</span> OK here's what I'm thinking. We launch with two tiers and build the mid-tier on a fast follow. Is that workable for everyone?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:12:22]</span> <span class="s2-spk">Rachel Torres:</span> I can live with that if we commit to a hard date for the mid-tier. I need something to tell the sales team</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:12:38]</span> <span class="s2-spk">David Park:</span> Same. The positioning has to be clear — this isn't "we don't have it," it's "it's coming in X weeks"</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:12:55]</span> <span class="s2-spk">James Liu:</span> I can commit to six weeks post-launch if we start the metering work in parallel</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:13:10]</span> <span class="s2-spk">Sarah Kim:</span> OK let's move on. We've been on pricing for eleven minutes. Budget allocation?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:13:25]</span> <span class="s2-spk">Peter Langford:</span> Right. So I met with Raj from finance on Thursday. The headline is we have 15% less discretionary budget than we planned for Q3 because</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:13:48]</span> <span class="s2-spk">Maria Chen:</span> Wait, 15%? That's going to blow up the headcount plan</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:14:02]</span> <span class="s2-spk">David Park:</span> Does that include the contractor budget or just FTE?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:14:15]</span> <span class="s2-spk">Peter Langford:</span> Both. It's a blanket cut. Raj said it's coming from corporate and there's no negotiation room. So we need to figure out how to</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:14:35]</span> <span class="s2-spk">Rachel Torres:</span> So the three open headcount recs — the senior PM, the solutions architect, and the designer — are those all at risk?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:14:50]</span> <span class="s2-spk">Peter Langford:</span> We can probably save one. Maybe two if we restructure the contractor spend. But we have to make a call this week because HR</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:15:08]</span> <span class="s2-spk">James Liu:</span> If I can only keep one, it's the solutions architect. We're drowning in implementation work and the team is already at</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:15:25]</span> <span class="s2-spk">Sarah Kim:</span> Product would say the PM. We've got three major workstreams and only two PMs covering them. The coverage gaps are</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:15:42]</span> <span class="s2-spk">Maria Chen:</span> And marketing obviously needs the designer. We're going into a launch with no dedicated design resource which is</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:15:55]</span> <span class="s2-spk">David Park:</span> So everyone needs their headcount. That's helpful.</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:16:08]</span> <span class="s2-spk">Peter Langford:</span> Let me take this offline with each of you individually. I need to build the case for Raj by Friday. Send me your priority justification by end of day tomorrow</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:16:28]</span> <span class="s2-spk">Rachel Torres:</span> Can we at least agree on criteria? Otherwise we're all just going to advocate for our own team and</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:16:42]</span> <span class="s2-spk">Maria Chen:</span> Revenue impact should be the primary criterion. Which role directly contributes to Q3 revenue targets?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:16:55]</span> <span class="s2-spk">James Liu:</span> That disadvantages engineering every time. Implementation capacity is a revenue bottleneck even if it's not direct</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:17:10]</span> <span class="s2-spk">David Park:</span> I think the criteria should be: which role, if unfilled, creates the biggest risk to the Q3 plan?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:17:25]</span> <span class="s2-spk">Peter Langford:</span> OK I like that framing. Risk to Q3 plan. Send me your justification through that lens. Now — Meridian partnership. Rachel, where are we?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:17:45]</span> <span class="s2-spk">Rachel Torres:</span> So Meridian came back with revised terms last Friday. They've dropped the exclusivity clause which was our biggest concern but they're now asking for</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:18:05]</span> <span class="s2-spk">Sarah Kim:</span> What's the revenue share they're proposing?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:18:15]</span> <span class="s2-spk">Rachel Torres:</span> 18% on all referred deals, down from 25%, but they want a minimum guarantee of</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:18:32]</span> <span class="s2-spk">David Park:</span> 18% is still high for a channel partner. Industry standard is more like 12 to 15</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:18:45]</span> <span class="s2-spk">Rachel Torres:</span> I know, but they're bringing Fortune 500 logos we can't reach on our own. The first three deals in the pipeline are</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:19:02]</span> <span class="s2-spk">Maria Chen:</span> Can we counter at 15% with a lower minimum guarantee? That gives them upside if they perform but protects us if</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:19:18]</span> <span class="s2-spk">Peter Langford:</span> Rachel, do you think they'd accept 15?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:19:28]</span> <span class="s2-spk">Rachel Torres:</span> Honestly, probably not. But I think we could land at 16 with some creative structuring around the</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:19:45]</span> <span class="s2-spk">James Liu:</span> Just flagging — whatever we agree on, engineering needs two weeks lead time to set up the partner portal and referral tracking. So if we want this live by</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:20:02]</span> <span class="s2-spk">David Park:</span> OK we're running low on time. Can we agree on the negotiation range and let Rachel run with it?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:20:15]</span> <span class="s2-spk">Peter Langford:</span> Yes. Rachel, you're authorized to close at 16% or below. Anything above that, come back to me. Minimum guarantee capped at</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:20:32]</span> <span class="s2-spk">Rachel Torres:</span> Got it. I'll set up the call with their team for next week</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:20:42]</span> <span class="s2-spk">Sarah Kim:</span> One more thing — the customer reference program for the enterprise launch. We said we'd make a call today</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:20:55]</span> <span class="s2-spk">Peter Langford:</span> Given the launch timeline, Maria should run a 4-week reference sprint. Three enterprise case studies, weekly checkpoints with me, and any legal sign-off goes through</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:21:15]</span> <span class="s2-spk">Maria Chen:</span> What about the event marketing coordinator? That was supposed to open next week and we have the London event in</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:21:30]</span> <span class="s2-spk">Peter Langford:</span> Exception requests go through me and Raj. I'll fast-track anything that's event-critical but I can't make blanket approvals today because</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:21:48]</span> <span class="s2-spk">David Park:</span> I think that's reasonable. Let's just make sure the exception process doesn't add three weeks of bureaucracy like last time when we</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:21:55]</span> <span class="s2-spk">Peter Langford:</span> Agreed, I'll keep approvals to a 48 hour turnaround. OK — are we good? Let me summarize: two-tier pricing at launch with mid-tier fast follow, headcount justifications due to me tomorrow through risk-to-Q3 lens, Rachel closing Meridian at 16% or below, Maria running a 4-week customer reference sprint with weekly checkpoints. Anything I missed?</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:22:14]</span> <span class="s2-spk">James Liu:</span> The engineering timeline for the billing work — I'll send you a project plan by Thursday</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:22:25]</span> <span class="s2-spk">Sarah Kim:</span> And I'll pull the mid-market pipeline numbers so we have data for the mid-tier timeline discussion</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:22:38]</span> <span class="s2-spk">Maria Chen:</span> I'll draft the two-tier positioning doc and circulate for review by</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:22:48]</span> <span class="s2-spk">David Park:</span> I think we also need to loop in legal on the Meridian terms before Rachel goes back to them</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:22:55]</span> <span class="s2-spk">Rachel Torres:</span> Good call. I'll CC legal on the term sheet</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:23:02]</span> <span class="s2-spk">Peter Langford:</span> Great. Let's reconvene Thursday to check progress on all of these. Thanks everyone.</p>
+        <p class="s2-doc-line"><span class="s2-ts">[00:23:10]</span> <span class="s2-spk">Multiple:</span> Thanks. Thanks Peter. See you Thursday. Bye.</p>
+      </div>
+      <div id="s2DocPill" class="s2-stat-pill" aria-hidden="true">
+        <span class="s2-stat" id="s2StatPages">47 pages</span>
+        <span class="s2-stat-sep" id="s2Sep1">·</span>
+        <span class="s2-stat" id="s2StatSpeakers">10 speakers</span>
+        <span class="s2-stat-sep" id="s2Sep2">·</span>
+        <span class="s2-stat" id="s2StatDuration">58 min</span>
+      </div>
+    </div>
+
+    <div id="s2Notes" class="s2-notes-window">
+      <div class="s2-mac-titlebar" aria-hidden="true">
+        <span class="s2-mac-dot r"></span>
+        <span class="s2-mac-dot y"></span>
+        <span class="s2-mac-dot g"></span>
+      </div>
+      <div class="s2-notes-header">
+        <div class="s2-notes-title-row">
+          <span class="s2-notes-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2h13A2.5 2.5 0 0 1 21 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 19.5v-15zM6 7h12v2H6V7zm0 4h12v2H6v-2zm0 4h7v2H6v-2z"/></svg>
+          </span>
+          <span class="s2-notes-title">My Meeting Notes</span>
+        </div>
+      </div>
+      <div class="s2-notes-body">
+        <p class="s2-notes-line">- David wants to revisit Q1 alignment on enterprise</p>
+        <p class="s2-notes-line">- Budget allocation still open — Peter talked to fin</p>
+        <p class="s2-notes-line">- Something about Meridian partnership terms?<span class="s2-notes-cursor"></span></p>
+      </div>
+      <div id="s2NotesPill" class="s2-stat-pill" aria-hidden="true">
+        <span class="s2-stat" id="s2StatLines">3 lines</span>
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="mac-dock" aria-label="Dock">
+    <div class="dock-item is-active">
+      <div class="dock-icon dock-icon-tile-chrome" title="Google Chrome">
+        <img src="assets/dock/googlechrome.svg" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-slack" title="Slack">
+        <svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd" aria-hidden="true"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-notes" title="Apple Notes">
+        <img src="assets/dock/apple-notes.png" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+  </nav>
+
+  <div id="s2Toast" class="s2-toast" aria-hidden="true">
+    <div class="s2-toast-icon">
+      <img src="assets/brand/viven-logo.png" width="38" height="38" alt="">
+    </div>
+    <div class="s2-toast-copy">
+      <div class="s2-toast-title-row">
+        <span class="s2-toast-title">Viven Meetings</span>
+        <span class="s2-toast-time">now</span>
+      </div>
+      <p class="s2-toast-body">Your Twin was in yesterday's strategy call — notes are ready.</p>
+    </div>
+  </div>
+  <div id="s2FakeCursor" aria-hidden="true">
+    <svg viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg"><path d="M3 2 L3 22 L8.5 17 L11.7 24.5 L14.5 23.3 L11.3 16 L19 16 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  </div>
+
+</section>
+
+<section id="scene3" aria-label="Scene 3 — Meetings Agent">
+
+  <div class="s3-window">
+
+    <header class="s3-window-titlebar" aria-hidden="true">
+      <span class="s3-window-dot red"></span>
+      <span class="s3-window-dot yellow"></span>
+      <span class="s3-window-dot green"></span>
+    </header>
+
+    <div class="s3-app-shell">
+
+    <aside class="s3-sidebar">
+      <div class="s3-logo-row">
+        <span class="s3-logo-mark" aria-hidden="true">
+          <img src="assets/brand/viven-logo.png" alt="Viven" width="22" height="22">
+        </span>
+        <span class="s3-logo-text">Digital Twin</span>
+        <span class="s3-logo-toggle" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="9" y1="5" x2="9" y2="19"/></svg>
+        </span>
+      </div>
+
+      <nav class="s3-nav" aria-label="Primary">
+        <button class="s3-nav-item" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span>
+          New Chat
+        </button>
+        <button class="s3-nav-item" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          Search Chats
+        </button>
+        <button class="s3-nav-item" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/><path d="M19 4l1.2 2.8L23 8l-2.8 1.2L19 12l-1.2-2.8L15 8l2.8-1.2L19 4z"/></svg></span>
+          My Twin
+        </button>
+        <button class="s3-nav-item" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.8"/><path d="M3 20c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 19c.4-2.4 2.5-4.2 4.8-4.2 1.4 0 2.7.6 3.5 1.6"/></svg></span>
+          People
+        </button>
+        <button class="s3-nav-item" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v4c0 1.7 2.7 3 6 3s6-1.3 6-3v-4"/></svg></span>
+          Experts
+        </button>
+        <button class="s3-nav-item" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="2" y1="13" x2="4" y2="13"/><line x1="20" y1="13" x2="22" y2="13"/></svg></span>
+          Agents
+        </button>
+        <button class="s3-nav-item active" type="button">
+          <span class="s3-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          Meetings
+        </button>
+      </nav>
+
+      <div class="s3-sidebar-spacer"></div>
+
+      <div class="s3-profile">
+        <div class="s3-profile-avatar"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=160&h=160&fit=crop&crop=face" alt="" width="28" height="28"></div>
+        <div class="s3-profile-meta">
+          <span class="s3-profile-name">Kim Park</span>
+          <span class="s3-profile-email">kim@acme.com</span>
+        </div>
+        <span class="s3-profile-caret" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </span>
+      </div>
+    </aside>
+
+    <main class="s3-main">
+
+      <!-- BEAT 1: Meetings list -->
+      <div id="s3MeetingsView" class="s3-view active">
+
+        <header class="s3-page-header">
+          <h1 class="s3-page-title">Meetings</h1>
+          <div class="s3-page-actions">
+            <div class="s3-toggle-row"><span class="s3-toggle"></span> Auto join all meetings</div>
+            <button class="s3-record-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="14" r="3"/><circle cx="18" cy="14" r="3"/><line x1="9" y1="14" x2="15" y2="14"/><path d="M3 14V9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/></svg>
+              Record a meeting
+            </button>
+          </div>
+        </header>
+
+        <div class="s3-section-label">Upcoming</div>
+
+        <div class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Product Roadmap Review</div>
+            <div class="s3-meeting-meta">May 14, 9:00 AM - 10:00 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 8 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          </div>
+          <div class="s3-meeting-controls">
+            <div class="s3-invite-toggle"><span class="s3-toggle"></span> Invite Twin</div>
+            <button class="s3-join-btn" type="button">Join with Twin <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Engineering Standup</div>
+            <div class="s3-meeting-meta">May 15, 9:00 AM - 9:30 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 6 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          </div>
+          <div class="s3-meeting-controls">
+            <div class="s3-invite-toggle"><span class="s3-toggle"></span> Invite Twin</div>
+            <button class="s3-join-btn" type="button">Join with Twin <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Q3 Planning Sync</div>
+            <div class="s3-meeting-meta">May 16, 11:00 AM - 12:00 PM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 12 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          </div>
+          <div class="s3-meeting-controls">
+            <div class="s3-invite-toggle"><span class="s3-toggle"></span> Invite Twin</div>
+            <button class="s3-join-btn" type="button">Join with Twin <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-pagination">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Previous</span>
+          <span>Next <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+
+        <div class="s3-section-label">Past</div>
+
+        <div id="s3RowStrategy" class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Strategy Alignment Call</div>
+            <div class="s3-meeting-meta">May 7, 2:00 PM - 3:00 PM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 8 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          </div>
+          <div class="s3-meeting-controls">
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Engineering Standup</div>
+            <div class="s3-meeting-meta">May 7, 9:00 AM - 9:30 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 6</div>
+          </div>
+          <div class="s3-meeting-controls">
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Product Roadmap Review</div>
+            <div class="s3-meeting-meta">May 6, 10:00 AM - 11:00 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 10</div>
+          </div>
+          <div class="s3-meeting-controls">
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-meeting-row">
+          <span class="s3-meeting-cal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+          <div class="s3-meeting-info">
+            <div class="s3-meeting-name">Design Sprint Kickoff</div>
+            <div class="s3-meeting-meta">May 5, 1:00 PM - 2:00 PM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/></svg> 5</div>
+          </div>
+          <div class="s3-meeting-controls">
+            <span class="s3-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+
+        <div class="s3-pagination">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Previous</span>
+          <span>Next <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+      </div>
+
+      <!-- BEAT 2 + 3: Meeting detail -->
+      <div id="s3DetailView" class="s3-view">
+
+        <header class="s3-detail-header">
+          <span class="s3-back-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </span>
+          <div class="s3-detail-headline">
+            <div class="s3-detail-title-row">
+              <span class="s3-detail-title">Strategy Alignment Call</span>
+              <span class="s3-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+            </div>
+            <div class="s3-detail-sub">
+              <span>May 7, 2:00 PM - 3:00 PM</span>
+              <span class="s3-avatar-stack" aria-label="Participants">
+                <span class="s3-avatar-init">DP</span>
+                <span class="s3-avatar-init">SK</span>
+                <span class="s3-avatar-init">PL</span>
+                <span class="s3-avatar-init">MC</span>
+                <span class="s3-avatar-init">JL</span>
+                <span class="s3-avatar-init">RT</span>
+                <span class="s3-avatar-init s3-avatar-extra">+2</span>
+              </span>
+            </div>
+          </div>
+          <div class="s3-detail-actions">
+            <span class="s3-completed-pill">Completed</span>
+            <span class="s3-export-btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14 3 14 9 20 9"/></svg>
+            </span>
+          </div>
+        </header>
+
+        <div class="s3-tabs" role="tablist">
+          <button id="s3TabSummary" class="s3-tab active" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Summary
+          </button>
+          <button id="s3TabChat" class="s3-tab" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Chat
+          </button>
+        </div>
+
+        <div class="s3-detail-body">
+          <div id="s3SummaryPane" class="s3-pane active">
+            <p class="s3-section-title">SUMMARY</p>
+            <div class="s3-summary-block">
+              Leadership aligned on four decisions: two-tier enterprise pricing at launch, risk-to-Q3 headcount prioritization, Meridian terms at 16% rev share or below, and a 4-week customer reference sprint led by Maria for the enterprise launch.
+            </div>
+
+            <p class="s3-section-title">KEY TOPICS</p>
+            <ul class="s3-bullets">
+              <li><b>Enterprise pricing model:</b> Launch with two tiers; mid-tier follows in 6 weeks.</li>
+              <li><b>APAC expansion:</b> Pilot approved for Singapore and Tokyo in Q3. Sarah compiling local partner shortlist, due to you by Thursday.</li>
+              <li><b>Meridian partnership:</b> Rachel authorized to close at 16% or below.</li>
+              <li><b>Product roadmap:</b> Integrations hub committed for end of Q3. James sharing engineering timeline Thursday, David lining up advisory board for beta.</li>
+              <li class="s3-bullet-skel"><span class="s3-skel-line w85"></span><span class="s3-skel-line w55"></span></li>
+              <li class="s3-bullet-skel"><span class="s3-skel-line w92"></span><span class="s3-skel-line w65"></span></li>
+            </ul>
+
+            <p class="s3-section-title">ACTION ITEMS</p>
+            <ul class="s3-bullets">
+              <li>Submit risk-to-Q3 justifications (David, Sarah, Maria, James) — Thursday</li>
+              <li>Draft two-tier enterprise positioning (Maria Chen)</li>
+              <li class="s3-bullet-skel"><span class="s3-skel-line w92"></span><span class="s3-skel-line w65"></span></li>
+              <li class="s3-bullet-skel"><span class="s3-skel-line w80"></span></li>
+              <li class="s3-bullet-skel"><span class="s3-skel-line w95"></span><span class="s3-skel-line w60"></span></li>
+              <li class="s3-bullet-skel"><span class="s3-skel-line w88"></span><span class="s3-skel-line w50"></span></li>
+            </ul>
+          </div>
+
+          <div id="s3ChatPane" class="s3-pane">
+            <div id="s3ChatStream" class="s3-chat-stream"></div>
+
+            <div class="s3-composer">
+              <div class="s3-chips-row">
+                <button class="s3-chip" type="button">What did I miss?</button>
+                <button class="s3-chip" type="button">My action items</button>
+                <button class="s3-chip" type="button">Key Decisions</button>
+              </div>
+              <div id="s3InputBar" class="s3-input-bar">
+                <span id="s3InputText" class="s3-input-text"></span>
+                <span id="s3InputCaret" class="s3-input-caret"></span>
+                <span class="s3-input-placeholder">Ask anything about meeting...</span>
+                <button id="s3SendBtn" class="s3-send-btn" type="button" aria-label="Send">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <aside class="s3-transcript" aria-label="Transcript">
+      <header class="s3-transcript-head">
+        <span class="s3-transcript-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></span>
+        <span class="s3-transcript-title">Transcript</span>
+        <span class="s3-transcript-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+      </header>
+      <div class="s3-transcript-list">
+        <div class="s3-tx-item"><div class="s3-tx-meta"><span class="s3-tx-name">David Park</span> <span class="s3-tx-time">2:02 PM</span></div><p class="s3-tx-body">So moving on to the strategic alignment piece, I think we need to revisit what we agreed on last quarter regarding the enterprise pricing model and the Q3 headcount plan.</p></div>
+        <div class="s3-tx-item"><div class="s3-tx-meta"><span class="s3-tx-name">Sarah Kim</span> <span class="s3-tx-time">2:02 PM</span></div><p class="s3-tx-body">Right, and I had some thoughts on that. The customer feedback from Q1 suggests we should be more aggressive on the enterprise tier and adjust mid-market pricing accordingly.</p></div>
+        <div class="s3-tx-item"><div class="s3-tx-meta"><span class="s3-tx-name">Peter Langford</span> <span class="s3-tx-time">2:03 PM</span></div><p class="s3-tx-body">Hold on — before we go there, can we circle back on the budget allocation? I spoke with finance and they confirmed the 15% discretionary cut is locked in for Q3.</p></div>
+        <div class="s3-tx-item"><div class="s3-tx-meta"><span class="s3-tx-name">Maria Chen</span> <span class="s3-tx-time">2:04 PM</span></div><p class="s3-tx-body">I agree with David. We spent the last three meetings going back and forth on budget and we still haven't landed on the key strategic decisions we need before launch.</p></div>
+        <div class="s3-tx-item s3-tx-skeleton"><div class="s3-tx-meta"><span class="s3-tx-name-skel"></span><span class="s3-tx-time-skel"></span></div><span class="s3-skel-line w90"></span><span class="s3-skel-line w70"></span></div>
+        <div class="s3-tx-item s3-tx-skeleton"><div class="s3-tx-meta"><span class="s3-tx-name-skel"></span><span class="s3-tx-time-skel"></span></div><span class="s3-skel-line w85"></span><span class="s3-skel-line w55"></span></div>
+        <div class="s3-tx-item s3-tx-skeleton"><div class="s3-tx-meta"><span class="s3-tx-name-skel"></span><span class="s3-tx-time-skel"></span></div><span class="s3-skel-line w92"></span><span class="s3-skel-line w65"></span></div>
+        <div class="s3-tx-item s3-tx-skeleton"><div class="s3-tx-meta"><span class="s3-tx-name-skel"></span><span class="s3-tx-time-skel"></span></div><span class="s3-skel-line w80"></span></div>
+        <div class="s3-tx-item s3-tx-skeleton"><div class="s3-tx-meta"><span class="s3-tx-name-skel"></span><span class="s3-tx-time-skel"></span></div><span class="s3-skel-line w95"></span><span class="s3-skel-line w60"></span></div>
+      </div>
+    </aside>
+    </div>
+  </div>
+
+  <div id="s3FakeCursor" aria-hidden="true">
+    <svg viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg"><path d="M3 2 L3 22 L8.5 17 L11.7 24.5 L14.5 23.3 L11.3 16 L19 16 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  </div>
+
+</section>
+
+<section id="scene4" aria-label="Scene 4 — Payoff + title card">
+
+  <header class="mac-menubar" aria-label="macOS menubar">
+    <div class="mac-menubar-left">
+      <svg class="mac-apple" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      <span class="mac-app-name">Slack</span>
+      <nav class="mac-menus" aria-label="Menu">
+        <span>File</span><span>Edit</span><span>View</span><span>Workspace</span>
+      </nav>
+    </div>
+    <div class="mac-menubar-right">
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="none" aria-hidden="true"><path d="M2 12c2-4 6-6 10-6s8 2 10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg width="18" height="10" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="2" y="2" width="18" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="4" width="12" height="4" rx="0.5" fill="currentColor" opacity="0.35"/></svg>
+      <span class="mac-clock">Thu 7 May &nbsp;9:44 AM</span>
+    </div>
+  </header>
+
+  <div class="s1-shell-wrap">
+    <div id="s4SlackShell" class="slack-shell">
+
+      <div class="slack-topbar">
+        <div class="slack-traffic" aria-hidden="true">
+          <span class="slack-traffic-dot r"></span>
+          <span class="slack-traffic-dot y"></span>
+          <span class="slack-traffic-dot g"></span>
+        </div>
+        <div class="slack-search-wrap">
+          <div class="slack-search-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search Acme Inc</span>
+          </div>
+        </div>
+        <div class="slack-topbar-right" aria-hidden="true">
+          <svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>
+        </div>
+      </div>
+
+      <div class="slack-body">
+
+        <aside class="slack-sidebar" aria-label="Channels">
+          <div class="sb-workspace">
+            <span class="sb-workspace-name">
+              Acme Inc
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+            <span class="sb-workspace-pencil" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4z"/></svg>
+            </span>
+          </div>
+
+          <div class="sb-scroll">
+
+            <div class="sb-section">
+              <div class="sb-section-head">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+                Channels
+              </div>
+              <div class="sb-list">
+                <div class="sb-item">
+                  <span class="sb-prefix">#</span>
+                  <span class="sb-label">project-atlas</span>
+                </div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w70"></span></div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w55"></span></div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w62"></span></div>
+              </div>
+            </div>
+
+            <div class="sb-section">
+              <div class="sb-section-head">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+                Direct Messages
+              </div>
+              <div class="sb-list">
+                <div class="sb-item active">
+                  <img class="sb-avatar-img" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face" alt="" width="18" height="18">
+                  <span class="sb-label">Peter Langford</span>
+                </div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w60"></span></div>
+                <div class="sb-item is-skel" aria-hidden="true"><span class="sb-skel w48"></span></div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <section class="slack-main" aria-label="Channel content">
+          <header class="slack-main-head">
+            <span class="smh-title">
+              <img class="smh-avatar" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face" alt="" width="22" height="22">
+              <span>Peter Langford</span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+          </header>
+
+          <div class="slack-main-body">
+
+            <div class="main-state">
+             <div class="s4-chat-stack">
+              <div class="dm-history" aria-hidden="true">
+                <div class="skel-row">
+                  <div class="skel-avatar"></div>
+                  <div class="skel-content">
+                    <div class="skel-name"></div>
+                    <div class="skel-line w80"></div>
+                    <div class="skel-line w48"></div>
+                  </div>
+                </div>
+                <div class="skel-row">
+                  <div class="skel-avatar"></div>
+                  <div class="skel-content">
+                    <div class="skel-name"></div>
+                    <div class="skel-line w92"></div>
+                    <div class="skel-line w60"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dm-day-divider" aria-hidden="true"><span>Today</span></div>
+
+              <div class="s4-msg-list">
+
+                <div id="s4PeterFirst" class="dm-msg">
+                  <div class="dm-avatar" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                  </div>
+                  <div class="dm-content">
+                    <div class="dm-meta">
+                      <span class="dm-name">Peter Langford</span>
+                      <span class="dm-time">9:41 AM</span>
+                    </div>
+                    <p class="dm-body">Hi Kim — Need your help urgently.</p>
+                  </div>
+                </div>
+
+                <div id="s4PeterAsk" class="dm-msg">
+                  <div class="dm-avatar" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                  </div>
+                  <div class="dm-content">
+                    <div class="dm-meta">
+                      <span class="dm-name">Peter Langford</span>
+                      <span class="dm-time">9:42 AM</span>
+                    </div>
+                    <p class="dm-body">What strategic alignments were agreed upon in yesterday's meeting?<br>Need it <strong>ASAP</strong> for CEO 🙏</p>
+                  </div>
+                </div>
+
+                <div id="s4KimTyping" class="s4-typing-row" style="display:none">
+                  <div class="s4-typing-avatar">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                  </div>
+                  <div class="s4-typing-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                </div>
+
+                <div id="s4KimReply" class="dm-msg" style="display:none">
+                  <div class="dm-avatar" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                  </div>
+                  <div class="dm-content">
+                    <div class="dm-meta">
+                      <span class="dm-name">Kim Park</span>
+                      <span class="dm-time">9:43 AM</span>
+                    </div>
+                    <p class="dm-body">
+                      <span class="s4-reply-header">Here's the summary from yesterday's strategy alignment call:</span>
+                      <span class="s4-bullet">1. <strong>Enterprise pricing</strong> — two-tier model at launch, mid-tier fast follow in 6 weeks. Maria drafting positioning.</span>
+                      <span class="s4-bullet">2. <strong>APAC expansion</strong> — pilot approved for Singapore and Tokyo in Q3. Sarah compiling local partner shortlist, due to you by Thursday.</span>
+                      <span class="s4-bullet">3. <strong>Meridian</strong> — Rachel closing at 16% rev share or below, legal review first.</span>
+                      <span class="s4-bullet">4. <strong>Product roadmap</strong> — integrations hub committed for end of Q3. James sharing engineering timeline Thursday, David lining up advisory board for beta.</span>
+                      <span class="s4-summary-pill">4 decisions · 3 owners · from yesterday's call</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div id="s4PeterSecond" class="dm-msg">
+                  <div class="dm-avatar" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" alt="" width="40" height="40">
+                  </div>
+                  <div class="dm-content">
+                    <div class="dm-meta">
+                      <span class="dm-name">Peter Langford</span>
+                      <span class="dm-time">9:44 AM</span>
+                    </div>
+                    <p class="dm-body">Are you Flash? ⚡ Thanks for getting this done so swiftly 🙌</p>
+                  </div>
+                </div>
+
+              </div>
+             </div>
+            </div>
+
+          </div>
+
+          <div class="slack-input" aria-hidden="true">
+            <div class="slack-input-row">
+              <div class="slack-input-plus">+</div>
+              <span class="slack-input-placeholder">Message Peter Langford</span>
+            </div>
+            <div class="slack-input-toolbar">
+              <span class="tb-glyph"><b>B</b></span>
+              <span class="tb-glyph"><i>I</i></span>
+              <span class="tb-glyph"><u>U</u></span>
+              <span class="tb-divider"></span>
+              <span class="tb-glyph">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05L12.25 20.24a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83L13.41 7"/></svg>
+              </span>
+              <span class="tb-glyph">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+              </span>
+              <span class="tb-glyph">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6M5 12l7-7 7 7"/></svg>
+              </span>
+              <span class="tb-spacer"></span>
+              <span class="tb-send" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              </span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="mac-dock" aria-label="Dock">
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-chrome" title="Google Chrome">
+        <img src="assets/dock/googlechrome.svg" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item is-active">
+      <div class="dock-icon dock-icon-tile-slack" title="Slack">
+        <svg viewBox="0 0 2447.6 2452.5" xmlns="http://www.w3.org/2000/svg" clip-rule="evenodd" fill-rule="evenodd" aria-hidden="true"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"/><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"/><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"/><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"/></svg>
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon dock-icon-tile-notes" title="Apple Notes">
+        <img src="assets/dock/apple-notes.png" width="48" height="48" alt="">
+      </div>
+      <span class="dock-dot"></span>
+    </div>
+  </nav>
+
+  <div id="s4TitleCard" aria-hidden="true">
+    <div class="title-card-text-wrap">
+      <span class="tc-word emphasis" data-line="1">The</span>
+      <span class="tc-word emphasis" data-line="1">answer</span>
+      <span class="tc-word emphasis" data-line="1">was</span>
+      <span class="tc-word emphasis" data-line="1">ready</span>
+      <span class="tc-break"></span>
+      <span class="tc-word emphasis" data-line="2">before</span>
+      <span class="tc-word emphasis" data-line="2">you</span>
+      <span class="tc-word emphasis" data-line="2">asked.</span>
+    </div>
+  </div>
+
+</section>
+
+<div class="scene-indicator" id="controls">
+  Scene <span id="sceneNum">1</span> &nbsp;·&nbsp;
+  <kbd onclick="switchScene(1, { skipOpener: true })">1</kbd>
+  <kbd onclick="switchScene(2)">2</kbd>
+  <kbd onclick="switchScene(3)">3</kbd>
+  <kbd onclick="switchScene(4)">4</kbd>
+  &nbsp;·&nbsp;
+  <kbd onclick="switchScene(SCENE)">R</kbd> Replay
+  &nbsp;·&nbsp;
+  <kbd onclick="togglePlayback()">P</kbd> Pause / Play
+  &nbsp;·&nbsp;
+  <kbd onclick="toggleControls()">H</kbd>
+</div>
+
+<script>
+const timeouts = [];
+function st(fn, delay) { timeouts.push(setTimeout(fn, delay)); }
+function clearAllTimeouts() { timeouts.forEach(clearTimeout); timeouts.length = 0; }
+
+const unpauseResolvers = [];
+let playbackPaused = false;
+
+async function waitIfPaused() {
+  while (playbackPaused) {
+    await new Promise(r => { unpauseResolvers.push(r); });
+  }
+}
+
+async function sleep(ms) {
+  const chunk = 50;
+  let left = ms;
+  while (left > 0) {
+    await waitIfPaused();
+    const step = Math.min(chunk, left);
+    await new Promise(r => {
+      const t = setTimeout(() => { r(); }, step);
+      timeouts.push(t);
+    });
+    left -= step;
+  }
+}
+
+const P1_WORD_STAGGER_MS = 450;
+const P1_PAYOFF_EXTRA_MS = 400;
+const P1_POST_REVEAL_HOLD_MS = 2000;
+const P1_CARD_FADE_MS = 600;
+const P1_WORD_REVEAL_MS = 220;
+const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+const EASE_IN = 'power2.in';
+const STAGGER_UI_MS = 80;
+
+function resetTitleCard(cardId) {
+  const card = $(cardId);
+  if (!card) return;
+  card.classList.remove('visible');
+  card.querySelectorAll('.tc-word').forEach(w => w.classList.remove('visible', 'dimmed'));
+}
+
+async function playP1TitleCard(cardId, { isResetting = () => false, dimLine1After = false } = {}) {
+  if (isResetting()) return;
+  const card = $(cardId);
+  if (!card) return;
+
+  const line1 = Array.from(card.querySelectorAll('.tc-word[data-line="1"]'));
+  const line2 = Array.from(card.querySelectorAll('.tc-word[data-line="2"]'));
+  const allWords = line1.concat(line2);
+  if (!allWords.length) return;
+
+  resetTitleCard(cardId);
+  card.classList.add('visible');
+
+  for (let i = 0; i < allWords.length; i++) {
+    if (isResetting()) return;
+    const w = allWords[i];
+    const isLastWord = i === allWords.length - 1;
+    if (i > 0) await sleep(P1_WORD_STAGGER_MS);
+    if (isResetting()) return;
+    if (isLastWord) await sleep(P1_PAYOFF_EXTRA_MS);
+    if (isResetting()) return;
+
+    w.classList.add('visible');
+
+    if (dimLine1After && w.dataset.line === '1' && i === line1.length - 1) {
+      line1.forEach(word => word.classList.add('dimmed'));
+    }
+  }
+
+  await sleep(P1_WORD_REVEAL_MS);
+  if (isResetting()) return;
+  await sleep(P1_POST_REVEAL_HOLD_MS);
+  if (isResetting()) return;
+
+  card.classList.remove('visible');
+  await sleep(P1_CARD_FADE_MS);
+}
+
+function pausePlayback() {
+  if (playbackPaused) return;
+  playbackPaused = true;
+  if (typeof gsap !== 'undefined') gsap.globalTimeline.pause();
+}
+
+function resumePlayback() {
+  playbackPaused = false;
+  const rs = unpauseResolvers.splice(0);
+  rs.forEach(r => { try { r(); } catch (e) {} });
+  if (typeof gsap !== 'undefined') gsap.globalTimeline.resume();
+}
+
+function togglePlayback() {
+  if (playbackPaused) resumePlayback();
+  else pausePlayback();
+}
+
+function toggleControls() { $('controls').classList.toggle('hidden-ctrl'); }
+
+const $ = id => document.getElementById(id);
+
+function scrollDmToMsg1() {
+  const dm = $('dmState');
+  const msg1 = $('peterMsg1');
+  if (!dm || !msg1) return;
+  requestAnimationFrame(() => {
+    const pad = 10;
+    const msgBottom = msg1.offsetTop + msg1.offsetHeight;
+    dm.scrollTop = Math.max(0, msgBottom - dm.clientHeight + pad);
+  });
+}
+
+function scrollDmToBottom(duration = 0) {
+  const dm = $('dmState');
+  if (!dm) return Promise.resolve();
+  const target = dm.scrollHeight - dm.clientHeight;
+  if (duration <= 0) {
+    dm.scrollTop = target;
+    return Promise.resolve();
+  }
+  return new Promise(resolve => {
+    gsap.to(dm, {
+      scrollTop: target,
+      duration,
+      ease: 'power2.inOut',
+      onComplete: resolve
+    });
+  });
+}
+
+let SCENE = 1;
+let s1Resetting = false;
+
+function reset1() {
+  s1Resetting = true;
+  gsap.killTweensOf(['#slackShell', '#sbPeterBadge', '#skelState', '#dmState', '#peterMsg1', '#peterMsg2', '#peterMsg2 .dm-word', $('dmState')]);
+
+  gsap.set('#slackShell', { opacity: 0, y: 14, scale: 0.97, transformOrigin: '50% 50%' });
+  gsap.set('#sbPeterBadge', { opacity: 0, scale: 0.6, transformOrigin: '50% 50%' });
+  gsap.set('#skelState', { opacity: 1 });
+  gsap.set('#dmState', { opacity: 0 });
+  gsap.set('#peterMsg1', { opacity: 1, y: 0 });
+  gsap.set('#peterMsg2', { opacity: 0, y: 6 });
+  gsap.set('#peterMsg2 .dm-word', { opacity: 0 });
+  $('peterMsg2').classList.add('dm-msg--pending');
+
+  $('skelState').classList.remove('hidden');
+  $('dmState').classList.add('hidden');
+
+  $('mainHeadProject').style.display = '';
+  $('mainHeadPeter').style.display = 'none';
+  $('inputPlaceholder').textContent = 'Message #project-atlas';
+
+  $('sbProject').classList.add('active');
+  $('sbPeter').classList.remove('active', 'bold-unread');
+
+  resetTitleCard('s0TitleCard');
+
+  $('scene1').classList.remove('active');
+  st(() => { s1Resetting = false; }, 60);
+}
+
+async function run1Inner({ skipOpener = false } = {}) {
+  if (s1Resetting) return;
+
+  if (!skipOpener) {
+    await playP1TitleCard('s0TitleCard', { isResetting: () => s1Resetting });
+    if (s1Resetting) return;
+  }
+
+  // 0 → 600ms : Slack shell fades in + scales up
+  await sleep(150);
+  if (s1Resetting) return;
+
+  await new Promise(resolve => {
+    gsap.to('#slackShell', {
+      opacity: 1, y: 0, scale: 1,
+      duration: 0.6, ease: EASE_OUT,
+      onComplete: resolve
+    });
+  });
+  if (s1Resetting) return;
+
+  // 600 → 2000ms : Hold (~1400ms)
+  await sleep(1400);
+  if (s1Resetting) return;
+
+  // 2000ms : Peter Langford gets unread badge — scale-pop + sidebar bold
+  $('sbPeter').classList.add('bold-unread');
+  await new Promise(resolve => {
+    gsap.to('#sbPeterBadge', {
+      opacity: 1, scale: 1,
+      duration: 0.35, ease: 'back.out(2.4)',
+      onComplete: resolve
+    });
+  });
+  if (s1Resetting) return;
+
+  // ~2400ms : Switch to Peter Langford DM
+  await sleep(450);
+  if (s1Resetting) return;
+
+  $('sbProject').classList.remove('active');
+  $('sbPeter').classList.add('active');
+  $('sbPeter').classList.remove('bold-unread');
+  gsap.set('#sbPeterBadge', { opacity: 0 });
+
+  $('mainHeadProject').style.display = 'none';
+  $('mainHeadPeter').style.display = '';
+  $('inputPlaceholder').textContent = 'Message Peter Langford';
+
+  // # general skeleton view fades out, DM history container takes over
+  await new Promise(resolve => {
+    gsap.to('#skelState', {
+      opacity: 0,
+      duration: 0.3, ease: EASE_OUT,
+      onComplete: () => {
+        $('skelState').classList.add('hidden');
+        resolve();
+      }
+    });
+  });
+  if (s1Resetting) return;
+
+  // DM state: first Peter message already visible; second types in word-by-word
+  $('dmState').classList.remove('hidden');
+  gsap.set('#dmState', { opacity: 1 });
+  gsap.set('#peterMsg1', { opacity: 1, y: 0 });
+  gsap.set('#peterMsg2', { opacity: 0, y: 6 });
+  gsap.set('#peterMsg2 .dm-word', { opacity: 0 });
+  $('peterMsg2').classList.add('dm-msg--pending');
+  scrollDmToMsg1();
+
+  await sleep(800);
+  if (s1Resetting) return;
+
+  // Expand msg2 slot and scroll msg1 up before the second message types in
+  $('peterMsg2').classList.remove('dm-msg--pending');
+  await new Promise(r => requestAnimationFrame(r));
+  if (s1Resetting) return;
+  await scrollDmToBottom(0.42);
+  if (s1Resetting) return;
+
+  gsap.set('#peterMsg2', { opacity: 1 });
+  await new Promise(resolve => {
+    const tl = gsap.timeline({ onComplete: resolve });
+    tl.to('#peterMsg2', { y: 0, duration: 0.5, ease: EASE_OUT }, 0);
+    tl.to('#peterMsg2 .dm-word', {
+      opacity: 1,
+      duration: 0.17,
+      stagger: 0.09,
+      ease: EASE_OUT
+    }, 0.05);
+  });
+  await scrollDmToBottom(0.25);
+  if (s1Resetting) return;
+
+  // Hold on the DM for read (~2400ms)
+  await sleep(2400);
+  if (s1Resetting) return;
+
+  // Scene holds; transition to Scene 2 happens in stitched video.
+}
+
+function run1({ skipOpener = false } = {}) {
+  reset1();
+  $('scene1').classList.add('active');
+  s1Resetting = false;
+  run1Inner({ skipOpener });
+}
+
+/* ═══ Scene 2: Old Way ═══ */
+
+let s2Resetting = false;
+
+const s2ScrollProxy = { val: 0 };
+
+const S2_PILL_STATS = '#s2StatPages, #s2Sep1, #s2StatSpeakers, #s2Sep2, #s2StatDuration, #s2StatLines';
+
+function revealS2Stat(selector) {
+  gsap.to(selector, {
+    opacity: 1, y: 0,
+    duration: 0.55, ease: EASE_OUT
+  });
+}
+
+function scheduleS2Pills() {
+  st(() => {
+    if (s2Resetting) return;
+    gsap.to('#s2DocPill', { opacity: 1, duration: 0.4, ease: EASE_OUT });
+  }, 2100);
+
+  st(() => { if (s2Resetting) return; revealS2Stat('#s2StatPages'); }, 2500);
+
+  st(() => {
+    if (s2Resetting) return;
+    revealS2Stat('#s2Sep1');
+    revealS2Stat('#s2StatSpeakers');
+  }, 3000);
+
+  st(() => {
+    if (s2Resetting) return;
+    revealS2Stat('#s2Sep2');
+    revealS2Stat('#s2StatDuration');
+  }, 3500);
+
+  st(() => {
+    if (s2Resetting) return;
+    gsap.to('#s2NotesPill', { opacity: 1, duration: 0.4, ease: EASE_OUT });
+  }, 6500);
+
+  st(() => { if (s2Resetting) return; revealS2Stat('#s2StatLines'); }, 6900);
+}
+
+const S2_TOAST_TARGETS = ['#s2Toast', '#s2FakeCursor', '.s2-stage', '#s2Kicker'];
+
+function resetS2Toast() {
+  gsap.killTweensOf(S2_TOAST_TARGETS);
+  gsap.set('.s2-stage', { opacity: 1, filter: 'saturate(0.72) brightness(0.97)' });
+  gsap.set('#s2Kicker', { opacity: 1, filter: 'saturate(0.72) brightness(0.97)' });
+  gsap.set('#s2Toast', { opacity: 0, x: 'calc(100% + 40px)', scale: 1 });
+  gsap.set('#s2FakeCursor', { opacity: 0, scale: 1 });
+  const toast = $('s2Toast');
+  if (toast) gsap.set(toast, { scale: 1 });
+  const flash = $('p20WarmFlash');
+  if (flash) gsap.set(flash, { opacity: 0 });
+}
+
+function s2ToastAnchor() {
+  const r = $('s2Toast').getBoundingClientRect();
+  return { x: r.left + r.width / 2 - 4, y: r.top + r.height / 2 - 2 };
+}
+
+function s2MoveCursorToToast(dur = 0.8) {
+  return new Promise(resolve => {
+    if (s2Resetting) { resolve(); return; }
+    const cur = $('s2FakeCursor');
+    const target = s2ToastAnchor();
+    gsap.to(cur, {
+      left: target.x,
+      top: target.y,
+      duration: dur,
+      ease: 'power2.inOut',
+      onComplete: resolve
+    });
+  });
+}
+
+async function s2CursorClickToast() {
+  if (s2Resetting) return;
+  const cur = $('s2FakeCursor');
+  const toast = $('s2Toast');
+  await new Promise(r => gsap.to(cur, { scale: 0.82, duration: 0.08, ease: EASE_IN, onComplete: r }));
+  if (s2Resetting) return;
+  if (toast) await new Promise(r => gsap.to(toast, { scale: 0.97, duration: 0.08, ease: EASE_IN, onComplete: r }));
+  await new Promise(r => gsap.to(cur, { scale: 1, duration: 0.12, ease: EASE_OUT, onComplete: r }));
+  if (toast) gsap.to(toast, { scale: 1, duration: 0.12, ease: EASE_OUT });
+  await sleep(80);
+}
+
+async function handoffS2ToS3() {
+  if (s2Resetting) return;
+  const flash = $('p20WarmFlash');
+  await Promise.all([
+    new Promise(r => gsap.to(flash, { opacity: 1, duration: 0.2, ease: EASE_IN, onComplete: r })),
+    new Promise(r => gsap.to('#s2Toast', { opacity: 0, duration: 0.25, ease: EASE_IN, onComplete: r })),
+    new Promise(r => gsap.to('#s2FakeCursor', { opacity: 0, duration: 0.25, ease: EASE_IN, onComplete: r }))
+  ]);
+  if (s2Resetting) return;
+  resetS2Toast();
+  $('scene2').classList.remove('active', 'is-cool');
+  SCENE = 3;
+  $('sceneNum').textContent = '3';
+  run3({ warmEntry: true });
+  await new Promise(r => gsap.to(flash, { opacity: 0, duration: 0.35, ease: EASE_OUT, onComplete: r }));
+}
+
+async function handoffS3ToS4() {
+  if (s3Resetting) return;
+  await Promise.all([
+    new Promise(r => gsap.to('#scene3 .s3-window', { opacity: 0, scale: 0.98, duration: 0.5, ease: EASE_IN, onComplete: r })),
+    new Promise(r => gsap.to('#s3FakeCursor', { opacity: 0, duration: 0.25, ease: EASE_IN, onComplete: r }))
+  ]);
+  if (s3Resetting) return;
+  SCENE = 4;
+  $('sceneNum').textContent = '4';
+  $('scene3').classList.remove('active', 'is-warm-entry');
+  run4();
+}
+
+function reset2() {
+  s2Resetting = true;
+  clearAllTimeouts();
+  gsap.killTweensOf(['#s2Doc', '#s2Notes', '#s2DocPill', '#s2NotesPill', '#s2Kicker', S2_PILL_STATS, ...S2_TOAST_TARGETS, '#p20WarmFlash']);
+  gsap.killTweensOf(s2ScrollProxy);
+  resetS2Toast();
+  $('scene2').classList.remove('is-cool');
+  gsap.set(['#s2Doc', '#s2Notes'], { opacity: 0, y: 12 });
+  gsap.set(['#s2DocPill', '#s2NotesPill'], { opacity: 0 });
+  gsap.set('#s2Kicker', { opacity: 0 });
+  gsap.set(S2_PILL_STATS, { opacity: 0, y: 6 });
+}
+
+async function run2Inner() {
+  if (s2Resetting) return;
+  $('scene2').classList.add('is-cool');
+  await sleep(80); if (s2Resetting) return;
+  gsap.to('#s2Doc', { opacity: 1, y: 0, duration: 0.8, ease: EASE_OUT });
+
+  await sleep(150); if (s2Resetting) return;
+  gsap.to('#s2Notes', { opacity: 1, y: 0, duration: 0.8, ease: EASE_OUT });
+
+  await sleep(600); if (s2Resetting) return;
+  gsap.to('#s2Kicker', { opacity: 1, duration: 0.5, ease: EASE_OUT });
+
+  await sleep(900); if (s2Resetting) return;
+
+  const body = $('s2DocBody');
+  if (body) {
+    const targetEnd = Math.round(body.scrollHeight * 0.85);
+    s2ScrollProxy.val = body.scrollTop;
+    gsap.to(s2ScrollProxy, {
+      val: targetEnd,
+      duration: 6.3,
+      ease: 'power1.in',
+      onUpdate: () => { body.scrollTop = s2ScrollProxy.val; }
+    });
+  }
+
+  scheduleS2Pills();
+
+  await sleep(7800); if (s2Resetting) return;
+
+  gsap.to(['.s2-stage', '#s2Kicker'], { opacity: 0.45, filter: 'saturate(0.72) brightness(0.97) blur(2px)', duration: 0.6, ease: 'power2.inOut' });
+  await sleep(200); if (s2Resetting) return;
+
+  await new Promise(r => gsap.fromTo('#s2Toast',
+    { x: 'calc(100% + 40px)', opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.45, ease: 'cubic-bezier(0.16, 1, 0.3, 1)', onComplete: r }
+  ));
+  if (s2Resetting) return;
+
+  await sleep(1500); if (s2Resetting) return;
+
+  const s2Cur = $('s2FakeCursor');
+  gsap.set(s2Cur, { left: window.innerWidth * 0.5 - 12, top: window.innerHeight * 0.5 - 14, opacity: 0, scale: 1 });
+  await new Promise(r => gsap.to(s2Cur, { opacity: 1, duration: 0.2, onComplete: r }));
+  if (s2Resetting) return;
+
+  await s2MoveCursorToToast(0.8);
+  if (s2Resetting) return;
+
+  await s2CursorClickToast();
+  if (s2Resetting) return;
+
+  await handoffS2ToS3();
+}
+
+function run2() {
+  reset2();
+  $('scene2').classList.add('active');
+  s2Resetting = false;
+  const body = $('s2DocBody');
+  if (body) {
+    const start = Math.round(body.scrollHeight * 0.17);
+    body.scrollTop = start;
+    s2ScrollProxy.val = start;
+  }
+  run2Inner();
+}
+
+/* ---------------- SCENE 3 — Meetings Agent ---------------- */
+
+let s3Resetting = false;
+const s3SumScrollProxy = { val: 0 };
+
+const S3_QUESTION = "What were the key strategic decisions and who owns the follow-ups? I need to brief the CEO.";
+
+const S3_ANSWER_HTML = `Key decisions from the strategy alignment call:<br><br>` +
+  `<b>1. Enterprise pricing:</b> Two-tier model (Starter + Enterprise) at launch. Mid-tier fast follow in 6 weeks once metering infrastructure is ready. <span class="s3-entity-pill">Maria</span> drafting positioning doc.<br><br>` +
+  `<b>2. APAC expansion:</b> Pilot approved for Singapore and Tokyo in Q3. <span class="s3-entity-pill">Sarah</span> compiling local partner shortlist, due to you by Thursday.<br><br>` +
+  `<b>3. Meridian partnership:</b> <span class="s3-entity-pill">Rachel</span> authorized to close at 16% rev share or below. <span class="s3-entity-pill s3-entity-pill--app">Legal</span> review required before signing.<br><br>` +
+  `<b>4. Product roadmap:</b> Integrations hub committed for end of Q3. <span class="s3-entity-pill">James</span> sharing engineering timeline Thursday, <span class="s3-entity-pill">David</span> lining up advisory board for beta.`;
+
+const S3_WORK_LOG_STEPS = [
+  { surface: 'Reading transcript', verb: 'Scanning', desc: 'Strategy Alignment Call' },
+  { surface: 'Cross-referencing', verb: 'Matching', desc: 'decisions to owners' },
+  { surface: 'Drafting answer', verb: 'Writing', desc: 'CEO brief' },
+];
+
+function buildS3WorkLogHTML() {
+  const lines = S3_WORK_LOG_STEPS.map((step, i) =>
+    `<div class="s3-work-line" data-step="${i}">` +
+    `<span class="s3-work-check"></span>` +
+    `<span class="s3-work-surface">${step.surface}</span>` +
+    `<span><span class="s3-work-verb">${step.verb}</span> ${step.desc}</span>` +
+    `</div>`
+  ).join('');
+  return `<div id="s3WorkLog" class="s3-work-log">` +
+    `<div class="s3-work-header">Kim Park's Twin · working</div>${lines}</div>`;
+}
+
+async function runS3WorkLog() {
+  const stream = $('s3ChatStream');
+  if (!stream || s3Resetting) return;
+  stream.insertAdjacentHTML('beforeend', buildS3WorkLogHTML());
+  const log = $('s3WorkLog');
+  gsap.from(log, { y: 6, opacity: 0, duration: 0.3, ease: EASE_OUT });
+  const lines = log.querySelectorAll('.s3-work-line');
+  for (let i = 0; i < lines.length; i++) {
+    if (s3Resetting) return;
+    const line = lines[i];
+    line.classList.add('is-active');
+    const check = line.querySelector('.s3-work-check');
+    if (check) check.textContent = '…';
+    await sleep(i === 0 ? 520 : 580);
+    if (s3Resetting) return;
+    line.classList.remove('is-active');
+    line.classList.add('is-done');
+    if (check) check.textContent = '✓';
+  }
+  await sleep(200);
+  if (s3Resetting) return;
+  await new Promise(r => gsap.to(log, {
+    opacity: 0, duration: 0.25, ease: EASE_IN, onComplete: () => {
+      if (log) log.remove(); r();
+    }
+  }));
+}
+
+function s3CursorAnchor(el, place = 'center') {
+  const r = el.getBoundingClientRect();
+  if (place === 'topleft') return { x: r.left + 14, y: r.top + 14 };
+  if (place === 'right') return { x: r.right - 18, y: r.top + r.height / 2 };
+  return { x: r.left + r.width / 2 - 4, y: r.top + r.height / 2 - 2 };
+}
+
+function s3MoveCursor(targetEl, dur = 0.5, place = 'center') {
+  return new Promise(resolve => {
+    if (s3Resetting || !targetEl) { resolve(); return; }
+    const cur = $('s3FakeCursor');
+    const cs = cur.getBoundingClientRect();
+    if (cur.style.opacity === '' || parseFloat(cur.style.opacity) === 0) {
+      const start = s3CursorAnchor(targetEl, place);
+      gsap.set(cur, { left: start.x - 60, top: start.y - 30, opacity: 1 });
+    }
+    const target = s3CursorAnchor(targetEl, place);
+    gsap.to(cur, {
+      left: target.x,
+      top: target.y,
+      duration: dur,
+      ease: 'power2.inOut',
+      onComplete: resolve
+    });
+  });
+}
+
+async function s3CursorClick(targetEl) {
+  if (s3Resetting) return;
+  const cur = $('s3FakeCursor');
+  await new Promise(r => gsap.to(cur, { scale: 0.82, duration: 0.08, ease: EASE_IN, onComplete: r }));
+  if (s3Resetting) return;
+  if (targetEl) targetEl.classList.add('is-hover');
+  await new Promise(r => gsap.to(cur, { scale: 1, duration: 0.12, ease: EASE_OUT, onComplete: r }));
+  await sleep(120);
+  if (targetEl) targetEl.classList.remove('is-hover');
+}
+
+async function s3Type(text, charDelay = 28) {
+  const out = $('s3InputText');
+  $('s3InputBar').classList.add('is-typing');
+  for (let i = 0; i < text.length; i++) {
+    if (s3Resetting) return;
+    out.textContent += text[i];
+    await sleep(charDelay);
+  }
+}
+
+async function s3TypewriterInto(element, html, charDelay = 14) {
+  let i = 0;
+  while (i < html.length) {
+    if (s3Resetting) return;
+    if (html[i] === '<') {
+      const tagEnd = html.indexOf('>', i);
+      if (tagEnd === -1) { element.innerHTML += html.substring(i); break; }
+      element.innerHTML += html.substring(i, tagEnd + 1);
+      i = tagEnd + 1;
+    } else {
+      element.innerHTML += html[i];
+      i++;
+      await sleep(charDelay);
+    }
+  }
+}
+
+function reset3() {
+  s3Resetting = true;
+  if (typeof gsap !== 'undefined') {
+    gsap.killTweensOf(['#scene3 .s3-window', '#s3FakeCursor', '#s3MeetingsView', '#s3DetailView', '#s3SummaryPane', '#s3ChatPane']);
+    gsap.set('#scene3 .s3-window', { opacity: 0, scale: 0.97, filter: 'none', transformOrigin: '50% 50%' });
+    gsap.set('#s3FakeCursor', { opacity: 0, scale: 1 });
+  }
+  $('scene3').classList.remove('is-warm-entry');
+  document.querySelector('#scene3 .s3-app-shell').classList.remove('is-detail');
+  $('s3MeetingsView').classList.add('active');
+  $('s3DetailView').classList.remove('active');
+  $('s3SummaryPane').classList.add('active');
+  $('s3ChatPane').classList.remove('active');
+  $('s3TabSummary').classList.add('active');
+  $('s3TabChat').classList.remove('active');
+  $('s3RowStrategy').classList.remove('is-hover');
+  $('s3ChatStream').innerHTML = '';
+  $('s3InputText').textContent = '';
+  $('s3InputBar').classList.remove('is-typing');
+  $('s3SendBtn').classList.remove('clicked');
+  const sumPane = $('s3SummaryPane');
+  if (sumPane) sumPane.scrollTop = 0;
+  s3SumScrollProxy.val = 0;
+}
+
+async function run3Inner({ warmEntry = false } = {}) {
+  if (s3Resetting) return;
+
+  // 1. shell fade-in (warm entry after P20 toast click)
+  if (warmEntry) {
+    await new Promise(r => gsap.fromTo('#scene3 .s3-window',
+      { opacity: 0, scale: 0.97, filter: 'saturate(1.08)' },
+      { opacity: 1, scale: 1, filter: 'none', duration: 0.7, ease: EASE_OUT, onComplete: r }
+    ));
+    $('scene3').classList.remove('is-warm-entry');
+  } else {
+    gsap.to('#scene3 .s3-window', { opacity: 1, scale: 1, duration: 0.7, ease: EASE_OUT });
+    await sleep(700);
+  }
+  if (s3Resetting) return;
+
+  // 2. hold
+  await sleep(800); if (s3Resetting) return;
+
+  // 3. cursor → Strategy Alignment Call → click
+  await s3MoveCursor($('s3RowStrategy'), 0.6);
+  if (s3Resetting) return;
+  $('s3RowStrategy').classList.add('is-hover');
+  await sleep(220); if (s3Resetting) return;
+  await s3CursorClick($('s3RowStrategy'));
+  if (s3Resetting) return;
+
+  // 4. crossfade meetings → detail (collapse sidebar + reveal transcript)
+  $('s3MeetingsView').classList.remove('active');
+  $('s3DetailView').classList.add('active');
+  document.querySelector('#scene3 .s3-app-shell').classList.add('is-detail');
+  gsap.to('#s3FakeCursor', { opacity: 0, duration: 0.25 });
+  await sleep(600); if (s3Resetting) return;
+
+  // 5a. brief read-from-top
+  await sleep(500); if (s3Resetting) return;
+
+  // 5b. auto-scroll Summary pane down to reveal ACTION ITEMS
+  const sumPane = $('s3SummaryPane');
+  const target = Math.max(0, sumPane.scrollHeight - sumPane.clientHeight);
+  s3SumScrollProxy.val = 0;
+  await new Promise(r => gsap.to(s3SumScrollProxy, {
+    val: target,
+    duration: 2.0,
+    ease: 'sine.inOut',
+    onUpdate: () => { sumPane.scrollTop = s3SumScrollProxy.val; },
+    onComplete: r,
+  }));
+  if (s3Resetting) return;
+
+  // 5c. settle on action items
+  await sleep(200); if (s3Resetting) return;
+
+  // 6. cursor → Chat tab → click
+  await s3MoveCursor($('s3TabChat'), 0.55);
+  if (s3Resetting) return;
+  $('s3TabChat').classList.add('is-hover');
+  await sleep(180); if (s3Resetting) return;
+  await s3CursorClick($('s3TabChat'));
+  if (s3Resetting) return;
+
+  // 7. switch summary → chat pane + tab state
+  $('s3TabSummary').classList.remove('active');
+  $('s3TabChat').classList.add('active');
+  $('s3TabChat').classList.remove('is-hover');
+  $('s3SummaryPane').classList.remove('active');
+  $('s3ChatPane').classList.add('active');
+  await sleep(600); if (s3Resetting) return;
+
+  // 8. typewriter question → click send → user bubble
+  await s3MoveCursor($('s3InputBar'), 0.45, 'topleft');
+  if (s3Resetting) return;
+  // hide cursor so it doesn't block the typed text
+  await new Promise(r => gsap.to('#s3FakeCursor', { opacity: 0, duration: 0.18, onComplete: r }));
+  if (s3Resetting) return;
+  await s3Type(S3_QUESTION, 26);
+  if (s3Resetting) return;
+  await sleep(220); if (s3Resetting) return;
+  // restore cursor before it travels to the send button
+  gsap.to('#s3FakeCursor', { opacity: 1, duration: 0.18 });
+  await s3MoveCursor($('s3SendBtn'), 0.4);
+  if (s3Resetting) return;
+  $('s3SendBtn').classList.add('clicked');
+  await s3CursorClick($('s3SendBtn'));
+  $('s3SendBtn').classList.remove('clicked');
+  if (s3Resetting) return;
+
+  $('s3ChatStream').innerHTML = `<div class="s3-bubble-user-wrap"><span class="s3-bubble-label">You</span><div class="s3-bubble-user">${S3_QUESTION}</div></div>`;
+  $('s3InputText').textContent = '';
+  $('s3InputBar').classList.remove('is-typing');
+  gsap.from('.s3-bubble-user-wrap', { y: 8, opacity: 0, duration: 0.4, ease: EASE_OUT });
+  gsap.to('#s3FakeCursor', { opacity: 0, duration: 0.2 });
+  await sleep(450); if (s3Resetting) return;
+
+  // 9. P7/P13 work log
+  await runS3WorkLog();
+  if (s3Resetting) return;
+
+  // 10. stream twin response
+  $('s3ChatStream').insertAdjacentHTML('beforeend',
+    `<div id="s3TwinResponse" class="s3-twin-response">` +
+    `<div class="s3-twin-head"><span class="s3-twin-avatar"></span><span class="s3-twin-name">Kim Park's Twin</span></div>` +
+    `<div class="s3-twin-card"><div id="s3TwinBody" class="s3-twin-body"></div></div>` +
+    `</div>`);
+  gsap.from('#s3TwinResponse', { y: 6, opacity: 0, duration: 0.3, ease: EASE_OUT });
+  await s3TypewriterInto($('s3TwinBody'), S3_ANSWER_HTML, 14);
+  if (s3Resetting) return;
+
+  // 11. post-answer hold
+  await sleep(1500); if (s3Resetting) return;
+
+  // 12. chain to Scene 4
+  await handoffS3ToS4();
+}
+
+function run3({ warmEntry = false } = {}) {
+  reset3();
+  st(() => {
+    s3Resetting = false;
+    $('scene3').classList.add('active');
+    if (warmEntry) $('scene3').classList.add('is-warm-entry');
+    run3Inner({ warmEntry });
+  }, 80);
+}
+
+let s4Resetting = false;
+
+function reset4() {
+  s4Resetting = true;
+  if (typeof gsap !== 'undefined') {
+    gsap.killTweensOf([
+      '#s4SlackShell', '#s4KimReply', '#s4KimTyping', '#s4PeterSecond',
+      '#scene4 .mac-menubar', '#scene4 .mac-dock',
+      '.s4-bullet', '.s4-summary-pill', '.s4-reply-header'
+    ]);
+    gsap.set('#s4SlackShell', { opacity: 0, y: 14, scale: 0.97, transformOrigin: '50% 50%' });
+    gsap.set(['#scene4 .mac-menubar', '#scene4 .mac-dock'], { opacity: 1 });
+    gsap.set(['#s4PeterFirst', '#s4PeterAsk'], { opacity: 1, y: 0 });
+    gsap.set('#s4KimTyping', { display: 'none', opacity: 0 });
+    gsap.set('#s4KimReply', { display: 'none', opacity: 0, y: 8 });
+    gsap.set('#s4PeterSecond', { display: 'none', opacity: 0, y: 8 });
+    gsap.set(['.s4-reply-header', '.s4-bullet', '.s4-summary-pill'], { opacity: 0 });
+  }
+  resetTitleCard('s4TitleCard');
+  const s4Body = document.querySelector('#scene4 .main-state');
+  if (s4Body) s4Body.scrollTop = s4Body.scrollHeight;
+}
+
+async function run4Inner() {
+  if (s4Resetting) return;
+
+  await new Promise(r => gsap.to('#s4SlackShell', {
+    opacity: 1, y: 0, scale: 1, duration: 0.6, ease: EASE_OUT, onComplete: r,
+  }));
+  if (s4Resetting) return;
+
+  await sleep(400); if (s4Resetting) return;
+
+  const ms = document.querySelector('#scene4 .main-state');
+
+  gsap.set('#s4KimTyping', { display: 'flex' });
+  await new Promise(r => gsap.fromTo('#s4KimTyping',
+    { opacity: 0, y: 6 },
+    { opacity: 1, y: 0, duration: 0.35, ease: EASE_OUT, onComplete: r }
+  ));
+  if (s4Resetting) return;
+  if (ms) {
+    await new Promise(r => requestAnimationFrame(r));
+    ms.scrollTop = ms.scrollHeight;
+  }
+
+  await sleep(800); if (s4Resetting) return;
+
+  gsap.set('#s4KimTyping', { display: 'none' });
+  gsap.set('#s4KimReply', { display: 'flex' });
+  await new Promise(r => gsap.to('#s4KimReply', {
+    opacity: 1, y: 0, duration: 0.4, ease: EASE_OUT, onComplete: r,
+  }));
+  if (s4Resetting) return;
+  if (ms) {
+    await new Promise(r => requestAnimationFrame(r));
+    ms.scrollTop = ms.scrollHeight;
+  }
+
+  await new Promise(r => gsap.to('.s4-reply-header', {
+    opacity: 1, duration: 0.35, ease: EASE_OUT, onComplete: r,
+  }));
+  if (s4Resetting) return;
+
+  await new Promise(r => gsap.to('.s4-bullet', {
+    opacity: 1,
+    duration: 0.35,
+    stagger: STAGGER_UI_MS / 1000,
+    ease: EASE_OUT,
+    onComplete: r,
+  }));
+  if (s4Resetting) return;
+  if (ms) {
+    await new Promise(r => requestAnimationFrame(r));
+    ms.scrollTop = ms.scrollHeight;
+  }
+
+  await new Promise(r => gsap.to('.s4-summary-pill', {
+    opacity: 1, duration: 0.35, ease: EASE_OUT, onComplete: r,
+  }));
+  if (s4Resetting) return;
+  if (ms) {
+    await new Promise(r => requestAnimationFrame(r));
+    ms.scrollTop = ms.scrollHeight;
+  }
+
+  await sleep(1200); if (s4Resetting) return;
+
+  gsap.set('#s4PeterSecond', { display: 'flex' });
+  await new Promise(r => gsap.to('#s4PeterSecond', {
+    opacity: 1, y: 0, duration: 0.45, ease: EASE_OUT, onComplete: r,
+  }));
+  if (s4Resetting) return;
+  if (ms) {
+    await new Promise(r => requestAnimationFrame(r));
+    ms.scrollTop = ms.scrollHeight;
+  }
+
+  await sleep(1500); if (s4Resetting) return;
+
+  await new Promise(r => gsap.to(
+    ['#s4SlackShell', '#scene4 .mac-menubar', '#scene4 .mac-dock'],
+    { opacity: 0, duration: 0.8, ease: EASE_IN, onComplete: r }
+  ));
+  if (s4Resetting) return;
+
+  await sleep(500); if (s4Resetting) return;
+
+  await playP1TitleCard('s4TitleCard', {
+    isResetting: () => s4Resetting,
+    dimLine1After: true
+  });
+}
+
+function run4() {
+  reset4();
+  st(() => {
+    s4Resetting = false;
+    $('scene4').classList.add('active');
+    run4Inner();
+  }, 80);
+}
+
+function switchScene(num, { skipOpener = false } = {}) {
+  resetTitleCard('s0TitleCard');
+  clearAllTimeouts();
+  resumePlayback();
+  s1Resetting = true;
+  s2Resetting = true;
+  s3Resetting = true;
+  s4Resetting = true;
+
+  SCENE = num;
+  $('sceneNum').textContent = String(num);
+
+  reset1();
+  $('scene1').classList.remove('active');
+  s1Resetting = false;
+
+  reset2();
+  $('scene2').classList.remove('active', 'is-cool');
+  s2Resetting = false;
+
+  reset3();
+  $('scene3').classList.remove('active');
+  s3Resetting = false;
+
+  reset4();
+  $('scene4').classList.remove('active');
+  s4Resetting = false;
+
+  if (num === 1) run1({ skipOpener });
+  if (num === 2) run2();
+  if (num === 3) run3();
+  if (num === 4) run4();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === '1') switchScene(1, { skipOpener: true });
+  if (e.key === '2') switchScene(2);
+  if (e.key === '3') switchScene(3);
+  if (e.key === '4') switchScene(4);
+  if (e.key === 'h' || e.key === 'H') toggleControls();
+  if (e.key === 'p' || e.key === 'P') { e.preventDefault(); togglePlayback(); }
+  if (e.key === ' ' || e.key === 'r' || e.key === 'R') { e.preventDefault(); switchScene(SCENE); }
+});
+
+window.addEventListener('load', () => { switchScene(1); });
+</script>
+</body>
+</html>
