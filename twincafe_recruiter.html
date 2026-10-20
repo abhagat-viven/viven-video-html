@@ -43,32 +43,6 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .titlecard.ready .w{opacity:1;color:var(--ink)}
 .h2{margin:0 0 28px;text-align:center;font-family:var(--display);font-weight:600;font-size:52px;letter-spacing:-.03em;line-height:1.1}
 
-.train{width:1080px;display:flex;background:#fff;border-radius:22px;overflow:hidden;
-  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 22px 56px rgba(22,20,26,.10)}
-.train-side{width:220px;flex:none;background:#f6f5f8;padding:18px 12px 20px;display:flex;flex-direction:column}
-.train-logo{height:20px;width:auto;align-self:flex-start;margin:2px 8px 16px}
-.train-search{height:32px;margin:0 4px 14px;border-radius:8px;background:#fff;border:1px solid #ececef;
-  display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:#9a96a0;font-size:13px}
-.train-search b{font-weight:500;font-size:11px;color:#b0adb6}
-.tnav{height:32px;display:flex;align-items:center;gap:8px;padding:0 10px;border-radius:8px;font-size:13.5px;color:#3c3942;font-weight:500}
-.tnav.on{background:#ececef;font-weight:600;color:#16141a}
-.tnav svg{width:16px;height:16px;flex:none;color:#6b6772}
-.train-main{flex:1;min-width:0;padding:26px 28px 24px}
-.train-h h3{margin:0;font-size:22px;font-weight:600;letter-spacing:-.03em}
-.ttabs{display:flex;gap:8px;margin-top:18px}
-.ttab{height:30px;padding:0 12px;border-radius:999px;display:flex;align-items:center;font-size:13px;font-weight:500;color:#5f5b66;background:#f3f2f4}
-.ttab.on{background:#6e35c9;color:#fff;font-weight:600}
-.sources-h{margin:22px 0 10px;font-size:14px;font-weight:600}
-.src-row{display:flex;gap:12px}
-.src{flex:1;min-width:0;display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid #ececef;border-radius:12px;background:#fff}
-.src-ico{width:28px;height:28px;flex:none;display:grid;place-items:center}
-.src-ico svg{width:28px;height:28px;display:block}
-.src-ico.mic{border-radius:8px;background:#f3eefb;color:#6e35c9}
-.src-ico.mic svg{width:16px;height:16px}
-.src-name{font-size:14px;font-weight:600;letter-spacing:-.01em}
-.src-sub{margin-top:4px;display:inline-flex;align-items:center;gap:4px;color:#1a9d55;font-size:12px;font-weight:600}
-.src-check{width:14px;height:14px;display:grid;place-items:center}
-.src-check svg{width:14px;height:14px}
 .stack{display:flex;flex-direction:column;align-items:center}
 .split{display:flex;align-items:center;justify-content:center;gap:32px}
 
@@ -97,33 +71,78 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .lock{width:28px;height:28px;color:var(--ink);flex:none;display:grid;place-items:center}
 .lock svg{width:26px;height:26px}
 
-.chat{width:820px;height:700px;display:flex;flex-direction:column;overflow:hidden}
-.chat-h{display:flex;align-items:center;gap:16px;padding:22px 26px;border-bottom:1px solid var(--line)}
-.chat-h .nm{font-size:28px;font-weight:600;letter-spacing:-.01em}
-.msgs{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:22px;padding:24px 28px;min-height:0}
-.qwrap{align-self:flex-end;max-width:86%;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.qlbl{font-size:16px;color:var(--ink-3)}
-.q{background:#EEEBF2;border-radius:22px 22px 6px 22px;padding:16px 20px;font-size:24px;line-height:1.35}
-.a{display:flex;gap:12px;align-items:flex-start;max-width:94%}
-.who{font-size:16px;color:var(--purple);font-weight:600;margin:0 0 6px}
-.bub{font-size:24px;line-height:1.4;border:1px solid var(--line);border-radius:6px 22px 22px 22px;padding:16px 18px;background:#fff}
-.composer{margin:0 22px 20px;border:1.5px solid var(--line);border-radius:22px;min-height:72px;display:flex;align-items:center;gap:12px;padding:8px 8px 8px 20px}
-.composer .grow{flex:1}
 .mic{width:36px;height:36px;color:var(--ink-3);display:grid;place-items:center}
-.mic svg,.vid svg,.ctl svg{width:26px;height:26px}
+.mic svg,.vid svg{width:26px;height:26px}
 .vid{width:54px;height:54px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center;flex:none}
 
-.call{position:relative;width:380px;height:680px;border-radius:28px;overflow:hidden;background:var(--call);box-shadow:var(--shadow);flex:none}
-.call.compact{width:340px;height:560px}
-.call-top{position:absolute;z-index:2;top:0;left:0;right:0;padding:22px 16px 36px;text-align:center;
-  background:linear-gradient(#1E1F25,transparent);color:#fff;font-size:22px;font-weight:600}
-.call .cover,.call .video-slot{position:absolute;inset:0}
-.ctl{position:absolute;z-index:2;left:0;right:0;bottom:22px;display:flex;justify-content:center;gap:18px}
-.ctl span{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff}
-.ctl .m{background:rgba(255,255,255,.18)}
-.ctl .e{background:#E5484D}
+
+/* Scene 8. Phone call to the recruiter's Twin: connecting, then the talking video with captions. */
+.phone{position:relative;width:470px;height:840px;border-radius:34px;overflow:hidden;background:#111216;flex:none;
+  box-shadow:0 30px 90px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.05)}
+.phone-bg{position:absolute;inset:-60px;filter:blur(34px) saturate(.9);opacity:.7}
+.phone-bg .cover{width:100% !important;height:100% !important}
+.phone-video{position:absolute;inset:0;opacity:0}
+.phone-video .video-slot{position:absolute;inset:0}
+.phone .missing{background:#2A2B33;color:rgba(255,255,255,.5);font-size:18px}
+.phone-shade{position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 72%,rgba(0,0,0,.45))}
+.phone-top{position:absolute;z-index:4;top:0;left:0;right:0;padding:30px 20px;text-align:center;color:#fff;font-size:26px;font-weight:600;letter-spacing:-.01em}
+.phone-ring{position:absolute;z-index:4;left:0;right:0;top:44%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:20px}
+.ring-wrap{position:relative;width:210px;height:210px;display:grid;place-items:center}
+.ring-wrap .avatar{position:relative;z-index:1;box-shadow:0 0 0 4px rgba(255,255,255,.08)}
+.ring-wrap .avatar.initials{background:#3A3B45;color:#fff}
+.pulse{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);opacity:0}
+.ring-label{color:rgba(255,255,255,.85);font-size:24px;font-weight:500}
+.phone-ctl{position:absolute;z-index:4;left:0;right:0;bottom:36px;display:flex;justify-content:center;gap:28px}
+.phone-ctl span{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.phone-ctl svg{width:30px;height:30px}
+.phone-ctl .m{background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.phone-ctl .e{background:#E5484D}
+/* Captions live inside the call card, just above the buttons, so they can't spill past its edges. */
+.caption{position:absolute;z-index:5;left:20px;right:20px;bottom:128px;padding:12px 18px;border-radius:16px;background:rgba(18,18,24,.68);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-size:28px;font-weight:500;line-height:1.3;letter-spacing:-.01em;
+  text-align:center;text-wrap:balance;opacity:0}
+.caption .who{display:block;margin-bottom:4px;font-size:18px;font-weight:600;letter-spacing:.02em;color:#C9B8F0}
+.callset{display:flex;align-items:center;gap:80px}
+/* Arjun's side of the call: photo, live waveform, word-by-word transcript. */
+.caller{width:520px;display:flex;flex-direction:column;gap:24px;color:#F5F3F0}
+.caller-h{display:flex;align-items:center;gap:18px}
+.caller-h .avatar{transition:box-shadow .2s}
+.caller.speaking .caller-h .avatar{box-shadow:0 0 0 4px #1E1F25,0 0 0 7px #8B5CF6}
+.caller-nm{font-size:30px;font-weight:600;letter-spacing:-.02em}
+.caller-sub{margin-top:2px;font-size:18px;color:rgba(245,243,240,.6)}
+.caller canvas{display:block;width:520px;height:72px}
+.caller-tx{min-height:132px;font-size:30px;font-weight:500;line-height:1.36;letter-spacing:-.01em}
+.caller-tx span{opacity:0}
+
+/* Scene 7. Sarah's call card shrinks into a row of three hiring-team Twins. */
+.team{display:flex;flex-direction:column;align-items:center}
+.team h2{margin:0 0 44px;font-family:var(--display);font-weight:600;font-size:60px;line-height:1.1;letter-spacing:-.03em;color:#F5F3F0}
+.team h2 span{opacity:0}
+.team-row{display:flex;gap:48px}
+.tcol{width:360px;display:flex;flex-direction:column;align-items:center;gap:22px}
+/* Sized so that at 470/360 scale they match the scene 6 call card. */
+.tcard{position:relative;width:360px;height:640px;border-radius:26px;overflow:hidden;background:#111216;transform-origin:center;
+  box-shadow:0 26px 70px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05)}
+.tcard .cover{position:absolute;inset:0;width:100% !important;height:100% !important}
+.tcard .missing{background:#2A2B33;color:rgba(255,255,255,.5);font-size:16px}
+.tcard-top{position:absolute;z-index:4;top:0;left:0;right:0;padding:23px 16px;text-align:center;color:#fff}
+.tcard-top b{display:block;font-size:20px;font-weight:600;letter-spacing:-.01em}
+.tcard-top span{display:block;margin-top:2px;font-size:16px;color:rgba(255,255,255,.72)}
+.tcard .phone-ctl{bottom:28px;gap:22px}
+.tcard .phone-ctl span{width:58px;height:58px}
+.tcard .phone-ctl svg{width:24px;height:24px}
+.tcard .tclip{position:absolute;inset:0}
+.tcol-use{font-size:24px;font-weight:500;color:rgba(245,243,240,.84);text-align:center;opacity:0}
 
 .scene.desk{background:var(--canvas)}
+/* Scene 1 headline: starts as a centred title, then sits in a band above the inbox (height set from S3.HEAD_H). */
+.flood-head{position:absolute;z-index:4;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;transform-origin:center}
+.fh-line{position:absolute;margin:0;text-align:center;font-family:var(--display);font-weight:600;font-size:64px;line-height:1.1;
+  letter-spacing:-.035em;color:var(--ink)}
+.fh-line span.row{display:block}
+.fh-line .w{opacity:0;color:#9A96A0}
 .scene.desk .haze{z-index:0}
 .haze.drift{background-size:118% 118%,118% 118%,118% 118%,118% 118%,auto;background-repeat:no-repeat}
 .desk-bar{position:absolute;top:0;left:0;right:0;z-index:3;height:48px;display:flex;align-items:center;justify-content:flex-end;padding:0 36px;
@@ -164,35 +183,136 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
   box-shadow:inset 3px 0 0 var(--purple),0 12px 32px rgba(59,26,107,.16)}
 .spotlight .sender,.spotlight .preview{font-weight:700;color:#1d1d1f}
 
-.job{width:980px;padding:36px 40px 32px}
-.job h3{margin:0 0 26px;font-family:var(--display);font-weight:600;font-size:40px;letter-spacing:-.03em}
-.job-row{display:flex;align-items:center;gap:22px}
-.job-id{flex:1;min-width:0}
-.job-id .nm{font-size:32px;font-weight:600;letter-spacing:-.02em}
-.job-id .meta{margin-top:4px;font-size:20px;color:var(--purple);font-weight:600}
-.job-id .line{margin-top:6px;font-size:22px;color:var(--ink-2)}
-.btn-line{flex:none;border:1.5px solid var(--purple);color:var(--purple);background:#fff;border-radius:999px;
-  font-weight:600;font-size:20px;padding:12px 22px}
+/* Scene 6. Stylized job page: LinkedIn blue, no logo, skeleton bars for everything we don't need to read. */
+.li-win{position:relative;z-index:1;width:1440px;height:860px;background:#f4f2ee;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 28px 70px rgba(22,20,26,.12)}
+.li-chrome{flex:none;height:44px;display:flex;align-items:center;padding:0 18px;background:#f6f6f6;border-bottom:1px solid #e6e6e6}
+.li-url{width:520px;height:26px;margin:0 auto;border-radius:8px;background:#ebebeb;display:flex;align-items:center;gap:8px;padding:0 12px;color:#a3a3a3}
+.li-url svg{width:13px;height:13px}
+.li-nav{flex:none;height:64px;background:#fff;border-bottom:1px solid #e8e6e2;display:flex;align-items:center;gap:14px;padding:0 64px}
+.li-mark{width:36px;height:36px;border-radius:8px;background:#dfe3e8}
+.li-search{width:300px;height:38px;border-radius:6px;background:#edf3f8}
+.li-navs{margin-left:auto;display:flex;gap:34px}
+.li-ni{display:flex;flex-direction:column;align-items:center;gap:6px}
+.li-ni i{width:24px;height:24px;border-radius:6px;background:#dcd9d4;display:block}
+.li-ni b{width:44px;height:8px;border-radius:4px;background:#e6e3de;display:block}
+.li-body{flex:1;min-height:0;display:flex;justify-content:center;gap:24px;padding:24px 0}
+.li-main{width:900px;display:flex;flex-direction:column;gap:16px}
+.li-main > *{flex:none}
+.li-side{width:340px;display:flex;flex-direction:column;gap:16px}
+.li-card{background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.li-job{padding:24px 28px}
+.li-co{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:600;color:rgba(0,0,0,.9)}
+.li-co-logo{width:44px;height:44px;border-radius:8px;background:#1f2a44;color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:22px}
+.li-title{margin:16px 0 0;font-size:34px;font-weight:600;letter-spacing:-.02em;color:rgba(0,0,0,.9)}
+.li-meta{margin-top:8px;font-size:18px;color:rgba(0,0,0,.6)}
+.li-meta b{font-weight:600;color:rgba(0,0,0,.9)}
+.li-pills{display:flex;gap:10px;margin-top:16px}
+.li-pills i{display:block;height:30px;border-radius:999px;background:#edeae6}
+.li-acts{display:flex;gap:10px;margin-top:20px}
+.li-btn{height:46px;padding:0 24px;border-radius:999px;display:flex;align-items:center;font-size:19px;font-weight:600}
+.li-btn.pri{background:#0a66c2;color:#fff}
+.li-btn.sec{box-shadow:inset 0 0 0 1.5px #0a66c2;color:#0a66c2}
+.li-card h4{margin:0 0 16px;font-size:22px;font-weight:600;color:rgba(0,0,0,.9)}
+.li-team{padding:22px 28px 24px;overflow:hidden}
+.li-person{display:flex;align-items:center;gap:18px}
+.li-pid{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.li-name{font-size:20px;font-weight:600;color:rgba(0,0,0,.9)}
+.li-name span{margin-left:6px;font-size:17px;font-weight:400;color:rgba(0,0,0,.6)}
+.li-line{margin-top:4px;font-size:18px;color:rgba(0,0,0,.9)}
+.li-poster{margin-top:4px;font-size:16px;color:rgba(0,0,0,.6)}
+.li-msg{flex:none;height:42px;padding:0 20px;border-radius:999px;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.6);color:rgba(0,0,0,.75);
+  display:flex;align-items:center;gap:8px;font-size:18px;font-weight:600}
+.li-msg svg{width:18px;height:18px}
+/* Strikethrough is drawn, not text-decoration, so it can sweep left to right. */
+.strike{position:relative;display:inline-flex;align-self:flex-start}
+/* Margins live on the wrappers so the strike sits on the text's optical middle. */
+.li-team > .strike{margin-bottom:16px}
+.li-team h4{margin:0}
+.li-pid > .strike + .strike{margin-top:4px}
+.li-pid .li-line,.li-pid .li-poster{margin-top:0}
+.li-person > .strike{align-self:center}
+.strike > .x{position:absolute;left:-4px;right:-4px;top:52%;height:3px;margin-top:-1.5px;border-radius:2px;background:#D93F3F;transform:scaleX(0);transform-origin:left center}
+/* The JD is the lift target. The Twin line opens a slot under the heading and pushes the bars down. */
+.li-jd{position:relative;z-index:3;padding:24px 28px 26px;transform-origin:center}
+.li-jd .sk.sub{height:14px;margin-top:26px;background:#e0ddd8}
+.li-bul{display:flex;align-items:center;gap:12px;margin-top:14px}
+.li-bul::before{content:'';width:6px;height:6px;border-radius:50%;background:#cfcbc5;flex:none}
+.li-side .li-card{padding:20px 22px}
+.sk{display:block;height:12px;border-radius:6px;background:#ebe8e4}
+.sk + .sk{margin-top:14px}
+.li-peer{display:flex;align-items:center;gap:12px}
+.li-peer + .li-peer{margin-top:16px}
+.li-peer i{width:40px;height:40px;border-radius:50%;background:#e6e3de;flex:none;display:block}
+.li-peer div{flex:1}
+.li-peer .sk + .sk{margin-top:8px}
+.li-dim{position:absolute;inset:0;z-index:2;background:rgba(245,243,240,.62);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);opacity:0;pointer-events:none}
+.twin-line{position:relative;height:0;margin-bottom:0;display:flex;align-items:center;gap:16px;padding:0 16px 0 24px;background:#fff;border-radius:16px;
+  box-shadow:inset 0 0 0 1.5px var(--purple),0 14px 36px rgba(59,26,107,.14);opacity:0;overflow:hidden}
+.twin-line .txt{flex:1;min-width:0;font-size:24px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.twin-link{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;font-size:22px;font-weight:600;color:var(--purple-2);
+  text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;transition:color .18s,background-color .18s}
+.twin-link svg{width:18px;height:18px}
+.twin-link.hover{color:var(--purple);background:var(--purple-tint);text-decoration-thickness:2.5px}
+.twin-link.pressed{background:#E2D6F5}
 
-.pay-kicker{font-size:28px;font-weight:600;color:var(--ink-2);letter-spacing:-.01em}
-.pay-count{margin-top:8px;font-family:var(--display);font-weight:700;font-size:84px;letter-spacing:-.04em;line-height:1}
-.pay-list{margin-top:28px;font-size:26px;font-weight:600;color:var(--purple)}
-.rows{width:1080px;margin-top:14px;display:flex;flex-direction:column;gap:12px}
-.row{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 20px;font-size:26px;line-height:1.35}
-.row.accent{display:flex;flex-direction:column;align-items:flex-start;background:var(--purple-tint);border-color:var(--purple)}
-.badge{display:inline-block;margin-top:8px;font-size:18px;font-weight:600;color:var(--purple);background:#fff;border-radius:999px;padding:6px 12px}
+/* Scene 8. Round 1 with Daniel as a live transcript: who's speaking, waveform, words as said. */
+/* Nudged above centre so the headline has air above it and a clear gap to the transcript. */
+.round{width:1100px;display:flex;flex-direction:column;gap:22px;margin-top:-70px}
+/* Same headline style as scene 1, in light ink for the dark call scenes. */
+.round-head{align-self:center;margin:0 0 84px;text-align:center;font-family:var(--display);font-weight:600;font-size:64px;line-height:1.1;
+  letter-spacing:-.035em;color:#F5F3F0}
+.round-head .w{opacity:0}
+.sp-row{display:flex;gap:24px;align-items:flex-start;padding:28px 32px;border-radius:26px;background:rgba(255,255,255,.04);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);color:#F5F3F0;opacity:0}
+.sp-row .avatar{transition:box-shadow .2s}
+.sp-row.speaking .avatar{box-shadow:0 0 0 4px #1E1F25,0 0 0 7px #8B5CF6}
+.sp-body{flex:1;min-width:0}
+.sp-head{display:flex;align-items:center;gap:14px}
+.sp-nm{font-size:26px;font-weight:600;letter-spacing:-.01em}
+.sp-role{font-size:18px;color:rgba(245,243,240,.6)}
+.sp-head canvas{display:block;width:320px;height:48px;margin-left:auto}
+.sp-tx{margin-top:12px;min-height:46px;font-size:36px;font-weight:500;line-height:1.3;letter-spacing:-.015em}
+.sp-tx span{opacity:0}
 
-.end-stack{display:flex;flex-direction:column;align-items:center}
-.cta{margin-top:28px;background:var(--purple);color:#fff;font-weight:600;font-size:24px;padding:16px 28px;border-radius:999px}
-.url{margin-top:16px;color:var(--purple);font-family:var(--display);font-weight:600;font-size:28px;letter-spacing:-.02em}
-.footage{max-width:1200px;text-align:center;font-family:var(--display);font-weight:600;font-size:44px;line-height:1.2;
-  letter-spacing:-.03em;color:#F5F3F0}
+/* Scene 9. Slack-style DM card: Daniel's message, the card grows, Sarah's reply, one diagonal shine. */
+.sk-card{position:relative;z-index:1;width:920px;background:#fff;border-radius:24px;overflow:hidden;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 28px 70px rgba(22,20,26,.14)}
+.sk-top{display:flex;align-items:center;gap:12px;padding:24px 30px 0;font-size:18px;color:#616061}
+.sk-top svg{width:30px;height:30px;display:block}
+.sk-top b{font-size:22px;font-weight:800;color:#1d1c1d;letter-spacing:-.01em}
+.sk-msg{display:flex;gap:18px;align-items:flex-start;padding:20px 30px 28px}
+.sk-msg .avatar{border-radius:12px}
+.sk-who{display:flex;align-items:baseline;gap:10px}
+.sk-who b{font-size:22px;font-weight:700;color:#1d1c1d}
+.sk-who span{font-size:16px;color:#616061}
+.sk-msg p{margin:4px 0 0;font-size:28px;line-height:1.42;color:#1d1c1d}
+.sk-reply{height:0;overflow:hidden}
+.sk-reply .sk-msg{padding-top:0;opacity:0}
+/* Emoji-only message: Slack shows these jumbo. */
+.sk-reply p{font-size:56px;line-height:1.15;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
+.sk-reply p span{display:inline-block;margin-right:10px}
+.cf{position:absolute;z-index:5;pointer-events:none;will-change:transform,opacity}
+.sk-shine{position:absolute;inset:0;z-index:2;pointer-events:none;transform:translateX(-130%);
+  background:linear-gradient(110deg,transparent 28%,rgba(139,92,246,.34) 41%,rgba(236,72,153,.3) 50%,rgba(251,191,36,.24) 58%,transparent 70%)}
+/* End card, beat 2: logo, CTA headline, QR, URL. Beat 1 (the tagline) is the regular title card. */
+.endcta{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.endcta > *{opacity:0}
+.endcta .logo{width:330px;margin-bottom:34px}
+.endcta h2{margin:0 0 46px;font-family:var(--display);font-weight:600;font-size:80px;line-height:1.05;letter-spacing:-.035em;color:var(--ink)}
+.qr-card{width:360px;height:360px;padding:40px;background:#fff;border-radius:32px;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.06),0 24px 60px rgba(22,20,26,.10)}
+.qr-card img{width:100%;height:100%;display:block}
+.endcta .url{margin-top:34px;color:var(--purple);font-family:var(--display);font-weight:600;font-size:32px;letter-spacing:-.02em}
 
 #finish{position:absolute;inset:0;z-index:80;pointer-events:none}
 #grain{position:absolute;inset:-12%;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:180px 180px}
 #vignette{position:absolute;inset:0;background:radial-gradient(ellipse 78% 72% at 50% 46%,transparent 46%,#16141A 100%)}
 #cursor{position:absolute;left:0;top:0;z-index:50;opacity:0;pointer-events:none}
 #cursor svg{display:block;width:30px;height:36px;margin:-2px 0 0 -3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));transform-origin:3px 2px}
+#cursor svg.hand{display:none;margin:-2px 0 0 -13px;transform-origin:13px 2px}
+#cursor.pointer svg.arrow{display:none}
+#cursor.pointer svg.hand{display:block}
 .ripple{position:absolute;z-index:49;width:56px;height:56px;border-radius:50%;border:3px solid var(--purple-2);pointer-events:none}
 
 #panel{position:fixed;left:16px;bottom:16px;z-index:400;max-width:480px;padding:10px 14px;border-radius:16px;
@@ -207,7 +327,7 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
   <div><b id="p-scene"></b> <span id="p-name"></span></div>
   <div id="p-state"></div>
   <div id="p-time"></div>
-  <div>1-12 scene · P play/pause · H hide</div>
+  <div>1–9 0 scene · ←/→ prev/next · Space film · Enter scene · R retake · Esc stop · H hide</div>
 </div>
 <script>
 /* Planned film is 60.0s. Each play() lasts plannedMs (fade included).
@@ -223,11 +343,12 @@ const EASE_OUT = 'cubic-bezier(.16,1,.3,1)';
 const EASE_IN = 'cubic-bezier(.7,0,.84,0)';
 const STAGGER_MS = 80;
 const FADE_IN_MS = 480;
-const DIGIT_MS = 600;
 const CANCEL = Symbol('cancel');
 const GRAIN_OPACITY = 0.025;
 const VIGNETTE_STRENGTH = 0.07;
 const ROW_H = 96;
+/* Call audio (Sarah's answer, Arjun's question) plays with sound when true (a keypress counts as the gesture browsers need). */
+const CALL_AUDIO = true;
 document.documentElement.style.setProperty('--row-h', ROW_H + 'px');
 document.getElementById('grain').style.opacity = String(GRAIN_OPACITY);
 document.getElementById('vignette').style.opacity = String(VIGNETTE_STRENGTH);
@@ -246,27 +367,41 @@ function holdAnim(a){
 
 const ASSETS = {
   logo: 'assets/twincafe-logo.svg',
+  /* Points at https://twincafe.com (generated with macOS CoreImage). */
+  qr: 'assets/twincafe/twincafe-qr.svg',
   sarah: 'assets/sarah.jpg',
   daniel: 'assets/daniel.jpg',
   mei: 'assets/mei.jpg',
   arjun: 'assets/arjun.jpg',
-  sarahVideo: 'assets/sarah-avatar.mp4',
-  arjunVideo: 'assets/arjun-avatar.mp4'
+  /* Scene 8 Higgsfield clips. Same framing and start frame so the cut from listen to answer is invisible.
+     If the listen clip is missing, the answer clip holds on its first frame while Arjun asks. */
+  sarahListen: 'assets/sarah-twin-listen.mp4',
+  sarahAnswer: 'assets/sarah-twin-answer.mp4',
+  /* Arjun's spoken question. Its waveform comes from ARJUN_LEVELS; a synthetic one stands in if the file is missing. */
+  arjunQuestion: 'assets/arjun-question.mp3',
+  /* Scene 7 idle loops for the other two Twins. Missing clip → their still shows. */
+  danielIdle: 'assets/daniel-twin-idle.mp4',
+  /* Face crop of daniel.jpg for round avatars (his video frame is wide). */
+  danielAvatar: 'assets/daniel-avatar.jpg',
+  meiIdle: 'assets/mei-twin-idle.mp4'
 };
+
+/* Loudness of arjun-question.mp3 every 20ms (0..1), baked with ffmpeg so the waveform works even when the
+   page is opened straight from disk, where browsers silence Web Audio analysis. Re-bake if the file changes. */
+const ARJUN_LEVELS = { stepMs: 20, data: [0.0,0.0,0.0,0.01,0.11,0.73,1.0,1.0,0.88,0.6,0.44,0.39,0.4,0.4,0.31,0.29,0.21,0.36,0.53,0.84,1.0,1.0,1.0,0.96,1.0,0.87,0.8,0.33,0.34,0.85,1.0,0.99,0.91,0.92,0.96,0.88,0.97,0.92,0.77,0.84,1.0,0.88,0.97,0.65,0.45,0.36,0.35,0.32,0.05,0.04,0.12,0.32,0.41,0.37,0.25,0.06,0.05,0.08,0.81,0.94,0.94,0.91,0.59,0.38,0.12,0.08,0.06,0.2,0.59,0.86,0.96,0.94,0.81,0.31,0.13,0.32,0.51,0.26,0.58,0.96,0.65,0.55,0.59,0.55,0.3,0.13,0.06,0.03,0.04,0.03,0.13,0.67,0.57,0.51,0.44,0.33,0.18,0.03,0.03,0.02,0.01,0.04,0.12,0.09,0.09,0.05,0.05,0.03,0.03,0.02,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.14,0.66,0.75,0.86,0.7,0.41,0.35,0.21,0.29,0.41,0.58,0.49,0.5,0.42,0.62,1.0,0.84,0.82,0.82,0.74,0.86,0.85,0.8,0.69,0.52,0.46,0.47,0.31,0.2,0.56,1.0,0.99,0.87,0.82,0.35,0.07,0.18,0.73,0.65,0.63,0.57,0.48,0.43,0.58,0.62,0.31,0.06,0.14,0.88,0.84,0.62,0.44,0.4,0.36,0.22,0.2,0.2,0.47,0.85,0.72,0.22,0.07,0.05,0.15,0.31,0.48,0.63,0.38,0.2,0.52,0.33,0.29,0.26,0.23,0.22,0.31,0.61,0.74,0.71,0.68,0.67,0.6,0.53,0.62,0.51,0.22,0.3,0.35,0.12,0.05,0.04,0.06,0.52,0.52,0.43,0.34,0.37,0.43,0.34,0.49,0.84,0.47,0.07,0.13,0.37,0.41,0.27,0.14,0.39,0.51,0.49,0.45,0.5,0.46,0.41,0.4,0.37,0.25,0.2,0.22,0.2,0.18,0.14,0.1,0.06,0.05,0.02,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.65,0.92,0.91,0.61,0.3,0.16,0.61,0.8,0.7,0.73,0.68,0.45,0.44,0.65,0.69,0.49,0.45,0.43,0.25,0.5,0.86,0.78,0.9,0.96,0.83,0.8,0.7,0.41,0.18,0.39,0.95,0.94,0.8,0.79,0.51,0.19,0.07,0.14,0.13,0.53,0.85,0.71,0.69,0.45,0.08,0.0] };
 
 const COPY = {
   ui: { twin: 'Twin', trainedOn: 'Trained on:' },
   arjunName: 'Arjun Mehta',
-  arjunQuestion: "I've sold data infrastructure, not HR tech. Would I fit this team?",
-  s1: ["One open role. 1,200 applicants.", "You want the best fit. But how do you answer everyone?"],
-  s2: 'CANVA INSERT: Sarah at her desk at night',
+  /* Opening headline over the inbox: line 1, then line 2 in two parts as Arjun's email lands. */
+  s1: ["One open role. 1,200 applicants.", "You want the best fit.", "But how do you answer everyone?"],
   s3: {
     time: 'now',
     inbox: 'Inbox',
     role: 'Enterprise AE',
     countFinal: '1,200+',
     incoming: 'New application · Enterprise AE',
-    final: "I've sold data infrastructure, not HR tech. Would I fit this team?",
+    final: "The JD asks for HR tech. I've sold data infrastructure to banks for six years. Is that a dealbreaker?",
     questions: [
       'Is this role remote?',
       "What's the salary range?",
@@ -276,53 +411,74 @@ const COPY = {
     ]
   },
   s4: ["Some answers only you know.", "So build your Digital Twin."],
-  s5: {
-    train: 'Train Your Twin',
-    tabs: ['Train', 'My knowledge', 'Instructions'],
-    sourcesLabel: 'Sources',
-    search: 'Search',
-    nav: ['Home', 'Connections'],
-    sources: [
-      { name: 'Job description', sub: 'Added', kind: 'pdf' },
-      { name: 'LinkedIn', sub: 'Profile added', kind: 'linkedin' },
-      { name: 'Stories', sub: 'Recorded', kind: 'mic' }
-    ]
-  },
   s6: {
+    company: 'Northwind',
+    title: 'Enterprise Account Executive',
+    place: 'San Francisco · Hybrid',
+    applicants: '1,200+ applicants',
+    apply: 'Easy Apply',
+    save: 'Save',
     heading: 'Meet the hiring team',
-    headingNext: 'Talk to the hiring team',
     name: 'Sarah Lin',
-    meta: 'Job poster',
+    degree: '· 3rd',
     line: 'Hiring for an Enterprise AE at Northwind',
+    meta: 'Job poster',
     button: 'Message',
-    buttonNext: 'Talk to my Twin'
+    about: 'About the job',
+    twinLine: "Talk to the Recruiter's Digital Twin",
+    twinUrl: 'twincafe.com/sarah-lin'
   },
-  s7: 'CANVA INSERT: Arjun at the airport café picking up his phone',
+  /* Caption ms are on-screen times. Retime them to the final voice track. */
   s8: {
-    header: 'Sarah Lin',
-    twin: 'Sarah',
-    answer: "Yes. Our best rep came from payments. Daniel, our sales lead, cares that you can run a long cycle. The domain, you'll learn."
+    header: "Sarah's Twin",
+    connecting: 'Connecting…',
+    asker: 'Arjun Mehta',
+    askerSub: 'Candidate',
+    /* Timed to arjun-question.mp3 (6.18s). words = ms from the line's start to each word. */
+    question: [
+      { text: 'The JD asks for HR tech.', ms: 2540, words: [0, 200, 600, 980, 1260, 1660] },
+      { text: "I've sold data infrastructure to banks for six years.", ms: 2740, words: [0, 100, 340, 660, 1120, 1400, 1580, 1840, 1980] },
+      { text: 'Is that a dealbreaker?', ms: 900, words: [0, 80, 240, 380] }
+    ],
+    /* Timed to sarah-twin-answer.mp4 (11.04s) from word timestamps: each caption lands 100ms
+       before its first word. ms = time until the next caption. */
+    answer: [
+      { text: 'Not a dealbreaker.', ms: 1660 },
+      { text: 'Two of our best reps came from fintech.', ms: 2250 },
+      { text: 'Daniel, our sales lead,', ms: 1150 },
+      { text: 'wants six-figure deals closed through procurement.', ms: 2350 },
+      { text: 'My tip: prep one deal you almost lost.', ms: 2670 },
+      { text: 'He always asks.', ms: 960 }
+    ]
   },
   s9: {
     title: 'Bring your whole hiring team.',
     people: [
-      { name: 'Sarah · Recruiter', photo: 'sarah' },
-      { name: 'Daniel · Sales lead', photo: 'daniel' },
-      { name: 'Mei · Account Executive', photo: 'mei' }
+      { name: "Sarah's Twin", role: 'Recruiter', use: 'Process, timeline, offer', photo: 'sarah', clip: 'sarahListen' },
+      /* crop: Daniel was shot wider, so zoom in until his face matches Sarah's size and eye line. */
+      { name: "Daniel's Twin", role: 'Sales lead', use: 'What the bar really is', photo: 'daniel', clip: 'danielIdle',
+        crop: { transform: 'translateY(8%) scale(1.3)', origin: '50% 27%' } },
+      { name: "Mei's Twin", role: 'Account Executive', use: 'What the job is actually like', photo: 'mei', clip: 'meiIdle',
+        crop: { transform: 'translateY(3%) scale(1.1)', origin: '50% 30%' } }
     ]
   },
-  s10: {
-    when: 'Next morning',
-    count: '1,248 applicants',
-    list: 'Asked your Twin',
-    rows: ['Is it remote?', "What's the salary range?"],
-    badge: 'Applied · Twin link'
+  r1: {
+    heading: 'Face to face. Round 1.',
+    daniel: { name: 'Daniel', role: 'Sales lead', lines: [{ text: 'Walk me through a deal you almost lost.', ms: 2400 }] },
+    arjun: { name: 'Arjun Mehta', role: 'Candidate', lines: [
+      { text: 'A two-point-four million deal with a regional bank.', ms: 2700 },
+      { text: 'We nearly lost it in procurement, so…', ms: 1900 }
+    ] }
   },
-  s11: "CANVA INSERT: Sarah's reaction",
+  dm: {
+    channel: '#northwind-hiring',
+    daniel: { name: 'Daniel', time: '4:12 PM', text: 'Arjun crushed the interview. Had his \u201calmost lost\u201d deal ready before I asked. Moving him to final.' },
+    sarah: { name: 'Sarah', time: '4:13 PM', emoji: ['🎉', '🥳'] }
+  },
   s12: {
     l1: 'Answer every candidate.',
     l2: 'Start with the right one.',
-    cta: 'Create your Digital Twin',
+    cta: 'Create your Digital Twin Now.',
     url: 'twincafe.com'
   }
 };
@@ -331,15 +487,11 @@ const I = {
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg>',
   mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
   mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/></svg>',
-  pdf: '<svg viewBox="0 0 32 32"><path fill="#fff" stroke="#E4E2E8" stroke-width="1.2" d="M8 2.6h10.1L26 10.4V28a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4.6a2 2 0 0 1 2-2z"/><path fill="#F3F2F5" d="M17.8 2.9V10h7.3z"/><rect x="5.2" y="16.2" width="21.6" height="8.6" rx="1.6" fill="#E11D2E"/><text x="16" y="22.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="6.4" font-weight="700" fill="#fff">PDF</text></svg>',
-  linkedin: '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#0A66C2"/><circle cx="9.4" cy="9.2" r="1.7" fill="#fff"/><rect x="7.8" y="12.2" width="3.2" height="10.4" rx=".6" fill="#fff"/><path fill="#fff" d="M14.4 12.2h3.1v1.5c.7-1 1.8-1.7 3.4-1.7 2.6 0 4.1 1.6 4.1 4.5v6.1h-3.2v-5.5c0-1.3-.5-2.1-1.6-2.1s-1.8.8-1.8 2.1v5.5h-3.2V12.2z"/></svg>',
-  check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.2"/><path d="M5.1 8.2 7.1 10.1 10.9 6.2"/></svg>',
-  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></svg>',
-  people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.6-2.8 2.7-4 5.5-4s4.9 1.2 5.5 4"/><circle cx="17" cy="9" r="2.2"/><path d="M16.2 15c2.2.3 3.6 1.4 4.3 4"/></svg>',
-  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>',
-  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>',
   cam: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="M17 10.2 21.2 7.6c.4-.3.8 0 .8.4v8c0 .5-.4.7-.8.4L17 13.8z"/></svg>',
-  end: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 14.6c5.4-4.6 13.6-4.6 19 0l-1.9 3.1-4.3-1.5v-2.6a14 14 0 0 0-6.6 0v2.6l-4.3 1.5z"/></svg>'
+  end: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 14.6c5.4-4.6 13.6-4.6 19 0l-1.9 3.1-4.3-1.5v-2.6a14 14 0 0 0-6.6 0v2.6l-4.3 1.5z"/></svg>',
+  send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="M21 3 10 13"/></svg>',
+  slack: '<svg viewBox="0 0 60 60"><rect x="2" y="18" width="24" height="8" rx="4" fill="#36C5F0"/><rect x="18" y="2" width="8" height="8" rx="4" fill="#36C5F0"/><rect x="34" y="2" width="8" height="24" rx="4" fill="#2EB67D"/><rect x="50" y="18" width="8" height="8" rx="4" fill="#2EB67D"/><rect x="34" y="34" width="24" height="8" rx="4" fill="#ECB22E"/><rect x="34" y="50" width="8" height="8" rx="4" fill="#ECB22E"/><rect x="18" y="34" width="8" height="24" rx="4" fill="#E01E5A"/><rect x="2" y="34" width="8" height="8" rx="4" fill="#E01E5A"/></svg>',
+  out: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>'
 };
 
 function node(tag, className){ const n = document.createElement(tag); if (className) n.className = className; return n; }
@@ -509,42 +661,197 @@ function TwinCard({ name, role, photo, photoLabel, chips, strict }){
   return card;
 }
 
-function ChatThread({ header, photo, photoLabel, askLabel, question, twinName, answer }){
-  const card = node('div', 'card chat');
-  const h = node('div', 'chat-h');
-  h.append(portrait(photo, photoLabel, 64));
-  const nm = node('div', 'nm'); nm.textContent = header;
-  h.append(nm);
-  const msgs = node('div', 'msgs');
-  const q = node('div', 'qwrap');
-  const ql = node('div', 'qlbl'); ql.textContent = askLabel;
-  const qb = node('div', 'q'); qb.textContent = question;
-  q.append(ql, qb);
-  const a = node('div', 'a');
-  a.append(portrait(photo, photoLabel, 56));
-  const body = node('div');
-  const who = node('div', 'who'); who.textContent = twinName + "'s Twin";
-  const bub = node('div', 'bub'); bub.textContent = answer;
-  body.append(who, bub);
-  a.append(body);
-  msgs.append(q, a);
-  const bar = node('div', 'composer');
-  bar.append(node('div', 'grow'), iconWrap('mic', I.mic), iconWrap('vid', I.cam));
-  card.append(h, msgs, bar);
+function Caller(){
+  const c = COPY.s8;
+  const root = node('div', 'caller');
+  const h = node('div', 'caller-h');
+  const id = node('div');
+  id.append(text('div', 'caller-nm', c.asker), text('div', 'caller-sub', c.askerSub));
+  h.append(portrait(ASSETS.arjun, c.asker, 84, true), id);
+  const wave = document.createElement('canvas');
+  wave.width = 1040; wave.height = 144;
+  const tx = node('div', 'caller-tx');
+  c.question.forEach((line, i) => {
+    line.text.split(' ').forEach((word, j) => { if (i || j) tx.append(' '); tx.append(text('span', '', word)); });
+  });
+  const audio = document.createElement('audio');
+  audio.preload = 'auto';
+  audio.src = ASSETS.arjunQuestion;
+  root.append(h, wave, tx, audio);
+  return root;
+}
+/* Scrolling bar waveform. level() returns 0..1; a new bar enters every BAR_MS of clock time. */
+function Waveform(canvas, level){
+  const BARS = 52, BAR_MS = 60, ctx = canvas.getContext('2d');
+  const bars = new Array(BARS).fill(0);
+  let last = 0, peak = 0;
+  return function draw(elapsed){
+    peak = Math.max(peak, level());
+    if (elapsed - last >= BAR_MS){ bars.shift(); bars.push(peak); peak = 0; last = elapsed; }
+    const w = canvas.width, h = canvas.height, step = w / BARS, bw = step * 0.5;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#C9B8F0';
+    bars.forEach((v, i) => {
+      const bh = Math.max(6, v * h * 0.95);
+      const x = i * step + (step - bw) / 2, y = (h - bh) / 2;
+      ctx.globalAlpha = 0.35 + 0.65 * (i / BARS);
+      ctx.beginPath(); ctx.roundRect(x, y, bw, bh, bw / 2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  };
+}
+function PhoneCall(){
+  const c = COPY.s8;
+  const win = node('div', 'phone');
+  const bg = node('div', 'phone-bg');
+  bg.append(cover(ASSETS.sarah, 'sarah.jpg', 590, 960));
+  const vid = node('div', 'phone-video');
+  const answer = videoBox(ASSETS.sarahAnswer, 'sarah-twin-answer.mp4');
+  answer.classList.add('answer');
+  const listen = videoBox(ASSETS.sarahListen, 'sarah-twin-listen.mp4');
+  listen.classList.add('listen');
+  /* No listen clip: drop it so the answer clip's first frame shows instead. */
+  listen.querySelector('video').addEventListener('error', () => listen.remove());
+  vid.append(answer, listen);
+  answer.querySelector('video').loop = false;
+  answer.querySelector('video').muted = answer.querySelector('video').defaultMuted = !CALL_AUDIO;
+  const top = text('div', 'phone-top', c.header);
+  const ring = node('div', 'phone-ring');
+  const wrap = node('div', 'ring-wrap');
+  wrap.append(node('i', 'pulse'), node('i', 'pulse'), portrait(ASSETS.sarah, 'Sarah Lin', 150, true));
+  ring.append(wrap, text('div', 'ring-label', c.connecting));
+  const ctl = node('div', 'phone-ctl');
+  ctl.append(iconWrap('m', I.mic), iconWrap('e', I.end));
+  win.append(bg, vid, node('div', 'phone-shade'), top, ring, ctl);
+  return win;
+}
+function TeamCall(){
+  const c = COPY.s9;
+  const root = node('div', 'team');
+  const h = node('h2');
+  c.title.split(' ').forEach((word, i) => { if (i) h.append(' '); h.append(text('span', '', word)); });
+  const row = node('div', 'team-row');
+  c.people.forEach((p, i) => {
+    const col = node('div', 'tcol');
+    const card = node('div', 'tcard');
+    const top = node('div', 'tcard-top');
+    top.append(text('b', '', p.name), text('span', '', p.role));
+    card.append(cover(ASSETS[p.photo], p.photo + '.jpg', 360, 640));
+    /* Each Twin loops a short clip over its still (Sarah's carries on from the call). No clip → still. */
+    const clip = videoBox(ASSETS[p.clip], ASSETS[p.clip].split('/').pop());
+    clip.classList.add('tclip');
+    clip.querySelector('video').addEventListener('error', () => clip.remove());
+    card.append(clip);
+    if (p.crop) [card.querySelector('.cover'), clip].forEach(el => {
+      el.style.transform = p.crop.transform;
+      el.style.transformOrigin = p.crop.origin;
+    });
+    const ctl = node('div', 'phone-ctl');
+    ctl.append(iconWrap('m', I.mic), iconWrap('e', I.end));
+    card.append(node('div', 'phone-shade'), top, ctl);
+    col.append(card, text('div', 'tcol-use', p.use));
+    row.append(col);
+  });
+  root.append(h, row);
+  return root;
+}
+/* One speaker in the Round 1 transcript. */
+function SpeakerRow({ name, role, photo, lines }){
+  const row = node('div', 'sp-row');
+  const body = node('div', 'sp-body');
+  const head = node('div', 'sp-head');
+  const wave = document.createElement('canvas');
+  wave.width = 640; wave.height = 96;
+  head.append(text('span', 'sp-nm', name), text('span', 'sp-role', role), wave);
+  const tx = node('div', 'sp-tx');
+  lines.forEach((line, i) => line.text.split(' ').forEach((word, j) => { if (i || j) tx.append(' '); tx.append(text('span', '', word)); }));
+  body.append(head, tx);
+  row.append(portrait(photo, name, 84, true), body);
+  return row;
+}
+/* Schedules a speaker's words from now (evenly through the spoken part of each line) and returns
+   the total time plus a stand-in waveform level that's up only while they're talking. */
+function speakWords(t, words, lines, swallow){
+  const start = clock.elapsed, windows = [];
+  let off = 0, w = 0;
+  lines.forEach(line => {
+    const n = line.text.split(' ').length, talk = line.ms * S8.TALK;
+    windows.push([off, off + talk]);
+    for (let k = 0; k < n; k++, w++){
+      t.animate(words[w], [{ opacity: 0 }, { opacity: 1 }],
+        { duration: S8.WORD_IN, delay: off + (k * talk) / n, easing: EASE_OUT }).catch(swallow);
+    }
+    off += line.ms;
+  });
+  const level = () => {
+    const e = clock.elapsed - start;
+    if (!windows.some(([a, b]) => e >= a && e < b)) return 0.02;
+    return 0.22 + 0.5 * Math.abs(Math.sin(e / 47) * Math.sin(e / 113 + 1.3));
+  };
+  return { total: off, level };
+}
+/* Seeded so every take bursts the same way. */
+function rng(seed){
+  return () => {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let r = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    r = r + Math.imul(r ^ r >>> 7, 61 | r) ^ r;
+    return ((r ^ r >>> 14) >>> 0) / 4294967296;
+  };
+}
+const CONFETTI_COLORS = ['#8B5CF6', '#C4B5FD', '#EC4899', '#FBBF24', '#2DD4BF', '#6E35C9'];
+/* One burst of confetti from (x, y) in stage px, aimed at `dir` degrees (0 = right, -90 = up).
+   Each piece flies with drag and gravity, spins, and fades out near the end. */
+function burstConfetti(t, layer, { x, y, dir, spread, count, speed, seed }, swallow){
+  const rand = rng(seed);
+  const DRAG = 1.7, GRAVITY = 1500, STEPS = 12;
+  for (let i = 0; i < count; i++){
+    const piece = node('i', 'cf');
+    const round = rand() < .3;
+    const w = round ? 9 + rand() * 5 : 8 + rand() * 9, h = round ? w : 5 + rand() * 5;
+    piece.style.cssText += `left:${x}px;top:${y}px;width:${w}px;height:${h}px;margin:${-h / 2}px 0 0 ${-w / 2}px;` +
+      `background:${CONFETTI_COLORS[Math.floor(rand() * CONFETTI_COLORS.length)]};border-radius:${round ? '50%' : '2px'};opacity:0`;
+    layer.append(piece);
+    const a = (dir + (rand() - .5) * spread) * Math.PI / 180;
+    const v = speed * (.55 + rand() * .6);
+    const vx = Math.cos(a) * v, vy = Math.sin(a) * v;
+    const spin = (rand() - .5) * 1440, dur = 1500 + rand() * 700;
+    const frames = [];
+    for (let k = 0; k <= STEPS; k++){
+      const u = k / STEPS, tt = u * dur / 1000, drag = (1 - Math.exp(-DRAG * tt)) / DRAG;
+      frames.push({
+        transform: `translate(${vx * drag}px, ${vy * drag + .5 * GRAVITY * tt * tt * .45}px) rotate(${spin * tt}deg) scale(${k ? 1 : .4})`,
+        opacity: u < .72 ? 1 : 1 - (u - .72) / .28
+      });
+    }
+    t.animate(piece, frames, { duration: dur, delay: rand() * 90, easing: 'linear' })
+      .then(() => piece.remove()).catch(swallow);
+  }
+}
+function SlackCard(){
+  const c = COPY.dm;
+  const card = node('div', 'sk-card');
+  const top = node('div', 'sk-top');
+  top.insertAdjacentHTML('beforeend', I.slack);
+  top.append(text('b', '', c.channel));
+  const msg = (m, photo) => {
+    const row = node('div', 'sk-msg');
+    const body = node('div');
+    const who = node('div', 'sk-who');
+    who.append(text('b', '', m.name), text('span', '', m.time));
+    const p = node('p');
+    if (m.emoji) m.emoji.forEach(e => p.append(text('span', '', e)));
+    else p.textContent = m.text;
+    body.append(who, p);
+    row.append(portrait(photo, m.name, 60, true), body);
+    return row;
+  };
+  const reply = node('div', 'sk-reply');
+  reply.append(msg(c.sarah, ASSETS.sarah));
+  card.append(top, msg(c.daniel, ASSETS.danielAvatar), reply, node('div', 'sk-shine'));
   return card;
 }
 function iconWrap(className, html){ const s = node('span', className); s.innerHTML = html; return s; }
-
-function CallWindow({ name, photo, photoLabel, video, videoLabel, compact }){
-  const win = node('div', 'call' + (compact ? ' compact' : ''));
-  if (video) win.append(videoBox(video, videoLabel));
-  else win.append(cover(photo, photoLabel, compact ? 340 : 380, compact ? 560 : 680));
-  const top = node('div', 'call-top'); top.textContent = name;
-  const controls = node('div', 'ctl');
-  controls.append(iconWrap('m', I.mic), iconWrap('e', I.end));
-  win.append(top, controls);
-  return win;
-}
 
 function EmailNotification({ initials, sender, preview, time, photo, photoLabel, accent, bg }){
   const row = node('div', 'in-row' + (accent ? ' spotlight' : ''));
@@ -632,6 +939,27 @@ function InboxPanel(){
     }
   };
 }
+function FloodHead(){
+  const [l1, l2a, l2b] = COPY.s1;
+  const head = node('div', 'flood-head');
+  head.style.height = S3.HEAD_H + 'px';
+  const one = node('p', 'fh-line l1');
+  one.append(words(l1));
+  const two = node('p', 'fh-line l2');
+  const ra = node('span', 'row'); ra.append(words(l2a));
+  const rb = node('span', 'row'); rb.append(words(l2b));
+  two.append(ra, rb);
+  head.append(one, two);
+  return head;
+}
+/* Title-card word reveal (grey to ink) for a list of .w spans, starting after `delay`. */
+function revealWords(t, list, { stagger, delay = 0, payoff = 0, from = '#9A96A0', to = '#16141A' }, swallow){
+  list.forEach((w, i) => t.animate(w, [
+    { opacity: 0, color: from },
+    { opacity: 0.4, color: from, offset: 0.4 },
+    { opacity: 1, color: to }
+  ], { duration: 170, delay: delay + i * stagger + (payoff && i === list.length - 1 ? payoff : 0), easing: 'ease-out' }).catch(swallow));
+}
 function mountFlood(scene){
   scene.el.classList.add('desk');
   const haze = node('div', 'haze drift');
@@ -639,102 +967,140 @@ function mountFlood(scene){
   const when = node('span'); when.textContent = 'Wed 9:41';
   bar.append(when);
   const panel = InboxPanel();
+  /* The inbox sits below the headline band and runs off the bottom of the frame. Absolute so it
+     isn't re-centred by the scene's flex layout when it overflows. */
+  Object.assign(panel.el.style, { position: 'absolute', top: S3.PANEL_TOP + 'px', left: (1920 - 1500) / 2 + 'px' });
   scene.el.replaceChildren(haze, bar, panel.el);
   return panel;
 }
 
-function TrainWindow(){
-  const win = node('div', 'train');
-  const side = node('div', 'train-side');
-  const mark = new Image();
-  mark.className = 'train-logo'; mark.alt = 'TwinCafe'; mark.src = ASSETS.logo;
-  const search = node('div', 'train-search');
-  const searchLabel = node('span'); searchLabel.textContent = COPY.s5.search;
-  const kbd = node('b'); kbd.textContent = '⌘K';
-  search.append(searchLabel, kbd);
-  side.append(mark, search);
-  const navIcons = [I.home, I.people];
-  COPY.s5.nav.forEach((label, i) => {
-    const item = node('div', 'tnav');
-    const ico = node('span'); ico.innerHTML = navIcons[i];
-    item.append(ico, document.createTextNode(label));
-    side.append(item);
-  });
+function skel(widths, cls){
+  const frag = document.createDocumentFragment();
+  widths.forEach(w => { const s = node('i', 'sk' + (cls ? ' ' + cls : '')); s.style.width = w; frag.append(s); });
+  return frag;
+}
+function text(tag, className, value){ const n = node(tag, className); n.textContent = value; return n; }
 
-  const main = node('div', 'train-main');
-  const head = node('div', 'train-h');
-  const h = node('h3'); h.textContent = COPY.s5.train;
-  head.append(h);
-  const tabs = node('div', 'ttabs');
-  COPY.s5.tabs.forEach((label, i) => {
-    const tab = node('div', 'ttab' + (i === 1 ? ' on' : ''));
-    tab.textContent = label;
-    tabs.append(tab);
-  });
-  const sourcesH = node('div', 'sources-h'); sourcesH.textContent = COPY.s5.sourcesLabel;
-  const row = node('div', 'src-row');
-  COPY.s5.sources.forEach(src => {
-    const card = node('div', 'src');
-    const ico = node('span', 'src-ico ' + src.kind);
-    ico.innerHTML = I[src.kind];
-    const copy = node('div');
-    const name = node('div', 'src-name'); name.textContent = src.name;
-    const sub = node('div', 'src-sub');
-    const check = node('span', 'src-check'); check.innerHTML = I.check;
-    sub.append(check, document.createTextNode(src.sub));
-    copy.append(name, sub);
-    card.append(ico, copy);
-    row.append(card);
-  });
-  main.append(head, tabs, sourcesH, row);
-  win.append(side, main);
+function JobPage(){
+  const c = COPY.s6;
+  const win = node('div', 'li-win');
+  const chrome = node('div', 'li-chrome');
+  const lights = node('span', 'lights');
+  lights.append(node('i'), node('i'), node('i'));
+  const url = node('div', 'li-url');
+  url.append(iconWrap('', I.lock), skel(['180px']));
+  chrome.append(lights, url);
+
+  const nav = node('div', 'li-nav');
+  const navs = node('div', 'li-navs');
+  for (let i = 0; i < 5; i++){ const ni = node('div', 'li-ni'); ni.append(node('i'), node('b')); navs.append(ni); }
+  nav.append(node('div', 'li-mark'), node('div', 'li-search'), navs);
+
+  const job = node('div', 'li-card li-job');
+  const co = node('div', 'li-co');
+  co.append(text('span', 'li-co-logo', c.company[0]), text('span', '', c.company));
+  const meta = node('div', 'li-meta');
+  meta.append(document.createTextNode(c.place + ' · '), text('b', '', c.applicants));
+  const pills = node('div', 'li-pills');
+  ['130px', '110px', '150px'].forEach(w => { const p = node('i'); p.style.width = w; pills.append(p); });
+  const acts = node('div', 'li-acts');
+  acts.append(text('div', 'li-btn pri', c.apply), text('div', 'li-btn sec', c.save));
+  job.append(co, text('h2', 'li-title', c.title), meta, pills, acts);
+
+  /* Every text in the hiring card gets a .strike wrapper so scene 6 can cross it out. */
+  const struck = (tag, className, value) => {
+    const w = node('span', 'strike');
+    w.append(text(tag, className, value), node('i', 'x'));
+    return w;
+  };
+  const team = node('div', 'li-card li-team');
+  const person = node('div', 'li-person');
+  const pid = node('div', 'li-pid');
+  const name = text('div', 'li-name', c.name);
+  name.append(text('span', '', c.degree));
+  const nameWrap = node('span', 'strike');
+  nameWrap.append(name, node('i', 'x'));
+  pid.append(nameWrap, struck('div', 'li-line', c.line), struck('div', 'li-poster', c.meta));
+  const msg = node('div', 'li-msg');
+  msg.innerHTML = I.send;
+  msg.append(document.createTextNode(c.button));
+  const msgWrap = node('span', 'strike');
+  msgWrap.append(msg, node('i', 'x'));
+  person.append(portrait(ASSETS.sarah, c.name, 72, true), pid, msgWrap);
+  team.append(struck('h4', '', c.heading), person);
+
+  const jd = node('div', 'li-card li-jd');
+  jd.append(text('h4', '', c.about), TwinLine(), skel(['96%', '88%', '92%', '64%']), skel(['28%'], 'sub'));
+  ['78%', '66%', '72%'].forEach(w => { const b = node('div', 'li-bul'); b.append(skel([w])); jd.append(b); });
+
+  const main = node('div', 'li-main');
+  main.append(job, team, jd);
+  const side = node('div', 'li-side');
+  const promo = node('div', 'li-card');
+  promo.append(skel(['70%', '92%', '54%']));
+  const peers = node('div', 'li-card');
+  for (let i = 0; i < 3; i++){
+    const peer = node('div', 'li-peer');
+    const lines = node('div');
+    lines.append(skel(['72%', '48%']));
+    peer.append(node('i'), lines);
+    peers.append(peer);
+  }
+  side.append(promo, peers);
+  const body = node('div', 'li-body');
+  body.append(main, side);
+  win.append(chrome, nav, body, node('div', 'li-dim'));
   return win;
 }
-
-function JobPostBox({ heading, name, meta, line, button, photo, photoLabel }){
-  const card = node('div', 'card job');
-  const h = node('h3'); h.textContent = heading;
-  const row = node('div', 'job-row');
-  row.append(portrait(photo, photoLabel, 88));
-  const id = node('div', 'job-id');
-  const nm = node('div', 'nm'); nm.textContent = name;
-  const metaEl = node('div', 'meta'); metaEl.textContent = meta;
-  const ln = node('div', 'line'); ln.textContent = line;
-  id.append(nm, metaEl, ln);
-  const btn = node('div', 'btn-line'); btn.textContent = button;
-  row.append(id, btn);
-  card.append(h, row);
-  return card;
+function TwinLine(){
+  const line = node('div', 'twin-line');
+  const link = text('span', 'twin-link', COPY.s6.twinUrl);
+  link.insertAdjacentHTML('beforeend', I.out);
+  line.append(text('span', 'txt', COPY.s6.twinLine), link);
+  return line;
+}
+/* Element box in stage px (the stage is scaled to fit the window). */
+function stageRect(el){
+  const s = STAGE.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 1920;
+  return { x: (r.left - s.left) / k, y: (r.top - s.top) / k, w: r.width / k, h: r.height / k };
 }
 
 function EndCard(){
-  const root = node('div', 'titlecard');
+  const c = COPY.s12;
+  const root = node('div', 'titlecard ready');
   root.append(node('div', 'haze'));
-  const frame = node('div', 'frame end-stack');
-  const a = node('p', 't1'); a.append(words(COPY.s12.l1));
-  const b = node('p', 't2'); b.append(words(COPY.s12.l2));
-  root.classList.add('ready');
-  const cta = node('div', 'cta'); cta.textContent = COPY.s12.cta;
-  const url = node('div', 'url'); url.textContent = COPY.s12.url;
-  frame.append(a, b, logo(), cta, url);
-  root.append(frame);
+  const frame = node('div', 'frame');
+  const a = node('p', 't1'); a.append(words(c.l1));
+  const b = node('p', 't2'); b.append(words(c.l2));
+  frame.append(a, b);
+  const cta = node('div', 'endcta');
+  const qr = node('div', 'qr-card');
+  const code = new Image();
+  code.alt = c.url; code.src = ASSETS.qr;
+  qr.append(code);
+  cta.append(logo(), text('h2', '', c.cta), qr, text('div', 'url', c.url));
+  root.append(frame, cta);
   return root;
 }
 
-function Footage(text){ const d = node('div', 'footage'); d.textContent = text; return d; }
 
 /* Cursor persists on #cam. Long moves arc; short moves are straight. */
 const Cursor = {
   x: 1680, y: 940, el: null, svg: null,
   mount(parent){
     const d = node('div'); d.id = 'cursor';
-    d.innerHTML = '<svg viewBox="0 0 26 31"><path d="M3 2v23.5l6.3-6.1 4.2 9.6 4.1-1.8-4.1-9.4h8.7z" fill="#111" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>';
-    this.el = d; this.svg = d.querySelector('svg');
+    d.innerHTML = '<svg class="arrow" viewBox="0 0 26 31"><path d="M3 2v23.5l6.3-6.1 4.2 9.6 4.1-1.8-4.1-9.4h8.7z" fill="#111" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>'
+      + '<svg class="hand" viewBox="0 0 26 31"><path d="M9.2 3.6c0-1.3 1-2.3 2.3-2.3s2.3 1 2.3 2.3v8.2c.3-.9 1.1-1.5 2.1-1.5 1.2 0 2.1.9 2.1 2.1v.8c.3-.8 1.1-1.3 2-1.3 1.2 0 2.1.9 2.1 2.1v1c.3-.6 1-1 1.7-1 1.1 0 1.9.9 1.9 2v5.5c0 4.6-3.6 8.2-8.2 8.2h-2c-2.6 0-5-1.2-6.5-3.3l-5-6.9c-.7-1-.5-2.4.5-3.1 1-.7 2.3-.6 3.1.3l1.6 1.8z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/>'
+      + '<path d="M13.8 17.5v4.8M17.9 17.6v4.6M21.9 18v4.2" stroke="#111" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    this.el = d; this.arrow = d.querySelector('.arrow'); this.hand = d.querySelector('.hand'); this.svg = this.arrow;
     parent.append(d); this.place(this.x, this.y);
   },
   place(x, y){ this.x = x; this.y = y; this.el.style.transform = `translate(${x}px, ${y}px)`; },
   show(){ this.el.style.opacity = '1'; },
-  hide(){ this.el.style.opacity = '0'; },
+  /* hide() also drops held opacity/move animations so the next scene starts clean. */
+  hide(){ this.el.getAnimations().forEach(a => a.cancel()); this.el.style.opacity = '0'; this.pointer(false); },
+  /* Pointing hand over links, arrow everywhere else. */
+  pointer(on){ this.el.classList.toggle('pointer', on); this.svg = on ? this.hand : this.arrow; },
   async move(t, x, y, ms = 720){
     const x0 = this.x, y0 = this.y;
     const dist = Math.hypot(x - x0, y - y0);
@@ -754,17 +1120,20 @@ const Cursor = {
     await t.animate(this.el, frames, { duration: ms, easing: 'cubic-bezier(.45,0,.2,1)' });
     this.place(x, y);
   },
+  /* Press and ripple overlap: 80ms in, the ring starts; 600ms total. */
   async click(t){
-    await t.animate(this.svg, [
-      { transform: 'scale(1)' }, { transform: 'scale(.82)' }, { transform: 'scale(1)' }
-    ], { duration: 180, easing: EASE_OUT });
+    const press = t.animate(this.svg, [
+      { transform: 'scale(1)' }, { transform: 'scale(.8)', offset: .35 }, { transform: 'scale(1)' }
+    ], { duration: 240, easing: EASE_OUT });
+    await t(80);
     const rip = node('div', 'ripple');
     rip.style.left = this.x + 'px'; rip.style.top = this.y + 'px';
     this.el.parentElement.append(rip);
-    await t.animate(rip, [
+    const ring = t.animate(rip, [
       { opacity: .65, transform: 'translate(-50%, -50%) scale(.3)' },
       { opacity: 0, transform: 'translate(-50%, -50%) scale(1.5)' }
     ], { duration: 520, easing: EASE_OUT });
+    await Promise.all([press, ring]);
     rip.remove();
   }
 };
@@ -802,8 +1171,9 @@ class Clock {
     if (this.paused) anim.pause();
     return done;
   }
+  /* Any media element: videos and Arjun's question audio pause and resume with the clock. */
   trackVideo(v){
-    if (!v || v.tagName !== 'VIDEO') return;
+    if (!(v instanceof HTMLMediaElement)) return;
     this.videos.add(v);
     if (this.paused || this.dead) v.pause();
     else v.play().catch(() => {});
@@ -849,6 +1219,8 @@ function blank(scene){
   scene.el.innerHTML = '';
   scene.el.classList.toggle('dark', !!scene.dark);
   scene.el.style.opacity = '1';
+  Cursor.hide();
+  Cursor.place(1680, 940);
 }
 async function playHold(scene, t){
   const fade = Math.min(FADE_IN_MS, scene.plannedMs);
@@ -859,22 +1231,67 @@ async function playHold(scene, t){
   await t(scene.plannedMs - fade);
 }
 async function exitEl(el, t){
-  await t.animate(el, [{ opacity: 1 }, { opacity: 0 }], { duration: SCENE_EXIT_MS, easing: EASE_IN });
+  const out = [{ opacity: 1 }, { opacity: 0 }];
+  const fades = [t.animate(el, out, { duration: SCENE_EXIT_MS, easing: EASE_IN })];
+  if (Cursor.el.style.opacity === '1') fades.push(t.animate(Cursor.el, out, { duration: SCENE_EXIT_MS, easing: EASE_IN }));
+  await Promise.all(fades);
   el.style.opacity = '0';
+  Cursor.hide();
 }
 
+/* Scene 8 beats. Total follows the caption times in COPY.s8. */
+const S8 = {
+  IN: 480, RING: 1900, CONNECT: 500, GAP: 250, HOLD: 400, OUTRO: 700, PULSE: 1800, SWAP_OUT: 120, SWAP_IN: 140, RELISTEN: 350,
+  TALK: .85, WORD_IN: 160, DIM: .5,
+  total(){
+    const sum = list => list.reduce((a, l) => a + l.ms, 0);
+    return this.IN + this.RING + this.CONNECT + sum(COPY.s8.question) + this.GAP + sum(COPY.s8.answer) + this.HOLD + this.OUTRO;
+  }
+};
+
+/* Scene 7 beats. BIG is the call card width in scene 6, so the hand-off matches. */
+const S9 = {
+  BIG: 470, OFF: 'translateX(80px) scale(.96)',
+  HOLD: 300, SHRINK: 650, DANIEL_AT: 150, MEI_AFTER: 180, CARD_IN: 520, BEAT: 150,
+  WORD: 260, WORD_STAGGER: 110, HEADLINE: 810, USE: 360, USE_STAGGER: 140, USES: 780
+};
+
+/* Scene 8 beats. Speaking time follows the line ms in COPY.r1. */
+const R1 = {
+  IN: 480, ROW_IN: 420, BEAT: 300, HOLD: 900, DIM: .55,
+  /* Headline: 5 words at 220ms + payoff beat + 170ms reveal + a short read. */
+  HEAD_STAGGER: 220, get HEAD(){ return 4 * this.HEAD_STAGGER + P1_PAYOFF_EXTRA_MS + 170 + 450; },
+  total(){
+    const sum = list => list.reduce((a, l) => a + l.ms, 0);
+    return this.HEAD + this.IN + sum(COPY.r1.daniel.lines) + this.BEAT + this.ROW_IN + sum(COPY.r1.arjun.lines) + this.HOLD;
+  }
+};
+
+/* End card beat 2: tagline out, then 4 parts staggered in, then hold. */
+const END = { OUT: 400, PART: 520, STAGGER: 130, get IN(){ return this.PART + 3 * this.STAGGER; }, HOLD: 2400 };
+
+/* Scene 1 beats. The flood itself is 9100ms (2840 opening + 3340 stream + 520 Arjun + 2400 hold);
+   here the hold is longer so line 2 can be read. */
+const S3 = {
+  /* Headline band is HEAD_H tall (≈80px air above and below two lines); the inbox starts right under it. */
+  HEAD_H: 300, PANEL_TOP: 300, get HEAD_START(){ return `translateY(${540 - this.HEAD_H / 2}px) scale(1.3)`; },
+  INTRO: 4 * P1_WORD_STAGGER_MS + P1_PAYOFF_EXTRA_MS + 180 + 500, LIFT: 700, HOLD: 2900,
+  L2_STAGGER: 110, L2A_AT: 120, L2B_AT: 1200,
+  total(){ return this.INTRO + this.LIFT + 2440 + 3340 + 520 + this.HOLD; }
+};
+
 const SCENES = [
-  { id: 's1', name: 'The number', plannedMs: titleMs(5, 11), build(){ blank(this); this.el.append(TitleCard(COPY.s1[0], COPY.s1[1])); }, play(t){ return playTitle(this, t); } },
-  { id: 's2', name: 'Sarah at her desk at night', plannedMs: 2000, dark: true, build(){ blank(this); this.el.append(Footage(COPY.s2)); }, play(t){ return playHold(this, t); } },
-  { id: 's3', name: 'The flood', plannedMs: 9100, build(){
+  { id: 's3', name: 'The number + the flood', get plannedMs(){ return S3.total(); }, build(){
       blank(this);
       const panel = mountFlood(this);
-      const p = INBOX_PEOPLE[0];
-      panel.setCount('1');
-      panel.list.append(EmailNotification({
-        sender: p[0], photo: p[1], photoLabel: p[0], preview: COPY.s3.incoming, time: 'now'
-      }));
+      panel.el.style.opacity = '0';
+      const head = FloodHead();
+      head.style.transform = S3.HEAD_START;
+      head.querySelectorAll('.l1 .w').forEach(w => { w.style.opacity = '1'; w.style.color = 'var(--ink)'; });
+      this.el.append(head);
     }, async play(t){
+      /* Line 1 reveals centred, lifts to the top as the inbox rises under it, the flood plays,
+         and line 2 replaces line 1 as Arjun's email lands. */
       /* Opening stays 2840ms. Stream stays 3340ms. Hard stop at 6180ms.
          2840 + 3340 stream + 520 Arjun + 2400 hold = 9100. */
       const PANEL_MS = 400, SLIDE = 420, ARJUN_MS = 520, DIM_MS = 300;
@@ -885,7 +1302,7 @@ const SCENES = [
       const BUMPS = GAPS.map((_, i) => i < 5 ? [12, 24, 40, 70, 110][i] : 16);
       const PATTERN = GAPS.map((_, i) => i % 10 < 7 ? 1 : 0);
       const STOP = PANEL_MS + (SLIDE + HOLDS[0]) + (SLIDE + HOLDS[1]) + (SLIDE + HOLDS[2]) + GAPS.reduce((a, b) => a + b, 0);
-      const HOLD = 2400;
+      const HOLD = S3.HOLD;
       const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
       let at = 0;
       const burn = async ms => {
@@ -894,6 +1311,11 @@ const SCENES = [
         if (left > 0) await t(left);
       };
       const panel = mountFlood(this);
+      const head = FloodHead();
+      head.style.transform = S3.HEAD_START;
+      this.el.append(head);
+      const line1 = [...head.querySelectorAll('.l1 .w')];
+      const [rowA, rowB] = [...head.querySelectorAll('.l2 .row')];
       const haze = this.el.querySelector('.haze');
       t.animate(haze, [
         { backgroundPosition: '0% 0%' },
@@ -908,11 +1330,19 @@ const SCENES = [
         const p = INBOX_PEOPLE[i % INBOX_PEOPLE.length];
         return EmailNotification({ sender: p[0], photo: p[1], photoLabel: p[0], preview, time: 'now' });
       };
+      /* Line 1 centred, then it lifts while the inbox rises underneath. */
+      revealWords(t, line1, { stagger: P1_WORD_STAGGER_MS, payoff: P1_PAYOFF_EXTRA_MS }, swallow);
+      await burn(S3.INTRO);
+      line1.forEach(w => { w.style.opacity = '1'; w.style.color = 'var(--ink)'; });
+      t.animate(head, [{ transform: S3.HEAD_START }, { transform: 'none' }],
+        { duration: S3.LIFT, easing: 'cubic-bezier(.65,0,.35,1)' }).catch(swallow);
+      await burn(S3.LIFT - PANEL_MS);
       t.animate(panel.el, [
         { opacity: 0, transform: 'translateY(16px)' },
         { opacity: 1, transform: 'translateY(0px)' }
       ], { duration: PANEL_MS, easing: EASE_OUT }).catch(swallow);
       await burn(PANEL_MS);
+      head.style.transform = 'none';
       panel.el.style.opacity = '1';
       panel.el.style.transform = 'none';
       const opening = [COPY.s3.incoming, COPY.s3.incoming, COPY.s3.questions[0]];
@@ -979,32 +1409,53 @@ const SCENES = [
         { marginTop: '-' + ROW_H + 'px', opacity: 0, transform: 'translateY(-12px)', boxShadow: 'inset 3px 0 0 #3B1A6B, 0 0 0 rgba(59,26,107,0)' },
         { marginTop: '0px', opacity: 1, transform: 'translateY(-4px)', boxShadow: 'inset 3px 0 0 #3B1A6B, 0 12px 32px rgba(59,26,107,.16)' }
       ], { duration: ARJUN_MS, easing: EASE_OUT }).catch(swallow);
+      /* Line 2 replaces line 1: "best fit" lands with Arjun, the question follows. */
+      t.animate(head.querySelector('.l1'), [
+        { opacity: 1, transform: 'translateY(0px)' },
+        { opacity: 0, transform: 'translateY(-12px)' }
+      ], { duration: 220, easing: EASE_IN }).catch(swallow);
+      revealWords(t, [...rowA.querySelectorAll('.w')], { stagger: S3.L2_STAGGER, delay: S3.L2A_AT }, swallow);
+      revealWords(t, [...rowB.querySelectorAll('.w')], { stagger: S3.L2_STAGGER, delay: S3.L2B_AT }, swallow);
       await burn(ARJUN_MS);
+      head.querySelector('.l1').style.opacity = '0';
       arjun.style.marginTop = '0px';
       arjun.style.opacity = '1';
       arjun.style.transform = 'translateY(-4px)';
       await burn(HOLD);
     } },
   { id: 's4', name: 'Some answers only you know', plannedMs: titleMs(5, 5), build(){ blank(this); this.el.append(TitleCard(COPY.s4[0], COPY.s4[1])); }, play(t){ return playTitle(this, t); } },
-  { id: 's5', name: 'Train your twin', plannedMs: 6000, build(){
+  { id: 's6', name: 'Meet the hiring team', plannedMs: 6900, build(){
       blank(this);
-      this.el.append(TrainWindow());
+      this.el.append(node('div', 'haze drift'), JobPage());
     }, async play(t){
-      /* Shell rises, then JD, LinkedIn, and Stories land one at a time. 460 + 380 + 3×420 + 2×720 + 2460 = 6000. */
-      const RISE = 460, BEAT = 380, IN = 420, GAP = 720;
-      const TAIL = 6000 - (RISE + BEAT + IN * 3 + GAP * 2);
+      /* Page rises. "Meet the hiring team" is struck out and collapses. The JD pops up,
+         its bars shift down for the Twin line, and the cursor clicks the link.
+         460 + 800 + 520 + 300 + 220 + 380 + 600 + 150 + 420 + 300 + 200 + 840 + 240 + 600 + 870 hold = 6900. */
+      const RISE = 460, READ = 800, STRIKE = 520, STRUCK = 300, FADE = 220, COLLAPSE = 380;
+      const LIFT = 600, BEAT = 150, GROW = 420, LINK = 300, PRE = 200, MOVE = 840, HOVER = 240, CLICK = 600;
+      const TAIL = this.plannedMs - (RISE + READ + STRIKE + STRUCK + FADE + COLLAPSE + LIFT + BEAT + GROW + LINK + PRE + MOVE + HOVER + CLICK);
+      const STRIKE_EACH = 280, STRIKE_STAGGER = 60, LINE_FADE_AT = 160, LINE_FADE = 360;
+      const LIFT_SCALE = 1.16, LIFT_Y = 540, SLOT_H = 76, SLOT_GAP = 20, MAIN_GAP = 16;
       const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
-      const win = this.el.querySelector('.train');
-      const cards = [...this.el.querySelectorAll('.src')];
-      win.style.opacity = '0';
-      win.style.transform = 'translateY(18px)';
-      cards.forEach(card => { card.style.opacity = '0'; card.style.transform = 'translateY(14px)'; });
+      const win = this.el.querySelector('.li-win');
+      const team = this.el.querySelector('.li-team');
+      const card = this.el.querySelector('.li-jd');
+      const dim = this.el.querySelector('.li-dim');
+      const line = card.querySelector('.twin-line');
+      const link = line.querySelector('.twin-link');
       let at = 0;
       const burn = async ms => {
         at += ms;
         const left = at - clock.elapsed;
         if (left > 0) await t(left);
       };
+      t.animate(this.el.querySelector('.haze'), [
+        { backgroundPosition: '0% 0%' },
+        { backgroundPosition: '4% 3%' }
+      ], { duration: this.plannedMs, easing: 'linear' }).catch(swallow);
+      link.style.opacity = '0';
+      win.style.opacity = '0';
+      win.style.transform = 'translateY(18px)';
       t.animate(win, [
         { opacity: 0, transform: 'translateY(18px)' },
         { opacity: 1, transform: 'translateY(0px)' }
@@ -1012,70 +1463,471 @@ const SCENES = [
       await burn(RISE);
       win.style.opacity = '1';
       win.style.transform = 'none';
+      await burn(READ);
+
+      /* Strike every line of the hiring card, top to bottom. */
+      const marks = [...team.querySelectorAll('.strike > .x')];
+      marks.forEach((x, i) => {
+        t.animate(x, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+          { duration: STRIKE_EACH, delay: i * STRIKE_STAGGER, easing: EASE_OUT }).catch(swallow);
+      });
+      await burn(STRIKE);
+      marks.forEach(x => { x.style.transform = 'scaleX(1)'; });
+      await burn(STRUCK);
+      t.animate(team, [
+        { opacity: 1, transform: 'translateY(0px)' },
+        { opacity: 0, transform: 'translateY(-6px)' }
+      ], { duration: FADE, easing: EASE_IN }).catch(swallow);
+      await burn(FADE);
+      team.style.opacity = '0';
+      const th = team.offsetHeight;
+      t.animate(team, [
+        { height: th + 'px', paddingTop: '22px', paddingBottom: '24px', marginBottom: '0px' },
+        { height: '0px', paddingTop: '0px', paddingBottom: '0px', marginBottom: -MAIN_GAP + 'px' }
+      ], { duration: COLLAPSE, easing: EASE_OUT }).catch(swallow);
+      await burn(COLLAPSE);
+      team.getAnimations().forEach(a => a.cancel());
+      team.style.display = 'none';
+
+      /* Lift the JD. Aim for its final height so it ends centred once the slot opens. */
+      const r = stageRect(card);
+      const grownH = r.h + SLOT_H + SLOT_GAP;
+      const lifted = `translate(${960 - (r.x + r.w / 2)}px, ${LIFT_Y - (r.y + grownH / 2)}px) scale(${LIFT_SCALE})`;
+      const liftedShadow = '0 0 0 1px rgba(0,0,0,.04), 0 32px 80px rgba(22,20,26,.20)';
+      t.animate(dim, [{ opacity: 0 }, { opacity: 1 }], { duration: LIFT, easing: EASE_OUT }).catch(swallow);
+      t.animate(card, [
+        { transform: 'none', boxShadow: '0 0 0 1px rgba(0,0,0,.08)' },
+        { transform: lifted, boxShadow: liftedShadow }
+      ], { duration: LIFT, easing: EASE_OUT }).catch(swallow);
+      await burn(LIFT);
+      dim.style.opacity = '1';
+      card.style.transform = lifted;
+      card.style.boxShadow = liftedShadow;
       await burn(BEAT);
-      for (let i = 0; i < cards.length; i++){
-        const card = cards[i];
-        t.animate(card, [
-          { opacity: 0, transform: 'translateY(14px) scale(.98)' },
-          { opacity: 1, transform: 'translateY(0px) scale(1)' }
-        ], { duration: IN, easing: EASE_OUT }).catch(swallow);
-        await burn(IN);
-        card.style.opacity = '1';
-        card.style.transform = 'none';
-        if (i < cards.length - 1) await burn(GAP);
-      }
+
+      /* Open the slot under the heading (bars shift down), then the line and link land. */
+      t.animate(line, [
+        { height: '0px', marginBottom: '0px' },
+        { height: SLOT_H + 'px', marginBottom: SLOT_GAP + 'px' }
+      ], { duration: GROW, easing: EASE_OUT }).catch(swallow);
+      await burn(LINE_FADE_AT);
+      t.animate(line, [
+        { opacity: 0, transform: 'translateY(-6px)' },
+        { opacity: 1, transform: 'translateY(0px)' }
+      ], { duration: LINE_FADE, easing: EASE_OUT }).catch(swallow);
+      await burn(GROW - LINE_FADE_AT);
+      line.style.height = SLOT_H + 'px';
+      line.style.marginBottom = SLOT_GAP + 'px';
+      t.animate(link, [
+        { opacity: 0, transform: 'translateX(-8px)' },
+        { opacity: 1, transform: 'translateX(0px)' }
+      ], { duration: LINK, easing: EASE_OUT }).catch(swallow);
+      await burn(LINK);
+      line.style.opacity = '1';
+      link.style.opacity = '1';
+      await burn(PRE);
+
+      const lr = stageRect(link);
+      Cursor.place(1700, 960);
+      Cursor.show();
+      t.animate(Cursor.el, [{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: EASE_OUT }).catch(swallow);
+      await Cursor.move(t, lr.x + lr.w * 0.42, lr.y + lr.h * 0.6, MOVE - STAGGER_MS);
+      await burn(MOVE);
+      Cursor.pointer(true);
+      link.classList.add('hover');
+      await burn(HOVER);
+      link.classList.add('pressed');
+      t.animate(link, [
+        { transform: 'scale(1)' }, { transform: 'scale(.96)', offset: .35 }, { transform: 'scale(1)' }
+      ], { duration: 240, easing: EASE_OUT }).catch(swallow);
+      await Cursor.click(t);
+      await burn(CLICK);
       await burn(TAIL);
     } },
-  { id: 's6', name: 'Meet the hiring team', plannedMs: 5000, build(){
+  /* handoff: scene 7 opens on this scene's last frame, so there's no fade between them. */
+  { id: 's8', name: "Sarah's Twin answers", get plannedMs(){ return S8.total(); }, dark: true, handoff: true, build(){
       blank(this);
-      this.el.append(JobPostBox({
-        heading: COPY.s6.heading, name: COPY.s6.name, meta: COPY.s6.meta, line: COPY.s6.line,
-        button: COPY.s6.button, photo: ASSETS.sarah, photoLabel: 'sarah.jpg'
-      }));
-    }, play(t){ return playHold(this, t); } },
-  { id: 's7', name: 'Arjun at the airport café', plannedMs: 2000, dark: true, build(){ blank(this); this.el.append(Footage(COPY.s7)); }, play(t){ return playHold(this, t); } },
-  { id: 's8', name: "Sarah's Twin answers", plannedMs: 9000, build(){
+      const set = node('div', 'callset');
+      const caller = Caller();
+      set.append(caller, PhoneCall());
+      this.el.append(set);
+      Waveform(caller.querySelector('canvas'), () => 0)(0);
+    }, async play(t){
+      /* Arjun's panel and the call card rise; the call rings, connects to the listen clip, Arjun asks
+         out loud (waveform + transcript), the answer clip plays under captions, then his panel fades
+         and the card glides back to centre for scene 7. */
+      const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
+      S8.handoff = null;
+      const caller = this.el.querySelector('.caller');
+      const audio = caller.querySelector('audio');
+      const words = [...caller.querySelectorAll('.caller-tx span')];
+      const phone = this.el.querySelector('.phone');
+      const ring = phone.querySelector('.phone-ring');
+      const label = ring.querySelector('.ring-label');
+      const bg = phone.querySelector('.phone-bg');
+      const vid = phone.querySelector('.phone-video');
+      const pulses = [...ring.querySelectorAll('.pulse')];
+      let at = 0;
+      const burn = async ms => {
+        at += ms;
+        const left = at - clock.elapsed;
+        if (left > 0) await t(left);
+      };
+
+      /* Waveform runs on this scene's clock and stops when the clock changes. */
+      let level = () => 0;
+      const draw = Waveform(caller.querySelector('canvas'), () => level());
+      const sceneClock = clock;
+      const loop = () => {
+        if (sceneClock.dead || clock !== sceneClock) return;
+        if (!sceneClock.paused) draw(sceneClock.elapsed);
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+
+      phone.style.opacity = '0';
+      phone.style.transform = 'translateY(24px) scale(.98)';
+      caller.style.opacity = '0';
+      t.animate(phone, [
+        { opacity: 0, transform: 'translateY(24px) scale(.98)' },
+        { opacity: 1, transform: 'translateY(0px) scale(1)' }
+      ], { duration: S8.IN, easing: EASE_OUT }).catch(swallow);
+      t.animate(caller, [
+        { opacity: 0, transform: 'translateX(-16px)' },
+        { opacity: 1, transform: 'translateX(0px)' }
+      ], { duration: S8.IN, delay: 120, easing: EASE_OUT }).catch(swallow);
+      pulses.forEach((p, i) => t.animate(p, [
+        { opacity: .6, transform: 'scale(.78)' },
+        { opacity: 0, transform: 'scale(1.4)' }
+      ], { duration: S8.PULSE, delay: i * S8.PULSE / 2, iterations: Infinity, easing: 'cubic-bezier(.2,.6,.3,1)' }).catch(swallow));
+      t.animate(label, [{ opacity: 1 }, { opacity: .55 }], {
+        duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out'
+      }).catch(swallow);
+      await burn(S8.IN);
+      phone.style.opacity = '1';
+      phone.style.transform = 'none';
+      caller.style.opacity = '1';
+      await burn(S8.RING);
+
+      /* Connect: ring block and blurred photo out, video in. */
+      const listen = vid.querySelector('.listen video');
+      if (listen) t.trackVideo(listen);
+      t.animate(ring, [
+        { opacity: 1, transform: 'translateY(-50%) scale(1)' },
+        { opacity: 0, transform: 'translateY(-50%) scale(.94)' }
+      ], { duration: 300, easing: EASE_IN }).catch(swallow);
+      t.animate(bg, [{ opacity: .7 }, { opacity: 0 }], { duration: S8.CONNECT, easing: EASE_OUT }).catch(swallow);
+      t.animate(vid, [{ opacity: 0 }, { opacity: 1 }], { duration: S8.CONNECT, easing: EASE_OUT }).catch(swallow);
+      await burn(S8.CONNECT);
+      [...pulses, label].forEach(el => el.getAnimations().forEach(a => a.cancel()));
+      ring.style.opacity = '0';
+      bg.style.opacity = '0';
+      vid.style.opacity = '1';
+
+      /* Arjun asks. Words land evenly through the spoken part of each phrase.
+         Real audio drives the waveform; without it, a seeded wobble stands in. */
+      const speakAt = clock.elapsed;
+      const windows = [];
+      let off = 0, w = 0;
+      COPY.s8.question.forEach(line => {
+        const n = line.text.split(' ').length, talk = line.ms * S8.TALK;
+        windows.push([off, off + talk]);
+        for (let k = 0; k < n; k++, w++){
+          t.animate(words[w], [{ opacity: 0 }, { opacity: 1 }],
+            { duration: S8.WORD_IN, delay: off + (line.words ? line.words[k] : (k * talk) / n), easing: EASE_OUT }).catch(swallow);
+        }
+        off += line.ms;
+      });
+      audio.muted = !CALL_AUDIO;
+      if (!audio.error){
+        t.trackVideo(audio);
+        level = () => audio.paused ? 0.02
+          : (ARJUN_LEVELS.data[Math.floor(audio.currentTime * 1000 / ARJUN_LEVELS.stepMs)] ?? 0.02) * 0.9;
+      } else level = () => {
+        const e = clock.elapsed - speakAt;
+        if (!windows.some(([a, b]) => e >= a && e < b)) return 0.02;
+        return 0.22 + 0.5 * Math.abs(Math.sin(e / 47) * Math.sin(e / 113 + 1.3));
+      };
+      caller.classList.add('speaking');
+      await burn(off);
+      words.forEach(el => { el.style.opacity = '1'; });
+      caller.classList.remove('speaking');
+      t.animate(caller, [{ opacity: 1 }, { opacity: S8.DIM }], { duration: 400, easing: EASE_OUT }).catch(swallow);
+      await burn(S8.GAP);
+      caller.style.opacity = String(S8.DIM);
+
+      /* Answer: start the answer clip, fade the listen clip off it, captions on her card. */
+      const answer = vid.querySelector('.answer video');
+      if (answer) t.trackVideo(answer);
+      const listenWrap = vid.querySelector('.listen');
+      if (listenWrap){
+        t.animate(listenWrap, [{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: EASE_OUT })
+          .then(() => { listenWrap.style.opacity = '0'; if (listen) listen.pause(); }).catch(swallow);
+      }
+      const pr = stageRect(phone);
+      const cap = node('div', 'caption');
+      phone.append(cap);
+      /* Captions follow the answer clip's own playhead, polled on a plain timer so a decode stall or a
+         dropped animation frame can't push them late. No clip → clock timing. Lines swap straight in. */
+      const lines = COPY.s8.answer;
+      const cueAt = [];
+      lines.reduce((acc, l) => { cueAt.push(acc); return acc + l.ms; }, 0);
+      const endAt = cueAt[cueAt.length - 1] + lines[lines.length - 1].ms;
+      const synced = answer && !answer.error && answer.readyState >= 1;
+      const reach = ms => new Promise((resolve, reject) => {
+        const poll = () => {
+          if (sceneClock.dead || clock !== sceneClock) return reject(CANCEL);
+          if (answer.ended || answer.currentTime * 1000 >= ms) return resolve();
+          setTimeout(poll, 8);
+        };
+        poll();
+      });
+      for (let i = 0; i < lines.length; i++){
+        if (synced) await reach(cueAt[i]);
+        cap.textContent = lines[i].text;
+        t.animate(cap, [
+          { opacity: i ? .35 : 0, transform: 'translateY(6px)' },
+          { opacity: 1, transform: 'translateY(0px)' }
+        ], { duration: S8.SWAP_IN, easing: EASE_OUT }).catch(swallow);
+        cap.style.opacity = '1';
+        if (!synced) await burn(lines[i].ms);
+      }
+      if (synced){ await reach(endAt); at = clock.elapsed; }
+      /* She goes back to listening rather than freezing on the clip's last frame. */
+      if (listen && listenWrap){
+        listen.currentTime = 0;
+        t.trackVideo(listen);
+        t.animate(listenWrap, [{ opacity: 0 }, { opacity: 1 }], { duration: S8.RELISTEN, easing: EASE_OUT }).catch(swallow);
+        listenWrap.style.opacity = '1';
+      }
+      await burn(S8.HOLD);
+
+      /* Outro: caption and Arjun's panel out, card glides back to centre (scene 7 starts there). */
+      const toCentre = `translateX(${960 - (pr.x + pr.w / 2)}px)`;
+      t.animate(cap, [{ opacity: 1 }, { opacity: 0 }], { duration: 250, easing: EASE_IN }).catch(swallow);
+      t.animate(caller, [{ opacity: S8.DIM }, { opacity: 0 }], { duration: 300, easing: EASE_IN }).catch(swallow);
+      t.animate(phone, [{ transform: 'none' }, { transform: toCentre }],
+        { duration: S8.OUTRO, easing: 'cubic-bezier(.65,0,.35,1)' }).catch(swallow);
+      await burn(S8.OUTRO);
+      cap.style.opacity = '0';
+      caller.style.opacity = '0';
+      phone.style.transform = toCentre;
+      /* Scene 7 picks up her listen loop at this exact frame. */
+      S8.handoff = { listenAt: listen ? listen.currentTime : 0, at: performance.now() };
+    } },
+  { id: 's9', name: 'Bring your whole hiring team', plannedMs: 5000, dark: true, build(){
       blank(this);
-      const row = node('div', 'split');
-      row.append(
-        ChatThread({
-          header: COPY.s8.header, photo: ASSETS.sarah, photoLabel: 'sarah.jpg',
-          askLabel: COPY.arjunName, question: COPY.arjunQuestion,
-          twinName: COPY.s8.twin, answer: COPY.s8.answer
-        }),
-        CallWindow({ name: COPY.s8.header, video: ASSETS.sarahVideo, videoLabel: 'sarah-avatar.mp4' })
-      );
-      this.el.append(row);
-    }, play(t){ return playHold(this, t); } },
-  { id: 's9', name: 'Bring your whole hiring team', plannedMs: 5000, build(){
+      this.el.append(TeamCall());
+      /* Key frame matches the end of the call scene: Sarah's card big and centred, the others not in yet. */
+      const [sarah, ...rest] = [...this.el.querySelectorAll('.tcard')];
+      const r = stageRect(sarah);
+      sarah.style.transform = `translate(${960 - (r.x + r.w / 2)}px, ${540 - (r.y + r.h / 2)}px) scale(${S9.BIG / r.w})`;
+      sarah.querySelector('.tcard-top span').style.opacity = '0';
+      const clip = sarah.querySelector('.tclip video');
+      if (clip && S8.handoff && performance.now() - S8.handoff.at < 1500){
+        /* A fresh <video> has no metadata yet, so seek once it does. */
+        const to = S8.handoff.listenAt;
+        if (clip.readyState >= 1) clip.currentTime = to;
+        else clip.addEventListener('loadedmetadata', () => { clip.currentTime = to; }, { once: true });
+      }
+      S8.handoff = null;
+      rest.forEach(card => { card.style.opacity = '0'; card.style.transform = S9.OFF; });
+    }, async play(t){
+      /* 300 hold + 650 shrink (Daniel at +150, Mei at +330) + 150 + 810 headline + 780 use lines + hold = 5000. */
+      const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
+      const cards = [...this.el.querySelectorAll('.tcard')];
+      const uses = [...this.el.querySelectorAll('.tcol-use')];
+      const words = [...this.el.querySelectorAll('.team h2 span')];
+      const [sarah, daniel] = cards;
+      this.el.querySelectorAll('.tclip video').forEach(v => t.trackVideo(v));
+      let at = 0;
+      const burn = async ms => {
+        at += ms;
+        const left = at - clock.elapsed;
+        if (left > 0) await t(left);
+      };
+      await burn(S9.HOLD);
+      t.animate(sarah.querySelector('.tcard-top span'), [{ opacity: 0 }, { opacity: 1 }],
+        { duration: 300, delay: S9.SHRINK / 2, easing: EASE_OUT }).catch(swallow);
+
+      t.animate(sarah, [{ transform: sarah.style.transform }, { transform: 'none' }],
+        { duration: S9.SHRINK, easing: 'cubic-bezier(.65,0,.35,1)' }).catch(swallow);
+      for (const card of cards.slice(1)){
+        await burn(card === daniel ? S9.DANIEL_AT : S9.MEI_AFTER);
+        t.animate(card, [{ opacity: 0, transform: S9.OFF }, { opacity: 1, transform: 'none' }],
+          { duration: S9.CARD_IN, easing: EASE_OUT }).catch(swallow);
+      }
+      await burn(S9.CARD_IN);
+      cards.forEach(card => { card.style.opacity = '1'; card.style.transform = 'none'; });
+      await burn(S9.BEAT);
+
+      words.forEach((w, i) => t.animate(w, [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0px)' }],
+        { duration: S9.WORD, delay: i * S9.WORD_STAGGER, easing: EASE_OUT }).catch(swallow));
+      await burn(S9.HEADLINE);
+      words.forEach(w => { w.style.opacity = '1'; });
+
+      uses.forEach((u, i) => t.animate(u, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0px)' }],
+        { duration: S9.USE, delay: i * S9.USE_STAGGER, easing: EASE_OUT }).catch(swallow));
+      /* Daniel was just name-checked on the call, so his card gets a brief purple ring. */
+      t.animate(daniel, [
+        { boxShadow: '0 26px 70px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.05)' },
+        { boxShadow: '0 26px 70px rgba(0,0,0,.4), 0 0 0 3px #8B5CF6', offset: .4 },
+        { boxShadow: '0 26px 70px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.05)' }
+      ], { duration: 1100, delay: S9.USE_STAGGER, easing: 'ease-in-out' }).catch(swallow);
+      await burn(S9.USES);
+      uses.forEach(u => { u.style.opacity = '1'; });
+      await burn(this.plannedMs - at);
+    } },
+  { id: 'r1', name: 'Round 1', get plannedMs(){ return R1.total(); }, dark: true, build(){
       blank(this);
-      const col = node('div', 'stack');
-      const h = node('h2', 'h2'); h.textContent = COPY.s9.title;
-      const row = node('div', 'split');
-      COPY.s9.people.forEach(p => row.append(CallWindow({
-        name: p.name, photo: ASSETS[p.photo], photoLabel: p.photo + '.jpg', compact: true
-      })));
-      col.append(h, row);
+      const c = COPY.r1;
+      const col = node('div', 'round');
+      const label = node('h2', 'round-head');
+      label.append(words(c.heading));
+      label.querySelectorAll('.w').forEach(w => { w.style.opacity = '1'; });
+      const daniel = SpeakerRow({ ...c.daniel, photo: ASSETS.danielAvatar });
+      const arjun = SpeakerRow({ ...c.arjun, photo: ASSETS.arjun });
+      daniel.classList.add('daniel'); arjun.classList.add('arjun');
+      col.append(label, daniel, arjun);
       this.el.append(col);
-    }, play(t){ return playHold(this, t); } },
-  { id: 's10', name: 'Next morning', plannedMs: 9000, build(){
+      col.querySelectorAll('canvas').forEach(cv => Waveform(cv, () => 0)(0));
+    }, async play(t){
+      /* Daniel asks the question Sarah's Twin warned about; Arjun already has his deal ready. */
+      const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
+      const label = this.el.querySelector('.round-head');
+      const headWords = [...label.querySelectorAll('.w')];
+      const rows = { daniel: this.el.querySelector('.sp-row.daniel'), arjun: this.el.querySelector('.sp-row.arjun') };
+      const levels = { daniel: () => 0, arjun: () => 0 };
+      const draws = Object.keys(rows).map(k => Waveform(rows[k].querySelector('canvas'), () => levels[k]()));
+      const sceneClock = clock;
+      const loop = () => {
+        if (sceneClock.dead || clock !== sceneClock) return;
+        if (!sceneClock.paused) draws.forEach(d => d(sceneClock.elapsed));
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+      let at = 0;
+      const burn = async ms => {
+        at += ms;
+        const left = at - clock.elapsed;
+        if (left > 0) await t(left);
+      };
+      const rowIn = row => t.animate(row, [
+        { opacity: 0, transform: 'translateY(14px)' },
+        { opacity: 1, transform: 'translateY(0px)' }
+      ], { duration: R1.ROW_IN, easing: EASE_OUT }).catch(swallow);
+      const speak = async key => {
+        const row = rows[key];
+        const said = speakWords(t, [...row.querySelectorAll('.sp-tx span')], COPY.r1[key].lines, swallow);
+        levels[key] = said.level;
+        row.classList.add('speaking');
+        await burn(said.total);
+        row.querySelectorAll('.sp-tx span').forEach(w => { w.style.opacity = '1'; });
+        row.classList.remove('speaking');
+        levels[key] = () => 0;
+      };
+
+      /* Headline reveals word by word, then Daniel's row comes in under it. */
+      headWords.forEach(w => { w.style.opacity = '0'; });
+      revealWords(t, headWords, { stagger: R1.HEAD_STAGGER, payoff: P1_PAYOFF_EXTRA_MS, from: 'rgba(245,243,240,.35)', to: '#F5F3F0' }, swallow);
+      await burn(R1.HEAD);
+      headWords.forEach(w => { w.style.opacity = '1'; w.style.color = '#F5F3F0'; });
+      rowIn(rows.daniel);
+      await burn(R1.IN);
+      rows.daniel.style.opacity = '1';
+      await speak('daniel');
+      t.animate(rows.daniel, [{ opacity: 1 }, { opacity: R1.DIM }], { duration: 300, easing: EASE_OUT }).catch(swallow);
+      await burn(R1.BEAT);
+      rows.daniel.style.opacity = String(R1.DIM);
+      rowIn(rows.arjun);
+      await burn(R1.ROW_IN);
+      rows.arjun.style.opacity = '1';
+      await speak('arjun');
+      await burn(R1.HOLD);
+    } },
+  { id: 'dm', name: 'The message', plannedMs: 5600, build(){
       blank(this);
-      const col = node('div', 'stack frame');
-      const k = node('div', 'pay-kicker'); k.textContent = COPY.s10.when;
-      const count = node('div', 'pay-count'); count.textContent = COPY.s10.count;
-      const list = node('div', 'pay-list'); list.textContent = COPY.s10.list;
-      const rows = node('div', 'rows');
-      COPY.s10.rows.forEach(text => { const r = node('div', 'row'); r.textContent = text; rows.append(r); });
-      const hi = node('div', 'row accent');
-      hi.append(document.createTextNode(COPY.arjunQuestion));
-      const badge = node('div', 'badge'); badge.textContent = COPY.s10.badge;
-      hi.append(badge);
-      rows.append(hi);
-      col.append(k, count, list, rows);
-      this.el.append(col);
-    }, play(t){ return playHold(this, t); } },
-  { id: 's11', name: "Sarah's reaction", plannedMs: 2000, dark: true, build(){ blank(this); this.el.append(Footage(COPY.s11)); }, play(t){ return playHold(this, t); } },
-  { id: 's12', name: 'End card', plannedMs: titleMs(3, 5), build(){ blank(this); this.el.append(EndCard()); }, play(t){ return playTitle(this, t); } }
+      this.el.classList.add('desk');
+      this.el.append(node('div', 'haze drift'), SlackCard());
+    }, async play(t){
+      /* Card rises with Daniel's message, grows for Sarah's 🎉 🥳, confetti bursts around the card
+         and one diagonal shine crosses it. 500 + 1900 + 400 + 2800 party/hold = 5600. */
+      const RISE = 500, READ = 1900, EXTEND = 400, POP = 460, POP_STAGGER = 130, SHINE_AT = 180, SHINE = 1000;
+      const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
+      const card = this.el.querySelector('.sk-card');
+      const reply = card.querySelector('.sk-reply');
+      const replyRow = reply.querySelector('.sk-msg');
+      const emoji = [...reply.querySelectorAll('p span')];
+      const shine = card.querySelector('.sk-shine');
+      let at = 0;
+      const burn = async ms => {
+        at += ms;
+        const left = at - clock.elapsed;
+        if (left > 0) await t(left);
+      };
+      t.animate(this.el.querySelector('.haze'), [
+        { backgroundPosition: '0% 0%' },
+        { backgroundPosition: '4% 3%' }
+      ], { duration: this.plannedMs, easing: 'linear' }).catch(swallow);
+      card.style.opacity = '0';
+      t.animate(card, [
+        { opacity: 0, transform: 'translateY(22px) scale(.98)' },
+        { opacity: 1, transform: 'translateY(0px) scale(1)' }
+      ], { duration: RISE, easing: EASE_OUT }).catch(swallow);
+      await burn(RISE);
+      card.style.opacity = '1';
+      await burn(READ);
+
+      /* Grow the card first so the confetti origins are measured on its final size. */
+      const h = replyRow.offsetHeight;
+      emoji.forEach(e => { e.style.opacity = '0'; });
+      replyRow.style.opacity = '1';
+      t.animate(reply, [{ height: '0px' }, { height: h + 'px' }], { duration: EXTEND, easing: EASE_OUT }).catch(swallow);
+      await burn(EXTEND);
+      reply.style.height = h + 'px';
+
+      emoji.forEach((e, i) => t.animate(e, [
+        { opacity: 0, transform: 'scale(.3) rotate(-12deg)' },
+        { opacity: 1, transform: 'scale(1.25) rotate(6deg)', offset: .55 },
+        { opacity: 1, transform: 'scale(1) rotate(0deg)' }
+      ], { duration: POP, delay: i * POP_STAGGER, easing: EASE_OUT }).catch(swallow));
+      const cr = stageRect(card), er = stageRect(emoji[0]);
+      burstConfetti(t, this.el, { x: cr.x + 24, y: cr.y + cr.h - 24, dir: -125, spread: 50, count: 38, speed: 1250, seed: 7 }, swallow);
+      burstConfetti(t, this.el, { x: cr.x + cr.w - 24, y: cr.y + cr.h - 24, dir: -55, spread: 50, count: 38, speed: 1250, seed: 11 }, swallow);
+      burstConfetti(t, this.el, { x: er.x + er.w, y: er.y + er.h / 2, dir: -90, spread: 300, count: 22, speed: 620, seed: 3 }, swallow);
+      t.animate(shine, [{ transform: 'translateX(-130%)' }, { transform: 'translateX(130%)' }],
+        { duration: SHINE, delay: SHINE_AT, easing: 'cubic-bezier(.45,0,.25,1)' }).catch(swallow);
+      t.animate(card, [
+        { boxShadow: '0 0 0 .5px rgba(22,20,26,.08), 0 28px 70px rgba(22,20,26,.14)' },
+        { boxShadow: '0 0 0 1.5px rgba(139,92,246,.55), 0 28px 80px rgba(110,53,201,.28)', offset: .5 },
+        { boxShadow: '0 0 0 .5px rgba(22,20,26,.08), 0 28px 70px rgba(22,20,26,.14)' }
+      ], { duration: SHINE + 200, delay: SHINE_AT, easing: 'ease-in-out' }).catch(swallow);
+      await burn(POP + POP_STAGGER);
+      emoji.forEach(e => { e.style.opacity = '1'; });
+      await burn(this.plannedMs - at);
+    } },
+  { id: 's12', name: 'End card', get plannedMs(){ return titleMs(3, 5) + END.OUT + END.IN + END.HOLD; },
+    build(){ blank(this); this.el.append(EndCard()); },
+    async play(t){
+      /* Beat 1: the tagline reveals like the other title cards. Beat 2: it lifts away and the
+         logo, CTA, QR and URL come in one by one. */
+      const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
+      await playTitle(this, t);
+      const frame = this.el.querySelector('.titlecard .frame');
+      await t.animate(frame, [
+        { opacity: 1, transform: 'translateY(0px)' },
+        { opacity: 0, transform: 'translateY(-24px)' }
+      ], { duration: END.OUT, easing: EASE_IN }).catch(swallow);
+      frame.style.opacity = '0';
+      const parts = [...this.el.querySelectorAll('.endcta > *')];
+      parts.forEach((el, i) => t.animate(el, [
+        { opacity: 0, transform: el.classList.contains('qr-card') ? 'translateY(16px) scale(.96)' : 'translateY(16px)' },
+        { opacity: 1, transform: 'translateY(0px) scale(1)' }
+      ], { duration: END.PART, delay: i * END.STAGGER, easing: EASE_OUT }).catch(swallow));
+      await t(END.IN);
+      parts.forEach(el => { el.style.opacity = '1'; });
+      await t(END.HOLD);
+    } }
 ];
 
 SCENES.forEach(scene => {
@@ -1086,9 +1938,13 @@ SCENES.forEach(scene => {
 });
 Cursor.mount(CAM);
 
-let token = 0, clock = null, state = 'ready', index = 0;
-let digitBuf = '', digitAt = 0, panelHidden = false;
+/* state: ready (key frame) · playing · paused · done (held on last frame).
+   mode: film plays on through the scenes, scene stops after the current one. */
+let token = 0, clock = null, state = 'ready', mode = 'film', index = 0;
+let panelHidden = false;
 const TOTAL_MS = SCENES.reduce((sum, scene) => sum + scene.plannedMs, 0);
+const SCENE_KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal'];
+const STATE_LABEL = { ready: 'Ready', playing: 'Playing', paused: 'Paused', done: 'Done' };
 
 function filmBase(i){ let ms = 0; for (let k = 0; k < i; k++) ms += SCENES[k].plannedMs; return ms; }
 function fmt(ms){
@@ -1099,16 +1955,17 @@ function fmt(ms){
 }
 function times(){
   if (state === 'ready' || !clock) return { scene: 0, film: filmBase(index) };
-  return { scene: clock.elapsed, film: filmBase(index) + clock.elapsed };
+  const scene = Math.min(clock.elapsed, SCENES[index].plannedMs);
+  return { scene, film: filmBase(index) + scene };
 }
 function paint(){
   const scene = SCENES[index];
   const t = times();
-  document.getElementById('p-scene').textContent = 'Scene ' + (index + 1) + '/12';
+  document.getElementById('p-scene').textContent = 'Scene ' + (index + 1) + '/' + SCENES.length;
   document.getElementById('p-name').textContent = scene.name;
-  document.getElementById('p-state').textContent = state === 'playing' ? 'Playing' : state === 'paused' ? 'Paused' : 'Ready';
+  document.getElementById('p-state').textContent = STATE_LABEL[state] + ' · ' + (mode === 'film' ? 'Film' : 'Scene') + ' mode';
   document.getElementById('p-time').textContent = 'Scene ' + fmt(t.scene) + ' / ' + fmt(scene.plannedMs) + '    Film ' + fmt(t.film) + ' / ' + fmt(TOTAL_MS);
-  document.getElementById('panel').classList.toggle('hide', panelHidden);
+  document.getElementById('panel').classList.toggle('hide', panelHidden || state === 'playing');
 }
 function bindClock(c){
   const t = ms => c.wait(ms);
@@ -1129,17 +1986,20 @@ function selectScene(i){
   if (i < 0 || i >= SCENES.length) return;
   token++;
   if (clock){ clock.cancel(); clock = null; }
-  state = 'ready'; index = i; digitBuf = '';
+  state = 'ready'; index = i;
   hideOthers(i);
   const scene = SCENES[i];
   scene.el.classList.add('on');
   scene.build();
   paint();
 }
-async function playThrough(from){
+async function play(from, playMode){
   const my = ++token;
+  if (clock){ clock.cancel(); clock = null; }
+  mode = playMode;
   state = 'playing';
-  for (let i = from; i < SCENES.length; i++){
+  const last = mode === 'scene' ? from : SCENES.length - 1;
+  for (let i = from; i <= last; i++){
     if (token !== my) return;
     index = i;
     const scene = SCENES[i];
@@ -1153,7 +2013,7 @@ async function playThrough(from){
     try {
       await scene.play(t);
       if (token !== my) return;
-      if (i < SCENES.length - 1) await exitEl(scene.el, t);
+      if (i < last && !scene.handoff) await exitEl(scene.el, t);
     } catch (err){
       if (token !== my || err === CANCEL) return;
       console.error(err);
@@ -1163,39 +2023,39 @@ async function playThrough(from){
     if (clock) clock.pause();
   }
   if (token !== my) return;
-  state = 'ready';
+  state = 'done';
   paint();
 }
-function onP(){
-  if (state === 'playing'){ state = 'paused'; if (clock) clock.pause(); paint(); return; }
-  if (state === 'paused'){ state = 'playing'; if (clock) clock.resume(); paint(); return; }
-  playThrough(index);
+function togglePause(){
+  if (state === 'playing'){ state = 'paused'; if (clock) clock.pause(); }
+  else if (state === 'paused'){ state = 'playing'; if (clock) clock.resume(); }
+  paint();
 }
-function onDigit(d){
-  const now = performance.now();
-  const open = digitBuf && (now - digitAt < DIGIT_MS);
-  if (open && digitBuf === '1' && (d === '0' || d === '1' || d === '2')){
-    digitBuf = '';
-    selectScene(9 + Number(d));
-    return;
-  }
-  digitBuf = d;
-  digitAt = now;
+function onSpace(){
+  if (state === 'playing' || state === 'paused') togglePause();
+  else play(index, 'film');
+}
+function onEnter(){
+  if (state === 'paused' && mode === 'scene') togglePause();
+  else play(index, 'scene');
 }
 function uiTick(){
-  if (digitBuf && performance.now() - digitAt >= DIGIT_MS){
-    const n = Number(digitBuf);
-    digitBuf = '';
-    if (n >= 1 && n <= 9) selectScene(n - 1);
-  }
-  if (state !== 'ready') paint();
+  if (state === 'playing' || state === 'paused') paint();
   requestAnimationFrame(uiTick);
 }
 addEventListener('keydown', e => {
-  if (e.repeat) return;
-  if (e.key >= '0' && e.key <= '9'){ e.preventDefault(); onDigit(e.key); return; }
-  if (e.key === 'p' || e.key === 'P'){ e.preventDefault(); onP(); }
-  else if (e.key === 'h' || e.key === 'H'){ e.preventDefault(); panelHidden = !panelHidden; paint(); }
+  if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+  const n = SCENE_KEYS.indexOf(e.code);
+  if (n >= 0){ e.preventDefault(); selectScene(n); return; }
+  switch (e.code){
+    case 'ArrowLeft': e.preventDefault(); selectScene(index - 1); break;
+    case 'ArrowRight': e.preventDefault(); selectScene(index + 1); break;
+    case 'Space': e.preventDefault(); onSpace(); break;
+    case 'Enter': case 'NumpadEnter': e.preventDefault(); onEnter(); break;
+    case 'KeyR': e.preventDefault(); play(index, mode); break;
+    case 'Escape': e.preventDefault(); selectScene(index); break;
+    case 'KeyH': e.preventDefault(); panelHidden = !panelHidden; paint(); break;
+  }
 });
 selectScene(0);
 requestAnimationFrame(uiTick);
