@@ -86,6 +86,7 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .phone .missing{background:#2A2B33;color:rgba(255,255,255,.5);font-size:18px}
 .phone-shade{position:absolute;inset:0;z-index:3;pointer-events:none;
   background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 72%,rgba(0,0,0,.45))}
+.phone-top span{display:block;margin-top:2px;font-size:18px;font-weight:500;color:rgba(255,255,255,.72)}
 .phone-top{position:absolute;z-index:4;top:0;left:0;right:0;padding:30px 20px;text-align:center;color:#fff;font-size:26px;font-weight:600;letter-spacing:-.01em}
 .phone-ring{position:absolute;z-index:4;left:0;right:0;top:44%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:20px}
 .ring-wrap{position:relative;width:210px;height:210px;display:grid;place-items:center}
@@ -128,7 +129,8 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .tcard .missing{background:#2A2B33;color:rgba(255,255,255,.5);font-size:16px}
 .tcard-top{position:absolute;z-index:4;top:0;left:0;right:0;padding:23px 16px;text-align:center;color:#fff}
 .tcard-top b{display:block;font-size:20px;font-weight:600;letter-spacing:-.01em}
-.tcard-top span{display:block;margin-top:2px;font-size:16px;color:rgba(255,255,255,.72)}
+/* 14px here is 18px at hand-off scale (470/360), matching the call card's trust line. */
+.tcard-top span{display:block;margin-top:2px;font-size:14px;font-weight:500;color:rgba(255,255,255,.72)}
 .tcard .phone-ctl{bottom:28px;gap:22px}
 .tcard .phone-ctl span{width:58px;height:58px}
 .tcard .phone-ctl svg{width:24px;height:24px}
@@ -145,8 +147,6 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .fh-line .w{opacity:0;color:#9A96A0}
 .scene.desk .haze{z-index:0}
 .haze.drift{background-size:118% 118%,118% 118%,118% 118%,118% 118%,auto;background-repeat:no-repeat}
-.desk-bar{position:absolute;top:0;left:0;right:0;z-index:3;height:48px;display:flex;align-items:center;justify-content:flex-end;padding:0 36px;
-  font-size:16px;font-weight:500;color:rgba(22,20,26,.5)}
 .mail-win{position:relative;z-index:1;width:1500px;height:880px;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
   box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 28px 70px rgba(22,20,26,.12)}
 .mail-title{flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#f6f6f6;border-bottom:1px solid #e6e6e6}
@@ -260,9 +260,11 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 /* Nudged above centre so the headline has air above it and a clear gap to the transcript. */
 .round{width:1100px;display:flex;flex-direction:column;gap:22px;margin-top:-70px}
 /* Same headline style as scene 1, in light ink for the dark call scenes. */
-.round-head{align-self:center;margin:0 0 84px;text-align:center;font-family:var(--display);font-weight:600;font-size:64px;line-height:1.1;
+.round-head{align-self:center;margin:0 0 84px;text-align:center;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:64px;line-height:1.1;
   letter-spacing:-.035em;color:#F5F3F0}
 .round-head .w{opacity:0}
+/* Callback phrase ("a deal you almost lost") highlighted wherever it appears on dark scenes. */
+.hl{color:#C9B8F0}
 .sp-row{display:flex;gap:24px;align-items:flex-start;padding:28px 32px;border-radius:26px;background:rgba(255,255,255,.04);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);color:#F5F3F0;opacity:0}
 .sp-row .avatar{transition:box-shadow .2s}
@@ -398,6 +400,7 @@ const COPY = {
   s3: {
     time: 'now',
     inbox: 'Inbox',
+    window: 'Sarah Lin \u00b7 Inbox',
     role: 'Enterprise AE',
     countFinal: '1,200+',
     incoming: 'New application · Enterprise AE',
@@ -410,7 +413,7 @@ const COPY = {
       "What's the team like?"
     ]
   },
-  s4: ["Some answers only you know.", "So build your Digital Twin."],
+  s4: ["Some answers only you know.", "So share your Digital Twin."],
   s6: {
     company: 'Northwind',
     title: 'Enterprise Account Executive',
@@ -431,6 +434,7 @@ const COPY = {
   /* Caption ms are on-screen times. Retime them to the final voice track. */
   s8: {
     header: "Sarah's Twin",
+    trust: 'Trained by Sarah \u00b7 approved answers',
     connecting: 'Connecting…',
     asker: 'Arjun Mehta',
     askerSub: 'Candidate',
@@ -447,7 +451,7 @@ const COPY = {
       { text: 'Two of our best reps came from fintech.', ms: 2250 },
       { text: 'Daniel, our sales lead,', ms: 1150 },
       { text: 'wants six-figure deals closed through procurement.', ms: 2350 },
-      { text: 'My tip: prep one deal you almost lost.', ms: 2670 },
+      { text: 'My tip: prep *one deal you almost lost.*', ms: 2670 },
       { text: 'He always asks.', ms: 960 }
     ]
   },
@@ -456,15 +460,15 @@ const COPY = {
     people: [
       { name: "Sarah's Twin", role: 'Recruiter', use: 'Process, timeline, offer', photo: 'sarah', clip: 'sarahListen' },
       /* crop: Daniel was shot wider, so zoom in until his face matches Sarah's size and eye line. */
-      { name: "Daniel's Twin", role: 'Sales lead', use: 'What the bar really is', photo: 'daniel', clip: 'danielIdle',
+      { name: "Daniel's Twin", role: 'Sales lead \u00b7 Hiring manager', use: 'What the bar really is', photo: 'daniel', clip: 'danielIdle',
         crop: { transform: 'translateY(8%) scale(1.3)', origin: '50% 27%' } },
       { name: "Mei's Twin", role: 'Account Executive', use: 'What the job is actually like', photo: 'mei', clip: 'meiIdle',
         crop: { transform: 'translateY(3%) scale(1.1)', origin: '50% 30%' } }
     ]
   },
   r1: {
-    heading: 'Face to face. Round 1.',
-    daniel: { name: 'Daniel', role: 'Sales lead', lines: [{ text: 'Walk me through a deal you almost lost.', ms: 2400 }] },
+    heading: 'So the face-to-face interview just clicks.',
+    daniel: { name: 'Daniel', role: 'Hiring manager', lines: [{ text: 'Walk me through *a deal you almost lost.*', ms: 2400 }] },
     arjun: { name: 'Arjun Mehta', role: 'Candidate', lines: [
       { text: 'A two-point-four million deal with a regional bank.', ms: 2700 },
       { text: 'We nearly lost it in procurement, so…', ms: 1900 }
@@ -472,7 +476,7 @@ const COPY = {
   },
   dm: {
     channel: '#northwind-hiring',
-    daniel: { name: 'Daniel', time: '4:12 PM', text: 'Arjun crushed the interview. Had his \u201calmost lost\u201d deal ready before I asked. Moving him to final.' },
+    daniel: { name: 'Daniel', time: '4:12 PM', text: 'Arjun crushed the interview. Had his \u201calmost lost\u201d deal ready the second I asked. Moving him to final.' },
     sarah: { name: 'Sarah', time: '4:13 PM', emoji: ['🎉', '🥳'] }
   },
   s12: {
@@ -494,6 +498,17 @@ const I = {
   out: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>'
 };
 
+/* Copy can mark a phrase with *asterisks*; those words get the .hl highlight. Returns [{ word, hl }]. */
+function marked(textValue){
+  let on = false;
+  return textValue.split(' ').map(raw => {
+    const starts = raw.startsWith('*'), ends = raw.endsWith('*') || raw.endsWith('*.') || raw.endsWith('*?');
+    if (starts) on = true;
+    const item = { word: raw.replace(/\*/g, ''), hl: on };
+    if (ends) on = false;
+    return item;
+  });
+}
 function node(tag, className){ const n = document.createElement(tag); if (className) n.className = className; return n; }
 function icon(html){ const s = node('span', 'ico'); s.innerHTML = html; return s; }
 function words(text){
@@ -716,6 +731,7 @@ function PhoneCall(){
   answer.querySelector('video').loop = false;
   answer.querySelector('video').muted = answer.querySelector('video').defaultMuted = !CALL_AUDIO;
   const top = text('div', 'phone-top', c.header);
+  top.append(text('span', '', c.trust));
   const ring = node('div', 'phone-ring');
   const wrap = node('div', 'ring-wrap');
   wrap.append(node('i', 'pulse'), node('i', 'pulse'), portrait(ASSETS.sarah, 'Sarah Lin', 150, true));
@@ -764,7 +780,10 @@ function SpeakerRow({ name, role, photo, lines }){
   wave.width = 640; wave.height = 96;
   head.append(text('span', 'sp-nm', name), text('span', 'sp-role', role), wave);
   const tx = node('div', 'sp-tx');
-  lines.forEach((line, i) => line.text.split(' ').forEach((word, j) => { if (i || j) tx.append(' '); tx.append(text('span', '', word)); }));
+  lines.forEach((line, i) => marked(line.text).forEach(({ word, hl }, j) => {
+    if (i || j) tx.append(' ');
+    tx.append(text('span', hl ? 'hl' : '', word));
+  }));
   body.append(head, tx);
   row.append(portrait(photo, name, 84, true), body);
   return row;
@@ -775,7 +794,7 @@ function speakWords(t, words, lines, swallow){
   const start = clock.elapsed, windows = [];
   let off = 0, w = 0;
   lines.forEach(line => {
-    const n = line.text.split(' ').length, talk = line.ms * S8.TALK;
+    const n = marked(line.text).length, talk = line.ms * S8.TALK;
     windows.push([off, off + talk]);
     for (let k = 0; k < n; k++, w++){
       t.animate(words[w], [{ opacity: 0 }, { opacity: 1 }],
@@ -897,7 +916,7 @@ function InboxPanel(){
   const title = node('div', 'mail-title');
   const lights = node('span', 'lights');
   lights.append(node('i'), node('i'), node('i'));
-  const titleText = node('b'); titleText.textContent = 'Inbox';
+  const titleText = node('b'); titleText.textContent = COPY.s3.window;
   title.append(lights, titleText);
   const body = node('div', 'mail-body');
   const side = node('div', 'mail-side');
@@ -963,14 +982,11 @@ function revealWords(t, list, { stagger, delay = 0, payoff = 0, from = '#9A96A0'
 function mountFlood(scene){
   scene.el.classList.add('desk');
   const haze = node('div', 'haze drift');
-  const bar = node('div', 'desk-bar');
-  const when = node('span'); when.textContent = 'Wed 9:41';
-  bar.append(when);
   const panel = InboxPanel();
   /* The inbox sits below the headline band and runs off the bottom of the frame. Absolute so it
      isn't re-centred by the scene's flex layout when it overflows. */
   Object.assign(panel.el.style, { position: 'absolute', top: S3.PANEL_TOP + 'px', left: (1920 - 1500) / 2 + 'px' });
-  scene.el.replaceChildren(haze, bar, panel.el);
+  scene.el.replaceChildren(haze, panel.el);
   return panel;
 }
 
@@ -1259,8 +1275,8 @@ const S9 = {
 /* Scene 8 beats. Speaking time follows the line ms in COPY.r1. */
 const R1 = {
   IN: 480, ROW_IN: 420, BEAT: 300, HOLD: 900, DIM: .55,
-  /* Headline: 5 words at 220ms + payoff beat + 170ms reveal + a short read. */
-  HEAD_STAGGER: 220, get HEAD(){ return 4 * this.HEAD_STAGGER + P1_PAYOFF_EXTRA_MS + 170 + 450; },
+  /* Headline: one word every 220ms + payoff beat before the last + 170ms reveal + a short read. */
+  HEAD_STAGGER: 220, get HEAD(){ return (COPY.r1.heading.split(' ').length - 1) * this.HEAD_STAGGER + P1_PAYOFF_EXTRA_MS + 170 + 450; },
   total(){
     const sum = list => list.reduce((a, l) => a + l.ms, 0);
     return this.HEAD + this.IN + sum(COPY.r1.daniel.lines) + this.BEAT + this.ROW_IN + sum(COPY.r1.arjun.lines) + this.HOLD;
@@ -1684,7 +1700,8 @@ const SCENES = [
       });
       for (let i = 0; i < lines.length; i++){
         if (synced) await reach(cueAt[i]);
-        cap.textContent = lines[i].text;
+        cap.replaceChildren();
+        marked(lines[i].text).forEach(({ word, hl }, j) => { if (j) cap.append(' '); cap.append(text('span', hl ? 'hl' : '', word)); });
         t.animate(cap, [
           { opacity: i ? .35 : 0, transform: 'translateY(6px)' },
           { opacity: 1, transform: 'translateY(0px)' }
@@ -1722,7 +1739,8 @@ const SCENES = [
       const [sarah, ...rest] = [...this.el.querySelectorAll('.tcard')];
       const r = stageRect(sarah);
       sarah.style.transform = `translate(${960 - (r.x + r.w / 2)}px, ${540 - (r.y + r.h / 2)}px) scale(${S9.BIG / r.w})`;
-      sarah.querySelector('.tcard-top span').style.opacity = '0';
+      /* Hand-off frame shows the call card's trust line; it becomes "Recruiter" as the card shrinks. */
+      sarah.querySelector('.tcard-top span').textContent = COPY.s8.trust;
       const clip = sarah.querySelector('.tclip video');
       if (clip && S8.handoff && performance.now() - S8.handoff.at < 1500){
         /* A fresh <video> has no metadata yet, so seek once it does. */
@@ -1747,8 +1765,12 @@ const SCENES = [
         if (left > 0) await t(left);
       };
       await burn(S9.HOLD);
-      t.animate(sarah.querySelector('.tcard-top span'), [{ opacity: 0 }, { opacity: 1 }],
-        { duration: 300, delay: S9.SHRINK / 2, easing: EASE_OUT }).catch(swallow);
+      const role = sarah.querySelector('.tcard-top span');
+      t.animate(role, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: EASE_IN }).catch(swallow);
+      t(160).then(() => {
+        role.textContent = COPY.s9.people[0].role;
+        t.animate(role, [{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: EASE_OUT }).catch(swallow);
+      }).catch(swallow);
 
       t.animate(sarah, [{ transform: sarah.style.transform }, { transform: 'none' }],
         { duration: S9.SHRINK, easing: 'cubic-bezier(.65,0,.35,1)' }).catch(swallow);
