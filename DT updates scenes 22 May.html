@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DT Updates — 22 May · Digital Twin Home</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #f5f3f0;
+  --bg-surface: #ffffff;
+  --bg-card: #faf9f7;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.10);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #9a9a9a;
+  --accent: #a196eb;
+  --accent-strong: #6d5ce8;
+  --accent-chip-bg: #6d5ce8;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.09);
+  --radius: 12px;
+  --font-main: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --dt-sidebar-bg: #f7f7f7;
+  --dt-divider: rgba(0,0,0,0.08);
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ambient-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 22% 18%, rgba(186, 214, 240, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 85% 92%, rgba(168, 198, 230, 0.50) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 55% at 60% 50%, rgba(220, 234, 246, 0.55) 0%, transparent 70%),
+    linear-gradient(135deg, #eaf2f9 0%, #e3edf6 45%, #dde8f4 100%);
+  z-index: 0;
+}
+.ambient-grain {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+#dtScene {
+  position: fixed;
+  inset: 0;
+  display: block;
+  z-index: 1;
+  padding: 48px;
+}
+
+.dt-window {
+  position: absolute;
+  inset: 48px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 1px 3px rgba(0,0,0,0.05),
+    0 8px 32px rgba(0,0,0,0.09);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.dt-window-titlebar {
+  height: 36px;
+  flex-shrink: 0;
+  background: #f1efeb;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 8px;
+}
+.dt-window-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dt-window-dot.red { background: #ff5f57; }
+.dt-window-dot.yellow { background: #febc2e; }
+.dt-window-dot.green { background: #28c840; }
+
+#dtScene,
+#dtScene * {
+  scrollbar-width: none;
+}
+#dtScene::-webkit-scrollbar,
+#dtScene *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.dt-app-shell {
+  flex: 1;
+  display: flex;
+  background: #ffffff;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ---- Sidebar ---- */
+.dt-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--dt-sidebar-bg);
+  border-right: 1px solid var(--dt-divider);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px 14px;
+  font-size: 13px;
+  transition: width 0.35s ease, padding 0.35s ease;
+  overflow: hidden;
+}
+.dt-logo-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 6px 18px;
+}
+.dt-logo-mark {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.dt-logo-mark svg { width: 22px; height: 22px; display: block; }
+.dt-logo-text {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+  flex: 1;
+  white-space: nowrap;
+}
+.dt-logo-toggle {
+  width: 18px; height: 18px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.dt-nav {
+  display: flex; flex-direction: column;
+  gap: 2px;
+}
+.dt-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: default;
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+}
+.dt-nav-item.active {
+  background: rgba(0,0,0,0.05);
+  font-weight: 600;
+}
+.dt-nav-icon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.dt-sidebar-spacer { flex: 1; }
+
+.dt-profile {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+.dt-profile-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #8b7fd4 0%, #6d5ce8 100%);
+}
+.dt-profile-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.dt-profile-name { font-size: 12.5px; font-weight: 600; }
+.dt-profile-email { font-size: 11px; color: var(--text-secondary); }
+.dt-profile-caret {
+  width: 14px; height: 14px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* Collapsed sidebar */
+.dt-app-shell.is-collapsed .dt-sidebar {
+  width: 52px;
+  padding: 14px 6px;
+}
+.dt-app-shell.is-collapsed .dt-logo-row {
+  padding: 4px 0 18px;
+  justify-content: center;
+}
+.dt-app-shell.is-collapsed .dt-nav-item {
+  padding: 8px 0;
+  justify-content: center;
+  gap: 0;
+  font-size: 0;
+  color: transparent;
+}
+.dt-app-shell.is-collapsed .dt-logo-text,
+.dt-app-shell.is-collapsed .dt-logo-toggle,
+.dt-app-shell.is-collapsed .dt-profile-meta,
+.dt-app-shell.is-collapsed .dt-profile-caret {
+  display: none;
+}
+.dt-app-shell.is-collapsed .dt-profile {
+  justify-content: center;
+  padding: 6px 0;
+  gap: 0;
+}
+
+/* ---- Main ---- */
+.dt-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dt-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--dt-divider);
+  background: #fff;
+}
+.dt-topbar-user {
+  display: flex; align-items: center; gap: 12px;
+}
+.dt-topbar-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #9a8fd8 0%, #6d5ce8 100%);
+}
+.dt-topbar-meta { display: flex; flex-direction: column; gap: 2px; }
+.dt-topbar-name { font-size: 14px; font-weight: 600; letter-spacing: -0.2px; }
+.dt-topbar-role {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex; align-items: center; gap: 6px;
+}
+.dt-topbar-role svg { width: 12px; height: 12px; opacity: 0.65; }
+.dt-topbar-actions {
+  display: flex; align-items: center; gap: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.dt-topbar-btn {
+  display: flex; align-items: center; gap: 6px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: default;
+}
+.dt-topbar-btn svg { width: 15px; height: 15px; opacity: 0.75; }
+
+.dt-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: auto;
+}
+
+.dt-content {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 32px 40px 48px;
+}
+
+.dt-greeting {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+/* Composer */
+.dt-composer-wrap {
+  border: 1px solid var(--dt-divider);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+.dt-composer-input {
+  padding: 18px 18px 14px;
+  font-size: 15px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+  min-height: 44px;
+}
+.dt-composer-pills {
+  border-top: 1px solid var(--dt-divider);
+  padding: 12px 14px 14px;
+}
+.dt-composer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--dt-divider);
+}
+.dt-toolbar-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.dt-toolbar-icon svg { width: 16px; height: 16px; }
+.dt-toolbar-spacer { flex: 1; }
+.dt-auto-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--dt-divider);
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: #fff;
+}
+.dt-auto-pill svg { width: 14px; height: 14px; color: var(--accent-strong); }
+.dt-send-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  border: none;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+.dt-send-btn svg { width: 16px; height: 16px; }
+
+.dt-prompt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+}
+.dt-prompt-chip {
+  padding: 9px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.1px;
+  max-width: 100%;
+  text-align: left;
+  cursor: default;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.dt-prompt-chip.is-hover {
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(34, 197, 94, 0.08);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2);
+}
+.dt-prompt-chip.is-link {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 9px 4px;
+  box-shadow: none;
+}
+.dt-prompt-chip.is-link.is-hover {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  box-shadow: none;
+}
+.dt-prompt-chip.is-link svg { width: 12px; height: 12px; opacity: 0.7; }
+
+.dt-responsible {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 40px;
+}
+.dt-responsible svg { width: 12px; height: 12px; opacity: 0.7; }
+
+/* Recent chats */
+.dt-recent-head {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin-bottom: 16px;
+}
+.dt-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--dt-divider);
+  border-radius: 10px;
+  background: #fff;
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: var(--text-tertiary);
+}
+.dt-search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
+.dt-search-bar.is-focused {
+  border-color: rgba(109, 92, 232, 0.45);
+  box-shadow: 0 0 0 3px rgba(109, 92, 232, 0.1);
+}
+.dt-search-query {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  min-height: 20px;
+}
+.dt-search-placeholder {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-tertiary);
+}
+.dt-search-bar.is-typing .dt-search-placeholder { display: none; }
+
+.dt-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.dt-filter {
+  padding: 6px 14px;
+  border: 1px solid var(--dt-divider);
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: #fff;
+  white-space: nowrap;
+  font-family: inherit;
+  cursor: default;
+}
+.dt-filter.active {
+  background: var(--accent-chip-bg);
+  border-color: var(--accent-chip-bg);
+  color: #fff;
+}
+.dt-filter.is-hover:not(.active) {
+  background: rgba(109, 92, 232, 0.08);
+  border-color: rgba(109, 92, 232, 0.35);
+  color: var(--text-primary);
+}
+
+.dt-week-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.dt-feed {
+  transition: opacity 0.2s ease;
+}
+
+.dt-chat-card {
+  border: 1px solid var(--dt-divider);
+  border-radius: 12px;
+  background: #fff;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.dt-chat-card.is-hover {
+  border-color: rgba(109, 92, 232, 0.35);
+  box-shadow: 0 4px 20px rgba(109, 92, 232, 0.08);
+}
+.dt-chat-card.is-selected {
+  border-color: rgba(109, 92, 232, 0.55);
+  box-shadow: 0 4px 24px rgba(109, 92, 232, 0.14);
+}
+.dt-card-title {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.dt-msg-user {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.dt-msg-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #9a8fd8 0%, #6d5ce8 100%);
+}
+.dt-msg-body { flex: 1; min-width: 0; }
+.dt-msg-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.dt-msg-meta b { color: var(--text-primary); font-weight: 600; }
+.dt-msg-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+.dt-msg-twin {
+  padding-left: 44px;
+}
+.dt-twin-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.dt-twin-icon {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c4b8f0 0%, #8b7fd4 100%);
+  display: grid;
+  place-items: center;
+}
+.dt-twin-icon svg { width: 11px; height: 11px; color: #fff; }
+.dt-twin-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+.dt-show-more {
+  color: #4f6fd8;
+  font-weight: 500;
+  cursor: default;
+}
+.dt-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--dt-divider);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.dt-card-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.dt-card-action svg { width: 14px; height: 14px; opacity: 0.7; }
+.dt-card-action.is-hover {
+  color: #16a34a;
+  background: rgba(34, 197, 94, 0.12);
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25);
+}
+.dt-card-action.is-hover svg { opacity: 1; color: #16a34a; }
+.dt-card-actions.is-hidden { display: none; }
+
+.dt-thread-footer {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dt-thread-footer svg { width: 12px; height: 12px; }
+
+/* Scene 5 — static Recent Chats still frame */
+#dtScene5View { display: none; }
+.dt-app-shell.is-scene5 #dtHomeView { display: none; }
+.dt-app-shell.is-scene5 #dtScene5View { display: block; }
+
+.dt-app-shell.is-scene5 .dt-topbar-avatar--initial { display: none; }
+.dt-app-shell.is-scene5 .dt-topbar-avatar--photo { display: block; }
+
+.dt-filter.active-indigo {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+.dt-day-heading {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin: 4px 0 12px;
+}
+
+.dt-twin-head-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.dt-twin-head-row .dt-twin-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+}
+.dt-twin-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #16a34a;
+}
+.dt-twin-verified svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.dt-topbar-avatar--photo {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.dt-topbar-avatar--photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dt-avatar-photo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #e5e5e5;
+}
+.dt-avatar-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dt-avatar-ext {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: #22c55e;
+}
+
+.dt-card-action--positive {
+  color: #16a34a;
+  font-weight: 500;
+}
+.dt-card-action--positive svg {
+  opacity: 1;
+  color: #16a34a;
+}
+
+.scene-indicator {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-surface); border: 1px solid var(--border-medium);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; color: var(--text-tertiary); z-index: 100;
+  box-shadow: var(--shadow-sm); font-family: var(--font-mono);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+#dtFakeCursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 24px; height: 28px;
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0;
+}
+#dtFakeCursor svg { display: block; width: 24px; height: 28px; }
+
+.scene-indicator.hidden-ctrl { opacity: 0; pointer-events: none; }
+.scene-indicator kbd {
+  background: var(--bg-card); border: 1px solid var(--border-subtle);
+  padding: 1px 5px; border-radius: 4px; font-size: 11px; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="ambient-bg" aria-hidden="true"></div>
+<div class="ambient-grain" aria-hidden="true"></div>
+
+<section id="dtScene" aria-label="Digital Twin — Home &amp; Recent Chats">
+
+  <div id="dtWindow" class="dt-window">
+
+    <header class="dt-window-titlebar" aria-hidden="true">
+      <span class="dt-window-dot red"></span>
+      <span class="dt-window-dot yellow"></span>
+      <span class="dt-window-dot green"></span>
+    </header>
+
+    <div id="dtAppShell" class="dt-app-shell">
+
+      <aside class="dt-sidebar" aria-label="Primary navigation">
+        <div class="dt-logo-row">
+          <span class="dt-logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="#6d5ce8" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M12 12l8-5M12 12v10M12 12L4 7" stroke="#6d5ce8" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="dt-logo-text">Digital Twin</span>
+          <span class="dt-logo-toggle" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="9" y1="5" x2="9" y2="19"/></svg>
+          </span>
+        </div>
+
+        <nav class="dt-nav">
+          <button class="dt-nav-item active" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span>
+            New Chat
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            Search
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg></span>
+            Train My Twin
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.8"/><path d="M3 20c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 19c.4-2.4 2.5-4.2 4.8-4.2"/></svg></span>
+            People
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg></span>
+            Experts
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/><line x1="12" y1="3" x2="12" y2="7"/></svg></span>
+            Agents
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+            Meetings
+          </button>
+          <button class="dt-nav-item" type="button">
+            <span class="dt-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></span>
+            Library
+          </button>
+        </nav>
+
+        <div class="dt-sidebar-spacer"></div>
+
+        <div class="dt-profile">
+          <div class="dt-profile-avatar" aria-hidden="true">MR</div>
+          <div class="dt-profile-meta">
+            <span class="dt-profile-name">Maya Raman</span>
+            <span class="dt-profile-email">maya.raman@northstar.example</span>
+          </div>
+          <span class="dt-profile-caret" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </span>
+        </div>
+      </aside>
+
+      <div class="dt-main">
+        <header class="dt-topbar">
+          <div class="dt-topbar-user">
+            <div class="dt-topbar-avatar dt-topbar-avatar--initial" id="dtTopbarAvatarInitial" aria-hidden="true">MR</div>
+            <div class="dt-topbar-avatar dt-topbar-avatar--photo" id="dtTopbarAvatarPhoto" aria-hidden="true">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face" alt="" width="36" height="36">
+            </div>
+            <div class="dt-topbar-meta">
+              <span class="dt-topbar-name">Maya Raman</span>
+              <span class="dt-topbar-role">
+                Revenue Operations
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></svg>
+                Administrator Access
+              </span>
+            </div>
+          </div>
+          <div class="dt-topbar-actions">
+            <button class="dt-topbar-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share Twin
+            </button>
+            <button class="dt-topbar-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              About
+            </button>
+          </div>
+        </header>
+
+        <div id="dtScroll" class="dt-scroll">
+          <div class="dt-content">
+
+            <div id="dtHomeView">
+
+            <h1 class="dt-greeting">Good afternoon, Maya.</h1>
+
+            <div class="dt-composer-wrap" id="dtComposer">
+              <div class="dt-composer-input">Ask anything or search your company docs...</div>
+              <div class="dt-composer-pills">
+                <div class="dt-prompt-chips">
+                  <button type="button" class="dt-prompt-chip" data-prompt="0">What are the top risks in our Q3 enterprise pipeline?</button>
+                  <button type="button" class="dt-prompt-chip" data-prompt="1">Summarize last week's customer advisory board themes</button>
+                  <button type="button" class="dt-prompt-chip" data-prompt="2">Compare self-serve vs enterprise onboarding playbooks</button>
+                  <button type="button" class="dt-prompt-chip" data-prompt="3">What milestones should we hit before the board review?</button>
+                  <button type="button" class="dt-prompt-chip" data-prompt="4">What can I do with my Twin?</button>
+                  <button type="button" class="dt-prompt-chip" data-prompt="5">How do I get the most out of my Twin?</button>
+                  <button type="button" class="dt-prompt-chip is-link">Show more (4) <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+                </div>
+              </div>
+              <div class="dt-composer-toolbar">
+                <span class="dt-toolbar-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </span>
+                <span class="dt-toolbar-spacer"></span>
+                <span class="dt-auto-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg>
+                  Auto
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="dt-toolbar-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                </span>
+                <span class="dt-toolbar-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                </span>
+                <button class="dt-send-btn" type="button" aria-label="Send">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <p class="dt-responsible">
+              Use this digital twin responsibly
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </p>
+
+            <h2 class="dt-recent-head">Recent Chats</h2>
+
+            <div id="dtSearchBar" class="dt-search-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span id="dtSearchText" class="dt-search-query"></span>
+              <span id="dtSearchPlaceholder" class="dt-search-placeholder">Search people or chat</span>
+            </div>
+
+            <div class="dt-filters" id="dtFilters">
+              <button type="button" class="dt-filter" data-filter="all" id="dtFilterAll">All (192)</button>
+              <button type="button" class="dt-filter" data-filter="twin" id="dtFilterTwin">Asked your twin (11)</button>
+              <button type="button" class="dt-filter active" data-filter="self" id="dtFilterSelf">Asked self (100)</button>
+              <button type="button" class="dt-filter" data-filter="experts" id="dtFilterExperts">Asked your experts (3)</button>
+              <button type="button" class="dt-filter" data-filter="others" id="dtFilterOthers">Asked others (78)</button>
+            </div>
+
+            <p class="dt-week-label">This week</p>
+
+            <div id="dtFeed" class="dt-feed"></div>
+
+            </div><!-- /dtHomeView -->
+
+            <div id="dtScene5View" class="dt-s5-view" hidden>
+
+            <h2 class="dt-recent-head">Recent Chats</h2>
+
+            <div class="dt-search-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span class="dt-search-placeholder" style="flex:1">Search people or chat</span>
+            </div>
+
+            <div class="dt-filters">
+              <span class="dt-filter active-indigo">All (192)</span>
+              <span class="dt-filter">Asked your twin (11)</span>
+              <span class="dt-filter">Asked self (100)</span>
+              <span class="dt-filter">Asked your experts (3)</span>
+              <span class="dt-filter">Asked others (78)</span>
+            </div>
+
+            <p class="dt-day-heading">Today</p>
+
+            <article class="dt-chat-card">
+              <p class="dt-card-title">Northstar at the Global AI Leadership Forum</p>
+              <div class="dt-msg-user">
+                <div class="dt-avatar-photo" aria-hidden="true">
+                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face" alt="" width="32" height="32">
+                </div>
+                <div class="dt-msg-body">
+                  <p class="dt-msg-meta"><b>Maya Raman</b> · Revenue Operations · 12 mins ago</p>
+                  <p class="dt-msg-text">Create a short message to share about our participation in the Global AI Leadership Forum for Show and Tell</p>
+                </div>
+              </div>
+              <div class="dt-msg-twin">
+                <div class="dt-twin-head-row">
+                  <p class="dt-twin-label" style="margin:0">
+                    <span class="dt-twin-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg>
+                    </span>
+                    Your twin
+                  </p>
+                  <span class="dt-twin-verified">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Verified by Maya Raman
+                  </span>
+                </div>
+                <p class="dt-twin-text">Quick update for Show &amp; Tell: Northstar will be participating in the Global AI Leadership Forum. We'll be there to share what we're building, connect with customers and partners, and demo how our platform helps teams create... <span class="dt-show-more">Show more</span></p>
+              </div>
+              <div class="dt-card-actions">
+                <span class="dt-card-action dt-card-action--positive">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  Looks good
+                </span>
+                <span class="dt-card-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                  Edit
+                </span>
+                <span class="dt-card-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Chime
+                </span>
+                <span class="dt-card-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-6 10 6-10 6z"/><path d="M6 12v5c0 1 2 2 4 2s4-1 4-2v-5"/></svg>
+                  Train
+                </span>
+              </div>
+              <p class="dt-thread-footer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                1 message in thread
+              </p>
+            </article>
+
+            <p class="dt-day-heading">Yesterday</p>
+
+            <article class="dt-chat-card">
+              <p class="dt-card-title">WhatsApp Strategies for Self-Service Engagement</p>
+              <div class="dt-msg-user">
+                <div class="dt-avatar-ext" aria-hidden="true">JL</div>
+                <div class="dt-msg-body">
+                  <p class="dt-msg-meta"><b>Jordan Lee</b> · Strategy Extern · 1 day ago</p>
+                  <p class="dt-msg-text">whatsapp outreach for self serve</p>
+                </div>
+              </div>
+              <div class="dt-msg-twin">
+                <div class="dt-twin-head-row">
+                  <p class="dt-twin-label" style="margin:0">
+                    <span class="dt-twin-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg>
+                    </span>
+                    Your twin
+                  </p>
+                  <span class="dt-twin-verified">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Verified by Maya Raman
+                  </span>
+                </div>
+                <p class="dt-twin-text">What I'd set up (based on how we planned self-serve outreach): For our self-serve rollout, we explicitly planned to use WhatsApp + email as the primary closed-group channels (friends/family + E... <span class="dt-show-more">Show more</span></p>
+              </div>
+              <div class="dt-card-actions">
+                <span class="dt-card-action dt-card-action--positive">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  Looks good
+                </span>
+                <span class="dt-card-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                  Edit
+                </span>
+                <span class="dt-card-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Chime
+                </span>
+                <span class="dt-card-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-6 10 6-10 6z"/><path d="M6 12v5c0 1 2 2 4 2s4-1 4-2v-5"/></svg>
+                  Train
+                </span>
+              </div>
+              <p class="dt-thread-footer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                2 messages in thread
+              </p>
+            </article>
+
+            </div><!-- /dtScene5View -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="scene-indicator" id="controls">
+  Scene <span id="sceneNum">1</span> &nbsp;·&nbsp;
+  <kbd onclick="switchScene(1)">1</kbd> Home choreo
+  <kbd onclick="switchScene(2)">2</kbd> Scroll
+  <kbd onclick="switchScene(3)">3</kbd> Collapsed
+  <kbd onclick="switchScene(4)">4</kbd> Feed
+  <kbd onclick="switchScene(5)">5</kbd> Recent
+  &nbsp;·&nbsp;
+  <kbd onclick="switchScene(SCENE)">R</kbd> Replay
+  &nbsp;·&nbsp;
+  <kbd onclick="toggleControls()">H</kbd>
+</div>
+
+<div id="dtFakeCursor" aria-hidden="true">
+  <svg viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg"><path d="M3 2 L3 22 L8.5 17 L11.7 24.5 L14.5 23.3 L11.3 16 L19 16 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.4" stroke-linejoin="round"/></svg>
+</div>
+
+<script>
+const timeouts = [];
+function st(fn, delay) { timeouts.push(setTimeout(fn, delay)); }
+function clearAllTimeouts() { timeouts.forEach(clearTimeout); timeouts.length = 0; }
+
+const unpauseResolvers = [];
+let playbackPaused = false;
+
+async function waitIfPaused() {
+  while (playbackPaused) {
+    await new Promise(r => { unpauseResolvers.push(r); });
+  }
+}
+
+async function sleep(ms) {
+  const chunk = 50;
+  let left = ms;
+  while (left > 0) {
+    await waitIfPaused();
+    const step = Math.min(chunk, left);
+    await new Promise(r => {
+      const t = setTimeout(() => { r(); }, step);
+      timeouts.push(t);
+    });
+    left -= step;
+  }
+}
+
+function pausePlayback() {
+  if (playbackPaused) return;
+  playbackPaused = true;
+  if (typeof gsap !== 'undefined') gsap.globalTimeline.pause();
+}
+
+function resumePlayback() {
+  playbackPaused = false;
+  const rs = unpauseResolvers.splice(0);
+  rs.forEach(r => { try { r(); } catch (e) {} });
+  if (typeof gsap !== 'undefined') gsap.globalTimeline.resume();
+}
+
+function togglePlayback() {
+  if (playbackPaused) resumePlayback();
+  else pausePlayback();
+}
+
+function toggleControls() { $('controls').classList.toggle('hidden-ctrl'); }
+
+const $ = id => document.getElementById(id);
+
+let SCENE = 1;
+let dtResetting = false;
+const dtScrollProxy = { val: 0 };
+
+const SCROLL_TO_RECENT = 300;
+const SCROLL_SCENE2 = 300;
+const SCROLL_SCENE4 = 520;
+
+let dtCurrentFilter = 'self';
+let dtSearchQuery = '';
+let dtShowCardActions = false;
+
+const TWIN_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg>';
+const ACTION_SVGS = {
+  good: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+  chime: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  train: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 4 4.5.7-3.2 3.2.8 4.5-4.1-2.2-4.1 2.2.8-4.5-3.2-3.2L10 6l2-4z"/></svg>',
+};
+const THREAD_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+
+const FILTER_CARD_IDS = {
+  all: ['qbr', 'renewal', 'analyst'],
+  twin: ['pricing-faq'],
+  self: ['qbr', 'renewal', 'analyst'],
+  experts: ['legal-dpa'],
+  others: ['cs-handoff', 'product-launch'],
+};
+
+const CARDS = {
+  qbr: {
+    id: 'qbr',
+    keywords: ['qbr', 'horizon', 'launch', 'board', 'executive'],
+    title: 'QBR Executive Brief — Horizon Platform Launch',
+    meta: '<b>Maya Raman</b> · Revenue Operations · 2 days ago',
+    question: 'Can you draft a board-ready summary of launch readiness gaps?',
+    twinLabel: 'Your twin',
+    answer: 'Yes — here are three board-ready themes based on your internal docs: (1) Security & compliance sign-off is on track for May 30. (2) Customer reference pipeline needs two more logos before general availability. (3) GTM alignment — enterprise and mid-market messaging still diverge on pricing narrative.',
+    messages: 2,
+  },
+  renewal: {
+    id: 'renewal',
+    keywords: ['renewal', 'playbook', 'enterprise', 'fy26'],
+    title: 'Enterprise Renewal Playbook — FY26 Update',
+    meta: '<b>Maya Raman</b> · Revenue Operations · 4 days ago',
+    question: 'What changed in the renewal playbook since the March revision?',
+    twinLabel: 'Your twin',
+    answer: 'The March revision added: executive escalation paths for accounts over $500K ARR, a 90-day health score trigger for CSM outreach, and standardized discount guardrails tied to finance approval. Legal also inserted updated data-processing language for EU renewals.',
+    messages: 3,
+  },
+  analyst: {
+    id: 'analyst',
+    keywords: ['analyst', 'competitive', 'win', 'loss', 'summit'],
+    title: 'Competitive Positioning — Analyst Summit Prep',
+    meta: '<b>Maya Raman</b> · Revenue Operations · 5 days ago',
+    question: 'Pull the latest win/loss themes from sales calls this quarter',
+    twinLabel: 'Your twin',
+    answer: 'Top win themes: faster time-to-answer for tribal knowledge, meeting capture quality, and security posture vs. point solutions. Loss themes: procurement cycles on new vendors and gaps in Salesforce native workflow. I can format this as analyst-ready bullets.',
+    messages: 4,
+  },
+  'pricing-faq': {
+    id: 'pricing-faq',
+    keywords: ['pricing', 'faq', 'enterprise', 'deals'],
+    title: 'Pricing FAQ for Enterprise Deals',
+    meta: '<b>Maya Raman</b> · Revenue Operations · 1 day ago',
+    question: 'What discount guardrails apply to multi-year renewals?',
+    twinLabel: 'Your twin',
+    answer: 'For multi-year renewals: Finance pre-approval required above 12% total discount. Standard band is 5–8% for 2-year commits. Partner-sourced deals follow the partner playbook addendum — I can pull the latest clause references.',
+    messages: 2,
+  },
+  'legal-dpa': {
+    id: 'legal-dpa',
+    keywords: ['legal', 'dpa', 'compliance', 'review'],
+    title: 'Legal Review — DPA Clause Guidance',
+    meta: '<b>Maya Raman</b> · Revenue Operations · 3 days ago',
+    question: 'Summarize Legal’s feedback on the EU data-processing addendum',
+    twinLabel: 'Sarah Chen · Legal Expert',
+    answer: 'Legal recommends adopting the 2024 EU DPA template: subprocessors must be listed in Schedule B, 30-day breach notification, and SCCs Module 2 for controller-to-processor transfers. Two clauses need your sign-off before customer send.',
+    messages: 3,
+  },
+  'cs-handoff': {
+    id: 'cs-handoff',
+    keywords: ['cs', 'handoff', 'onboarding'],
+    title: 'CS Handoff — Meridian Account Onboarding',
+    meta: '<b>Jordan Lee</b> · Customer Success · 2 days ago',
+    question: 'What did Sales commit to during the Meridian kickoff?',
+    twinLabel: 'Your twin',
+    answer: 'Sales noted: dedicated CSM for 90 days, weekly exec sync for month one, and custom SSO timeline by June 15. Open item — sandbox environment requested but not in the order form.',
+    messages: 2,
+  },
+  'product-launch': {
+    id: 'product-launch',
+    keywords: ['product', 'launch', 'enablement'],
+    title: 'Product Launch Enablement — Field Readiness',
+    meta: '<b>Alex Rivera</b> · Product Marketing · 6 days ago',
+    question: 'When is the field team trained on the new integrations hub?',
+    twinLabel: 'Your twin',
+    answer: 'Enablement sessions are scheduled May 28 and June 4. Deck and demo scripts are in the launch workspace — positioning emphasizes workflow consolidation vs. point tools.',
+    messages: 3,
+  },
+};
+
+function getCardIdsForFilter(filterId, searchQuery = '') {
+  let ids = FILTER_CARD_IDS[filterId] || FILTER_CARD_IDS.self;
+  const q = (searchQuery || '').trim().toLowerCase();
+  if (!q) return ids.slice();
+  return ids.filter(id => {
+    const c = CARDS[id];
+    if (!c) return false;
+    return c.keywords.some(k => k.includes(q)) ||
+      c.title.toLowerCase().includes(q) ||
+      c.question.toLowerCase().includes(q);
+  });
+}
+
+function buildCardHtml(card, opts = {}) {
+  const showActions = opts.showActions ?? dtShowCardActions;
+  const actionsClass = showActions ? 'dt-card-actions' : 'dt-card-actions is-hidden';
+  const cardId = `dt-card-${card.id}`;
+  return `<article class="dt-chat-card" id="${cardId}" data-card-id="${card.id}">` +
+    `<p class="dt-card-title">${card.title}</p>` +
+    `<div class="dt-msg-user">` +
+    `<div class="dt-msg-avatar" aria-hidden="true">MR</div>` +
+    `<div class="dt-msg-body">` +
+    `<p class="dt-msg-meta">${card.meta}</p>` +
+    `<p class="dt-msg-text">${card.question}</p>` +
+    `</div></div>` +
+    `<div class="dt-msg-twin">` +
+    `<p class="dt-twin-label"><span class="dt-twin-icon" aria-hidden="true">${TWIN_ICON_SVG}</span>${card.twinLabel}</p>` +
+    `<p class="dt-twin-text">${card.answer} <span class="dt-show-more">Show more</span></p>` +
+    `</div>` +
+    `<div class="${actionsClass}">` +
+    `<span class="dt-card-action" data-action="good">${ACTION_SVGS.good} Looks good</span>` +
+    `<span class="dt-card-action" data-action="edit">${ACTION_SVGS.edit} Edit</span>` +
+    `<span class="dt-card-action" data-action="chime">${ACTION_SVGS.chime} Chime</span>` +
+    `<span class="dt-card-action" data-action="train">${ACTION_SVGS.train} Train</span>` +
+    `</div>` +
+    `<p class="dt-thread-footer">${THREAD_SVG} ${card.messages} messages in thread</p>` +
+    `</article>`;
+}
+
+function setActiveFilter(filterId) {
+  dtCurrentFilter = filterId;
+  document.querySelectorAll('.dt-filter').forEach(el => {
+    el.classList.toggle('active', el.dataset.filter === filterId);
+  });
+}
+
+function renderFeed(filterId, searchQuery = '', animate = true) {
+  const feed = $('dtFeed');
+  if (!feed) return Promise.resolve();
+  dtSearchQuery = searchQuery;
+  const ids = getCardIdsForFilter(filterId, searchQuery);
+  const html = ids.map(id => buildCardHtml(CARDS[id])).join('') ||
+    '<p class="dt-week-label" style="margin-top:8px">No chats match your search.</p>';
+
+  if (!animate || typeof gsap === 'undefined') {
+    feed.innerHTML = html;
+    feed.style.opacity = '1';
+    return Promise.resolve();
+  }
+
+  return new Promise(resolve => {
+    gsap.to(feed, {
+      opacity: 0,
+      duration: 0.12,
+      ease: 'power2.in',
+      onComplete: () => {
+        feed.innerHTML = html;
+        gsap.fromTo(feed, { opacity: 0 }, { opacity: 1, duration: 0.22, ease: 'power2.out', onComplete: resolve });
+      },
+    });
+  });
+}
+
+function dtCursorAnchor(el, place = 'center') {
+  const r = el.getBoundingClientRect();
+  if (place === 'topleft') return { x: r.left + 14, y: r.top + 14 };
+  if (place === 'right') return { x: r.right - 18, y: r.top + r.height / 2 };
+  return { x: r.left + r.width / 2 - 4, y: r.top + r.height / 2 - 2 };
+}
+
+function dtMoveCursor(targetEl, dur = 0.5, place = 'center') {
+  return new Promise(resolve => {
+    if (dtResetting || !targetEl) { resolve(); return; }
+    const cur = $('dtFakeCursor');
+    const target = dtCursorAnchor(targetEl, place);
+    if (!cur.style.opacity || parseFloat(cur.style.opacity) === 0) {
+      gsap.set(cur, { left: target.x - 40, top: target.y - 20, opacity: 1 });
+    }
+    gsap.to(cur, {
+      left: target.x,
+      top: target.y,
+      duration: dur,
+      ease: 'power2.inOut',
+      onComplete: resolve,
+    });
+  });
+}
+
+async function dtCursorClick(targetEl) {
+  if (dtResetting) return;
+  const cur = $('dtFakeCursor');
+  await new Promise(r => gsap.to(cur, { scale: 0.82, duration: 0.08, ease: 'power2.in', onComplete: r }));
+  if (dtResetting) return;
+  await new Promise(r => gsap.to(cur, { scale: 1, duration: 0.12, ease: 'power2.out', onComplete: r }));
+  await sleep(100);
+}
+
+function dtScrollTo(y, duration = 0.85) {
+  const scrollEl = $('dtScroll');
+  if (!scrollEl) return Promise.resolve();
+  dtScrollProxy.val = scrollEl.scrollTop;
+  return new Promise(resolve => {
+    gsap.to(dtScrollProxy, {
+      val: y,
+      duration,
+      ease: 'power2.inOut',
+      onUpdate: () => { scrollEl.scrollTop = dtScrollProxy.val; },
+      onComplete: resolve,
+    });
+  });
+}
+
+async function dtClickFilter(filterId) {
+  const el = document.querySelector(`.dt-filter[data-filter="${filterId}"]`);
+  if (!el) return;
+  await dtMoveCursor(el, 0.45);
+  if (dtResetting) return;
+  el.classList.add('is-hover');
+  await sleep(180);
+  if (dtResetting) return;
+  await dtCursorClick(el);
+  setActiveFilter(filterId);
+  await renderFeed(filterId, dtSearchQuery, true);
+  el.classList.remove('is-hover');
+  await sleep(280);
+}
+
+async function dtTypeSearch(text, charDelay = 70) {
+  const bar = $('dtSearchBar');
+  const out = $('dtSearchText');
+  const ph = $('dtSearchPlaceholder');
+  bar.classList.add('is-focused', 'is-typing');
+  if (ph) ph.style.display = 'none';
+  out.textContent = '';
+  for (let i = 0; i < text.length; i++) {
+    if (dtResetting) return;
+    out.textContent += text[i];
+    await sleep(charDelay);
+  }
+  await renderFeed(dtCurrentFilter, text, true);
+}
+
+function reset1State() {
+  dtCurrentFilter = 'self';
+  dtSearchQuery = '';
+  dtShowCardActions = false;
+
+  const scrollEl = $('dtScroll');
+  if (scrollEl) scrollEl.scrollTop = 0;
+  dtScrollProxy.val = 0;
+
+  $('dtAppShell').classList.remove('is-collapsed');
+
+  const bar = $('dtSearchBar');
+  if (bar) {
+    bar.classList.remove('is-focused', 'is-typing');
+  }
+  const out = $('dtSearchText');
+  if (out) out.textContent = '';
+  const ph = $('dtSearchPlaceholder');
+  if (ph) ph.style.display = '';
+
+  setActiveFilter('self');
+  renderFeed('self', '', false);
+
+  if (typeof gsap !== 'undefined') {
+    gsap.killTweensOf(['#dtFakeCursor', '#dtFeed', dtScrollProxy, $('dtScroll')]);
+    gsap.set('#dtFakeCursor', { opacity: 0, scale: 1 });
+  }
+
+  document.querySelectorAll('.dt-filter.is-hover, .dt-chat-card.is-hover, .dt-chat-card.is-selected, .dt-card-action.is-hover')
+    .forEach(el => el.classList.remove('is-hover', 'is-selected'));
+}
+
+function applySceneLayout(num, animateScroll = false) {
+  const shell = $('dtAppShell');
+  const scrollEl = $('dtScroll');
+  const collapsed = num >= 3;
+  shell.classList.toggle('is-collapsed', collapsed);
+
+  let targetScroll = 0;
+  if (num === 2) targetScroll = SCROLL_SCENE2;
+  if (num === 4) targetScroll = SCROLL_SCENE4;
+
+  if (!scrollEl) return Promise.resolve();
+
+  if (num >= 2) {
+    dtShowCardActions = true;
+    renderFeed(dtCurrentFilter, dtSearchQuery, false);
+  }
+
+  if (animateScroll && typeof gsap !== 'undefined') {
+    dtScrollProxy.val = scrollEl.scrollTop;
+    return new Promise(resolve => {
+      gsap.to(dtScrollProxy, {
+        val: targetScroll,
+        duration: num === 4 ? 1.1 : 0.85,
+        ease: 'power2.inOut',
+        onUpdate: () => { scrollEl.scrollTop = dtScrollProxy.val; },
+        onComplete: resolve,
+      });
+    });
+  }
+  scrollEl.scrollTop = targetScroll;
+  dtScrollProxy.val = targetScroll;
+  return Promise.resolve();
+}
+
+function resetScene5Layout() {
+  const shell = $('dtAppShell');
+  if (shell) shell.classList.remove('is-scene5');
+  const home = $('dtHomeView');
+  const s5 = $('dtScene5View');
+  if (home) home.hidden = false;
+  if (s5) s5.hidden = true;
+}
+
+function applyScene5Layout() {
+  const shell = $('dtAppShell');
+  if (shell) shell.classList.add('is-collapsed', 'is-scene5');
+  const home = $('dtHomeView');
+  const s5 = $('dtScene5View');
+  if (home) home.hidden = true;
+  if (s5) s5.hidden = false;
+  const scrollEl = $('dtScroll');
+  if (scrollEl) scrollEl.scrollTop = 0;
+  dtScrollProxy.val = 0;
+  if (typeof gsap !== 'undefined') {
+    gsap.killTweensOf(['#dtFakeCursor', '#dtWindow']);
+    gsap.set('#dtFakeCursor', { opacity: 0, scale: 1 });
+    gsap.set('#dtWindow', { opacity: 1, scale: 1, transformOrigin: '50% 50%' });
+  }
+}
+
+function run5Inner() {
+  if (dtResetting) return;
+  applyScene5Layout();
+}
+
+function resetDt() {
+  dtResetting = true;
+  if (typeof gsap !== 'undefined') {
+    gsap.killTweensOf(['#dtWindow', '#dtFakeCursor', '#dtFeed', dtScrollProxy, $('dtScroll')]);
+    gsap.set('#dtWindow', { opacity: 0, scale: 0.97, transformOrigin: '50% 50%' });
+  }
+  resetScene5Layout();
+  reset1State();
+}
+
+async function run1Inner() {
+  if (dtResetting) return;
+
+  reset1State();
+  if (dtResetting) return;
+
+  gsap.to('#dtWindow', { opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out' });
+  await sleep(500);
+  if (dtResetting) return;
+
+  await dtScrollTo(SCROLL_TO_RECENT, 0.9);
+  if (dtResetting) return;
+
+  dtShowCardActions = true;
+  await renderFeed(dtCurrentFilter, '', false);
+  await sleep(350);
+  if (dtResetting) return;
+
+  const filterTour = ['all', 'twin', 'experts', 'others', 'self'];
+  for (const fid of filterTour) {
+    await dtClickFilter(fid);
+    if (dtResetting) return;
+  }
+
+  const searchBar = $('dtSearchBar');
+  await dtMoveCursor(searchBar, 0.5, 'topleft');
+  if (dtResetting) return;
+  await dtCursorClick(searchBar);
+  await sleep(200);
+  if (dtResetting) return;
+
+  await dtTypeSearch('QBR');
+  if (dtResetting) return;
+
+  await sleep(400);
+  if (dtResetting) return;
+
+  const card = document.querySelector('.dt-chat-card[data-card-id="qbr"]');
+  if (card) {
+    const actions = card.querySelectorAll('.dt-card-action');
+    for (const action of actions) {
+      await dtMoveCursor(action, 0.35);
+      if (dtResetting) return;
+      action.classList.add('is-hover');
+      await sleep(320);
+      action.classList.remove('is-hover');
+      await sleep(80);
+    }
+
+    await dtMoveCursor(card, 0.5);
+    if (dtResetting) return;
+    card.classList.add('is-hover');
+    await sleep(220);
+    if (dtResetting) return;
+    await dtCursorClick(card);
+    card.classList.remove('is-hover');
+    card.classList.add('is-selected');
+    await sleep(1000);
+  }
+
+  gsap.to('#dtFakeCursor', { opacity: 0, duration: 0.25 });
+}
+
+async function run2Inner() {
+  if (dtResetting) return;
+  applySceneLayout(1, false);
+  gsap.to('#dtWindow', { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' });
+  await sleep(400);
+  if (dtResetting) return;
+  await applySceneLayout(2, true);
+  await sleep(500);
+}
+
+async function run3Inner() {
+  if (dtResetting) return;
+  applySceneLayout(1, false);
+  gsap.to('#dtWindow', { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' });
+  await sleep(350);
+  if (dtResetting) return;
+  $('dtAppShell').classList.add('is-collapsed');
+  await sleep(450);
+}
+
+async function run4Inner() {
+  if (dtResetting) return;
+  $('dtAppShell').classList.add('is-collapsed');
+  dtShowCardActions = true;
+  await renderFeed(dtCurrentFilter, dtSearchQuery, false);
+  const scrollEl = $('dtScroll');
+  if (scrollEl) scrollEl.scrollTop = 0;
+  dtScrollProxy.val = 0;
+  gsap.to('#dtWindow', { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' });
+  await sleep(350);
+  if (dtResetting) return;
+  await applySceneLayout(4, true);
+  await sleep(600);
+}
+
+function runScene(num) {
+  resetDt();
+  st(() => {
+    dtResetting = false;
+    if (num === 5) {
+      run5Inner();
+    } else if (num === 1) {
+      run1Inner();
+    } else {
+      gsap.to('#dtFakeCursor', { opacity: 0, duration: 0.15 });
+      if (num === 2) run2Inner();
+      else if (num === 3) run3Inner();
+      else if (num === 4) run4Inner();
+    }
+  }, 80);
+}
+
+function switchScene(num) {
+  clearAllTimeouts();
+  dtResetting = true;
+  if (typeof gsap !== 'undefined') gsap.killTweensOf(['#dtWindow', dtScrollProxy, $('dtScroll')]);
+
+  SCENE = num;
+  $('sceneNum').textContent = num;
+
+  runScene(num);
+}
+
+window.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === '1') switchScene(1);
+  if (e.key === '2') switchScene(2);
+  if (e.key === '3') switchScene(3);
+  if (e.key === '4') switchScene(4);
+  if (e.key === '5') switchScene(5);
+  if (e.key === 'h' || e.key === 'H') toggleControls();
+  if (e.key === ' ') { e.preventDefault(); togglePlayback(); }
+  if (e.key === 'r' || e.key === 'R') { e.preventDefault(); switchScene(SCENE); }
+});
+
+window.addEventListener('load', () => { switchScene(1); });
+</script>
+</body>
+</html>

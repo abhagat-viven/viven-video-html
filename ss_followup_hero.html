@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SS Followup Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --viven-indigo-1: #eef2ff;
+      --viven-indigo-3: #a5b4fc;
+      --viven-indigo-5: #6366f1;
+      --viven-indigo-7: #4338ca;
+      --fg-1: #101828;
+      --fg-2: #344054;
+      --fg-3: #667085;
+      --bg-0: #ffffff;
+      --border-1: #eaecf0;
+      --success: #12ba6c;
+      --success-bg: #dff7e8;
+      --success-brd: #81dea9;
+      --error: #ef362a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      width: 1104px;
+      height: 560px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 36px;
+      background:
+        radial-gradient(120% 90% at 88% 6%, rgba(99,102,241,0.16), rgba(99,102,241,0) 58%),
+        linear-gradient(180deg, var(--viven-indigo-1) 0%, #f3f1fd 38%, var(--bg-0) 78%);
+    }
+
+    .calendar-card {
+      width: 880px;
+      background: var(--bg-0);
+      border: 2px solid var(--border-1);
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(16,24,40,0.08);
+      padding: 48px 56px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      grid-template-rows: repeat(4, 96px);
+      position: relative;
+    }
+
+    .time-label {
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--fg-3);
+      line-height: 1;
+      padding-top: 0;
+      transform: translateY(-11px);
+    }
+
+    .grid-cell {
+      border-top: 2px solid var(--border-1);
+    }
+
+    .now-line {
+      position: absolute;
+      left: 80px;
+      right: 0;
+      top: 72px;
+      height: 12px;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .now-line-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--error);
+      flex-shrink: 0;
+    }
+
+    .now-line-bar {
+      flex: 1;
+      height: 2px;
+      background: var(--error);
+    }
+
+    .event-block {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: start;
+      width: 92%;
+      height: 144px;
+      background: var(--viven-indigo-1);
+      border-left: 8px solid var(--viven-indigo-7);
+      border-radius: 12px;
+      padding: 28px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .event-title {
+      font-weight: 700;
+      font-size: 34px;
+      color: var(--viven-indigo-7);
+      line-height: 1;
+      margin-bottom: 4px;
+      padding-right: 160px;
+    }
+
+    .event-subtitle {
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--fg-2);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .event-duration {
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--fg-3);
+      line-height: 1;
+    }
+
+    .confirmed-chip {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--success);
+      background: var(--success-bg);
+      border: 2px solid var(--success-brd);
+      border-radius: 999px;
+      padding: 6px 18px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Screenshot: capture .stage exactly at 1104 x 560.
+    Export as PNG, place in email at width 552 (display size), i.e. natively @2x for retina.
+    Filename: ss_followup_hero@2x.png
+  -->
+  <div class="stage">
+    <div class="calendar-card">
+      <div class="calendar-grid">
+        <div class="time-label">10:00</div>
+        <div class="grid-cell"></div>
+
+        <div class="time-label">11:00</div>
+        <div class="grid-cell"></div>
+
+        <div class="time-label">12:00</div>
+        <div class="grid-cell"></div>
+
+        <div class="time-label">13:00</div>
+        <div class="grid-cell"></div>
+
+        <div class="now-line">
+          <div class="now-line-dot"></div>
+          <div class="now-line-bar"></div>
+        </div>
+
+        <div class="event-block">
+          <div class="confirmed-chip">&#10003; Confirmed</div>
+          <div class="event-title">Build your Digital Twin</div>
+          <div class="event-subtitle">with the Viven team &#183; Live</div>
+          <div class="event-duration">20 min</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

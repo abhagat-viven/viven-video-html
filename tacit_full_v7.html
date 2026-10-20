@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tacit Knowledge — Full Diagram</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-deep: #f5f3f0;
+  --bg-surface: #ffffff;
+  --text-tertiary: #9a9a9a;
+  --arrow-color: #4a5568;
+  --font-main: 'DM Sans', -apple-system, sans-serif;
+}
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+}
+.stage {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.ambient-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(161,150,235,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(59,111,160,0.02) 0%, transparent 60%),
+    var(--bg-deep);
+  z-index: 0;
+}
+.scene-wrap {
+  position: relative;
+  width: 880px; height: 400px;
+  z-index: 2;
+  animation: el-drift 10s ease-in-out infinite;
+}
+@keyframes el-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.head-img { opacity: 0; transition: opacity 0.8s ease; }
+.head-img.visible { opacity: 1; }
+.diamond-shape { opacity: 0; transition: opacity 0.6s ease; }
+.diamond-shape.visible { opacity: 1; }
+.knot-logo { opacity: 0; transition: opacity 0.8s ease; }
+.knot-logo.visible { opacity: 1; }
+.brain-dot, .green-dot, .blue-dot, .grad-dot { fill: #ffffff; opacity: 0; }
+.arrow-path {
+  fill: none; stroke: var(--arrow-color); stroke-width: 1.8;
+  stroke-linecap: round; opacity: 0;
+}
+.arrow-path.drawing { opacity: 1; }
+.arrow-head { fill: var(--arrow-color); opacity: 0; transition: opacity 0.3s ease; }
+.arrow-head.visible { opacity: 1; }
+.scene-indicator {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-surface); border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; color: var(--text-tertiary); z-index: 100;
+  font-family: 'JetBrains Mono', monospace;
+}
+.scene-indicator kbd {
+  background: #faf9f7; border: 1px solid rgba(0,0,0,0.06);
+  padding: 1px 5px; border-radius: 4px; font-size: 11px;
+}
+/* Labels below each element */
+.label-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--text-primary);
+  text-anchor: middle;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.label-title.visible { opacity: 1; }
+.label-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9.5px;
+  font-weight: 400;
+  fill: var(--text-tertiary);
+  text-anchor: middle;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+.label-sub.visible { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="ambient-bg"></div>
+<div class="stage">
+  <div class="scene-wrap">
+    <svg id="mainSvg" viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradient for the last diamond: blue top-left → teal center → green bottom-right -->
+        <!-- Gradient goes bottom-left → top-right in rect space, which after rotate(45) becomes left→right visually -->
+        <linearGradient id="blueGreenGrad" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#006aab"/>
+          <stop offset="45%" stop-color="#0d7b94"/>
+          <stop offset="100%" stop-color="#37b34a"/>
+        </linearGradient>
+      </defs>
+
+      <!-- HEAD SILHOUETTE -->
+      <foreignObject x="10" y="74" width="140" height="166" class="head-img" id="headImg">
+        <img xmlns="http://www.w3.org/1999/xhtml" src="data:image/png;base64,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" style="width:100%;height:100%;filter:brightness(0.92) saturate(0.8);" />
+      </foreignObject>
+
+      <!-- BRAIN DOTS -->
+      <g id="headDots">
+    <circle cx="92.96" cy="87.63" r="1.37" class="brain-dot" data-idx="0" />
+    <circle cx="72.02" cy="89.17" r="1.37" class="brain-dot" data-idx="1" />
+    <circle cx="61.24" cy="91.53" r="1.37" class="brain-dot" data-idx="2" />
+    <circle cx="81.53" cy="92.1" r="1.38" class="brain-dot" data-idx="3" />
+    <circle cx="91.39" cy="93.75" r="1.38" class="brain-dot" data-idx="4" />
+    <circle cx="111.08" cy="94.09" r="1.4" class="brain-dot" data-idx="5" />
+    <circle cx="101.33" cy="94.32" r="1.39" class="brain-dot" data-idx="6" />
+    <circle cx="70.22" cy="95.53" r="1.37" class="brain-dot" data-idx="7" />
+    <circle cx="59.09" cy="97.87" r="1.37" class="brain-dot" data-idx="8" />
+    <circle cx="79.66" cy="98.19" r="1.38" class="brain-dot" data-idx="9" />
+    <circle cx="117.22" cy="98.77" r="1.41" class="brain-dot" data-idx="10" />
+    <circle cx="48.15" cy="99.05" r="1.36" class="brain-dot" data-idx="11" />
+    <circle cx="89.38" cy="99.61" r="1.38" class="brain-dot" data-idx="12" />
+    <circle cx="108.41" cy="99.67" r="1.41" class="brain-dot" data-idx="13" />
+    <circle cx="99.05" cy="99.99" r="1.39" class="brain-dot" data-idx="14" />
+    <circle cx="68.04" cy="101.57" r="1.38" class="brain-dot" data-idx="15" />
+    <circle cx="127.67" cy="102.35" r="1.44" class="brain-dot" data-idx="16" />
+    <circle cx="121.04" cy="103.18" r="1.43" class="brain-dot" data-idx="17" />
+    <circle cx="56.48" cy="103.88" r="1.37" class="brain-dot" data-idx="18" />
+    <circle cx="77.35" cy="103.98" r="1.38" class="brain-dot" data-idx="19" />
+    <circle cx="113.48" cy="104.2" r="1.41" class="brain-dot" data-idx="20" />
+    <circle cx="45.1" cy="104.99" r="1.37" class="brain-dot" data-idx="21" />
+    <circle cx="105.11" cy="105.06" r="1.4" class="brain-dot" data-idx="22" />
+    <circle cx="86.81" cy="105.2" r="1.4" class="brain-dot" data-idx="23" />
+    <circle cx="96.14" cy="105.45" r="1.4" class="brain-dot" data-idx="24" />
+    <circle cx="65.34" cy="107.31" r="1.39" class="brain-dot" data-idx="25" />
+    <circle cx="127.77" cy="107.79" r="1.45" class="brain-dot" data-idx="26" />
+    <circle cx="122.46" cy="107.97" r="1.45" class="brain-dot" data-idx="27" />
+    <circle cx="132.2" cy="108.28" r="1.47" class="brain-dot" data-idx="28" />
+    <circle cx="116.24" cy="108.6" r="1.43" class="brain-dot" data-idx="29" />
+    <circle cx="74.46" cy="109.47" r="1.39" class="brain-dot" data-idx="30" />
+    <circle cx="109.09" cy="109.48" r="1.42" class="brain-dot" data-idx="31" />
+    <circle cx="53.36" cy="109.53" r="1.38" class="brain-dot" data-idx="32" />
+    <circle cx="101.18" cy="110.27" r="1.41" class="brain-dot" data-idx="33" />
+    <circle cx="41.52" cy="110.55" r="1.37" class="brain-dot" data-idx="34" />
+    <circle cx="83.65" cy="110.53" r="1.39" class="brain-dot" data-idx="35" />
+    <circle cx="92.62" cy="110.69" r="1.41" class="brain-dot" data-idx="36" />
+    <circle cx="62.04" cy="112.69" r="1.38" class="brain-dot" data-idx="37" />
+    <circle cx="116.74" cy="113.5" r="1.44" class="brain-dot" data-idx="38" />
+    <circle cx="121.82" cy="113.55" r="1.45" class="brain-dot" data-idx="39" />
+    <circle cx="110.81" cy="113.95" r="1.45" class="brain-dot" data-idx="40" />
+    <circle cx="126.15" cy="114.23" r="1.47" class="brain-dot" data-idx="41" />
+    <circle cx="104.07" cy="114.61" r="1.43" class="brain-dot" data-idx="42" />
+    <circle cx="70.91" cy="114.67" r="1.4" class="brain-dot" data-idx="43" />
+    <circle cx="49.63" cy="114.81" r="1.39" class="brain-dot" data-idx="44" />
+    <circle cx="96.54" cy="115.32" r="1.42" class="brain-dot" data-idx="45" />
+    <circle cx="79.79" cy="115.59" r="1.4" class="brain-dot" data-idx="46" />
+    <circle cx="129.85" cy="115.7" r="1.48" class="brain-dot" data-idx="47" />
+    <circle cx="88.4" cy="115.7" r="1.41" class="brain-dot" data-idx="48" />
+    <circle cx="58.09" cy="117.77" r="1.39" class="brain-dot" data-idx="49" />
+    <circle cx="133.08" cy="118.04" r="1.48" class="brain-dot" data-idx="50" />
+    <circle cx="110.51" cy="118.96" r="1.45" class="brain-dot" data-idx="51" />
+    <circle cx="104.82" cy="119.16" r="1.45" class="brain-dot" data-idx="52" />
+    <circle cx="115.48" cy="119.21" r="1.46" class="brain-dot" data-idx="53" />
+    <circle cx="66.69" cy="119.57" r="1.4" class="brain-dot" data-idx="54" />
+    <circle cx="98.38" cy="119.67" r="1.44" class="brain-dot" data-idx="55" />
+    <circle cx="45.21" cy="119.75" r="1.39" class="brain-dot" data-idx="56" />
+    <circle cx="119.83" cy="120.07" r="1.48" class="brain-dot" data-idx="57" />
+    <circle cx="91.23" cy="120.21" r="1.43" class="brain-dot" data-idx="58" />
+    <circle cx="75.22" cy="120.4" r="1.41" class="brain-dot" data-idx="59" />
+    <circle cx="83.46" cy="120.51" r="1.42" class="brain-dot" data-idx="60" />
+    <circle cx="136.05" cy="121.26" r="1.49" class="brain-dot" data-idx="61" />
+    <circle cx="123.65" cy="121.69" r="1.48" class="brain-dot" data-idx="62" />
+    <circle cx="53.42" cy="122.51" r="1.4" class="brain-dot" data-idx="63" />
+    <circle cx="127.18" cy="124.08" r="1.49" class="brain-dot" data-idx="64" />
+    <circle cx="61.72" cy="124.18" r="1.4" class="brain-dot" data-idx="65" />
+    <circle cx="103.84" cy="124.32" r="1.46" class="brain-dot" data-idx="66" />
+    <circle cx="40.07" cy="124.33" r="1.39" class="brain-dot" data-idx="67" />
+    <circle cx="98.27" cy="124.33" r="1.45" class="brain-dot" data-idx="68" />
+    <circle cx="92.08" cy="124.61" r="1.44" class="brain-dot" data-idx="69" />
+    <circle cx="108.8" cy="124.77" r="1.47" class="brain-dot" data-idx="70" />
+    <circle cx="69.9" cy="124.99" r="1.41" class="brain-dot" data-idx="71" />
+    <circle cx="85.22" cy="125.0" r="1.43" class="brain-dot" data-idx="72" />
+    <circle cx="77.78" cy="125.14" r="1.42" class="brain-dot" data-idx="73" />
+    <circle cx="138.97" cy="125.45" r="1.5" class="brain-dot" data-idx="74" />
+    <circle cx="113.26" cy="125.82" r="1.48" class="brain-dot" data-idx="75" />
+    <circle cx="47.98" cy="126.95" r="1.4" class="brain-dot" data-idx="76" />
+    <circle cx="130.56" cy="127.33" r="1.5" class="brain-dot" data-idx="77" />
+    <circle cx="117.37" cy="127.52" r="1.49" class="brain-dot" data-idx="78" />
+    <circle cx="55.97" cy="128.59" r="1.41" class="brain-dot" data-idx="79" />
+    <circle cx="63.83" cy="129.39" r="1.42" class="brain-dot" data-idx="80" />
+    <circle cx="85.17" cy="129.47" r="1.45" class="brain-dot" data-idx="81" />
+    <circle cx="91.23" cy="129.4" r="1.45" class="brain-dot" data-idx="82" />
+    <circle cx="78.55" cy="129.63" r="1.44" class="brain-dot" data-idx="83" />
+    <circle cx="96.77" cy="129.6" r="1.46" class="brain-dot" data-idx="84" />
+    <circle cx="71.4" cy="129.68" r="1.43" class="brain-dot" data-idx="85" />
+    <circle cx="121.27" cy="129.97" r="1.49" class="brain-dot" data-idx="86" />
+    <circle cx="101.82" cy="130.25" r="1.48" class="brain-dot" data-idx="87" />
+    <circle cx="106.52" cy="131.42" r="1.48" class="brain-dot" data-idx="88" />
+    <circle cx="133.99" cy="131.46" r="1.51" class="brain-dot" data-idx="89" />
+    <circle cx="49.46" cy="132.73" r="1.42" class="brain-dot" data-idx="90" />
+    <circle cx="110.97" cy="133.23" r="1.49" class="brain-dot" data-idx="91" />
+    <circle cx="125.13" cy="133.19" r="1.51" class="brain-dot" data-idx="92" />
+    <circle cx="57.01" cy="133.68" r="1.43" class="brain-dot" data-idx="93" />
+    <circle cx="64.31" cy="134.05" r="1.44" class="brain-dot" data-idx="94" />
+    <circle cx="71.23" cy="134.23" r="1.45" class="brain-dot" data-idx="95" />
+    <circle cx="77.73" cy="134.26" r="1.46" class="brain-dot" data-idx="96" />
+    <circle cx="83.76" cy="134.4" r="1.47" class="brain-dot" data-idx="97" />
+    <circle cx="89.36" cy="134.84" r="1.47" class="brain-dot" data-idx="98" />
+    <circle cx="94.63" cy="135.66" r="1.48" class="brain-dot" data-idx="99" />
+    <circle cx="115.35" cy="135.68" r="1.49" class="brain-dot" data-idx="100" />
+    <circle cx="137.58" cy="136.5" r="1.51" class="brain-dot" data-idx="101" />
+    <circle cx="99.64" cy="136.96" r="1.49" class="brain-dot" data-idx="102" />
+    <circle cx="129.09" cy="137.3" r="1.51" class="brain-dot" data-idx="103" />
+    <circle cx="49.49" cy="137.8" r="1.43" class="brain-dot" data-idx="104" />
+    <circle cx="56.57" cy="138.37" r="1.44" class="brain-dot" data-idx="105" />
+    <circle cx="63.37" cy="138.74" r="1.46" class="brain-dot" data-idx="106" />
+    <circle cx="104.55" cy="138.78" r="1.5" class="brain-dot" data-idx="107" />
+    <circle cx="119.74" cy="138.91" r="1.5" class="brain-dot" data-idx="108" />
+    <circle cx="69.8" cy="139.01" r="1.47" class="brain-dot" data-idx="109" />
+    <circle cx="75.89" cy="139.41" r="1.47" class="brain-dot" data-idx="110" />
+    <circle cx="81.69" cy="140.01" r="1.48" class="brain-dot" data-idx="111" />
+    <circle cx="87.25" cy="140.98" r="1.49" class="brain-dot" data-idx="112" />
+    <circle cx="109.44" cy="141.29" r="1.51" class="brain-dot" data-idx="113" />
+    <circle cx="133.2" cy="142.29" r="1.52" class="brain-dot" data-idx="114" />
+    <circle cx="92.7" cy="142.36" r="1.5" class="brain-dot" data-idx="115" />
+    <circle cx="124.24" cy="143.0" r="1.52" class="brain-dot" data-idx="116" />
+    <circle cx="54.98" cy="143.24" r="1.46" class="brain-dot" data-idx="117" />
+    <circle cx="61.46" cy="143.77" r="1.47" class="brain-dot" data-idx="118" />
+    <circle cx="98.1" cy="144.27" r="1.5" class="brain-dot" data-idx="119" />
+    <circle cx="67.73" cy="144.36" r="1.47" class="brain-dot" data-idx="120" />
+    <circle cx="114.38" cy="144.52" r="1.52" class="brain-dot" data-idx="121" />
+    <circle cx="73.79" cy="145.16" r="1.49" class="brain-dot" data-idx="122" />
+    <circle cx="79.76" cy="146.23" r="1.49" class="brain-dot" data-idx="123" />
+    <circle cx="103.53" cy="146.8" r="1.51" class="brain-dot" data-idx="124" />
+    <circle cx="85.69" cy="147.73" r="1.5" class="brain-dot" data-idx="125" />
+    <circle cx="128.81" cy="148.08" r="1.53" class="brain-dot" data-idx="126" />
+    <circle cx="119.37" cy="148.7" r="1.53" class="brain-dot" data-idx="127" />
+    <circle cx="91.65" cy="149.69" r="1.51" class="brain-dot" data-idx="128" />
+    <circle cx="108.98" cy="150.13" r="1.52" class="brain-dot" data-idx="129" />
+    <circle cx="65.74" cy="150.28" r="1.49" class="brain-dot" data-idx="130" />
+    <circle cx="72.17" cy="151.49" r="1.5" class="brain-dot" data-idx="131" />
+    <circle cx="97.6" cy="152.32" r="1.52" class="brain-dot" data-idx="132" />
+    <circle cx="78.64" cy="153.05" r="1.51" class="brain-dot" data-idx="133" />
+    <circle cx="114.34" cy="154.28" r="1.53" class="brain-dot" data-idx="134" />
+    <circle cx="85.12" cy="155.13" r="1.51" class="brain-dot" data-idx="135" />
+    <circle cx="103.46" cy="155.63" r="1.52" class="brain-dot" data-idx="136" />
+    <circle cx="91.5" cy="157.74" r="1.53" class="brain-dot" data-idx="137" />
+      </g>
+
+      <!-- ARROWS: exact bezier curves from PPTX, mapped to our layout -->
+      <!-- Big arc: starts mid-air near head, arcs UP then sweeps right toward blue diamond area -->
+      <path id="arrow1" class="arrow-path" d="M 158,106.8 C 165,103.4 185.4,90.4 199.6,87.3 C 213.9,84 228.4,83 243.5,87.3 C 258.6,91.6 282.3,108.7 290,113" />
+      <polygon id="arrowHead1" class="arrow-head" points="0,0 -6,3 -6,-3" />
+      <!-- Small arc: shorter, more curved, ends before green diamond -->
+      <path id="arrow2" class="arrow-path" d="M 158,132.4 C 161,129.8 169.8,120.6 176,118.1 C 182.1,115.5 188.4,115 194.9,118.1 C 201.4,121.1 211.7,133.9 215,137" />
+      <polygon id="arrowHead2" class="arrow-head" points="0,0 -6,3 -6,-3" />
+
+      <!-- GREEN DIAMOND -->
+      <g transform="translate(230, 189)">
+        <rect class="diamond-shape" id="greenDiamond" x="-36" y="-36" width="72" height="72" rx="12" fill="#37b34a" transform="rotate(45)" />
+      </g>
+      <g id="greenDots">
+    <circle cx="232.67" cy="160.14" r="1.63" class="green-dot" data-idx="0" />
+    <circle cx="219.79" cy="164.52" r="1.64" class="green-dot" data-idx="1" />
+    <circle cx="242.73" cy="165.08" r="1.64" class="green-dot" data-idx="2" />
+    <circle cx="230.26" cy="169.32" r="1.64" class="green-dot" data-idx="3" />
+    <circle cx="241.6" cy="172.91" r="1.65" class="green-dot" data-idx="4" />
+    <circle cx="218.09" cy="173.4" r="1.65" class="green-dot" data-idx="5" />
+    <circle cx="253.41" cy="175.47" r="1.66" class="green-dot" data-idx="6" />
+    <circle cx="229.76" cy="176.86" r="1.66" class="green-dot" data-idx="7" />
+    <circle cx="206.21" cy="177.38" r="1.66" class="green-dot" data-idx="8" />
+    <circle cx="241.8" cy="179.29" r="1.67" class="green-dot" data-idx="9" />
+    <circle cx="218.18" cy="180.73" r="1.67" class="green-dot" data-idx="10" />
+    <circle cx="253.85" cy="180.85" r="1.68" class="green-dot" data-idx="11" />
+    <circle cx="230.36" cy="183.16" r="1.68" class="green-dot" data-idx="12" />
+    <circle cx="206.88" cy="184.66" r="1.67" class="green-dot" data-idx="13" />
+    <circle cx="242.42" cy="184.77" r="1.68" class="green-dot" data-idx="14" />
+    <circle cx="253.87" cy="185.88" r="1.69" class="green-dot" data-idx="15" />
+    <circle cx="264.27" cy="186.68" r="1.6" class="green-dot" data-idx="16" />
+    <circle cx="219.15" cy="187.14" r="1.68" class="green-dot" data-idx="17" />
+    <circle cx="195.91" cy="188.72" r="1.68" class="green-dot" data-idx="18" />
+    <circle cx="231.12" cy="188.87" r="1.69" class="green-dot" data-idx="19" />
+    <circle cx="242.34" cy="190.23" r="1.71" class="green-dot" data-idx="20" />
+    <circle cx="252.55" cy="191.31" r="1.72" class="green-dot" data-idx="21" />
+    <circle cx="208.17" cy="191.35" r="1.69" class="green-dot" data-idx="22" />
+    <circle cx="261.41" cy="192.52" r="1.72" class="green-dot" data-idx="23" />
+    <circle cx="219.97" cy="193.31" r="1.71" class="green-dot" data-idx="24" />
+    <circle cx="230.88" cy="194.98" r="1.71" class="green-dot" data-idx="25" />
+    <circle cx="197.87" cy="195.38" r="1.27" class="green-dot" data-idx="26" />
+    <circle cx="240.66" cy="196.48" r="1.72" class="green-dot" data-idx="27" />
+    <circle cx="208.99" cy="198.12" r="1.71" class="green-dot" data-idx="28" />
+    <circle cx="249.03" cy="198.21" r="1.72" class="green-dot" data-idx="29" />
+    <circle cx="219.52" cy="200.21" r="1.71" class="green-dot" data-idx="30" />
+    <circle cx="255.95" cy="200.33" r="1.72" class="green-dot" data-idx="31" />
+    <circle cx="228.82" cy="202.21" r="1.72" class="green-dot" data-idx="32" />
+    <circle cx="236.68" cy="204.53" r="1.73" class="green-dot" data-idx="33" />
+    <circle cx="208.54" cy="205.68" r="1.47" class="green-dot" data-idx="34" />
+    <circle cx="243.11" cy="207.38" r="1.74" class="green-dot" data-idx="35" />
+    <circle cx="217.05" cy="208.53" r="1.73" class="green-dot" data-idx="36" />
+    <circle cx="224.37" cy="211.53" r="1.73" class="green-dot" data-idx="37" />
+    <circle cx="230.31" cy="215.13" r="1.75" class="green-dot" data-idx="38" />
+    <circle cx="234.94" cy="219.66" r="1.75" class="green-dot" data-idx="39" />
+      </g>
+
+      <!-- BLUE DIAMOND -->
+      <g transform="translate(380, 148)">
+        <rect class="diamond-shape" id="blueDiamond" x="-65" y="-65" width="130" height="130" rx="16" fill="#006aab" transform="rotate(45)" />
+      </g>
+      <g id="blueDots">
+    <circle cx="376.37" cy="87.32" r="1.66" class="blue-dot" data-idx="0" />
+    <circle cx="383.48" cy="89.66" r="1.68" class="blue-dot" data-idx="1" />
+    <circle cx="370.91" cy="93.43" r="1.68" class="blue-dot" data-idx="2" />
+    <circle cx="390.82" cy="94.14" r="1.68" class="blue-dot" data-idx="3" />
+    <circle cx="398.52" cy="97.85" r="1.7" class="blue-dot" data-idx="4" />
+    <circle cx="378.2" cy="98.18" r="1.69" class="blue-dot" data-idx="5" />
+    <circle cx="385.92" cy="102.26" r="1.7" class="blue-dot" data-idx="6" />
+    <circle cx="365.06" cy="102.43" r="1.7" class="blue-dot" data-idx="7" />
+    <circle cx="394.06" cy="105.65" r="1.71" class="blue-dot" data-idx="8" />
+    <circle cx="351.61" cy="106.86" r="1.68" class="blue-dot" data-idx="9" />
+    <circle cx="372.92" cy="106.8" r="1.7" class="blue-dot" data-idx="10" />
+    <circle cx="402.52" cy="108.54" r="1.72" class="blue-dot" data-idx="11" />
+    <circle cx="381.24" cy="110.56" r="1.71" class="blue-dot" data-idx="12" />
+    <circle cx="411.34" cy="110.95" r="1.73" class="blue-dot" data-idx="13" />
+    <circle cx="359.59" cy="111.58" r="1.71" class="blue-dot" data-idx="14" />
+    <circle cx="390.01" cy="113.76" r="1.72" class="blue-dot" data-idx="15" />
+    <circle cx="368.2" cy="115.66" r="1.73" class="blue-dot" data-idx="16" />
+    <circle cx="399.21" cy="116.47" r="1.73" class="blue-dot" data-idx="17" />
+    <circle cx="346.05" cy="116.56" r="1.72" class="blue-dot" data-idx="18" />
+    <circle cx="408.81" cy="118.77" r="1.74" class="blue-dot" data-idx="19" />
+    <circle cx="377.33" cy="119.19" r="1.73" class="blue-dot" data-idx="20" />
+    <circle cx="418.75" cy="120.72" r="1.76" class="blue-dot" data-idx="21" />
+    <circle cx="354.98" cy="120.99" r="1.73" class="blue-dot" data-idx="22" />
+    <circle cx="387.0" cy="122.06" r="1.74" class="blue-dot" data-idx="23" />
+    <circle cx="397.06" cy="124.53" r="1.76" class="blue-dot" data-idx="24" />
+    <circle cx="364.54" cy="124.68" r="1.74" class="blue-dot" data-idx="25" />
+    <circle cx="341.64" cy="126.39" r="1.74" class="blue-dot" data-idx="26" />
+    <circle cx="407.54" cy="126.45" r="1.77" class="blue-dot" data-idx="27" />
+    <circle cx="374.63" cy="127.71" r="1.76" class="blue-dot" data-idx="28" />
+    <circle cx="418.2" cy="127.98" r="1.78" class="blue-dot" data-idx="29" />
+    <circle cx="428.81" cy="129.15" r="1.78" class="blue-dot" data-idx="30" />
+    <circle cx="385.23" cy="130.19" r="1.77" class="blue-dot" data-idx="31" />
+    <circle cx="351.61" cy="130.26" r="1.76" class="blue-dot" data-idx="32" />
+    <circle cx="328.22" cy="131.91" r="1.74" class="blue-dot" data-idx="33" />
+    <circle cx="396.18" cy="131.98" r="1.77" class="blue-dot" data-idx="34" />
+    <circle cx="362.21" cy="133.29" r="1.76" class="blue-dot" data-idx="35" />
+    <circle cx="407.22" cy="133.29" r="1.78" class="blue-dot" data-idx="36" />
+    <circle cx="418.09" cy="134.12" r="1.79" class="blue-dot" data-idx="37" />
+    <circle cx="428.41" cy="134.73" r="1.81" class="blue-dot" data-idx="38" />
+    <circle cx="373.26" cy="135.64" r="1.77" class="blue-dot" data-idx="39" />
+    <circle cx="338.61" cy="135.75" r="1.76" class="blue-dot" data-idx="40" />
+    <circle cx="384.62" cy="137.24" r="1.78" class="blue-dot" data-idx="41" />
+    <circle cx="395.96" cy="138.23" r="1.79" class="blue-dot" data-idx="42" />
+    <circle cx="349.67" cy="138.67" r="1.77" class="blue-dot" data-idx="43" />
+    <circle cx="406.97" cy="138.76" r="1.8" class="blue-dot" data-idx="44" />
+    <circle cx="417.3" cy="139.07" r="1.81" class="blue-dot" data-idx="45" />
+    <circle cx="426.65" cy="139.28" r="1.81" class="blue-dot" data-idx="46" />
+    <circle cx="434.79" cy="139.61" r="1.84" class="blue-dot" data-idx="47" />
+    <circle cx="361.16" cy="140.83" r="1.78" class="blue-dot" data-idx="48" />
+    <circle cx="325.56" cy="141.07" r="1.77" class="blue-dot" data-idx="49" />
+    <circle cx="372.86" cy="142.13" r="1.79" class="blue-dot" data-idx="50" />
+    <circle cx="384.41" cy="142.86" r="1.79" class="blue-dot" data-idx="51" />
+    <circle cx="395.5" cy="143.11" r="1.8" class="blue-dot" data-idx="52" />
+    <circle cx="405.7" cy="143.14" r="1.82" class="blue-dot" data-idx="53" />
+    <circle cx="414.8" cy="143.13" r="1.82" class="blue-dot" data-idx="54" />
+    <circle cx="422.57" cy="143.37" r="1.84" class="blue-dot" data-idx="55" />
+    <circle cx="337.04" cy="143.8" r="1.77" class="blue-dot" data-idx="56" />
+    <circle cx="428.84" cy="144.15" r="1.85" class="blue-dot" data-idx="57" />
+    <circle cx="433.62" cy="145.66" r="1.85" class="blue-dot" data-idx="58" />
+    <circle cx="348.94" cy="145.71" r="1.78" class="blue-dot" data-idx="59" />
+    <circle cx="360.89" cy="146.73" r="1.79" class="blue-dot" data-idx="60" />
+    <circle cx="402.39" cy="146.94" r="1.84" class="blue-dot" data-idx="61" />
+    <circle cx="393.62" cy="147.03" r="1.82" class="blue-dot" data-idx="62" />
+    <circle cx="409.72" cy="147.18" r="1.84" class="blue-dot" data-idx="63" />
+    <circle cx="372.56" cy="147.2" r="1.8" class="blue-dot" data-idx="64" />
+    <circle cx="383.59" cy="147.19" r="1.81" class="blue-dot" data-idx="65" />
+    <circle cx="415.5" cy="148.1" r="1.85" class="blue-dot" data-idx="66" />
+    <circle cx="436.95" cy="148.3" r="1.86" class="blue-dot" data-idx="67" />
+    <circle cx="324.4" cy="148.66" r="1.78" class="blue-dot" data-idx="68" />
+    <circle cx="419.79" cy="149.89" r="1.86" class="blue-dot" data-idx="69" />
+    <circle cx="336.58" cy="150.29" r="1.79" class="blue-dot" data-idx="70" />
+    <circle cx="389.43" cy="150.82" r="1.84" class="blue-dot" data-idx="71" />
+    <circle cx="381.06" cy="150.89" r="1.84" class="blue-dot" data-idx="72" />
+    <circle cx="348.74" cy="151.08" r="1.8" class="blue-dot" data-idx="73" />
+    <circle cx="371.32" cy="151.11" r="1.82" class="blue-dot" data-idx="74" />
+    <circle cx="396.31" cy="151.2" r="1.85" class="blue-dot" data-idx="75" />
+    <circle cx="360.4" cy="151.31" r="1.8" class="blue-dot" data-idx="76" />
+    <circle cx="439.06" cy="152.16" r="1.87" class="blue-dot" data-idx="77" />
+    <circle cx="401.59" cy="152.39" r="1.86" class="blue-dot" data-idx="78" />
+    <circle cx="422.67" cy="152.95" r="1.86" class="blue-dot" data-idx="79" />
+    <circle cx="405.38" cy="154.61" r="1.86" class="blue-dot" data-idx="80" />
+    <circle cx="324.13" cy="154.65" r="1.8" class="blue-dot" data-idx="81" />
+    <circle cx="368.08" cy="154.79" r="1.84" class="blue-dot" data-idx="82" />
+    <circle cx="376.01" cy="154.9" r="1.85" class="blue-dot" data-idx="83" />
+    <circle cx="358.69" cy="155.01" r="1.82" class="blue-dot" data-idx="84" />
+    <circle cx="336.37" cy="155.22" r="1.81" class="blue-dot" data-idx="85" />
+    <circle cx="348.0" cy="155.26" r="1.82" class="blue-dot" data-idx="86" />
+    <circle cx="382.37" cy="155.55" r="1.85" class="blue-dot" data-idx="87" />
+    <circle cx="387.15" cy="157.17" r="1.86" class="blue-dot" data-idx="88" />
+    <circle cx="424.42" cy="157.35" r="1.87" class="blue-dot" data-idx="89" />
+    <circle cx="407.86" cy="158.21" r="1.86" class="blue-dot" data-idx="90" />
+    <circle cx="354.72" cy="158.91" r="1.84" class="blue-dot" data-idx="91" />
+    <circle cx="345.73" cy="158.99" r="1.84" class="blue-dot" data-idx="92" />
+    <circle cx="323.86" cy="159.22" r="1.82" class="blue-dot" data-idx="93" />
+    <circle cx="335.33" cy="159.23" r="1.82" class="blue-dot" data-idx="94" />
+    <circle cx="362.15" cy="159.3" r="1.86" class="blue-dot" data-idx="95" />
+    <circle cx="390.53" cy="159.93" r="1.86" class="blue-dot" data-idx="96" />
+    <circle cx="368.01" cy="160.36" r="1.86" class="blue-dot" data-idx="97" />
+    <circle cx="372.31" cy="162.52" r="1.87" class="blue-dot" data-idx="98" />
+    <circle cx="332.47" cy="163.18" r="1.84" class="blue-dot" data-idx="99" />
+    <circle cx="409.31" cy="163.29" r="1.88" class="blue-dot" data-idx="100" />
+    <circle cx="340.99" cy="163.38" r="1.85" class="blue-dot" data-idx="101" />
+    <circle cx="425.26" cy="163.43" r="1.88" class="blue-dot" data-idx="102" />
+    <circle cx="347.92" cy="164.16" r="1.86" class="blue-dot" data-idx="103" />
+    <circle cx="392.66" cy="164.19" r="1.88" class="blue-dot" data-idx="104" />
+    <circle cx="353.28" cy="165.76" r="1.87" class="blue-dot" data-idx="105" />
+    <circle cx="375.29" cy="165.94" r="1.87" class="blue-dot" data-idx="106" />
+    <circle cx="357.15" cy="168.56" r="1.87" class="blue-dot" data-idx="107" />
+    <circle cx="333.41" cy="169.6" r="1.86" class="blue-dot" data-idx="108" />
+    <circle cx="393.9" cy="170.04" r="1.88" class="blue-dot" data-idx="109" />
+    <circle cx="410.03" cy="170.13" r="1.88" class="blue-dot" data-idx="110" />
+    <circle cx="377.15" cy="170.98" r="1.87" class="blue-dot" data-idx="111" />
+    <circle cx="424.98" cy="171.01" r="1.88" class="blue-dot" data-idx="112" />
+    <circle cx="338.3" cy="171.83" r="1.87" class="blue-dot" data-idx="113" />
+    <circle cx="359.79" cy="172.75" r="1.88" class="blue-dot" data-idx="114" />
+    <circle cx="341.76" cy="175.39" r="1.88" class="blue-dot" data-idx="115" />
+    <circle cx="378.29" cy="177.73" r="1.88" class="blue-dot" data-idx="116" />
+    <circle cx="394.57" cy="177.79" r="1.88" class="blue-dot" data-idx="117" />
+    <circle cx="361.47" cy="178.68" r="1.87" class="blue-dot" data-idx="118" />
+    <circle cx="410.44" cy="178.82" r="1.88" class="blue-dot" data-idx="119" />
+    <circle cx="344.15" cy="180.45" r="1.88" class="blue-dot" data-idx="120" />
+    <circle cx="362.6" cy="186.36" r="1.89" class="blue-dot" data-idx="121" />
+    <circle cx="379.04" cy="186.42" r="1.89" class="blue-dot" data-idx="122" />
+    <circle cx="395.13" cy="187.44" r="1.89" class="blue-dot" data-idx="123" />
+    <circle cx="363.56" cy="196.05" r="1.9" class="blue-dot" data-idx="124" />
+    <circle cx="379.87" cy="197.06" r="1.89" class="blue-dot" data-idx="125" />
+    <circle cx="395.92" cy="199.11" r="1.89" class="blue-dot" data-idx="126" />
+    <circle cx="381.13" cy="209.8" r="1.9" class="blue-dot" data-idx="127" />
+      </g>
+
+      <!-- ARROW: blue diamond → viven knot (short horizontal) -->
+      <path id="arrow3" class="arrow-path" d="M 479,148 L 507,148" />
+      <polygon id="arrowHead3" class="arrow-head" points="0,0 -6,3 -6,-3" />
+
+      <!-- VIVEN KNOT LOGO -->
+      <g id="vivenKnot" class="knot-logo" transform="translate(519, 117) scale(1.3)">
+        <defs>
+          <radialGradient id="knotShine" cx="50%" cy="45%" r="50%">
+            <stop offset="0%" stop-color="#8994a5"/>
+            <stop offset="60%" stop-color="#64748b"/>
+            <stop offset="100%" stop-color="#475569"/>
+          </radialGradient>
+        </defs>
+        <path d="M29.7 38.76l-7.48 7.48a6.01 6.01 0 01-8.5 0 6.01 6.01 0 010-8.5l1.1-1.1 2.11 2.11-1.09 1.1a2.97 2.97 0 004.2 4.2l7.48-7.48 2.11 2.11zm4.51-1.02a6.01 6.01 0 010 8.5 6.01 6.01 0 01-8.5 0l-1.1-1.1 2.11-2.11 1.1 1.09a2.97 2.97 0 004.27-4.13l-7.48-7.48 2.11-2.11 7.48 7.48zm-10.9 1.88l-2.11 2.11-8.58-8.58 2.11-2.11 8.58 8.58zm-5.6-12.85l-7.49 7.48a6.01 6.01 0 01-8.5-8.5l1.1-1.1 2.11 2.11-1.09 1.1a2.97 2.97 0 004.27 4.13l7.48-7.48 2.11 2.11zm28.5-1.02a6.01 6.01 0 010 8.5 6.01 6.01 0 01-8.5 0l-1.1-1.09 2.12-2.11 1.09 1.09a2.97 2.97 0 004.28-4.13l-7.48-7.48 2.11-2.11 7.48 7.48zm-17.29 1.02l-8.58 8.58-2.11-2.11 8.58-8.58 2.11 2.11zm12.78 0l-8.58 8.58-2.11-2.11 8.58-8.58 2.11 2.11zm-6.39.86l-2.11 2.11-8.58-8.58 2.11-2.11 8.58 8.58zM1.76 13.75a6.01 6.01 0 018.5 0l1.09 1.09-2.11 2.11-1.1-1.09a2.97 2.97 0 00-4.27 4.27L11.35 27.62l-2.11 2.11-7.48-7.48a6.01 6.01 0 010-8.5zm21.59 13.09l-2.11 2.11-8.58-8.58 2.11-2.11 8.58 8.58zm-6.39-12.07L8.38 23.35l-2.11-2.11 8.58-8.58 2.11 2.11zm12.78 0l-8.58 8.58-2.11-2.11 8.58-8.58 2.11 2.11zM37.74 13.75a6.01 6.01 0 018.5 8.5l-1.09 1.09-2.11-2.11 1.09-1.1a2.97 2.97 0 00-4.27-4.27l-7.48 7.48-2.11-2.11 7.48-7.48zM13.75 1.76a6.01 6.01 0 018.5 0l1.1 1.09-2.11 2.11-1.1-1.09a2.97 2.97 0 00-4.27 4.27l7.48 7.48-2.11 2.11-7.48-7.48a6.01 6.01 0 010-8.5zm21.59 13.09l-2.11 2.11-8.58-8.58 2.11-2.11 8.58 8.58zm-9.59-13.09a6.01 6.01 0 018.5 8.5l-1.1 1.1-2.11-2.12 1.09-1.09a2.97 2.97 0 00-4.27-4.27l-7.48 7.48-2.11-2.11 7.48-7.48z" fill="url(#knotShine)"/>
+      </g>
+
+      <!-- ARROW: viven knot → gradient diamond (short horizontal) -->
+      <path id="arrow4" class="arrow-path" d="M 593,148 L 621,148" />
+      <polygon id="arrowHead4" class="arrow-head" points="0,0 -6,3 -6,-3" />
+
+      <!-- GRADIENT DIAMOND (blue→green) -->
+      <g transform="translate(720, 148)">
+        <rect class="diamond-shape" id="gradDiamond" x="-65" y="-65" width="130" height="130" rx="16" fill="url(#blueGreenGrad)" transform="rotate(45)" />
+      </g>
+      <g id="gradDots">
+    <circle cx="724.73" cy="87.56" r="1.61" class="grad-dot" data-idx="0" />
+    <circle cx="712.41" cy="87.84" r="1.6" class="grad-dot" data-idx="1" />
+    <circle cx="711.62" cy="94.11" r="1.6" class="grad-dot" data-idx="2" />
+    <circle cx="723.99" cy="95.26" r="1.6" class="grad-dot" data-idx="3" />
+    <circle cx="736.26" cy="96.72" r="1.62" class="grad-dot" data-idx="4" />
+    <circle cx="699.18" cy="101.54" r="1.6" class="grad-dot" data-idx="5" />
+    <circle cx="710.79" cy="102.01" r="1.6" class="grad-dot" data-idx="6" />
+    <circle cx="735.92" cy="102.57" r="1.62" class="grad-dot" data-idx="7" />
+    <circle cx="723.26" cy="102.85" r="1.61" class="grad-dot" data-idx="8" />
+    <circle cx="697.89" cy="108.01" r="1.6" class="grad-dot" data-idx="9" />
+    <circle cx="746.96" cy="108.57" r="1.63" class="grad-dot" data-idx="10" />
+    <circle cx="709.96" cy="109.75" r="1.61" class="grad-dot" data-idx="11" />
+    <circle cx="734.88" cy="109.81" r="1.62" class="grad-dot" data-idx="12" />
+    <circle cx="722.43" cy="110.33" r="1.62" class="grad-dot" data-idx="13" />
+    <circle cx="686.09" cy="114.75" r="1.6" class="grad-dot" data-idx="14" />
+    <circle cx="745.13" cy="115.6" r="1.64" class="grad-dot" data-idx="15" />
+    <circle cx="696.9" cy="115.89" r="1.61" class="grad-dot" data-idx="16" />
+    <circle cx="733.5" cy="116.96" r="1.63" class="grad-dot" data-idx="17" />
+    <circle cx="709.01" cy="117.36" r="1.61" class="grad-dot" data-idx="18" />
+    <circle cx="721.33" cy="117.67" r="1.62" class="grad-dot" data-idx="19" />
+    <circle cx="752.88" cy="121.01" r="1.65" class="grad-dot" data-idx="20" />
+    <circle cx="684.09" cy="121.02" r="1.6" class="grad-dot" data-idx="21" />
+    <circle cx="742.77" cy="122.56" r="1.64" class="grad-dot" data-idx="22" />
+    <circle cx="695.76" cy="123.57" r="1.61" class="grad-dot" data-idx="23" />
+    <circle cx="731.69" cy="123.96" r="1.63" class="grad-dot" data-idx="24" />
+    <circle cx="707.82" cy="124.74" r="1.61" class="grad-dot" data-idx="25" />
+    <circle cx="719.92" cy="124.82" r="1.63" class="grad-dot" data-idx="26" />
+    <circle cx="764.38" cy="126.24" r="1.68" class="grad-dot" data-idx="27" />
+    <circle cx="757.55" cy="126.76" r="1.66" class="grad-dot" data-idx="28" />
+    <circle cx="749.33" cy="127.93" r="1.65" class="grad-dot" data-idx="29" />
+    <circle cx="682.66" cy="128.77" r="1.61" class="grad-dot" data-idx="30" />
+    <circle cx="739.86" cy="129.4" r="1.65" class="grad-dot" data-idx="31" />
+    <circle cx="729.32" cy="130.81" r="1.64" class="grad-dot" data-idx="32" />
+    <circle cx="694.33" cy="130.99" r="1.61" class="grad-dot" data-idx="33" />
+    <circle cx="718.0" cy="131.78" r="1.63" class="grad-dot" data-idx="34" />
+    <circle cx="706.21" cy="131.89" r="1.62" class="grad-dot" data-idx="35" />
+    <circle cx="669.82" cy="132.79" r="1.6" class="grad-dot" data-idx="36" />
+    <circle cx="759.06" cy="133.57" r="1.68" class="grad-dot" data-idx="37" />
+    <circle cx="752.79" cy="133.81" r="1.68" class="grad-dot" data-idx="38" />
+    <circle cx="764.01" cy="134.33" r="1.69" class="grad-dot" data-idx="39" />
+    <circle cx="745.2" cy="134.77" r="1.66" class="grad-dot" data-idx="40" />
+    <circle cx="736.32" cy="136.13" r="1.65" class="grad-dot" data-idx="41" />
+    <circle cx="680.95" cy="136.21" r="1.61" class="grad-dot" data-idx="42" />
+    <circle cx="767.77" cy="136.29" r="1.7" class="grad-dot" data-idx="43" />
+    <circle cx="726.34" cy="137.5" r="1.64" class="grad-dot" data-idx="44" />
+    <circle cx="692.49" cy="138.14" r="1.62" class="grad-dot" data-idx="45" />
+    <circle cx="715.52" cy="138.54" r="1.64" class="grad-dot" data-idx="46" />
+    <circle cx="704.13" cy="138.81" r="1.62" class="grad-dot" data-idx="47" />
+    <circle cx="770.52" cy="139.62" r="1.71" class="grad-dot" data-idx="48" />
+    <circle cx="667.74" cy="140.21" r="1.61" class="grad-dot" data-idx="49" />
+    <circle cx="747.45" cy="140.8" r="1.68" class="grad-dot" data-idx="50" />
+    <circle cx="753.23" cy="140.85" r="1.7" class="grad-dot" data-idx="51" />
+    <circle cx="740.38" cy="141.53" r="1.66" class="grad-dot" data-idx="52" />
+    <circle cx="757.84" cy="141.88" r="1.7" class="grad-dot" data-idx="53" />
+    <circle cx="780.29" cy="142.21" r="1.72" class="grad-dot" data-idx="54" />
+    <circle cx="732.1" cy="142.71" r="1.65" class="grad-dot" data-idx="55" />
+    <circle cx="678.79" cy="143.34" r="1.62" class="grad-dot" data-idx="56" />
+    <circle cx="722.71" cy="144.01" r="1.65" class="grad-dot" data-idx="57" />
+    <circle cx="761.39" cy="144.09" r="1.71" class="grad-dot" data-idx="58" />
+    <circle cx="772.58" cy="144.41" r="1.72" class="grad-dot" data-idx="59" />
+    <circle cx="690.15" cy="144.98" r="1.62" class="grad-dot" data-idx="60" />
+    <circle cx="712.41" cy="145.06" r="1.64" class="grad-dot" data-idx="61" />
+    <circle cx="701.45" cy="145.45" r="1.63" class="grad-dot" data-idx="62" />
+    <circle cx="665.17" cy="147.29" r="1.61" class="grad-dot" data-idx="63" />
+    <circle cx="764.13" cy="147.61" r="1.71" class="grad-dot" data-idx="64" />
+    <circle cx="741.52" cy="147.74" r="1.69" class="grad-dot" data-idx="65" />
+    <circle cx="746.95" cy="148.02" r="1.7" class="grad-dot" data-idx="66" />
+    <circle cx="734.93" cy="148.21" r="1.68" class="grad-dot" data-idx="67" />
+    <circle cx="727.17" cy="149.16" r="1.66" class="grad-dot" data-idx="68" />
+    <circle cx="751.31" cy="149.33" r="1.71" class="grad-dot" data-idx="69" />
+    <circle cx="781.52" cy="149.79" r="1.74" class="grad-dot" data-idx="70" />
+    <circle cx="676.07" cy="150.11" r="1.62" class="grad-dot" data-idx="71" />
+    <circle cx="718.34" cy="150.35" r="1.65" class="grad-dot" data-idx="72" />
+    <circle cx="774.24" cy="150.58" r="1.73" class="grad-dot" data-idx="73" />
+    <circle cx="708.55" cy="151.38" r="1.64" class="grad-dot" data-idx="74" />
+    <circle cx="687.12" cy="151.52" r="1.63" class="grad-dot" data-idx="75" />
+    <circle cx="754.83" cy="151.75" r="1.72" class="grad-dot" data-idx="76" />
+    <circle cx="698.06" cy="151.82" r="1.63" class="grad-dot" data-idx="77" />
+    <circle cx="766.36" cy="152.5" r="1.73" class="grad-dot" data-idx="78" />
+    <circle cx="662.01" cy="154.0" r="1.61" class="grad-dot" data-idx="79" />
+    <circle cx="735.05" cy="154.56" r="1.7" class="grad-dot" data-idx="80" />
+    <circle cx="728.84" cy="154.79" r="1.69" class="grad-dot" data-idx="81" />
+    <circle cx="740.23" cy="155.13" r="1.71" class="grad-dot" data-idx="82" />
+    <circle cx="757.68" cy="155.41" r="1.72" class="grad-dot" data-idx="83" />
+    <circle cx="721.56" cy="155.51" r="1.66" class="grad-dot" data-idx="84" />
+    <circle cx="672.7" cy="156.52" r="1.62" class="grad-dot" data-idx="85" />
+    <circle cx="713.2" cy="156.53" r="1.65" class="grad-dot" data-idx="86" />
+    <circle cx="744.52" cy="156.64" r="1.71" class="grad-dot" data-idx="87" />
+    <circle cx="703.94" cy="157.46" r="1.65" class="grad-dot" data-idx="88" />
+    <circle cx="683.43" cy="157.76" r="1.63" class="grad-dot" data-idx="89" />
+    <circle cx="693.93" cy="157.94" r="1.64" class="grad-dot" data-idx="90" />
+    <circle cx="775.83" cy="158.18" r="1.74" class="grad-dot" data-idx="91" />
+    <circle cx="768.33" cy="158.72" r="1.74" class="grad-dot" data-idx="92" />
+    <circle cx="748.1" cy="159.23" r="1.73" class="grad-dot" data-idx="93" />
+    <circle cx="760.19" cy="160.36" r="1.73" class="grad-dot" data-idx="94" />
+    <circle cx="722.13" cy="161.23" r="1.69" class="grad-dot" data-idx="95" />
+    <circle cx="728.1" cy="161.29" r="1.7" class="grad-dot" data-idx="96" />
+    <circle cx="715.21" cy="161.76" r="1.69" class="grad-dot" data-idx="97" />
+    <circle cx="733.15" cy="162.09" r="1.71" class="grad-dot" data-idx="98" />
+    <circle cx="707.31" cy="162.54" r="1.66" class="grad-dot" data-idx="99" />
+    <circle cx="668.54" cy="162.61" r="1.63" class="grad-dot" data-idx="100" />
+    <circle cx="751.19" cy="163.0" r="1.73" class="grad-dot" data-idx="101" />
+    <circle cx="698.53" cy="163.37" r="1.65" class="grad-dot" data-idx="102" />
+    <circle cx="678.91" cy="163.67" r="1.63" class="grad-dot" data-idx="103" />
+    <circle cx="737.48" cy="163.81" r="1.72" class="grad-dot" data-idx="104" />
+    <circle cx="688.99" cy="163.79" r="1.64" class="grad-dot" data-idx="105" />
+    <circle cx="770.02" cy="165.42" r="1.76" class="grad-dot" data-idx="106" />
+    <circle cx="741.26" cy="166.53" r="1.73" class="grad-dot" data-idx="107" />
+    <circle cx="762.59" cy="166.52" r="1.74" class="grad-dot" data-idx="108" />
+    <circle cx="714.85" cy="167.61" r="1.7" class="grad-dot" data-idx="109" />
+    <circle cx="708.2" cy="167.85" r="1.69" class="grad-dot" data-idx="110" />
+    <circle cx="720.67" cy="167.9" r="1.71" class="grad-dot" data-idx="111" />
+    <circle cx="754.11" cy="167.92" r="1.74" class="grad-dot" data-idx="112" />
+    <circle cx="700.66" cy="168.47" r="1.68" class="grad-dot" data-idx="113" />
+    <circle cx="725.75" cy="168.93" r="1.72" class="grad-dot" data-idx="114" />
+    <circle cx="692.3" cy="169.09" r="1.66" class="grad-dot" data-idx="115" />
+    <circle cx="673.58" cy="169.3" r="1.65" class="grad-dot" data-idx="116" />
+    <circle cx="683.2" cy="169.44" r="1.65" class="grad-dot" data-idx="117" />
+    <circle cx="744.73" cy="170.32" r="1.74" class="grad-dot" data-idx="118" />
+    <circle cx="730.23" cy="170.82" r="1.73" class="grad-dot" data-idx="119" />
+    <circle cx="734.36" cy="173.61" r="1.73" class="grad-dot" data-idx="120" />
+    <circle cx="700.55" cy="173.89" r="1.7" class="grad-dot" data-idx="121" />
+    <circle cx="707.06" cy="173.87" r="1.7" class="grad-dot" data-idx="122" />
+    <circle cx="757.06" cy="174.0" r="1.76" class="grad-dot" data-idx="123" />
+    <circle cx="693.29" cy="174.22" r="1.68" class="grad-dot" data-idx="124" />
+    <circle cx="712.85" cy="174.41" r="1.72" class="grad-dot" data-idx="125" />
+    <circle cx="685.26" cy="174.67" r="1.68" class="grad-dot" data-idx="126" />
+    <circle cx="676.74" cy="174.7" r="1.54" class="grad-dot" data-idx="127" />
+    <circle cx="748.16" cy="175.21" r="1.74" class="grad-dot" data-idx="128" />
+    <circle cx="718.07" cy="175.64" r="1.72" class="grad-dot" data-idx="129" />
+    <circle cx="738.31" cy="177.4" r="1.74" class="grad-dot" data-idx="130" />
+    <circle cx="722.87" cy="177.63" r="1.73" class="grad-dot" data-idx="131" />
+    <circle cx="685.21" cy="179.91" r="1.69" class="grad-dot" data-idx="132" />
+    <circle cx="692.31" cy="179.82" r="1.7" class="grad-dot" data-idx="133" />
+    <circle cx="698.79" cy="180.06" r="1.71" class="grad-dot" data-idx="134" />
+    <circle cx="727.44" cy="180.49" r="1.74" class="grad-dot" data-idx="135" />
+    <circle cx="704.7" cy="180.82" r="1.72" class="grad-dot" data-idx="136" />
+    <circle cx="751.72" cy="181.17" r="1.77" class="grad-dot" data-idx="137" />
+    <circle cx="710.19" cy="182.19" r="1.73" class="grad-dot" data-idx="138" />
+    <circle cx="742.33" cy="182.23" r="1.76" class="grad-dot" data-idx="139" />
+    <circle cx="731.96" cy="184.25" r="1.76" class="grad-dot" data-idx="140" />
+    <circle cx="715.39" cy="184.31" r="1.73" class="grad-dot" data-idx="141" />
+    <circle cx="690.12" cy="186.19" r="1.72" class="grad-dot" data-idx="142" />
+    <circle cx="696.29" cy="187.14" r="1.73" class="grad-dot" data-idx="143" />
+    <circle cx="720.51" cy="187.17" r="1.74" class="grad-dot" data-idx="144" />
+    <circle cx="746.51" cy="188.12" r="1.77" class="grad-dot" data-idx="145" />
+    <circle cx="702.15" cy="188.65" r="1.74" class="grad-dot" data-idx="146" />
+    <circle cx="736.59" cy="189.05" r="1.77" class="grad-dot" data-idx="147" />
+    <circle cx="707.89" cy="190.8" r="1.74" class="grad-dot" data-idx="148" />
+    <circle cx="725.66" cy="190.95" r="1.76" class="grad-dot" data-idx="149" />
+    <circle cx="713.61" cy="193.73" r="1.76" class="grad-dot" data-idx="150" />
+    <circle cx="741.4" cy="194.89" r="1.77" class="grad-dot" data-idx="151" />
+    <circle cx="730.92" cy="195.74" r="1.77" class="grad-dot" data-idx="152" />
+    <circle cx="700.34" cy="197.22" r="1.76" class="grad-dot" data-idx="153" />
+    <circle cx="719.37" cy="197.49" r="1.77" class="grad-dot" data-idx="154" />
+    <circle cx="706.7" cy="200.17" r="1.76" class="grad-dot" data-idx="155" />
+    <circle cx="725.22" cy="202.39" r="1.78" class="grad-dot" data-idx="156" />
+    <circle cx="713.07" cy="204.07" r="1.78" class="grad-dot" data-idx="157" />
+    <circle cx="719.34" cy="208.92" r="1.79" class="grad-dot" data-idx="158" />
+      </g>
+
+      <!-- LABELS -->
+      <!-- 1. Expert Person (below head, cx=80) -->
+      <text class="label-title" id="lbl1t" x="80" y="275">Expert Person</text>
+      <text class="label-sub" id="lbl1s" x="80" y="290">(Your most in-demand</text>
+      <text class="label-sub" id="lbl1s2" x="80" y="302">employees)</text>
+
+      <!-- 2. Documented Knowledge (below green, cx=230) -->
+      <text class="label-title" id="lbl2t" x="230" y="275">Documented</text>
+      <text class="label-title" id="lbl2t2" x="230" y="290">Knowledge</text>
+      <text class="label-sub" id="lbl2s" x="230" y="305">(Databases, manuals, wikis,</text>
+      <text class="label-sub" id="lbl2s2" x="230" y="317">procedures the Expert</text>
+      <text class="label-sub" id="lbl2s3" x="230" y="329">has created)</text>
+
+      <!-- 3. Tacit Knowledge (below blue, cx=380) -->
+      <text class="label-title" id="lbl3t" x="380" y="275">Tacit Knowledge</text>
+      <text class="label-sub" id="lbl3s" x="380" y="290">(Captured versions of Expert's</text>
+      <text class="label-sub" id="lbl3s2" x="380" y="302">experience, intuition, judgment,</text>
+      <text class="label-sub" id="lbl3s3" x="380" y="314">and unspoken rules)</text>
+
+      <!-- 4. Viven PLM (below knot, cx=550) -->
+      <text class="label-title" id="lbl4t" x="550" y="275">Viven Personalized</text>
+      <text class="label-title" id="lbl4t2" x="550" y="290">Language Model</text>
+      <text class="label-sub" id="lbl4s" x="550" y="305">(Synthesizes information</text>
+      <text class="label-sub" id="lbl4s2" x="550" y="317">using the Expert's context</text>
+      <text class="label-sub" id="lbl4s3" x="550" y="329">and reasoning)</text>
+
+      <!-- 5. Viven Digital Twin (below gradient, cx=720) -->
+      <text class="label-title" id="lbl5t" x="720" y="275">Viven</text>
+      <text class="label-title" id="lbl5t2" x="720" y="290">Digital Twin</text>
+      <text class="label-sub" id="lbl5s" x="720" y="305">(AI version of</text>
+      <text class="label-sub" id="lbl5s2" x="720" y="317">the Expert)</text>
+
+    </svg>
+  </div>
+</div>
+
+<div class="scene-indicator"><kbd>Space</kbd> play · <kbd>R</kbd> reset</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let timeouts = [];
+let rafIds = [];
+function clearT() { timeouts.forEach(t => clearTimeout(t)); timeouts = []; rafIds.forEach(r => cancelAnimationFrame(r)); rafIds = []; }
+function st(fn, d) { const t = setTimeout(fn, d); timeouts.push(t); return t; }
+
+const HEAD_DATA = [
+  {x:92.96,y:87.63,r:1.37},
+  {x:72.02,y:89.17,r:1.37},
+  {x:61.24,y:91.53,r:1.37},
+  {x:81.53,y:92.1,r:1.38},
+  {x:91.39,y:93.75,r:1.38},
+  {x:111.08,y:94.09,r:1.4},
+  {x:101.33,y:94.32,r:1.39},
+  {x:70.22,y:95.53,r:1.37},
+  {x:59.09,y:97.87,r:1.37},
+  {x:79.66,y:98.19,r:1.38},
+  {x:117.22,y:98.77,r:1.41},
+  {x:48.15,y:99.05,r:1.36},
+  {x:89.38,y:99.61,r:1.38},
+  {x:108.41,y:99.67,r:1.41},
+  {x:99.05,y:99.99,r:1.39},
+  {x:68.04,y:101.57,r:1.38},
+  {x:127.67,y:102.35,r:1.44},
+  {x:121.04,y:103.18,r:1.43},
+  {x:56.48,y:103.88,r:1.37},
+  {x:77.35,y:103.98,r:1.38},
+  {x:113.48,y:104.2,r:1.41},
+  {x:45.1,y:104.99,r:1.37},
+  {x:105.11,y:105.06,r:1.4},
+  {x:86.81,y:105.2,r:1.4},
+  {x:96.14,y:105.45,r:1.4},
+  {x:65.34,y:107.31,r:1.39},
+  {x:127.77,y:107.79,r:1.45},
+  {x:122.46,y:107.97,r:1.45},
+  {x:132.2,y:108.28,r:1.47},
+  {x:116.24,y:108.6,r:1.43},
+  {x:74.46,y:109.47,r:1.39},
+  {x:109.09,y:109.48,r:1.42},
+  {x:53.36,y:109.53,r:1.38},
+  {x:101.18,y:110.27,r:1.41},
+  {x:41.52,y:110.55,r:1.37},
+  {x:83.65,y:110.53,r:1.39},
+  {x:92.62,y:110.69,r:1.41},
+  {x:62.04,y:112.69,r:1.38},
+  {x:116.74,y:113.5,r:1.44},
+  {x:121.82,y:113.55,r:1.45},
+  {x:110.81,y:113.95,r:1.45},
+  {x:126.15,y:114.23,r:1.47},
+  {x:104.07,y:114.61,r:1.43},
+  {x:70.91,y:114.67,r:1.4},
+  {x:49.63,y:114.81,r:1.39},
+  {x:96.54,y:115.32,r:1.42},
+  {x:79.79,y:115.59,r:1.4},
+  {x:129.85,y:115.7,r:1.48},
+  {x:88.4,y:115.7,r:1.41},
+  {x:58.09,y:117.77,r:1.39},
+  {x:133.08,y:118.04,r:1.48},
+  {x:110.51,y:118.96,r:1.45},
+  {x:104.82,y:119.16,r:1.45},
+  {x:115.48,y:119.21,r:1.46},
+  {x:66.69,y:119.57,r:1.4},
+  {x:98.38,y:119.67,r:1.44},
+  {x:45.21,y:119.75,r:1.39},
+  {x:119.83,y:120.07,r:1.48},
+  {x:91.23,y:120.21,r:1.43},
+  {x:75.22,y:120.4,r:1.41},
+  {x:83.46,y:120.51,r:1.42},
+  {x:136.05,y:121.26,r:1.49},
+  {x:123.65,y:121.69,r:1.48},
+  {x:53.42,y:122.51,r:1.4},
+  {x:127.18,y:124.08,r:1.49},
+  {x:61.72,y:124.18,r:1.4},
+  {x:103.84,y:124.32,r:1.46},
+  {x:40.07,y:124.33,r:1.39},
+  {x:98.27,y:124.33,r:1.45},
+  {x:92.08,y:124.61,r:1.44},
+  {x:108.8,y:124.77,r:1.47},
+  {x:69.9,y:124.99,r:1.41},
+  {x:85.22,y:125.0,r:1.43},
+  {x:77.78,y:125.14,r:1.42},
+  {x:138.97,y:125.45,r:1.5},
+  {x:113.26,y:125.82,r:1.48},
+  {x:47.98,y:126.95,r:1.4},
+  {x:130.56,y:127.33,r:1.5},
+  {x:117.37,y:127.52,r:1.49},
+  {x:55.97,y:128.59,r:1.41},
+  {x:63.83,y:129.39,r:1.42},
+  {x:85.17,y:129.47,r:1.45},
+  {x:91.23,y:129.4,r:1.45},
+  {x:78.55,y:129.63,r:1.44},
+  {x:96.77,y:129.6,r:1.46},
+  {x:71.4,y:129.68,r:1.43},
+  {x:121.27,y:129.97,r:1.49},
+  {x:101.82,y:130.25,r:1.48},
+  {x:106.52,y:131.42,r:1.48},
+  {x:133.99,y:131.46,r:1.51},
+  {x:49.46,y:132.73,r:1.42},
+  {x:110.97,y:133.23,r:1.49},
+  {x:125.13,y:133.19,r:1.51},
+  {x:57.01,y:133.68,r:1.43},
+  {x:64.31,y:134.05,r:1.44},
+  {x:71.23,y:134.23,r:1.45},
+  {x:77.73,y:134.26,r:1.46},
+  {x:83.76,y:134.4,r:1.47},
+  {x:89.36,y:134.84,r:1.47},
+  {x:94.63,y:135.66,r:1.48},
+  {x:115.35,y:135.68,r:1.49},
+  {x:137.58,y:136.5,r:1.51},
+  {x:99.64,y:136.96,r:1.49},
+  {x:129.09,y:137.3,r:1.51},
+  {x:49.49,y:137.8,r:1.43},
+  {x:56.57,y:138.37,r:1.44},
+  {x:63.37,y:138.74,r:1.46},
+  {x:104.55,y:138.78,r:1.5},
+  {x:119.74,y:138.91,r:1.5},
+  {x:69.8,y:139.01,r:1.47},
+  {x:75.89,y:139.41,r:1.47},
+  {x:81.69,y:140.01,r:1.48},
+  {x:87.25,y:140.98,r:1.49},
+  {x:109.44,y:141.29,r:1.51},
+  {x:133.2,y:142.29,r:1.52},
+  {x:92.7,y:142.36,r:1.5},
+  {x:124.24,y:143.0,r:1.52},
+  {x:54.98,y:143.24,r:1.46},
+  {x:61.46,y:143.77,r:1.47},
+  {x:98.1,y:144.27,r:1.5},
+  {x:67.73,y:144.36,r:1.47},
+  {x:114.38,y:144.52,r:1.52},
+  {x:73.79,y:145.16,r:1.49},
+  {x:79.76,y:146.23,r:1.49},
+  {x:103.53,y:146.8,r:1.51},
+  {x:85.69,y:147.73,r:1.5},
+  {x:128.81,y:148.08,r:1.53},
+  {x:119.37,y:148.7,r:1.53},
+  {x:91.65,y:149.69,r:1.51},
+  {x:108.98,y:150.13,r:1.52},
+  {x:65.74,y:150.28,r:1.49},
+  {x:72.17,y:151.49,r:1.5},
+  {x:97.6,y:152.32,r:1.52},
+  {x:78.64,y:153.05,r:1.51},
+  {x:114.34,y:154.28,r:1.53},
+  {x:85.12,y:155.13,r:1.51},
+  {x:103.46,y:155.63,r:1.52},
+  {x:91.5,y:157.74,r:1.53}
+];
+const GREEN_DATA = [
+  {x:232.67,y:160.14,r:1.63},
+  {x:219.79,y:164.52,r:1.64},
+  {x:242.73,y:165.08,r:1.64},
+  {x:230.26,y:169.32,r:1.64},
+  {x:241.6,y:172.91,r:1.65},
+  {x:218.09,y:173.4,r:1.65},
+  {x:253.41,y:175.47,r:1.66},
+  {x:229.76,y:176.86,r:1.66},
+  {x:206.21,y:177.38,r:1.66},
+  {x:241.8,y:179.29,r:1.67},
+  {x:218.18,y:180.73,r:1.67},
+  {x:253.85,y:180.85,r:1.68},
+  {x:230.36,y:183.16,r:1.68},
+  {x:206.88,y:184.66,r:1.67},
+  {x:242.42,y:184.77,r:1.68},
+  {x:253.87,y:185.88,r:1.69},
+  {x:264.27,y:186.68,r:1.6},
+  {x:219.15,y:187.14,r:1.68},
+  {x:195.91,y:188.72,r:1.68},
+  {x:231.12,y:188.87,r:1.69},
+  {x:242.34,y:190.23,r:1.71},
+  {x:252.55,y:191.31,r:1.72},
+  {x:208.17,y:191.35,r:1.69},
+  {x:261.41,y:192.52,r:1.72},
+  {x:219.97,y:193.31,r:1.71},
+  {x:230.88,y:194.98,r:1.71},
+  {x:197.87,y:195.38,r:1.27},
+  {x:240.66,y:196.48,r:1.72},
+  {x:208.99,y:198.12,r:1.71},
+  {x:249.03,y:198.21,r:1.72},
+  {x:219.52,y:200.21,r:1.71},
+  {x:255.95,y:200.33,r:1.72},
+  {x:228.82,y:202.21,r:1.72},
+  {x:236.68,y:204.53,r:1.73},
+  {x:208.54,y:205.68,r:1.47},
+  {x:243.11,y:207.38,r:1.74},
+  {x:217.05,y:208.53,r:1.73},
+  {x:224.37,y:211.53,r:1.73},
+  {x:230.31,y:215.13,r:1.75},
+  {x:234.94,y:219.66,r:1.75}
+];
+const BLUE_DATA = [
+  {x:376.37,y:87.32,r:1.66},
+  {x:383.48,y:89.66,r:1.68},
+  {x:370.91,y:93.43,r:1.68},
+  {x:390.82,y:94.14,r:1.68},
+  {x:398.52,y:97.85,r:1.7},
+  {x:378.2,y:98.18,r:1.69},
+  {x:385.92,y:102.26,r:1.7},
+  {x:365.06,y:102.43,r:1.7},
+  {x:394.06,y:105.65,r:1.71},
+  {x:351.61,y:106.86,r:1.68},
+  {x:372.92,y:106.8,r:1.7},
+  {x:402.52,y:108.54,r:1.72},
+  {x:381.24,y:110.56,r:1.71},
+  {x:411.34,y:110.95,r:1.73},
+  {x:359.59,y:111.58,r:1.71},
+  {x:390.01,y:113.76,r:1.72},
+  {x:368.2,y:115.66,r:1.73},
+  {x:399.21,y:116.47,r:1.73},
+  {x:346.05,y:116.56,r:1.72},
+  {x:408.81,y:118.77,r:1.74},
+  {x:377.33,y:119.19,r:1.73},
+  {x:418.75,y:120.72,r:1.76},
+  {x:354.98,y:120.99,r:1.73},
+  {x:387.0,y:122.06,r:1.74},
+  {x:397.06,y:124.53,r:1.76},
+  {x:364.54,y:124.68,r:1.74},
+  {x:341.64,y:126.39,r:1.74},
+  {x:407.54,y:126.45,r:1.77},
+  {x:374.63,y:127.71,r:1.76},
+  {x:418.2,y:127.98,r:1.78},
+  {x:428.81,y:129.15,r:1.78},
+  {x:385.23,y:130.19,r:1.77},
+  {x:351.61,y:130.26,r:1.76},
+  {x:328.22,y:131.91,r:1.74},
+  {x:396.18,y:131.98,r:1.77},
+  {x:362.21,y:133.29,r:1.76},
+  {x:407.22,y:133.29,r:1.78},
+  {x:418.09,y:134.12,r:1.79},
+  {x:428.41,y:134.73,r:1.81},
+  {x:373.26,y:135.64,r:1.77},
+  {x:338.61,y:135.75,r:1.76},
+  {x:384.62,y:137.24,r:1.78},
+  {x:395.96,y:138.23,r:1.79},
+  {x:349.67,y:138.67,r:1.77},
+  {x:406.97,y:138.76,r:1.8},
+  {x:417.3,y:139.07,r:1.81},
+  {x:426.65,y:139.28,r:1.81},
+  {x:434.79,y:139.61,r:1.84},
+  {x:361.16,y:140.83,r:1.78},
+  {x:325.56,y:141.07,r:1.77},
+  {x:372.86,y:142.13,r:1.79},
+  {x:384.41,y:142.86,r:1.79},
+  {x:395.5,y:143.11,r:1.8},
+  {x:405.7,y:143.14,r:1.82},
+  {x:414.8,y:143.13,r:1.82},
+  {x:422.57,y:143.37,r:1.84},
+  {x:337.04,y:143.8,r:1.77},
+  {x:428.84,y:144.15,r:1.85},
+  {x:433.62,y:145.66,r:1.85},
+  {x:348.94,y:145.71,r:1.78},
+  {x:360.89,y:146.73,r:1.79},
+  {x:402.39,y:146.94,r:1.84},
+  {x:393.62,y:147.03,r:1.82},
+  {x:409.72,y:147.18,r:1.84},
+  {x:372.56,y:147.2,r:1.8},
+  {x:383.59,y:147.19,r:1.81},
+  {x:415.5,y:148.1,r:1.85},
+  {x:436.95,y:148.3,r:1.86},
+  {x:324.4,y:148.66,r:1.78},
+  {x:419.79,y:149.89,r:1.86},
+  {x:336.58,y:150.29,r:1.79},
+  {x:389.43,y:150.82,r:1.84},
+  {x:381.06,y:150.89,r:1.84},
+  {x:348.74,y:151.08,r:1.8},
+  {x:371.32,y:151.11,r:1.82},
+  {x:396.31,y:151.2,r:1.85},
+  {x:360.4,y:151.31,r:1.8},
+  {x:439.06,y:152.16,r:1.87},
+  {x:401.59,y:152.39,r:1.86},
+  {x:422.67,y:152.95,r:1.86},
+  {x:405.38,y:154.61,r:1.86},
+  {x:324.13,y:154.65,r:1.8},
+  {x:368.08,y:154.79,r:1.84},
+  {x:376.01,y:154.9,r:1.85},
+  {x:358.69,y:155.01,r:1.82},
+  {x:336.37,y:155.22,r:1.81},
+  {x:348.0,y:155.26,r:1.82},
+  {x:382.37,y:155.55,r:1.85},
+  {x:387.15,y:157.17,r:1.86},
+  {x:424.42,y:157.35,r:1.87},
+  {x:407.86,y:158.21,r:1.86},
+  {x:354.72,y:158.91,r:1.84},
+  {x:345.73,y:158.99,r:1.84},
+  {x:323.86,y:159.22,r:1.82},
+  {x:335.33,y:159.23,r:1.82},
+  {x:362.15,y:159.3,r:1.86},
+  {x:390.53,y:159.93,r:1.86},
+  {x:368.01,y:160.36,r:1.86},
+  {x:372.31,y:162.52,r:1.87},
+  {x:332.47,y:163.18,r:1.84},
+  {x:409.31,y:163.29,r:1.88},
+  {x:340.99,y:163.38,r:1.85},
+  {x:425.26,y:163.43,r:1.88},
+  {x:347.92,y:164.16,r:1.86},
+  {x:392.66,y:164.19,r:1.88},
+  {x:353.28,y:165.76,r:1.87},
+  {x:375.29,y:165.94,r:1.87},
+  {x:357.15,y:168.56,r:1.87},
+  {x:333.41,y:169.6,r:1.86},
+  {x:393.9,y:170.04,r:1.88},
+  {x:410.03,y:170.13,r:1.88},
+  {x:377.15,y:170.98,r:1.87},
+  {x:424.98,y:171.01,r:1.88},
+  {x:338.3,y:171.83,r:1.87},
+  {x:359.79,y:172.75,r:1.88},
+  {x:341.76,y:175.39,r:1.88},
+  {x:378.29,y:177.73,r:1.88},
+  {x:394.57,y:177.79,r:1.88},
+  {x:361.47,y:178.68,r:1.87},
+  {x:410.44,y:178.82,r:1.88},
+  {x:344.15,y:180.45,r:1.88},
+  {x:362.6,y:186.36,r:1.89},
+  {x:379.04,y:186.42,r:1.89},
+  {x:395.13,y:187.44,r:1.89},
+  {x:363.56,y:196.05,r:1.9},
+  {x:379.87,y:197.06,r:1.89},
+  {x:395.92,y:199.11,r:1.89},
+  {x:381.13,y:209.8,r:1.9}
+];
+const GRAD_DATA = [
+  {x:724.73,y:87.56,r:1.61},
+  {x:712.41,y:87.84,r:1.6},
+  {x:711.62,y:94.11,r:1.6},
+  {x:723.99,y:95.26,r:1.6},
+  {x:736.26,y:96.72,r:1.62},
+  {x:699.18,y:101.54,r:1.6},
+  {x:710.79,y:102.01,r:1.6},
+  {x:735.92,y:102.57,r:1.62},
+  {x:723.26,y:102.85,r:1.61},
+  {x:697.89,y:108.01,r:1.6},
+  {x:746.96,y:108.57,r:1.63},
+  {x:709.96,y:109.75,r:1.61},
+  {x:734.88,y:109.81,r:1.62},
+  {x:722.43,y:110.33,r:1.62},
+  {x:686.09,y:114.75,r:1.6},
+  {x:745.13,y:115.6,r:1.64},
+  {x:696.9,y:115.89,r:1.61},
+  {x:733.5,y:116.96,r:1.63},
+  {x:709.01,y:117.36,r:1.61},
+  {x:721.33,y:117.67,r:1.62},
+  {x:752.88,y:121.01,r:1.65},
+  {x:684.09,y:121.02,r:1.6},
+  {x:742.77,y:122.56,r:1.64},
+  {x:695.76,y:123.57,r:1.61},
+  {x:731.69,y:123.96,r:1.63},
+  {x:707.82,y:124.74,r:1.61},
+  {x:719.92,y:124.82,r:1.63},
+  {x:764.38,y:126.24,r:1.68},
+  {x:757.55,y:126.76,r:1.66},
+  {x:749.33,y:127.93,r:1.65},
+  {x:682.66,y:128.77,r:1.61},
+  {x:739.86,y:129.4,r:1.65},
+  {x:729.32,y:130.81,r:1.64},
+  {x:694.33,y:130.99,r:1.61},
+  {x:718.0,y:131.78,r:1.63},
+  {x:706.21,y:131.89,r:1.62},
+  {x:669.82,y:132.79,r:1.6},
+  {x:759.06,y:133.57,r:1.68},
+  {x:752.79,y:133.81,r:1.68},
+  {x:764.01,y:134.33,r:1.69},
+  {x:745.2,y:134.77,r:1.66},
+  {x:736.32,y:136.13,r:1.65},
+  {x:680.95,y:136.21,r:1.61},
+  {x:767.77,y:136.29,r:1.7},
+  {x:726.34,y:137.5,r:1.64},
+  {x:692.49,y:138.14,r:1.62},
+  {x:715.52,y:138.54,r:1.64},
+  {x:704.13,y:138.81,r:1.62},
+  {x:770.52,y:139.62,r:1.71},
+  {x:667.74,y:140.21,r:1.61},
+  {x:747.45,y:140.8,r:1.68},
+  {x:753.23,y:140.85,r:1.7},
+  {x:740.38,y:141.53,r:1.66},
+  {x:757.84,y:141.88,r:1.7},
+  {x:780.29,y:142.21,r:1.72},
+  {x:732.1,y:142.71,r:1.65},
+  {x:678.79,y:143.34,r:1.62},
+  {x:722.71,y:144.01,r:1.65},
+  {x:761.39,y:144.09,r:1.71},
+  {x:772.58,y:144.41,r:1.72},
+  {x:690.15,y:144.98,r:1.62},
+  {x:712.41,y:145.06,r:1.64},
+  {x:701.45,y:145.45,r:1.63},
+  {x:665.17,y:147.29,r:1.61},
+  {x:764.13,y:147.61,r:1.71},
+  {x:741.52,y:147.74,r:1.69},
+  {x:746.95,y:148.02,r:1.7},
+  {x:734.93,y:148.21,r:1.68},
+  {x:727.17,y:149.16,r:1.66},
+  {x:751.31,y:149.33,r:1.71},
+  {x:781.52,y:149.79,r:1.74},
+  {x:676.07,y:150.11,r:1.62},
+  {x:718.34,y:150.35,r:1.65},
+  {x:774.24,y:150.58,r:1.73},
+  {x:708.55,y:151.38,r:1.64},
+  {x:687.12,y:151.52,r:1.63},
+  {x:754.83,y:151.75,r:1.72},
+  {x:698.06,y:151.82,r:1.63},
+  {x:766.36,y:152.5,r:1.73},
+  {x:662.01,y:154.0,r:1.61},
+  {x:735.05,y:154.56,r:1.7},
+  {x:728.84,y:154.79,r:1.69},
+  {x:740.23,y:155.13,r:1.71},
+  {x:757.68,y:155.41,r:1.72},
+  {x:721.56,y:155.51,r:1.66},
+  {x:672.7,y:156.52,r:1.62},
+  {x:713.2,y:156.53,r:1.65},
+  {x:744.52,y:156.64,r:1.71},
+  {x:703.94,y:157.46,r:1.65},
+  {x:683.43,y:157.76,r:1.63},
+  {x:693.93,y:157.94,r:1.64},
+  {x:775.83,y:158.18,r:1.74},
+  {x:768.33,y:158.72,r:1.74},
+  {x:748.1,y:159.23,r:1.73},
+  {x:760.19,y:160.36,r:1.73},
+  {x:722.13,y:161.23,r:1.69},
+  {x:728.1,y:161.29,r:1.7},
+  {x:715.21,y:161.76,r:1.69},
+  {x:733.15,y:162.09,r:1.71},
+  {x:707.31,y:162.54,r:1.66},
+  {x:668.54,y:162.61,r:1.63},
+  {x:751.19,y:163.0,r:1.73},
+  {x:698.53,y:163.37,r:1.65},
+  {x:678.91,y:163.67,r:1.63},
+  {x:737.48,y:163.81,r:1.72},
+  {x:688.99,y:163.79,r:1.64},
+  {x:770.02,y:165.42,r:1.76},
+  {x:741.26,y:166.53,r:1.73},
+  {x:762.59,y:166.52,r:1.74},
+  {x:714.85,y:167.61,r:1.7},
+  {x:708.2,y:167.85,r:1.69},
+  {x:720.67,y:167.9,r:1.71},
+  {x:754.11,y:167.92,r:1.74},
+  {x:700.66,y:168.47,r:1.68},
+  {x:725.75,y:168.93,r:1.72},
+  {x:692.3,y:169.09,r:1.66},
+  {x:673.58,y:169.3,r:1.65},
+  {x:683.2,y:169.44,r:1.65},
+  {x:744.73,y:170.32,r:1.74},
+  {x:730.23,y:170.82,r:1.73},
+  {x:734.36,y:173.61,r:1.73},
+  {x:700.55,y:173.89,r:1.7},
+  {x:707.06,y:173.87,r:1.7},
+  {x:757.06,y:174.0,r:1.76},
+  {x:693.29,y:174.22,r:1.68},
+  {x:712.85,y:174.41,r:1.72},
+  {x:685.26,y:174.67,r:1.68},
+  {x:676.74,y:174.7,r:1.54},
+  {x:748.16,y:175.21,r:1.74},
+  {x:718.07,y:175.64,r:1.72},
+  {x:738.31,y:177.4,r:1.74},
+  {x:722.87,y:177.63,r:1.73},
+  {x:685.21,y:179.91,r:1.69},
+  {x:692.31,y:179.82,r:1.7},
+  {x:698.79,y:180.06,r:1.71},
+  {x:727.44,y:180.49,r:1.74},
+  {x:704.7,y:180.82,r:1.72},
+  {x:751.72,y:181.17,r:1.77},
+  {x:710.19,y:182.19,r:1.73},
+  {x:742.33,y:182.23,r:1.76},
+  {x:731.96,y:184.25,r:1.76},
+  {x:715.39,y:184.31,r:1.73},
+  {x:690.12,y:186.19,r:1.72},
+  {x:696.29,y:187.14,r:1.73},
+  {x:720.51,y:187.17,r:1.74},
+  {x:746.51,y:188.12,r:1.77},
+  {x:702.15,y:188.65,r:1.74},
+  {x:736.59,y:189.05,r:1.77},
+  {x:707.89,y:190.8,r:1.74},
+  {x:725.66,y:190.95,r:1.76},
+  {x:713.61,y:193.73,r:1.76},
+  {x:741.4,y:194.89,r:1.77},
+  {x:730.92,y:195.74,r:1.77},
+  {x:700.34,y:197.22,r:1.76},
+  {x:719.37,y:197.49,r:1.77},
+  {x:706.7,y:200.17,r:1.76},
+  {x:725.22,y:202.39,r:1.78},
+  {x:713.07,y:204.07,r:1.78},
+  {x:719.34,y:208.92,r:1.79}
+];
+
+const headDotEls = document.querySelectorAll('.brain-dot');
+const greenDotEls = document.querySelectorAll('.green-dot');
+const blueDotEls = document.querySelectorAll('.blue-dot');
+const gradDotEls = document.querySelectorAll('.grad-dot');
+
+function xNorms(data) {
+  const xs = data.map(d => d.x);
+  const mn = Math.min(...xs), mx = Math.max(...xs);
+  return data.map(d => (d.x - mn) / (mx - mn || 1));
+}
+const headXN = xNorms(HEAD_DATA);
+const greenXN = xNorms(GREEN_DATA);
+const blueXN = xNorms(BLUE_DATA);
+const gradXN = xNorms(GRAD_DATA);
+
+const DIM = 0.4, BRIGHT = 1.0;
+
+function drawArrow(pathEl, headEl, duration, onDone) {
+  const len = pathEl.getTotalLength();
+  pathEl.style.strokeDasharray = len;
+  pathEl.style.strokeDashoffset = len;
+  pathEl.classList.add('drawing');
+  const endPt = pathEl.getPointAtLength(len);
+  const nearEnd = pathEl.getPointAtLength(len - 2);
+  const angle = Math.atan2(endPt.y - nearEnd.y, endPt.x - nearEnd.x) * 180 / Math.PI;
+  headEl.setAttribute('transform', `translate(${endPt.x},${endPt.y}) rotate(${angle})`);
+  pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
+  requestAnimationFrame(() => { pathEl.style.strokeDashoffset = '0'; });
+  st(() => { headEl.classList.add('visible'); if (onDone) onDone(); }, duration);
+}
+
+function fadeInDots(dotEls, data, duration, onDone) {
+  const sorted = data.map((d, i) => ({ i, x: d.x })).sort((a, b) => a.x - b.x);
+  const stagger = duration / sorted.length;
+  sorted.forEach((entry, rank) => {
+    st(() => {
+      dotEls[entry.i].style.transition = 'opacity 0.4s ease';
+      dotEls[entry.i].style.opacity = DIM.toString();
+    }, rank * stagger);
+  });
+  st(() => { if (onDone) onDone(); }, duration + 400);
+}
+
+function startSweep(dotEls, xNormArr) {
+  const SWEEP_DUR = 2400, BEAM_W = 0.35, PAUSE = 600;
+  const CYCLE = SWEEP_DUR + PAUSE;
+  let start = null;
+  function tick(ts) {
+    if (!start) start = ts;
+    const elapsed = (ts - start) % CYCLE;
+    const progress = elapsed / SWEEP_DUR;
+    dotEls.forEach((dot, i) => {
+      const xPos = xNormArr[i];
+      let b;
+      if (progress > 1) { b = DIM; }
+      else {
+        const center = progress * (1 + BEAM_W) - BEAM_W / 2;
+        const dist = Math.abs(xPos - center);
+        if (dist < BEAM_W / 2) {
+          const t = 1 - dist / (BEAM_W / 2);
+          b = DIM + (BRIGHT - DIM) * t * t * (3 - 2 * t);
+        } else { b = DIM; }
+      }
+      dot.style.opacity = b.toFixed(3);
+    });
+    const id = requestAnimationFrame(tick);
+    rafIds.push(id);
+  }
+  const id = requestAnimationFrame(tick);
+  rafIds.push(id);
+}
+
+function showLabel(num) {
+  document.querySelectorAll(`[id^="lbl${num}"]`).forEach(el => el.classList.add('visible'));
+}
+function hideAllLabels() {
+  document.querySelectorAll('[class*="label-"]').forEach(el => el.classList.remove('visible'));
+}
+
+function reset() {
+  clearT();
+  $('headImg').classList.remove('visible');
+  $('greenDiamond').classList.remove('visible');
+  $('blueDiamond').classList.remove('visible');
+  $('gradDiamond').classList.remove('visible');
+  $('vivenKnot').classList.remove('visible');
+  for (let i = 1; i <= 4; i++) {
+    const p = $('arrow' + i); p.classList.remove('drawing');
+    p.style.strokeDashoffset = ''; p.style.strokeDasharray = ''; p.style.transition = '';
+    $('arrowHead' + i).classList.remove('visible');
+  }
+  [headDotEls, greenDotEls, blueDotEls, gradDotEls].forEach(els => {
+    els.forEach(d => { d.style.opacity = '0'; d.style.transition = ''; });
+  });
+  hideAllLabels();
+}
+
+function play() {
+  reset();
+
+  // Phase 1: Head + brain dots + sweep + label
+  st(() => $('headImg').classList.add('visible'), 200);
+  st(() => showLabel(1), 400);
+  st(() => fadeInDots(headDotEls, HEAD_DATA, 3500), 800);
+  st(() => startSweep(headDotEls, headXN), 5000);
+
+  // Phase 2: Curved arrows
+  st(() => {
+    drawArrow($('arrow1'), $('arrowHead1'), 700);
+    drawArrow($('arrow2'), $('arrowHead2'), 600);
+  }, 6000);
+
+  // Phase 3: Both diamonds + dots + labels simultaneously
+  st(() => {
+    $('greenDiamond').classList.add('visible');
+    $('blueDiamond').classList.add('visible');
+    showLabel(2);
+    showLabel(3);
+  }, 7200);
+  st(() => {
+    fadeInDots(greenDotEls, GREEN_DATA, 2500);
+    fadeInDots(blueDotEls, BLUE_DATA, 3500);
+  }, 7600);
+  st(() => {
+    startSweep(greenDotEls, greenXN);
+    startSweep(blueDotEls, blueXN);
+  }, 10600);
+
+  // Phase 4: Arrow → knot + label
+  st(() => drawArrow($('arrow3'), $('arrowHead3'), 500), 11500);
+  st(() => {
+    $('vivenKnot').classList.add('visible');
+    showLabel(4);
+  }, 12200);
+
+  // Phase 5: Arrow → gradient diamond + dots + label
+  st(() => drawArrow($('arrow4'), $('arrowHead4'), 500), 13200);
+  st(() => {
+    $('gradDiamond').classList.add('visible');
+    showLabel(5);
+  }, 13900);
+  st(() => fadeInDots(gradDotEls, GRAD_DATA, 3500), 14300);
+  st(() => startSweep(gradDotEls, gradXN), 18300);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); play(); }
+  if (e.key === 'r' || e.key === 'R') reset();
+});
+st(play, 500);
+</script>
+</body>
+</html>
