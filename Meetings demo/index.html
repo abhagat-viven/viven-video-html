@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meetings | Digital Twin</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --sidebar: #f8f8f8;
+      --sidebar-active: #f1f1f1;
+      --border: #ededed;
+      --border-strong: #e5e5e5;
+      --text: #1f1f1f;
+      --muted: #767676;
+      --muted-2: #9b9b9b;
+      --purple: #5f3fd6;
+      --purple-2: #7c5cff;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      font-family: Roboto, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 11px;
+      line-height: 1.35;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    .app {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      min-height: 560px;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 170px;
+      height: 100vh;
+      min-height: 560px;
+      flex: 0 0 170px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      background: var(--sidebar);
+    }
+
+    .brand {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px 0 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-weight: 500;
+      color: #181818;
+    }
+
+    .mark {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      color: #262626;
+    }
+
+    .collapse-icon {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #222;
+      border-radius: 3px;
+      position: relative;
+      opacity: 0.8;
+    }
+
+    .collapse-icon::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      left: 5px;
+      width: 1px;
+      background: #222;
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 9px 7px 0;
+    }
+
+    .nav-section {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-link {
+      height: 25px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px;
+      border-radius: 4px;
+      color: #2f2f2f;
+      font-size: 10.5px;
+      font-weight: 400;
+      text-decoration: none;
+    }
+
+    .nav-link.active {
+      background: var(--sidebar-active);
+    }
+
+    .icon {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+      color: #444;
+    }
+
+    .sidebar-group {
+      padding: 10px 0 6px;
+    }
+
+    .group-title {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px 0 5px;
+      color: #8c8c8c;
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
+
+    .person {
+      height: 25px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 7px;
+      color: #585858;
+      overflow: hidden;
+    }
+
+    .avatar {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 15px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 500;
+      background: #9b59d0;
+    }
+
+    .avatar.orange { background: #f47b20; }
+    .avatar.cyan { background: #80c5df; color: #31596c; }
+    .avatar.photo,
+    .avatar.photo-1,
+    .avatar.photo-2,
+    .avatar.photo-3,
+    .avatar.photo-4,
+    .avatar.photo-user {
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .avatar.photo-1 {
+      background-image:
+        radial-gradient(circle at 50% 38%, #f0c7a1 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 85%, #6f58d9 0 35%, transparent 36%),
+        linear-gradient(135deg, #d8ecff, #fbf2e8);
+    }
+
+    .avatar.photo-2 {
+      background-image:
+        radial-gradient(circle at 50% 38%, #d8a37d 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 85%, #2e7d7a 0 35%, transparent 36%),
+        linear-gradient(135deg, #f8e2d1, #e8f4ef);
+    }
+
+    .avatar.photo-3 {
+      background-image:
+        radial-gradient(circle at 50% 38%, #c98f66 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 85%, #394a75 0 35%, transparent 36%),
+        linear-gradient(135deg, #dce2ff, #f7efe5);
+    }
+
+    .avatar.photo-4 {
+      background-image:
+        radial-gradient(circle at 50% 38%, #e4b98f 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 85%, #9a5a38 0 35%, transparent 36%),
+        linear-gradient(135deg, #fff0d9, #e8f0ff);
+    }
+
+    .avatar.photo-user {
+      background-image:
+        radial-gradient(circle at 50% 38%, #e0ad86 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 86%, #6d5bd0 0 36%, transparent 37%),
+        linear-gradient(135deg, #f0ecff, #fff5eb);
+    }
+
+    .person-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 9.5px;
+    }
+
+    .show-less {
+      padding: 3px 8px 7px;
+      color: #777;
+      font-size: 9.5px;
+    }
+
+    .chat-item {
+      position: relative;
+      padding: 5px 18px 5px 8px;
+      color: #555;
+      font-size: 9.5px;
+      line-height: 1.15;
+    }
+
+    .chat-item .time {
+      color: #aaa;
+      font-size: 9px;
+    }
+
+    .chat-item::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 9px;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: #aaa;
+      box-shadow: 0 4px 0 #aaa, 0 8px 0 #aaa;
+    }
+
+    .profile {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-top: 1px solid var(--border);
+      background: #fbfbfb;
+    }
+
+    .profile .avatar {
+      width: 24px;
+      height: 24px;
+      flex-basis: 24px;
+      border-radius: 5px;
+      font-size: 10px;
+    }
+
+    .profile-text {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-email {
+      font-size: 9.5px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      height: 100vh;
+      min-height: 560px;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .switch-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #1f1f1f;
+      font-size: 10.5px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .switch {
+      width: 22px;
+      height: 12px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: var(--purple);
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      transition: transform 160ms ease, right 160ms ease;
+    }
+
+    .switch.is-off,
+    .mini-switch.is-off {
+      background: #d9d9d9;
+    }
+
+    .switch.is-off::after {
+      right: 11px;
+    }
+
+    .record {
+      height: 31px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: #fff;
+      color: #171717;
+      font-size: 10.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+
+    .record:hover,
+    .join:hover {
+      background: #fafafa;
+      border-color: #dcdcdc;
+    }
+
+    .content {
+      height: calc(100vh - 58px);
+      min-height: 502px;
+      overflow-y: auto;
+      padding: 0 13px 30px;
+    }
+
+    .meeting-section {
+      position: relative;
+      padding-top: 14px;
+    }
+
+    .section-title {
+      color: #8c8c8c;
+      font-size: 9.5px;
+      margin-bottom: 6px;
+    }
+
+    .meeting-row {
+      display: grid;
+      grid-template-columns: 20px minmax(240px, 1fr) 222px 18px;
+      align-items: start;
+      min-height: 45px;
+      padding: 3px 0 4px 6px;
+      color: #252525;
+      border-radius: 6px;
+    }
+
+    .meeting-row:hover {
+      background: #fafafa;
+    }
+
+    .past-meeting {
+      cursor: pointer;
+    }
+
+    .calendar {
+      width: 13px;
+      height: 13px;
+      margin-top: 3px;
+      border: 1.4px solid #777;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .calendar::before {
+      content: "";
+      position: absolute;
+      left: -1.4px;
+      right: -1.4px;
+      top: 3px;
+      height: 1.4px;
+      background: #777;
+    }
+
+    .calendar::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      top: -3px;
+      height: 4px;
+      border-left: 1.4px solid #777;
+      border-right: 1.4px solid #777;
+    }
+
+    .meeting-title {
+      font-size: 10.5px;
+      font-weight: 400;
+      color: #222;
+      margin-bottom: 3px;
+    }
+
+    .meeting-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #777;
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .attendees {
+      width: 12px;
+      height: 10px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .attendees::before,
+    .attendees::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 5px;
+      height: 5px;
+      border: 1px solid #777;
+      border-radius: 50%;
+    }
+
+    .attendees::before { left: 0; }
+    .attendees::after { right: 0; }
+
+    .attendees span {
+      position: absolute;
+      left: 1px;
+      right: 1px;
+      bottom: 0;
+      height: 4px;
+      border: 1px solid #777;
+      border-top: 0;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .repeat {
+      font-size: 12px;
+      color: #777;
+      line-height: 1;
+    }
+
+    .row-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 1px;
+    }
+
+    .invite {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #8b8b8b;
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
+
+    .mini-switch {
+      width: 20px;
+      height: 11px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: var(--purple);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .mini-switch::after {
+      content: "";
+      position: absolute;
+      right: 1px;
+      top: 1px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .mini-switch.is-off::after {
+      right: 10px;
+    }
+
+    .join {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 9px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: #fff;
+      color: #161616;
+      font-size: 10px;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .join.is-joined {
+      border-color: #dad7ff;
+      background: #f5f3ff;
+      color: var(--purple);
+    }
+
+    .chevron-down {
+      width: 7px;
+      height: 7px;
+      border-right: 1.5px solid #777;
+      border-bottom: 1.5px solid #777;
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .row-chevron {
+      width: 7px;
+      height: 7px;
+      margin-top: 9px;
+      border-right: 1.5px solid #999;
+      border-bottom: 1.5px solid #999;
+      transform: rotate(-45deg);
+      justify-self: center;
+      cursor: pointer;
+      background: transparent;
+      border-top: 0;
+      border-left: 0;
+      padding: 0;
+    }
+
+    .meeting-row.is-expanded .row-chevron {
+      transform: rotate(45deg);
+      margin-top: 7px;
+    }
+
+    .meeting-details {
+      display: none;
+      grid-column: 2 / 4;
+      margin: 4px 0 6px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: #666;
+      font-size: 9.5px;
+    }
+
+    .meeting-row.is-expanded .meeting-details {
+      display: block;
+    }
+
+    .pager {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      padding: 1px 11px 0 0;
+      color: #777;
+      font-size: 10px;
+    }
+
+    .pager-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .pager-arrow {
+      width: 6px;
+      height: 6px;
+      border-left: 1.4px solid #b0b0b0;
+      border-bottom: 1.4px solid #b0b0b0;
+      transform: rotate(45deg);
+    }
+
+    .pager-arrow.next {
+      transform: rotate(-135deg);
+    }
+
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #8c8c8c;
+      font-size: 10px;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .section-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 20;
+      min-width: 220px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      color: #222;
+      font-size: 11px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(360px, calc(100vw - 32px));
+      padding: 18px;
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+    }
+
+    .modal h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal p {
+      margin: 0 0 16px;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-button {
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .modal-button.primary {
+      border-color: var(--purple);
+      background: var(--purple);
+      color: #fff;
+    }
+
+    .sidebar.is-collapsed {
+      width: 50px;
+      flex-basis: 50px;
+    }
+
+    .sidebar.is-collapsed .brand-left span,
+    .sidebar.is-collapsed .sidebar-group,
+    .sidebar.is-collapsed .profile-text,
+    .sidebar.is-collapsed .profile > svg {
+      display: none;
+    }
+
+    .sidebar.is-collapsed .brand {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .sidebar.is-collapsed .sidebar-scroll {
+      padding: 9px 7px 0;
+    }
+
+    .sidebar.is-collapsed .nav-section {
+      border-bottom: 0;
+    }
+
+    .sidebar.is-collapsed .nav-link {
+      justify-content: center;
+      gap: 0;
+      padding: 0;
+      color: transparent;
+      overflow: hidden;
+    }
+
+    .sidebar.is-collapsed .nav-link .icon {
+      color: #444;
+    }
+
+    .sidebar.is-collapsed .profile {
+      justify-content: center;
+      padding: 7px 0;
+    }
+
+    .dashboard-screen.is-hidden {
+      display: none;
+    }
+
+    .detail-screen {
+      display: none;
+      height: 100vh;
+      min-height: 560px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .detail-screen.is-active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-header {
+      min-height: 92px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .detail-title-row {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+    }
+
+    .detail-title-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .back-button,
+    .tab-button,
+    .close-transcript,
+    .send-button,
+    .doc-button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .back-button {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      color: #666;
+      font-size: 20px;
+    }
+
+    .detail-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .detail-heading-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #242424;
+    }
+
+    .info-dot {
+      width: 13px;
+      height: 13px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid #a5a5a5;
+      border-radius: 50%;
+      color: #777;
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    .detail-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #6f6f6f;
+      font-size: 11px;
+    }
+
+    .participant-chips {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .participant-chip {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f2f2f2;
+      color: #666;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .detail-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-pill {
+      padding: 3px 9px;
+      border: 1px solid #d8dee8;
+      border-radius: 999px;
+      background: #f7f9fc;
+      color: #526070;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .doc-button {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #d7d0ff;
+      border-radius: 7px;
+      background: #f5f2ff;
+      color: var(--purple);
+    }
+
+    .detail-tabs {
+      height: 38px;
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      padding-left: 14px;
+      border-top: 1px solid #f7f7f7;
+    }
+
+    .tab-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 14px;
+      border-right: 1px solid transparent;
+      border-left: 1px solid transparent;
+      color: #777;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .tab-button.active {
+      margin-top: -1px;
+      border: 1px solid var(--border-strong);
+      border-bottom-color: #fff;
+      border-radius: 7px 7px 0 0;
+      background: #fff;
+      color: #222;
+    }
+
+    .detail-body {
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) 256px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .conversation {
+      position: relative;
+      overflow-y: auto;
+      padding: 48px min(11vw, 132px) 96px;
+      border-right: 1px solid var(--border);
+    }
+
+    .show-more {
+      width: 100%;
+      max-width: 620px;
+      height: 34px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      color: #444;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .chat-message {
+      max-width: 620px;
+      margin: 0 auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-message.user {
+      align-items: flex-end;
+    }
+
+    .chat-label {
+      font-size: 10px;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .chat-bubble {
+      width: min(100%, 520px);
+      padding: 12px 14px;
+      border: 1px solid #ded8f4;
+      border-radius: 7px;
+      background: #f7f5ff;
+      color: #333;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .chat-message.twin {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .twin-response {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .twin-response .chat-bubble {
+      width: 100%;
+      border-color: var(--border-strong);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .inline-more {
+      display: block;
+      margin-top: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .composer {
+      position: absolute;
+      left: min(11vw, 132px);
+      right: min(11vw, 132px);
+      bottom: 10px;
+      max-width: 620px;
+      margin: 0 auto;
+      border: 1px solid var(--border-strong);
+      border-radius: 13px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .prompt-chips {
+      display: flex;
+      gap: 8px;
+      padding: 10px 10px 8px;
+    }
+
+    .prompt-chip {
+      height: 24px;
+      padding: 0 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      background: #fff;
+      color: #444;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .composer-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 40px;
+      padding: 0 10px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .composer-input input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      color: #333;
+      font: inherit;
+      font-size: 11px;
+    }
+
+    .composer-input input::placeholder {
+      color: #aaa;
+    }
+
+    .send-button {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #8b75e8;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .responsible-note {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -18px;
+      color: #8a8a8a;
+      font-size: 9px;
+      text-align: center;
+    }
+
+    .transcript-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: #fff;
+    }
+
+    .transcript-header {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .close-transcript {
+      color: #999;
+      font-size: 18px;
+    }
+
+    .transcript-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 14px;
+    }
+
+    .transcript-item {
+      margin-bottom: 16px;
+      color: #6b6b6b;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .speaker {
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    .timestamp {
+      color: #9a9a9a;
+      font-size: 9px;
+      margin-left: 4px;
+    }
+
+    .summary-panel {
+      display: none;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 18px;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      background: #fff;
+      color: #444;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .detail-screen.summary-mode .chat-message,
+    .detail-screen.summary-mode .show-more,
+    .detail-screen.summary-mode .composer {
+      display: none;
+    }
+
+    .detail-screen.summary-mode .summary-panel {
+      display: block;
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        width: 150px;
+        flex-basis: 150px;
+      }
+
+      .meeting-row {
+        grid-template-columns: 20px minmax(180px, 1fr) 18px;
+      }
+
+      .row-actions {
+        display: none;
+      }
+
+      .top-actions {
+        gap: 8px;
+      }
+
+      .record {
+        padding: 0 8px;
+      }
+
+      .detail-body {
+        grid-template-columns: 1fr;
+      }
+
+      .transcript-panel {
+        display: none;
+      }
+
+      .conversation {
+        padding: 32px 18px 96px;
+      }
+
+      .composer {
+        left: 18px;
+        right: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-left">
+          <svg class="mark" viewBox="0 0 90 90" aria-hidden="true">
+            <path fill="currentColor" d="M27.695,58.202l-3.962,3.962l16.083,16.082l3.962,-3.962l-16.083,-16.082Zm0.001,-23.957l-3.963,3.962l16.083,16.083l3.962,-3.962l-16.082,-16.083Zm36.517,52.459c-4.395,4.396 -11.545,4.396 -15.94,0l-2.052,-2.052l3.962,-3.962l2.052,2.052c2.211,2.211 5.808,2.211 8.017,0.001c2.21,-2.209 2.21,-5.806 -0.001,-8.017l-14.029,-14.028l3.962,-3.963l14.029,14.029c4.396,4.395 4.396,11.546 0,15.94Zm-42.924,-34.91l-3.963,3.963l-14.029,-14.03c-4.396,-4.396 -4.396,-11.545 -0,-15.941c4.395,-4.395 11.545,-4.395 15.94,0l2.052,2.052l-3.963,3.963l-2.052,-2.052c-2.21,-2.211 -5.806,-2.21 -8.015,-0c-2.21,2.209 -2.211,5.805 -0,8.015l14.03,14.03Zm28.896,-16.082l-3.963,3.962l16.083,16.083l3.962,-3.962l-16.082,-16.083Zm-0.001,-23.956l-3.962,3.962l16.083,16.083l3.962,-3.962l-16.083,-16.083Zm36.519,52.458c-4.395,4.396 -11.545,4.396 -15.94,0l-2.052,-2.052l3.962,-3.962l2.052,2.052c2.211,2.211 5.808,2.211 8.017,0.001c2.21,-2.209 2.21,-5.806 -0.001,-8.017l-14.029,-14.028l3.962,-3.963l14.029,14.029c4.396,4.395 4.396,11.546 0,15.94Zm-42.925,-34.91l-3.963,3.963l-14.03,-14.03c-4.395,-4.396 -4.395,-11.545 0,-15.94c4.396,-4.396 11.546,-4.396 15.941,-0l2.052,2.052l-3.963,3.962l-2.052,-2.052c-2.21,-2.211 -5.806,-2.21 -8.015,-0c-2.21,2.209 -2.211,5.805 -0,8.015l14.03,14.03Zm30.505,16.919l-16.083,16.082l3.962,3.962l16.083,-16.083l-3.962,-3.961Zm-23.956,-0l-16.083,16.082l3.963,3.963l16.082,-16.083l-3.962,-3.962Zm36.376,-4.498l-2.052,2.052l-3.961,-3.961l2.052,-2.052c2.21,-2.209 2.21,-5.806 -0.001,-8.016c-2.21,-2.21 -5.805,-2.209 -8.015,0.001l-14.03,14.03l-3.962,-3.963l14.03,-14.03c4.396,-4.395 11.545,-4.395 15.939,-0.001c4.394,4.395 4.396,11.546 0,15.94Zm-30.949,30.949l-14.03,14.03c-4.395,4.395 -11.544,4.395 -15.94,0c-4.394,-4.394 -4.394,-11.544 0.001,-15.939l2.052,-2.052l3.963,3.962l-2.052,2.052c-2.21,2.21 -2.211,5.805 -0.002,8.015c2.211,2.21 5.808,2.21 8.017,0.001l14.03,-14.03l3.961,3.961Zm8.46,-53.437l-2.052,2.052l-3.962,-3.963l2.052,-2.052c2.21,-2.209 2.21,-5.806 0,-8.015c-2.211,-2.211 -5.806,-2.21 -8.016,-0l-14.029,14.03l-3.963,-3.963l14.03,-14.029c4.396,-4.396 11.545,-4.396 15.94,-0c4.395,4.394 4.396,11.545 0,15.94Zm-12.42,4.497l-16.083,16.083l3.963,3.962l16.082,-16.083l-3.962,-3.962Zm-18.527,26.452l-14.03,14.03c-4.396,4.395 -11.547,4.394 -15.94,-0c-4.396,-4.396 -4.396,-11.545 -0,-15.941l2.052,-2.052l3.962,3.963l-2.052,2.052c-2.21,2.209 -2.211,5.805 -0,8.015c2.209,2.21 5.806,2.21 8.015,0l14.03,-14.03l3.963,3.963Zm-5.429,-26.452l-16.083,16.083l3.963,3.962l16.082,-16.083l-3.962,-3.962Z"></path>
+          </svg>
+          <span>Digital Twin</span>
+        </div>
+        <button class="collapse-icon" type="button" aria-label="Toggle sidebar"></button>
+      </div>
+
+      <div class="sidebar-scroll">
+        <nav class="nav-section">
+          <a class="nav-link" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            New Chat
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+            Search Chats
+          </a>
+        </nav>
+
+        <nav class="nav-section" style="padding-top: 8px;">
+          <a class="nav-link" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 8l8 5 8-5-8-5Z"/><path d="m4 13 8 5 8-5"/></svg>
+            My Twin
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11a4 4 0 1 0-8 0"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            People
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg>
+            Experts
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M9 6V4h6v2M9 11h6"/></svg>
+            Agents
+          </a>
+          <a class="nav-link active" href="#">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+            Meetings
+          </a>
+        </nav>
+
+        <section class="sidebar-group">
+          <div class="group-title">
+            <span>Recently Interacted</span>
+            <span>⌄</span>
+          </div>
+          <div class="person"><span class="avatar photo-1"></span><span class="person-name">Alex Morgan</span></div>
+          <div class="person"><span class="avatar photo-2"></span><span class="person-name">Jamie Lee</span></div>
+          <div class="person"><span class="avatar photo-3"></span><span class="person-name">Taylor Kim</span></div>
+          <div class="person"><span class="avatar photo-4"></span><span class="person-name">Casey Rivera</span></div>
+          <div class="show-less">Show less</div>
+        </section>
+
+        <section class="sidebar-group" style="border-top: 1px solid rgba(0, 0, 0, 0.05);">
+          <div class="group-title">
+            <span>Recent Chats</span>
+            <span>⌄</span>
+          </div>
+          <div class="chat-item">Project Update Request<br><span class="time">13 hours ago</span></div>
+          <div class="chat-item">Weekly planning notes...</div>
+        </section>
+      </div>
+
+      <div class="profile">
+        <span class="avatar photo-user"></span>
+        <div class="profile-text">
+          <div class="profile-name">Jordan Taylor</div>
+          <div class="profile-email">jordan@company.com</div>
+        </div>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m8 9 4-4 4 4M16 15l-4 4-4-4"/></svg>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="dashboard-screen" id="dashboardScreen">
+      <header class="topbar">
+        <h1>Meetings</h1>
+        <div class="top-actions">
+          <label class="switch-label"><button class="switch" type="button" aria-pressed="true"></button> Auto join all meetings</label>
+          <button class="record" type="button">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 10h8v5a4 4 0 0 1-8 0v-5Z"/><path d="M5 11h3M16 11h3M12 19v3"/></svg>
+            Record a meeting
+          </button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="meeting-section">
+          <div class="section-title">Upcoming</div>
+
+          <div class="meeting-row">
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Team Show &amp; Tell</div>
+              <div class="meeting-meta">
+                <span>May 7, 9:00 AM - 10:00 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>12</span>
+                <span class="repeat">↻</span>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="invite"><button class="mini-switch" type="button" aria-pressed="true"></button>Invite Twin</span>
+              <button class="join" type="button">Join with Twin <span class="chevron-down"></span></button>
+            </div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="meeting-row">
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Bi-Weekly Planning</div>
+              <div class="meeting-meta">
+                <span>May 8, 9:00 AM - 10:00 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>12</span>
+                <span class="repeat">↻</span>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="invite"><button class="mini-switch" type="button" aria-pressed="true"></button>Invite Twin</span>
+              <button class="join" type="button">Join with Twin <span class="chevron-down"></span></button>
+            </div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="meeting-row">
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Team Show &amp; Tell</div>
+              <div class="meeting-meta">
+                <span>May 14, 9:00 AM - 10:00 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>12</span>
+                <span class="repeat">↻</span>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="invite"><button class="mini-switch" type="button" aria-pressed="true"></button>Invite Twin</span>
+              <button class="join" type="button">Join with Twin <span class="chevron-down"></span></button>
+            </div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="meeting-row">
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Team Show &amp; Tell</div>
+              <div class="meeting-meta">
+                <span>May 21, 9:00 AM - 10:00 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>12</span>
+                <span class="repeat">↻</span>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="invite"><button class="mini-switch" type="button" aria-pressed="true"></button>Invite Twin</span>
+              <button class="join" type="button">Join with Twin <span class="chevron-down"></span></button>
+            </div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="meeting-row past-meeting" data-open-detail>
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Bi-Weekly Planning</div>
+              <div class="meeting-meta">
+                <span>May 22, 9:00 AM - 10:00 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>12</span>
+                <span class="repeat">↻</span>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="invite"><button class="mini-switch" type="button" aria-pressed="true"></button>Invite Twin</span>
+              <button class="join" type="button">Join with Twin <span class="chevron-down"></span></button>
+            </div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="pager">
+            <span class="pager-item"><span class="pager-arrow"></span>Previous</span>
+            <span class="pager-item">Next<span class="pager-arrow next"></span></span>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-divider">Past</div>
+
+          <div class="meeting-row past-meeting" data-open-detail>
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Project Sync</div>
+              <div class="meeting-meta">
+                <span>Apr 30, 10:00 AM - 10:30 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>2</span>
+              </div>
+            </div>
+            <div></div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="meeting-row">
+            <div class="calendar"></div>
+            <div>
+              <div class="meeting-title">Team Show &amp; Tell</div>
+              <div class="meeting-meta">
+                <span>Apr 30, 9:00 AM - 10:00 AM</span>
+                <span class="meta-chip"><span class="attendees"><span></span></span>12</span>
+                <span class="repeat">↻</span>
+              </div>
+            </div>
+            <div></div>
+            <button class="row-chevron" type="button" aria-label="Show meeting details"></button>
+          </div>
+
+          <div class="pager" style="margin-top: 20px;">
+            <span class="pager-item"><span class="pager-arrow"></span>Previous</span>
+            <span class="pager-item">Next<span class="pager-arrow next"></span></span>
+          </div>
+        </section>
+      </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal-backdrop" id="recordModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="recordTitle">
+      <h2 id="recordTitle">Record a Meeting</h2>
+      <p>Start a demo recording session. The transcript and notes will appear after the meeting ends.</p>
+      <div class="modal-actions">
+        <button class="modal-button" type="button" data-close-modal>Cancel</button>
+        <button class="modal-button primary" type="button" id="startRecording">Start recording</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const toast = document.getElementById("toast");
+    const recordModal = document.getElementById("recordModal");
+    const sidebar = document.querySelector(".sidebar");
+    const demoState = JSON.parse(localStorage.getItem("meetingsDemoState") || "{}");
+    let toastTimer;
+
+    function saveState() {
+      localStorage.setItem("meetingsDemoState", JSON.stringify(demoState));
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
+    }
+
+    function setPressed(button, isPressed) {
+      button.setAttribute("aria-pressed", String(isPressed));
+      button.classList.toggle("is-off", !isPressed);
+    }
+
+    function getRowKey(row) {
+      const title = row.querySelector(".meeting-title").textContent.trim();
+      const time = row.querySelector(".meeting-meta span").textContent.trim();
+      return `${title}|${time}`;
+    }
+
+    function buildPastMeeting(title, time, attendees = "2") {
+      const row = document.createElement("div");
+      row.className = "meeting-row past-meeting";
+      row.dataset.openDetail = "";
+      row.innerHTML = `
+        <div class="calendar"></div>
+        <div>
+          <div class="meeting-title">${title}</div>
+          <div class="meeting-meta">
+            <span>${time}</span>
+            <span class="meta-chip"><span class="attendees"><span></span></span>${attendees}</span>
+          </div>
+        </div>
+        <div></div>
+        <button class="row-chevron" type="button" aria-label="Open meeting details"></button>
+      `;
+      addMeetingDetails(row);
+      return row;
+    }
+
+    function addMeetingDetails(row) {
+      if (row.querySelector(".meeting-details")) return;
+      const title = row.querySelector(".meeting-title").textContent;
+      const meta = row.querySelector(".meeting-meta").textContent.trim().replace(/\s+/g, " ");
+      const details = document.createElement("div");
+      details.className = "meeting-details";
+      details.textContent = `${title} · ${meta}. Twin notes, transcript, and follow-ups will be available here.`;
+      row.appendChild(details);
+    }
+
+    function openMeetingDetail(row) {
+      const title = row.querySelector(".meeting-title").textContent.trim();
+      const time = row.querySelector(".meeting-meta span").textContent.trim();
+      const params = new URLSearchParams({ title, time });
+      window.location.href = `meeting-detail.html?${params.toString()}`;
+    }
+
+    document.querySelectorAll(".meeting-row").forEach(addMeetingDetails);
+
+    if (demoState.autoJoin === false) {
+      setPressed(document.querySelector(".switch"), false);
+    }
+
+    if (demoState.recordedMeeting) {
+      const pastSection = document.querySelector(".section-divider").parentElement;
+      const firstPastRow = pastSection.querySelector(".meeting-row");
+      const existing = Array.from(pastSection.querySelectorAll(".meeting-row")).some((row) => getRowKey(row) === demoState.recordedMeeting.key);
+      if (!existing) {
+        pastSection.insertBefore(buildPastMeeting(demoState.recordedMeeting.title, demoState.recordedMeeting.time, "1"), firstPastRow);
+      }
+    }
+
+    document.querySelectorAll(".meeting-row").forEach((row) => {
+      const key = getRowKey(row);
+      if (demoState.invites?.[key] === false) {
+        const toggle = row.querySelector(".mini-switch");
+        if (toggle) setPressed(toggle, false);
+      }
+      if (demoState.joined?.[key]) {
+        const join = row.querySelector(".join");
+        if (join) {
+          join.classList.add("is-joined");
+          join.textContent = "Joined with Twin";
+        }
+      }
+    });
+
+    document.querySelector(".collapse-icon").addEventListener("click", () => {
+      sidebar.classList.toggle("is-collapsed");
+    });
+
+    document.querySelector(".switch").addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const isPressed = button.getAttribute("aria-pressed") !== "true";
+      setPressed(button, isPressed);
+      demoState.autoJoin = isPressed;
+      saveState();
+      showToast(isPressed ? "Auto-join enabled for all meetings." : "Auto-join disabled.");
+    });
+
+    document.addEventListener("click", (event) => {
+      const inviteToggle = event.target.closest(".mini-switch");
+      if (inviteToggle) {
+        event.stopPropagation();
+        const nextState = inviteToggle.getAttribute("aria-pressed") !== "true";
+        const row = inviteToggle.closest(".meeting-row");
+        const title = row.querySelector(".meeting-title").textContent;
+        demoState.invites = demoState.invites || {};
+        demoState.invites[getRowKey(row)] = nextState;
+        saveState();
+        setPressed(inviteToggle, nextState);
+        showToast(nextState ? `Twin invited to ${title}.` : `Twin removed from ${title}.`);
+      }
+    });
+
+    document.querySelectorAll(".join").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const row = button.closest(".meeting-row");
+        const title = row.querySelector(".meeting-title").textContent;
+        demoState.joined = demoState.joined || {};
+        demoState.joined[getRowKey(row)] = true;
+        saveState();
+        button.classList.add("is-joined");
+        button.textContent = "Joined with Twin";
+        showToast(`Joined ${title} with Twin.`);
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      const chevron = event.target.closest(".row-chevron");
+      if (chevron) {
+        event.stopPropagation();
+        const row = chevron.closest(".meeting-row");
+        if (row.matches("[data-open-detail]")) {
+          openMeetingDetail(row);
+          return;
+        }
+        const isExpanded = row.classList.toggle("is-expanded");
+        chevron.setAttribute("aria-label", isExpanded ? "Hide meeting details" : "Show meeting details");
+        return;
+      }
+
+      const detailRow = event.target.closest("[data-open-detail]");
+      if (detailRow && !event.target.closest("button")) {
+        openMeetingDetail(detailRow);
+      }
+    });
+
+    document.querySelectorAll(".pager-item").forEach((pager) => {
+      pager.addEventListener("click", () => {
+        showToast("This demo has one page of meetings.");
+      });
+    });
+
+    document.querySelector(".record").addEventListener("click", () => {
+      recordModal.classList.add("is-open");
+      recordModal.setAttribute("aria-hidden", "false");
+    });
+
+    document.querySelectorAll("[data-close-modal]").forEach((button) => {
+      button.addEventListener("click", () => {
+        recordModal.classList.remove("is-open");
+        recordModal.setAttribute("aria-hidden", "true");
+      });
+    });
+
+    document.getElementById("startRecording").addEventListener("click", () => {
+      recordModal.classList.remove("is-open");
+      recordModal.setAttribute("aria-hidden", "true");
+      const title = "Recorded Meeting";
+      const time = "Today, 11:00 AM - 11:30 AM";
+      demoState.recordedMeeting = { title, time, key: `${title}|${time}` };
+      saveState();
+      const pastSection = document.querySelector(".section-divider").parentElement;
+      const firstPastRow = pastSection.querySelector(".meeting-row");
+      pastSection.insertBefore(buildPastMeeting(title, time, "1"), firstPastRow);
+      showToast("Recording saved to Past meetings.");
+    });
+
+    recordModal.addEventListener("click", (event) => {
+      if (event.target === recordModal) {
+        recordModal.classList.remove("is-open");
+        recordModal.setAttribute("aria-hidden", "true");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Sync | Digital Twin</title>
+  <style>
+    :root {
+      --bg: #fff;
+      --sidebar: #f8f8f8;
+      --border: #ededed;
+      --border-strong: #e5e5e5;
+      --text: #222;
+      --muted: #747474;
+      --purple: #5f3fd6;
+      --rail-width: 36px;
+      --transcript-width: 225px;
+      --content-gutter: clamp(118px, 14vw, 146px);
+      font-family: Roboto, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 11px;
+      line-height: 1.35;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    .page {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      min-height: 560px;
+      overflow: hidden;
+    }
+
+    .rail {
+      width: var(--rail-width);
+      flex: 0 0 var(--rail-width);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-right: 1px solid var(--border);
+      background: var(--sidebar);
+    }
+
+    .mark {
+      width: 14px;
+      height: 14px;
+      margin: 17px 0 18px;
+      color: #2b2b2b;
+    }
+
+    .rail-icon {
+      width: var(--rail-width);
+      height: 27px;
+      display: grid;
+      place-items: center;
+      color: #444;
+    }
+
+    .rail-icon svg,
+    .icon {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+    }
+
+    .rail-spacer { flex: 1; }
+
+    .avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background-image:
+        radial-gradient(circle at 50% 38%, #e0ad86 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 86%, #6d5bd0 0 36%, transparent 37%),
+        linear-gradient(135deg, #f0ecff, #fff5eb);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .app {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .header {
+      min-height: 98px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .title-row {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px 0 12px;
+    }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .back-button,
+    .tab,
+    .close-transcript,
+    .send,
+    .doc-button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .back-button {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      color: #666;
+      font-size: 19px;
+      text-decoration: none;
+    }
+
+    .heading {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .heading-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #242424;
+    }
+
+    .info-dot {
+      width: 13px;
+      height: 13px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #a5a5a5;
+      border-radius: 50%;
+      color: #777;
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #6f6f6f;
+      font-size: 10.5px;
+    }
+
+    .chips {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .chip {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f2f2f2;
+      color: #666;
+      font-size: 9.5px;
+      font-weight: 500;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status {
+      padding: 3px 9px;
+      border: 1px solid #d8dee8;
+      border-radius: 999px;
+      background: #f7f9fc;
+      color: #526070;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .doc-button {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #d7d0ff;
+      border-radius: 7px;
+      background: #f5f2ff;
+      color: var(--purple);
+    }
+
+    .tabs {
+      height: 28px;
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      padding-left: 12px;
+      border-top: 1px solid #f7f7f7;
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 13px;
+      color: #777;
+      font-size: 10.5px;
+      font-weight: 500;
+    }
+
+    .tab.active {
+      margin-top: -1px;
+      border: 1px solid var(--border-strong);
+      border-bottom-color: #fff;
+      border-radius: 6px 6px 0 0;
+      color: #222;
+    }
+
+    .body {
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) var(--transcript-width);
+      flex: 1;
+      min-height: 0;
+    }
+
+    .conversation {
+      position: relative;
+      overflow-y: auto;
+      padding: 87px var(--content-gutter) 96px;
+      border-right: 1px solid var(--border);
+    }
+
+    .show-more {
+      width: 100%;
+      max-width: 620px;
+      height: 31px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      color: #444;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .chat-message {
+      max-width: 620px;
+      margin: 0 auto 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-message.user {
+      align-items: flex-end;
+    }
+
+    .chat-label {
+      font-size: 10px;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .bubble {
+      width: min(100%, 488px);
+      padding: 11px 13px;
+      border: 1px solid #ded8f4;
+      border-radius: 7px;
+      background: #f7f5ff;
+      color: #333;
+      font-size: 11px;
+      line-height: 1.42;
+    }
+
+    .chat-message.twin {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 9px;
+    }
+
+    .twin-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .twin-body .bubble {
+      width: 100%;
+      border-color: var(--border-strong);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .inline-more {
+      display: block;
+      margin-top: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .summary-panel {
+      display: none;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 16px;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      background: #fff;
+      color: #444;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .app.summary-mode .chat-message,
+    .app.summary-mode .show-more,
+    .app.summary-mode .composer {
+      display: none;
+    }
+
+    .app.summary-mode .summary-panel {
+      display: block;
+    }
+
+    .app.transcript-hidden .body {
+      grid-template-columns: 1fr;
+    }
+
+    .composer {
+      position: absolute;
+      left: var(--content-gutter);
+      right: var(--content-gutter);
+      bottom: 14px;
+      max-width: 620px;
+      margin: 0 auto;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .prompt-chips {
+      display: flex;
+      gap: 8px;
+      padding: 10px 10px 8px;
+    }
+
+    .prompt-chip {
+      height: 24px;
+      padding: 0 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      background: #fff;
+      color: #444;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .composer-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 40px;
+      padding: 0 10px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .composer-input input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      color: #333;
+      font: inherit;
+      font-size: 11px;
+    }
+
+    .composer-input input::placeholder {
+      color: #aaa;
+    }
+
+    .send {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #8b75e8;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .responsible-note {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -18px;
+      color: #8a8a8a;
+      font-size: 9px;
+      text-align: center;
+    }
+
+    .transcript {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: #fff;
+    }
+
+    .transcript-header {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .close-transcript {
+      color: #999;
+      font-size: 17px;
+    }
+
+    .transcript-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 13px;
+    }
+
+    .transcript-item {
+      margin-bottom: 15px;
+      color: #6b6b6b;
+      font-size: 9.5px;
+      line-height: 1.48;
+    }
+
+    .speaker {
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    .timestamp {
+      color: #9a9a9a;
+      font-size: 9px;
+      margin-left: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 20;
+      min-width: 220px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      color: #222;
+      font-size: 11px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .transcript-toggle {
+      position: fixed;
+      right: 14px;
+      top: 106px;
+      z-index: 12;
+      display: none;
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      background: #fff;
+      color: #333;
+      font-size: 11px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+    }
+
+    .transcript-toggle.visible {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 760px) {
+      .body { grid-template-columns: 1fr; }
+      .transcript { display: none; }
+      .conversation { padding: 32px 18px 96px; }
+      .composer { left: 18px; right: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="rail">
+      <svg class="mark" viewBox="0 0 90 90" aria-hidden="true">
+        <path fill="currentColor" d="M27.695,58.202l-3.962,3.962l16.083,16.082l3.962,-3.962l-16.083,-16.082Zm0.001,-23.957l-3.963,3.962l16.083,16.083l3.962,-3.962l-16.082,-16.083Zm36.517,52.459c-4.395,4.396 -11.545,4.396 -15.94,0l-2.052,-2.052l3.962,-3.962l2.052,2.052c2.211,2.211 5.808,2.211 8.017,0.001c2.21,-2.209 2.21,-5.806 -0.001,-8.017l-14.029,-14.028l3.962,-3.963l14.029,14.029c4.396,4.395 4.396,11.546 0,15.94Zm-42.924,-34.91l-3.963,3.963l-14.029,-14.03c-4.396,-4.396 -4.396,-11.545 -0,-15.941c4.395,-4.395 11.545,-4.395 15.94,0l2.052,2.052l-3.963,3.963l-2.052,-2.052c-2.21,-2.211 -5.806,-2.21 -8.015,-0c-2.21,2.209 -2.211,5.805 -0,8.015l14.03,14.03Zm28.896,-16.082l-3.963,3.962l16.083,16.083l3.962,-3.962l-16.082,-16.083Zm-0.001,-23.956l-3.962,3.962l16.083,16.083l3.962,-3.962l-16.083,-16.083Zm36.519,52.458c-4.395,4.396 -11.545,4.396 -15.94,0l-2.052,-2.052l3.962,-3.962l2.052,2.052c2.211,2.211 5.808,2.211 8.017,0.001c2.21,-2.209 2.21,-5.806 -0.001,-8.017l-14.029,-14.028l3.962,-3.963l14.029,14.029c4.396,4.395 4.396,11.546 0,15.94Zm-42.925,-34.91l-3.963,3.963l-14.03,-14.03c-4.395,-4.396 -4.395,-11.545 0,-15.94c4.396,-4.396 11.546,-4.396 15.941,-0l2.052,2.052l-3.963,3.962l-2.052,-2.052c-2.21,-2.211 -5.806,-2.21 -8.015,-0c-2.21,2.209 -2.211,5.805 -0,8.015l14.03,14.03Zm30.505,16.919l-16.083,16.082l3.962,3.962l16.083,-16.083l-3.962,-3.961Zm-23.956,-0l-16.083,16.082l3.963,3.963l16.082,-16.083l-3.962,-3.962Zm36.376,-4.498l-2.052,2.052l-3.961,-3.961l2.052,-2.052c2.21,-2.209 2.21,-5.806 -0.001,-8.016c-2.21,-2.21 -5.805,-2.209 -8.015,0.001l-14.03,14.03l-3.962,-3.963l14.03,-14.03c4.396,-4.395 11.545,-4.395 15.939,-0.001c4.394,4.395 4.396,11.546 0,15.94Zm-30.949,30.949l-14.03,14.03c-4.395,4.395 -11.544,4.395 -15.94,0c-4.394,-4.394 -4.394,-11.544 0.001,-15.939l2.052,-2.052l3.963,3.962l-2.052,2.052c-2.21,2.21 -2.211,5.805 -0.002,8.015c2.211,2.21 5.808,2.21 8.017,0.001l14.03,-14.03l3.961,3.961Zm8.46,-53.437l-2.052,2.052l-3.962,-3.963l2.052,-2.052c2.21,-2.209 2.21,-5.806 0,-8.015c-2.211,-2.211 -5.806,-2.21 -8.016,-0l-14.029,14.03l-3.963,-3.963l14.03,-14.029c4.396,-4.396 11.545,-4.396 15.94,-0c4.395,4.394 4.396,11.545 0,15.94Zm-12.42,4.497l-16.083,16.083l3.963,3.962l16.082,-16.083l-3.962,-3.962Zm-18.527,26.452l-14.03,14.03c-4.396,4.395 -11.547,4.394 -15.94,-0c-4.396,-4.396 -4.396,-11.545 -0,-15.941l2.052,-2.052l3.962,3.963l-2.052,2.052c-2.21,2.209 -2.211,5.805 -0,8.015c2.209,2.21 5.806,2.21 8.015,0l14.03,-14.03l3.963,3.963Zm-5.429,-26.452l-16.083,16.083l3.963,3.962l16.082,-16.083l-3.962,-3.962Z"></path>
+      </svg>
+      <a class="rail-icon" href="index.html" aria-label="Back to meetings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>
+      </a>
+      <span class="rail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></span>
+      <span class="rail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg></span>
+      <span class="rail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></span>
+      <div class="rail-spacer"></div>
+      <span class="avatar" style="margin-bottom: 10px;"></span>
+    </aside>
+
+    <main class="app" id="app">
+      <header class="header">
+        <div class="title-row">
+          <div class="title-left">
+            <a class="back-button" href="index.html" aria-label="Back to meetings">‹</a>
+            <div class="heading">
+              <div class="heading-main">
+                <span id="meetingTitle">Project Sync</span>
+                <span class="info-dot">i</span>
+              </div>
+              <div class="meta-row">
+                <span id="meetingTime">Apr 30, 10:00 AM - 10:30 AM</span>
+                <span class="chips" aria-label="Participants">
+                  <span class="chip">AL</span>
+                  <span class="chip">JT</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="status">Completed</span>
+            <button class="doc-button" type="button" aria-label="Open meeting notes">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="tabs">
+          <button class="tab" type="button" data-tab="summary">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h10M8 12h10M8 18h7"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+            Summary
+          </button>
+          <button class="tab active" type="button" data-tab="chat">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14v10H8l-3 3z"/></svg>
+            Chat
+          </button>
+        </div>
+      </header>
+
+      <div class="body">
+        <section class="conversation">
+          <div class="summary-panel">
+            <strong>Meeting summary</strong><br><br>
+            The team reviewed the current content workflow, clarified ownership for next steps, and agreed to use a reusable template for future meeting notes. Follow-ups include validating the template and sharing a short checklist before the next planning session.
+          </div>
+
+          <div class="chat-message user">
+            <div class="chat-label">You</div>
+            <div class="bubble">Summarize the key points and decisions from this meeting that I may have missed.</div>
+          </div>
+
+          <div class="chat-message twin">
+            <span class="avatar"></span>
+            <div class="twin-body">
+              <div class="chat-label">Jordan Taylor's Twin</div>
+              <div class="bubble">
+                Key points from the meeting include discussion of the process for creating and sending recurring updates, using a template-driven workflow, and collecting feedback on formatting. The team also reviewed follow-up ownership and agreed to keep the next update concise.
+                <span class="inline-more">Show More⌄</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-message user">
+            <div class="chat-label">You</div>
+            <div class="bubble">List the key decisions made in this meeting, including who made each decision, the rationale, and any follow-up actions or owners.</div>
+          </div>
+
+          <div class="chat-message twin">
+            <span class="avatar"></span>
+            <div class="twin-body">
+              <div class="chat-label">Jordan Taylor's Twin</div>
+              <div class="bubble">
+                Key decisions made in this meeting include: 1. Use a reusable template for recurring updates instead of rebuilding each note from scratch. Owner: Jordan. Rationale: consistent formatting and fewer manual revisions. 2. Share a short review checklist before the next sync.
+                <span class="inline-more">Show More⌄</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="composer">
+            <div class="prompt-chips">
+              <button class="prompt-chip" type="button">What did I miss?</button>
+              <button class="prompt-chip" type="button">My action items</button>
+              <button class="prompt-chip" type="button">Key Decisions</button>
+            </div>
+            <div class="composer-input">
+              <input id="meetingQuestion" type="text" placeholder="Ask anything about meeting...">
+              <button class="send" type="button" id="sendQuestion" aria-label="Send">↑</button>
+            </div>
+            <div class="responsible-note">Use this digital twin responsibly. ⓘ</div>
+          </div>
+        </section>
+
+        <aside class="transcript" id="transcript">
+          <div class="transcript-header">
+            <span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align: middle; margin-right: 6px;"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5"/></svg>
+              Transcript
+            </span>
+            <button class="close-transcript" type="button" id="closeTranscript" aria-label="Close transcript">×</button>
+          </div>
+          <div class="transcript-list">
+            <div class="transcript-item"><span class="speaker">Alex Lee</span><span class="timestamp">10:33 AM</span><br>Yes, it is very self-explanatory. The only item I want to discuss is how we handle a short review cycle.</div>
+            <div class="transcript-item"><span class="speaker">Jordan Taylor</span><span class="timestamp">10:33 AM</span><br>That makes sense. I am trying to understand what needs to be standardized.</div>
+            <div class="transcript-item"><span class="speaker">Jordan Taylor</span><span class="timestamp">10:33 AM</span><br>What is the main gap?</div>
+            <div class="transcript-item"><span class="speaker">Jordan Taylor</span><span class="timestamp">10:34 AM</span><br>Take care.</div>
+            <div class="transcript-item"><span class="speaker">Alex Lee</span><span class="timestamp">10:34 AM</span><br>Okay.</div>
+            <div class="transcript-item"><span class="speaker">Alex Lee</span><span class="timestamp">10:34 AM</span><br>Cool.</div>
+            <div class="transcript-item"><span class="speaker">Jordan Taylor</span><span class="timestamp">10:34 AM</span><br>Okay, cool.</div>
+            <div class="transcript-item"><span class="speaker">Alex Lee</span><span class="timestamp">10:34 AM</span><br>All right, have a nice day.</div>
+            <div class="transcript-item"><span class="speaker">Alex Lee</span><span class="timestamp">10:34 AM</span><br>Thank you.</div>
+            <div class="transcript-item"><span class="speaker">Jordan Taylor</span><span class="timestamp">10:34 AM</span><br>Bye.</div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <button class="transcript-toggle" type="button" id="showTranscript">Show transcript</button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const app = document.getElementById("app");
+    const toast = document.getElementById("toast");
+    const conversation = document.querySelector(".conversation");
+    const transcript = document.getElementById("transcript");
+    const showTranscript = document.getElementById("showTranscript");
+    const query = new URLSearchParams(window.location.search);
+    let toastTimer;
+
+    const selectedTitle = query.get("title");
+    const selectedTime = query.get("time");
+    if (selectedTitle) {
+      document.title = `${selectedTitle} | Digital Twin`;
+      document.getElementById("meetingTitle").textContent = selectedTitle;
+    }
+    if (selectedTime) {
+      document.getElementById("meetingTime").textContent = selectedTime;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("visible"), 2200);
+    }
+
+    function addChatMessage(kind, text) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `chat-message ${kind}`;
+
+      if (kind === "user") {
+        wrapper.innerHTML = `
+          <div class="chat-label">You</div>
+          <div class="bubble"></div>
+        `;
+        wrapper.querySelector(".bubble").textContent = text;
+      } else {
+        wrapper.innerHTML = `
+          <span class="avatar"></span>
+          <div class="twin-body">
+            <div class="chat-label">Jordan Taylor's Twin</div>
+            <div class="bubble"></div>
+          </div>
+        `;
+        wrapper.querySelector(".bubble").textContent = text;
+      }
+
+      conversation.insertBefore(wrapper, document.querySelector(".composer"));
+      conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    function generateAnswer(question) {
+      const lower = question.toLowerCase();
+      if (lower.includes("action")) {
+        return "Your action items are: finalize the reusable meeting-note template, share the review checklist, and confirm owners before the next sync.";
+      }
+      if (lower.includes("decision")) {
+        return "The key decision was to use a template-driven workflow for recurring updates so the team can reduce manual formatting and review time.";
+      }
+      if (lower.includes("miss")) {
+        return "You may have missed the agreement to keep the next update concise and route feedback through a short checklist before publishing.";
+      }
+      return "Based on the transcript, the team focused on standardizing the update workflow, clarifying ownership, and preparing a cleaner process for the next meeting.";
+    }
+
+    document.querySelectorAll(".tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+        button.classList.add("active");
+        app.classList.toggle("summary-mode", button.dataset.tab === "summary");
+      });
+    });
+
+    document.getElementById("closeTranscript").addEventListener("click", () => {
+      transcript.style.display = "none";
+      app.classList.add("transcript-hidden");
+      showTranscript.classList.add("visible");
+      showToast("Transcript hidden.");
+    });
+
+    showTranscript.addEventListener("click", () => {
+      transcript.style.display = "";
+      app.classList.remove("transcript-hidden");
+      showTranscript.classList.remove("visible");
+    });
+
+    document.querySelectorAll(".prompt-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.getElementById("meetingQuestion").value = chip.textContent;
+      });
+    });
+
+    document.getElementById("sendQuestion").addEventListener("click", () => {
+      const input = document.getElementById("meetingQuestion");
+      const question = input.value.trim();
+      if (!question) {
+        showToast("Type a question first.");
+        return;
+      }
+      addChatMessage("user", question);
+      input.value = "";
+      setTimeout(() => {
+        addChatMessage("twin", generateAnswer(question));
+        showToast("Twin answered.");
+      }, 350);
+    });
+
+    document.getElementById("meetingQuestion").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        document.getElementById("sendQuestion").click();
+      }
+    });
+
+    document.querySelector(".doc-button").addEventListener("click", () => {
+      document.querySelector('[data-tab="summary"]').click();
+      showToast("Meeting notes opened.");
+    });
+  </script>
+</body>
+</html>
