@@ -138,7 +138,7 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .tcol-use{font-size:24px;font-weight:500;color:rgba(245,243,240,.84);text-align:center;opacity:0}
 
 .scene.desk{background:var(--canvas)}
-/* Scene 1 headline: starts as a centred title, then sits in a band above the inbox (height set from S3.HEAD_H). */
+/* Scene 1 headline: starts as a centred title, then sits in a band above the tracker (height set from S3.HEAD_H). */
 .flood-head{position:absolute;z-index:4;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;
   pointer-events:none;transform-origin:center}
 .fh-line{position:absolute;margin:0;text-align:center;font-family:var(--display);font-weight:600;font-size:64px;line-height:1.1;
@@ -147,114 +147,80 @@ body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased;c
 .fh-line .w{opacity:0;color:#9A96A0}
 .scene.desk .haze{z-index:0}
 .haze.drift{background-size:118% 118%,118% 118%,118% 118%,118% 118%,auto;background-repeat:no-repeat}
-.mail-win{position:relative;z-index:1;width:1500px;height:880px;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+/* Window chrome shared by the tracker (scene 1) and the hand-off email (scene 3). */
+.win{position:relative;z-index:1;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
   box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 28px 70px rgba(22,20,26,.12)}
-.mail-title{flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#f6f6f6;border-bottom:1px solid #e6e6e6}
+.win-title{flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#f6f6f6;border-bottom:1px solid #e6e6e6}
 .lights{display:flex;gap:8px}
 .lights i{width:12px;height:12px;border-radius:50%;display:block}
 .lights i:nth-child(1){background:#ff5f57}
 .lights i:nth-child(2){background:#febc2e}
 .lights i:nth-child(3){background:#28c840}
-.mail-title b{flex:1;text-align:center;font-size:16px;font-weight:600;margin-right:58px;color:#3a3a3a}
-.mail-body{flex:1;min-height:0;display:flex}
-.mail-side{width:240px;flex:none;background:#f3f2f1;border-right:1px solid #e4e4e4;padding:18px 10px;display:flex;flex-direction:column;gap:4px}
-.side-label{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8e8e93;padding:12px 12px 4px}
-.side-item{display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 12px;border-radius:8px;font-size:18px;color:#1d1d1f}
-.side-item.on{background:#d6e6f8;font-weight:600}
-.side-count{color:#1d1d1f;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
-.mail-main{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff}
-.inbox-head{flex:none;display:flex;align-items:center;gap:14px;padding:16px 22px 14px;border-bottom:1px solid #ececec}
-.inbox-head h2{margin:0;font-size:34px;font-weight:700;letter-spacing:-.03em}
-.inbox-sub{font-size:16px;color:#8e8e93}
-.role-chip{font-size:16px;font-weight:600;color:#3a3a3c;background:#f2f2f7;border-radius:999px;padding:5px 12px}
-.count-pill{margin-left:auto;background:#e8f1fb;color:#1d4f91;font-weight:700;font-size:18px;border-radius:999px;padding:6px 12px;font-variant-numeric:tabular-nums}
-.inbox-clip{flex:1;min-height:0;overflow:hidden}
-.inbox-list{display:flex;flex-direction:column}
-.in-row{height:var(--row-h);box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid #f0f0f0;background:#fff;flex:none}
-.in-row .av,.in-row .avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:18px;color:var(--ink);flex:none;background:#efeae4}
-.in-row .mid{flex:1;min-width:0}
-.in-row .sender{display:flex;align-items:center;gap:8px;min-width:0;font-size:24px;font-weight:600;color:#1d1d1f}
-.in-row .sender span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.in-row .preview{margin-top:2px;font-size:20px;color:#6e6e73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.in-row .time{flex:none;width:64px;text-align:right;font-size:16px;color:#8e8e93}
-.unread{width:10px;height:10px;border-radius:50%;background:var(--purple);flex:none}
-/* Key element. Scenes 8 and 10 use this same purple focus. */
-.spotlight{position:relative;z-index:2;background:#efe6fb;transform:translateY(-4px);
-  box-shadow:inset 3px 0 0 var(--purple),0 12px 32px rgba(59,26,107,.16)}
-.spotlight .sender,.spotlight .preview{font-weight:700;color:#1d1d1f}
+.win-title b{flex:1;text-align:center;font-size:16px;font-weight:600;margin-right:58px;color:#3a3a3a}
 
-/* Scene 6. Stylized job page: LinkedIn blue, no logo, skeleton bars for everything we don't need to read. */
-.li-win{position:relative;z-index:1;width:1440px;height:860px;background:#f4f2ee;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
-  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 28px 70px rgba(22,20,26,.12)}
-.li-chrome{flex:none;height:44px;display:flex;align-items:center;padding:0 18px;background:#f6f6f6;border-bottom:1px solid #e6e6e6}
-.li-url{width:520px;height:26px;margin:0 auto;border-radius:8px;background:#ebebeb;display:flex;align-items:center;gap:8px;padding:0 12px;color:#a3a3a3}
-.li-url svg{width:13px;height:13px}
-.li-nav{flex:none;height:64px;background:#fff;border-bottom:1px solid #e8e6e2;display:flex;align-items:center;gap:14px;padding:0 64px}
-.li-mark{width:36px;height:36px;border-radius:8px;background:#dfe3e8}
-.li-search{width:300px;height:38px;border-radius:6px;background:#edf3f8}
-.li-navs{margin-left:auto;display:flex;gap:34px}
-.li-ni{display:flex;flex-direction:column;align-items:center;gap:6px}
-.li-ni i{width:24px;height:24px;border-radius:6px;background:#dcd9d4;display:block}
-.li-ni b{width:44px;height:8px;border-radius:4px;background:#e6e3de;display:block}
-.li-body{flex:1;min-height:0;display:flex;justify-content:center;gap:24px;padding:24px 0}
-.li-main{width:900px;display:flex;flex-direction:column;gap:16px}
-.li-main > *{flex:none}
-.li-side{width:340px;display:flex;flex-direction:column;gap:16px}
-.li-card{background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
-.li-job{padding:24px 28px}
-.li-co{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:600;color:rgba(0,0,0,.9)}
-.li-co-logo{width:44px;height:44px;border-radius:8px;background:#1f2a44;color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:22px}
-.li-title{margin:16px 0 0;font-size:34px;font-weight:600;letter-spacing:-.02em;color:rgba(0,0,0,.9)}
-.li-meta{margin-top:8px;font-size:18px;color:rgba(0,0,0,.6)}
-.li-meta b{font-weight:600;color:rgba(0,0,0,.9)}
-.li-pills{display:flex;gap:10px;margin-top:16px}
-.li-pills i{display:block;height:30px;border-radius:999px;background:#edeae6}
-.li-acts{display:flex;gap:10px;margin-top:20px}
-.li-btn{height:46px;padding:0 24px;border-radius:999px;display:flex;align-items:center;font-size:19px;font-weight:600}
-.li-btn.pri{background:#0a66c2;color:#fff}
-.li-btn.sec{box-shadow:inset 0 0 0 1.5px #0a66c2;color:#0a66c2}
-.li-card h4{margin:0 0 16px;font-size:22px;font-weight:600;color:rgba(0,0,0,.9)}
-.li-team{padding:22px 28px 24px;overflow:hidden}
-.li-person{display:flex;align-items:center;gap:18px}
-.li-pid{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
-.li-name{font-size:20px;font-weight:600;color:rgba(0,0,0,.9)}
-.li-name span{margin-left:6px;font-size:17px;font-weight:400;color:rgba(0,0,0,.6)}
-.li-line{margin-top:4px;font-size:18px;color:rgba(0,0,0,.9)}
-.li-poster{margin-top:4px;font-size:16px;color:rgba(0,0,0,.6)}
-.li-msg{flex:none;height:42px;padding:0 20px;border-radius:999px;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.6);color:rgba(0,0,0,.75);
-  display:flex;align-items:center;gap:8px;font-size:18px;font-weight:600}
-.li-msg svg{width:18px;height:18px}
-/* Strikethrough is drawn, not text-decoration, so it can sweep left to right. */
-.strike{position:relative;display:inline-flex;align-self:flex-start}
-/* Margins live on the wrappers so the strike sits on the text's optical middle. */
-.li-team > .strike{margin-bottom:16px}
-.li-team h4{margin:0}
-.li-pid > .strike + .strike{margin-top:4px}
-.li-pid .li-line,.li-pid .li-poster{margin-top:0}
-.li-person > .strike{align-self:center}
-.strike > .x{position:absolute;left:-4px;right:-4px;top:52%;height:3px;margin-top:-1.5px;border-radius:2px;background:#D93F3F;transform:scaleX(0);transform-origin:left center}
-/* The JD is the lift target. The Twin line opens a slot under the heading and pushes the bars down. */
-.li-jd{position:relative;z-index:3;padding:24px 28px 26px;transform-origin:center}
-.li-jd .sk.sub{height:14px;margin-top:26px;background:#e0ddd8}
-.li-bul{display:flex;align-items:center;gap:12px;margin-top:14px}
-.li-bul::before{content:'';width:6px;height:6px;border-radius:50%;background:#cfcbc5;flex:none}
-.li-side .li-card{padding:20px 22px}
-.sk{display:block;height:12px;border-radius:6px;background:#ebe8e4}
-.sk + .sk{margin-top:14px}
-.li-peer{display:flex;align-items:center;gap:12px}
-.li-peer + .li-peer{margin-top:16px}
-.li-peer i{width:40px;height:40px;border-radius:50%;background:#e6e3de;flex:none;display:block}
-.li-peer div{flex:1}
-.li-peer .sk + .sk{margin-top:8px}
-.li-dim{position:absolute;inset:0;z-index:2;background:rgba(245,243,240,.62);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);opacity:0;pointer-events:none}
-.twin-line{position:relative;height:0;margin-bottom:0;display:flex;align-items:center;gap:16px;padding:0 16px 0 24px;background:#fff;border-radius:16px;
-  box-shadow:inset 0 0 0 1.5px var(--purple),0 14px 36px rgba(59,26,107,.14);opacity:0;overflow:hidden}
-.twin-line .txt{flex:1;min-width:0;font-size:24px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
-.twin-link{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;font-size:22px;font-weight:600;color:var(--purple-2);
-  text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;transition:color .18s,background-color .18s}
-.twin-link svg{width:18px;height:18px}
-.twin-link.hover{color:var(--purple);background:var(--purple-tint);text-decoration-thickness:2.5px}
-.twin-link.pressed{background:#E2D6F5}
+/* Scene 1. Sarah's hiring tracker: her open roles on the left, Daniel's finalists as a sheet. */
+.trk{width:1500px;height:880px}
+.trk-body{flex:1;min-height:0;display:flex}
+.trk-side{width:290px;flex:none;background:#f3f2f1;border-right:1px solid #e4e4e4;padding:18px 12px;display:flex;flex-direction:column;gap:2px}
+.side-label{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8e8e93;padding:6px 12px 10px}
+.side-item{display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 12px;border-radius:8px;font-size:18px;color:#1d1d1f}
+.side-item.on{background:#e7defa;font-weight:600}
+/* Unanswered-question badges. Hidden until a role gets its first question. */
+.side-count{min-width:30px;height:26px;padding:0 9px;border-radius:999px;background:#E5484D;color:#fff;font-size:14px;font-weight:700;
+  display:grid;place-items:center;font-variant-numeric:tabular-nums;opacity:0}
+.trk-main{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;background:#fff}
+.sheet-head{flex:none;display:flex;align-items:center;gap:14px;padding:22px 28px 18px;border-bottom:1px solid #ececec}
+.sheet-head h2{margin:0;font-size:30px;font-weight:700;letter-spacing:-.025em;white-space:nowrap}
+.stage-chip{font-size:16px;font-weight:600;color:var(--purple);background:var(--purple-tint);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.count-pill{margin-left:auto;background:#FDECEC;color:#C4302B;font-weight:700;font-size:18px;border-radius:999px;padding:6px 14px;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.sheet-cols,.cand{display:grid;grid-template-columns:380px 250px 110px 1fr;align-items:center;padding:0 28px}
+.sheet-cols{flex:none;height:44px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8e8e93;
+  background:#fafafa;border-bottom:1px solid #ececec}
+.cand{flex:none;height:var(--row-h);border-bottom:1px solid #f0f0f0;background:#fff}
+.cand-who{display:flex;align-items:center;gap:14px;min-width:0}
+.cand-nm{font-size:22px;font-weight:600;color:#1d1d1f}
+.cand-now{margin-top:2px;font-size:17px;color:#6e6e73}
+.cand-when{font-size:19px;color:#3a3a3c}
+.cand-q{font-size:19px;font-weight:700;color:#C4302B;font-variant-numeric:tabular-nums;opacity:0}
+/* Key element. Arjun's row and card share this purple focus. */
+.cand.focus{background:#F6F1FD;box-shadow:inset 3px 0 0 var(--purple)}
+/* Question cards: one-line pills that fit two to a row, so each stays readable as the pile grows. */
+.qcard{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:7px 18px 7px 7px;background:#fff;border-radius:999px;white-space:nowrap;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 8px 22px rgba(22,20,26,.14);opacity:0;transform-origin:0 50%}
+.qcard p{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em;color:#1d1d1f}
+/* Arjun's card is the full question, with his name, in the purple focus. */
+.qcard.big{z-index:4;width:430px;align-items:flex-start;gap:12px;padding:16px 20px 18px 16px;border-radius:18px;white-space:normal;background:#F6F1FD;
+  box-shadow:inset 0 0 0 2px var(--purple),0 18px 44px rgba(59,26,107,.22)}
+.qcard.big b{display:block;font-size:15px;font-weight:600;color:var(--purple)}
+.qcard.big p{margin-top:2px;font-size:21px;line-height:1.34}
+.zoomer{position:absolute;inset:0;transform-origin:0 0}
+
+/* Scene 3. Sarah's hand-off email: To, Subject, a short note with her Twin card, then Send. */
+.mail{width:1180px}
+.mail-field{flex:none;display:flex;align-items:center;gap:14px;height:68px;padding:0 36px;border-bottom:1px solid #ececec;font-size:22px;color:#1d1d1f}
+.mail-field .lab{width:84px;color:#8e8e93}
+.mail-field b{font-weight:600}
+.to-chip{display:flex;align-items:center;gap:10px;padding:4px 16px 4px 4px;border-radius:999px;background:#f2f2f7;font-weight:600}
+.mail-text{padding:30px 36px 8px;font-size:28px;line-height:1.45;letter-spacing:-.01em;color:#1d1d1f}
+.mail-text p{margin:0}
+.mail-text p + p{margin-top:16px}
+.mail-text .mw{opacity:0}
+/* The Twin card's slot opens under the note, so the signature slides down to make room. */
+.twin-slot{height:0;overflow:hidden;margin:0 -24px;padding:0 24px}
+.twin-att{display:flex;align-items:center;gap:20px;width:640px;margin:22px 0 4px;padding:18px 22px;border-radius:20px;background:#fff;
+  box-shadow:inset 0 0 0 2px var(--purple),0 16px 40px rgba(59,26,107,.16);transform-origin:0 50%}
+.twin-att .twin-id .nm{font-size:28px}
+.twin-att .twin-id .role{margin-top:4px;font-size:19px}
+.twin-url{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:20px;font-weight:600;color:var(--purple-2);
+  text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
+.twin-url svg{width:16px;height:16px}
+.mail-foot{flex:none;display:flex;padding:22px 36px 30px}
+/* Gmail's Send blue, so the button reads as "email" at a glance. */
+.send{height:58px;padding:0 30px;border-radius:999px;background:#0B57D0;color:#fff;font-size:22px;font-weight:600;
+  display:flex;align-items:center;gap:10px;transition:background-color .18s,box-shadow .18s}
+.send svg{width:22px;height:22px}
+.send.hover{background:#0A4CB8;box-shadow:0 1px 3px rgba(11,87,208,.3),0 4px 8px rgba(11,87,208,.15)}
 
 /* Scene 8. Round 1 with Daniel as a live transcript: who's speaking, waveform, words as said. */
 /* Nudged above centre so the headline has air above it and a clear gap to the transcript. */
@@ -344,6 +310,8 @@ const SCENE_EXIT_MS = 260;
 const EASE_OUT = 'cubic-bezier(.16,1,.3,1)';
 const EASE_IN = 'cubic-bezier(.7,0,.84,0)';
 const STAGGER_MS = 80;
+/* Shade a title's first line eases to when its second line takes over. */
+const TITLE_DIM = '#B4B0BA';
 const FADE_IN_MS = 480;
 const CANCEL = Symbol('cancel');
 const GRAIN_OPACITY = 0.025;
@@ -395,41 +363,52 @@ const ARJUN_LEVELS = { stepMs: 20, data: [0.0,0.0,0.0,0.01,0.11,0.73,1.0,1.0,0.8
 const COPY = {
   ui: { twin: 'Twin', trainedOn: 'Trained on:' },
   arjunName: 'Arjun Mehta',
-  /* Opening headline over the inbox: line 1, then line 2 in two parts as Arjun's email lands. */
-  s1: ["One open role. 1,200 applicants.", "You want the best fit.", "But how do you answer everyone?"],
-  s3: {
-    time: 'now',
-    inbox: 'Inbox',
-    window: 'Sarah Lin \u00b7 Inbox',
-    role: 'Enterprise AE',
-    countFinal: '1,200+',
-    incoming: 'New application · Enterprise AE',
-    final: "The JD asks for HR tech. I've sold data infrastructure to banks for six years. Is that a dealbreaker?",
-    questions: [
-      'Is this role remote?',
-      "What's the salary range?",
-      'Do you sponsor visas?',
-      'How many interview rounds?',
-      "What's the team like?"
-    ]
+  /* Opening headline over the tracker: line 1, then line 2 in two parts as the questions pile up. */
+  s1: {
+    open: ['Hiring for 10 roles at once?', 'Every candidate has questions.'],
+    then: ['You want them all interview-ready.', "But you can't answer everyone in time."]
   },
-  s4: ["Some answers only you know.", "So share your Digital Twin."],
-  s6: {
-    company: 'Northwind',
-    title: 'Enterprise Account Executive',
-    place: 'San Francisco · Hybrid',
-    applicants: '1,200+ applicants',
-    apply: 'Easy Apply',
-    save: 'Save',
-    heading: 'Meet the hiring team',
-    name: 'Sarah Lin',
-    degree: '· 3rd',
-    line: 'Hiring for an Enterprise AE at Northwind',
-    meta: 'Job poster',
-    button: 'Message',
-    about: 'About the job',
-    twinLine: "Talk to the Recruiter's Digital Twin",
-    twinUrl: 'twincafe.com/sarah-lin'
+  /* Sarah's hiring tracker. Each finalist's questions pop up as cards; Arjun's is the one we zoom into. */
+  s3: {
+    window: 'Sarah Lin · Hiring tracker',
+    rolesLabel: 'Open roles',
+    /* [role, unanswered questions it climbs to]. The first is the open sheet; its count comes from the cards. */
+    roles: [
+      ['Enterprise AE', 0], ['Product Designer', 7], ['Data Engineer', 9], ['SDR Lead', 5], ['Solutions Engineer', 8],
+      ['HR Business Partner', 4], ['Backend Engineer', 11], ['Customer Success', 6], ['Marketing Manager', 7], ['Finance Analyst', 3]
+    ],
+    sheet: "Shortlisted candidates · Daniel's Enterprise AE",
+    stage: 'Final round',
+    unanswered: 'unanswered',
+    cols: ['Candidate', 'Interview with Daniel', 'Questions'],
+    /* Arjun is the middle row so the zoom lands near the centre of the frame. */
+    people: [
+      { name: 'Jenny Peters', now: 'Senior AE · Ramp', photo: 'assets/s2-jenny-peters-portrait.jpg', when: 'Today, 4:00 PM',
+        asks: ['How is quota set for year one?', 'Who would I report to?'] },
+      { name: 'Raj Shah', now: 'Enterprise AE · Rippling', photo: 'assets/s2-raj-portrait.jpg', when: 'Tomorrow, 9:00 AM',
+        asks: ['Is the role hybrid or remote?', 'How long is a typical deal?'] },
+      { name: 'Arjun Mehta', now: 'AE · Data infrastructure', photo: 'assets/arjun.jpg', when: 'Tomorrow, 10:30 AM', arjun: true,
+        asks: ['What does Daniel look for?'] },
+      { name: 'Victoria Adeyemi', now: 'Strategic AE · Deel', photo: 'assets/meeting-scene6/victoria.png', when: 'Wed, 2:00 PM',
+        asks: ['What do the first 90 days look like?', 'Can I talk to someone on the team?'] },
+      { name: 'Christopher Hale', now: 'Mid-market AE · HubSpot', photo: 'assets/meeting-scene6/christopher.png', when: 'Thu, 11:00 AM',
+        asks: ['How many rounds are left?', 'Is there an equity refresh?'] }
+    ],
+    final: "The JD asks for HR tech. I've sold data infrastructure to banks for six years. Is that a dealbreaker?"
+  },
+  s4: ["Can't get back to everyone?", 'Send your Digital Twin.'],
+  /* Sarah's hand-off email. The body reveals word by word, then the Twin card drops in. */
+  mail: {
+    window: 'New Message',
+    to: 'Arjun Mehta',
+    subject: 'Your interview with Daniel tomorrow',
+    hi: 'Hi Arjun,',
+    body: "Good luck with Daniel tomorrow! I'm in meetings all day, but if any questions come up as you prep, talk to my Twin.",
+    twin: "Sarah's Digital Twin",
+    twinRole: 'Recruiter · Northwind',
+    twinUrl: 'twincafe.com/sarah-lin',
+    sign: 'Sarah',
+    send: 'Send'
   },
   /* Caption ms are on-screen times. Retime them to the final voice track. */
   s8: {
@@ -480,9 +459,8 @@ const COPY = {
     sarah: { name: 'Sarah', time: '4:13 PM', emoji: ['🎉', '🥳'] }
   },
   s12: {
-    l1: 'Answer every candidate.',
-    l2: 'Start with the right one.',
-    cta: 'Create your Digital Twin Now.',
+    line: 'Set every candidate up to shine.',
+    cta: 'Create your Recruiter Twin.',
     url: 'twincafe.com'
   }
 };
@@ -632,6 +610,9 @@ async function playTitle(scene, t){
   await revealLine(line1, P1_WORD_STAGGER_MS, line2.length === 0);
   if (line2.length){
     await t(P1_LINE_GAP_MS);
+    /* Optional: hand focus to line 2 by easing line 1 to a lighter shade. */
+    if (scene.dimFirst) line1.forEach(w => t.animate(w, [{ color: '#16141A' }, { color: TITLE_DIM }],
+      { duration: 420, easing: EASE_OUT }).catch(swallow));
     await revealLine(line2, P1_LINE2_STAGGER_MS, true);
   }
   await t(P1_POST_REVEAL_HOLD_MS);
@@ -872,103 +853,77 @@ function SlackCard(){
 }
 function iconWrap(className, html){ const s = node('span', className); s.innerHTML = html; return s; }
 
-function EmailNotification({ initials, sender, preview, time, photo, photoLabel, accent, bg }){
-  const row = node('div', 'in-row' + (accent ? ' spotlight' : ''));
-  if (photo) row.append(portrait(photo, photoLabel || sender, 52, true));
-  else {
-    const av = node('div', 'av initials');
-    av.style.background = bg || '#EFEAE4';
-    av.textContent = initialsOf(initials || sender || '');
-    row.append(av);
-  }
-  const mid = node('div', 'mid');
-  const who = node('div', 'sender');
-  if (accent) who.append(node('i', 'unread'));
-  const name = node('span'); name.textContent = sender;
-  who.append(name);
-  const prev = node('div', 'preview'); prev.textContent = preview || '';
-  mid.append(who, prev);
-  const tm = node('div', 'time'); tm.textContent = time || '';
-  row.append(mid, tm);
-  return row;
-}
-
-/* Faces already in the repo. Arjun is separate. Scene 10 can reuse this window in a calm state. */
-const INBOX_PEOPLE = [
-  ['Jenny Peters', 'assets/s2-jenny-peters-portrait.jpg'],
-  ['Raj Shah', 'assets/s2-raj-portrait.jpg'],
-  ['Victoria Adeyemi', 'assets/meeting-scene6/victoria.png'],
-  ['Christopher Hale', 'assets/meeting-scene6/christopher.png'],
-  ['Raina Shah', 'assets/meeting-scene6/raina.png'],
-  ['Ming Na', 'assets/meeting-scene6/ming-na.png'],
-  ['Paul Miller', 'assets/paul-miller-avatar.png'],
-  ['Jordan Blake', 'assets/s7-avatars/team1.png'],
-  ['Amina Cole', 'assets/s7-avatars/team2.png'],
-  ['Luis Ortega', 'assets/s7-avatars/team3.png'],
-  ['Elena Voss', 'assets/s7-avatars/ea.png'],
-  ['Noah Berg', 'assets/s5-avatars/avatar-05.png'],
-  ['Hana Suzuki', 'assets/s5-avatars/avatar-06.png'],
-  ['Samir Patel', 'assets/s5-avatars/avatar-28.png'],
-  ['Leah Okonkwo', 'assets/s5-avatars/avatar-36.png']
-];
-function InboxPanel(){
-  const el = node('div', 'mail-win');
-  const title = node('div', 'mail-title');
+function WindowChrome(className, title){
+  const el = node('div', 'win ' + className);
+  const bar = node('div', 'win-title');
   const lights = node('span', 'lights');
   lights.append(node('i'), node('i'), node('i'));
-  const titleText = node('b'); titleText.textContent = COPY.s3.window;
-  title.append(lights, titleText);
-  const body = node('div', 'mail-body');
-  const side = node('div', 'mail-side');
-  const fav = node('div', 'side-label'); fav.textContent = 'Favourites';
-  const inboxItem = node('div', 'side-item on');
-  const inboxName = node('span'); inboxName.textContent = 'Inbox';
-  const sideCount = node('b', 'side-count'); sideCount.textContent = '0';
-  inboxItem.append(inboxName, sideCount);
-  const sent = node('div', 'side-item'); sent.textContent = 'Sent';
-  const boxes = node('div', 'side-label'); boxes.textContent = 'Mailboxes';
-  const drafts = node('div', 'side-item'); drafts.textContent = 'Drafts';
-  const archive = node('div', 'side-item'); archive.textContent = 'Archive';
-  side.append(fav, inboxItem, sent, boxes, drafts, archive);
-  const main = node('div', 'mail-main');
-  const head = node('div', 'inbox-head');
-  const h2 = node('h2'); h2.textContent = COPY.s3.inbox;
-  const sub = node('span', 'inbox-sub'); sub.textContent = '0 unread';
-  const role = node('span', 'role-chip'); role.textContent = COPY.s3.role;
-  const countEl = node('span', 'count-pill'); countEl.textContent = '0';
-  head.append(h2, sub, role, countEl);
-  const clip = node('div', 'inbox-clip');
-  const list = node('div', 'inbox-list');
-  clip.append(list);
-  main.append(head, clip);
+  bar.append(lights, text('b', '', title));
+  el.append(bar);
+  return el;
+}
+/* Scene 1 window. Returns setters for the badges so the play can tick them as questions land. */
+function Tracker(){
+  const c = COPY.s3;
+  const el = WindowChrome('trk', c.window);
+  const body = node('div', 'trk-body');
+  const side = node('div', 'trk-side');
+  side.append(text('div', 'side-label', c.rolesLabel + ' · ' + c.roles.length));
+  const roleCounts = c.roles.map(([role], i) => {
+    const item = node('div', 'side-item' + (i === 0 ? ' on' : ''));
+    const count = text('span', 'side-count', '0');
+    item.append(text('span', '', role), count);
+    side.append(item);
+    return count;
+  });
+  const main = node('div', 'trk-main');
+  const head = node('div', 'sheet-head');
+  const pill = text('span', 'count-pill', '0 ' + c.unanswered);
+  head.append(text('h2', '', c.sheet), text('span', 'stage-chip', c.stage), pill);
+  const cols = node('div', 'sheet-cols');
+  c.cols.forEach(label => cols.append(text('span', '', label)));
+  cols.append(node('span'));
+  main.append(head, cols);
+  const rows = c.people.map(p => {
+    const row = node('div', 'cand');
+    const who = node('div', 'cand-who');
+    const id = node('div');
+    id.append(text('div', 'cand-nm', p.name), text('div', 'cand-now', p.now));
+    who.append(portrait(p.photo, p.name, 52, true), id);
+    row.append(who, text('span', 'cand-when', p.when), text('span', 'cand-q', '0'));
+    main.append(row);
+    return row;
+  });
   body.append(side, main);
-  el.append(title, body);
+  el.append(body);
+  const show = (badge, n) => { badge.textContent = n; badge.style.opacity = n ? '1' : '0'; };
   return {
-    el, list,
-    setCount(value){
-      countEl.textContent = value;
-      sideCount.textContent = value;
-      sub.textContent = value + ' unread';
-    },
-    stamp(){
-      [...list.children].forEach((row, i) => {
-        const time = row.querySelector('.time');
-        if (time) time.textContent = i === 0 ? 'now' : i + 'm';
-      });
-    }
+    el, main, rows,
+    setRole(i, n){ show(roleCounts[i], n); },
+    setRow(i, n){ show(rows[i].querySelector('.cand-q'), n); },
+    setTotal(n){ pill.textContent = n + ' ' + c.unanswered; show(roleCounts[0], n); }
   };
 }
+function QuestionCard(person, question, big){
+  const card = node('div', 'qcard' + (big ? ' big' : ''));
+  if (!big){
+    card.append(portrait(person.photo, person.name, 30, true), text('p', '', question));
+    return card;
+  }
+  const body = node('div');
+  body.append(text('b', '', person.name), text('p', '', question));
+  card.append(portrait(person.photo, person.name, 48, true), body);
+  return card;
+}
 function FloodHead(){
-  const [l1, l2a, l2b] = COPY.s1;
   const head = node('div', 'flood-head');
   head.style.height = S3.HEAD_H + 'px';
-  const one = node('p', 'fh-line l1');
-  one.append(words(l1));
-  const two = node('p', 'fh-line l2');
-  const ra = node('span', 'row'); ra.append(words(l2a));
-  const rb = node('span', 'row'); rb.append(words(l2b));
-  two.append(ra, rb);
-  head.append(one, two);
+  const line = (className, rowsText) => {
+    const p = node('p', 'fh-line ' + className);
+    rowsText.forEach(r => { const row = node('span', 'row'); row.append(words(r)); p.append(row); });
+    return p;
+  };
+  head.append(line('l1', COPY.s1.open), line('l2', COPY.s1.then));
   return head;
 }
 /* Title-card word reveal (grey to ink) for a list of .w spans, starting after `delay`. */
@@ -979,102 +934,58 @@ function revealWords(t, list, { stagger, delay = 0, payoff = 0, from = '#9A96A0'
     { opacity: 1, color: to }
   ], { duration: 170, delay: delay + i * stagger + (payoff && i === list.length - 1 ? payoff : 0), easing: 'ease-out' }).catch(swallow));
 }
-function mountFlood(scene){
+/* Scene 1 layout: haze, then a zoom layer holding the tracker and the headline, so the push-in moves both. */
+function mountTracker(scene){
   scene.el.classList.add('desk');
-  const haze = node('div', 'haze drift');
-  const panel = InboxPanel();
-  /* The inbox sits below the headline band and runs off the bottom of the frame. Absolute so it
+  const zoomer = node('div', 'zoomer');
+  const panel = Tracker();
+  /* The tracker sits below the headline band and runs off the bottom of the frame. Absolute so it
      isn't re-centred by the scene's flex layout when it overflows. */
   Object.assign(panel.el.style, { position: 'absolute', top: S3.PANEL_TOP + 'px', left: (1920 - 1500) / 2 + 'px' });
-  scene.el.replaceChildren(haze, panel.el);
-  return panel;
+  const head = FloodHead();
+  head.style.transform = S3.HEAD_START;
+  zoomer.append(panel.el, head);
+  scene.el.replaceChildren(node('div', 'haze drift'), zoomer);
+  return { panel, head, zoomer };
 }
 
-function skel(widths, cls){
-  const frag = document.createDocumentFragment();
-  widths.forEach(w => { const s = node('i', 'sk' + (cls ? ' ' + cls : '')); s.style.width = w; frag.append(s); });
-  return frag;
-}
 function text(tag, className, value){ const n = node(tag, className); n.textContent = value; return n; }
 
-function JobPage(){
-  const c = COPY.s6;
-  const win = node('div', 'li-win');
-  const chrome = node('div', 'li-chrome');
-  const lights = node('span', 'lights');
-  lights.append(node('i'), node('i'), node('i'));
-  const url = node('div', 'li-url');
-  url.append(iconWrap('', I.lock), skel(['180px']));
-  chrome.append(lights, url);
-
-  const nav = node('div', 'li-nav');
-  const navs = node('div', 'li-navs');
-  for (let i = 0; i < 5; i++){ const ni = node('div', 'li-ni'); ni.append(node('i'), node('b')); navs.append(ni); }
-  nav.append(node('div', 'li-mark'), node('div', 'li-search'), navs);
-
-  const job = node('div', 'li-card li-job');
-  const co = node('div', 'li-co');
-  co.append(text('span', 'li-co-logo', c.company[0]), text('span', '', c.company));
-  const meta = node('div', 'li-meta');
-  meta.append(document.createTextNode(c.place + ' · '), text('b', '', c.applicants));
-  const pills = node('div', 'li-pills');
-  ['130px', '110px', '150px'].forEach(w => { const p = node('i'); p.style.width = w; pills.append(p); });
-  const acts = node('div', 'li-acts');
-  acts.append(text('div', 'li-btn pri', c.apply), text('div', 'li-btn sec', c.save));
-  job.append(co, text('h2', 'li-title', c.title), meta, pills, acts);
-
-  /* Every text in the hiring card gets a .strike wrapper so scene 6 can cross it out. */
-  const struck = (tag, className, value) => {
-    const w = node('span', 'strike');
-    w.append(text(tag, className, value), node('i', 'x'));
-    return w;
+/* Scene 3 window. Body words are .mw spans so the play can reveal them; the Twin card waits in a closed slot. */
+function MailCompose(){
+  const c = COPY.mail;
+  const el = WindowChrome('mail', c.window);
+  const field = (label, ...content) => {
+    const row = node('div', 'mail-field');
+    row.append(text('span', 'lab', label), ...content);
+    return row;
   };
-  const team = node('div', 'li-card li-team');
-  const person = node('div', 'li-person');
-  const pid = node('div', 'li-pid');
-  const name = text('div', 'li-name', c.name);
-  name.append(text('span', '', c.degree));
-  const nameWrap = node('span', 'strike');
-  nameWrap.append(name, node('i', 'x'));
-  pid.append(nameWrap, struck('div', 'li-line', c.line), struck('div', 'li-poster', c.meta));
-  const msg = node('div', 'li-msg');
-  msg.innerHTML = I.send;
-  msg.append(document.createTextNode(c.button));
-  const msgWrap = node('span', 'strike');
-  msgWrap.append(msg, node('i', 'x'));
-  person.append(portrait(ASSETS.sarah, c.name, 72, true), pid, msgWrap);
-  team.append(struck('h4', '', c.heading), person);
-
-  const jd = node('div', 'li-card li-jd');
-  jd.append(text('h4', '', c.about), TwinLine(), skel(['96%', '88%', '92%', '64%']), skel(['28%'], 'sub'));
-  ['78%', '66%', '72%'].forEach(w => { const b = node('div', 'li-bul'); b.append(skel([w])); jd.append(b); });
-
-  const main = node('div', 'li-main');
-  main.append(job, team, jd);
-  const side = node('div', 'li-side');
-  const promo = node('div', 'li-card');
-  promo.append(skel(['70%', '92%', '54%']));
-  const peers = node('div', 'li-card');
-  for (let i = 0; i < 3; i++){
-    const peer = node('div', 'li-peer');
-    const lines = node('div');
-    lines.append(skel(['72%', '48%']));
-    peer.append(node('i'), lines);
-    peers.append(peer);
-  }
-  side.append(promo, peers);
-  const body = node('div', 'li-body');
-  body.append(main, side);
-  win.append(chrome, nav, body, node('div', 'li-dim'));
-  return win;
+  const chip = node('span', 'to-chip');
+  chip.append(portrait(ASSETS.arjun, c.to, 36, true), text('span', '', c.to));
+  const para = value => {
+    const p = node('p');
+    value.split(' ').forEach((word, i) => { if (i) p.append(' '); p.append(text('span', 'mw', word)); });
+    return p;
+  };
+  const att = node('div', 'twin-att');
+  const id = node('div', 'twin-id');
+  const url = text('div', 'twin-url', c.twinUrl);
+  url.insertAdjacentHTML('beforeend', I.out);
+  id.append(text('div', 'nm', c.twin), text('div', 'role', c.twinRole), url);
+  const tag = text('div', 'tag', COPY.ui.twin);
+  att.append(portrait(ASSETS.sarah, 'Sarah Lin', 84, true), id, tag);
+  const slot = node('div', 'twin-slot');
+  slot.append(att);
+  const msg = node('div', 'mail-text');
+  msg.append(para(c.hi), para(c.body), slot, para(c.sign));
+  const foot = node('div', 'mail-foot');
+  const send = text('div', 'send', c.send);
+  send.insertAdjacentHTML('beforeend', I.send);
+  foot.append(send);
+  el.append(field('To:', chip), field('Subject:', text('b', '', c.subject)), msg, foot);
+  return el;
 }
-function TwinLine(){
-  const line = node('div', 'twin-line');
-  const link = text('span', 'twin-link', COPY.s6.twinUrl);
-  link.insertAdjacentHTML('beforeend', I.out);
-  line.append(text('span', 'txt', COPY.s6.twinLine), link);
-  return line;
-}
+
 /* Element box in stage px (the stage is scaled to fit the window). */
 function stageRect(el){
   const s = STAGE.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 1920;
@@ -1086,9 +997,8 @@ function EndCard(){
   const root = node('div', 'titlecard ready');
   root.append(node('div', 'haze'));
   const frame = node('div', 'frame');
-  const a = node('p', 't1'); a.append(words(c.l1));
-  const b = node('p', 't2'); b.append(words(c.l2));
-  frame.append(a, b);
+  const a = node('p', 't1'); a.append(words(c.line));
+  frame.append(a);
   const cta = node('div', 'endcta');
   const qr = node('div', 'qr-card');
   const code = new Image();
@@ -1286,39 +1196,50 @@ const R1 = {
 /* End card beat 2: tagline out, then 4 parts staggered in, then hold. */
 const END = { OUT: 400, PART: 520, STAGGER: 130, get IN(){ return this.PART + 3 * this.STAGGER; }, HOLD: 2400 };
 
-/* Scene 1 beats. The flood itself is 9100ms (2840 opening + 3340 stream + 520 Arjun + 2400 hold);
-   here the hold is longer so line 2 can be read. */
+/* Scene 1 beats. Opener, lift, the finalists fill in, their questions pop up (line 2 takes over partway),
+   Arjun's question lands on top, a read, then the camera pushes in on it and holds. */
 const S3 = {
-  /* Headline band is HEAD_H tall (≈80px air above and below two lines); the inbox starts right under it. */
+  /* Headline band is HEAD_H tall (≈80px air above and below two lines); the tracker starts right under it. */
   HEAD_H: 300, PANEL_TOP: 300, get HEAD_START(){ return `translateY(${540 - this.HEAD_H / 2}px) scale(1.3)`; },
-  INTRO: 4 * P1_WORD_STAGGER_MS + P1_PAYOFF_EXTRA_MS + 180 + 500, LIFT: 700, HOLD: 2900,
-  L2_STAGGER: 110, L2A_AT: 120, L2B_AT: 1200,
-  total(){ return this.INTRO + this.LIFT + 2440 + 3340 + 520 + this.HOLD; }
+  /* Opener: row A at 330ms a word, a 400ms beat, row B at 180ms with a payoff pause, then a 500ms read before the lift. */
+  get OPEN_B_AT(){ return (COPY.s1.open[0].split(' ').length - 1) * P1_WORD_STAGGER_MS + P1_WORD_REVEAL_MS + P1_LINE_GAP_MS; },
+  get INTRO(){ return this.OPEN_B_AT + (COPY.s1.open[1].split(' ').length - 1) * P1_LINE2_STAGGER_MS + P1_PAYOFF_EXTRA_MS + 170 + 500; },
+  LIFT: 700, ROWS: 900, ROW_STAGGER: 90,
+  /* Wait before each small card; they speed up as the pile grows. Line 2 takes over at card L2_AT. */
+  POPS: [420, 340, 280, 230, 200, 170, 150, 140, 130], L2_AT: 3,
+  /* Card x inside the sheet: small cards sit over the Questions column, Arjun's starts just after his interview time. */
+  CARD_X: 744, BIG_X: 610,
+  BIG: 560, READ: 1500, ZOOM: 1200, ZOOM_SCALE: 1.6, HOLD: 2600,
+  L2_STAGGER: 110, L2A_AT: 120, L2B_AT: 1000,
+  /* Arjun's card waits until line 2's last word has landed, plus a short beat. */
+  L2_BEAT: 800,
+  get PRE_BIG(){
+    const done = this.L2B_AT + (COPY.s1.then[1].split(' ').length - 1) * this.L2_STAGGER + 170;
+    return Math.max(0, done + this.L2_BEAT - this.POPS.slice(this.L2_AT + 1).reduce((a, b) => a + b, 0));
+  },
+  total(){ return this.INTRO + this.LIFT + this.ROWS + this.POPS.reduce((a, b) => a + b, 0) + this.PRE_BIG + this.BIG + this.READ + this.ZOOM + this.HOLD; }
+};
+
+/* Scene 3 beats: window rises, the note reveals word by word, the Twin card drops in, a beat on it, Send. */
+const MAIL = {
+  RISE: 460, PAUSE: 250, HI: 380, WORD: 55, BODY_TAIL: 300, SLOT: 460, SIGN: 260, BEAT: 1000,
+  MOVE: 800, HOVER: 220, CLICK: 600, OUT: 520, TAIL: 300,
+  total(){
+    return this.RISE + this.PAUSE + this.HI + COPY.mail.body.split(' ').length * this.WORD + this.BODY_TAIL + this.SLOT + this.SIGN
+      + this.BEAT + this.MOVE + this.HOVER + this.CLICK + this.OUT + this.TAIL;
+  }
 };
 
 const SCENES = [
-  { id: 's3', name: 'The number + the flood', get plannedMs(){ return S3.total(); }, build(){
+  { id: 's3', name: 'Every candidate has questions', get plannedMs(){ return S3.total(); }, build(){
       blank(this);
-      const panel = mountFlood(this);
+      const { panel, head } = mountTracker(this);
       panel.el.style.opacity = '0';
-      const head = FloodHead();
-      head.style.transform = S3.HEAD_START;
       head.querySelectorAll('.l1 .w').forEach(w => { w.style.opacity = '1'; w.style.color = 'var(--ink)'; });
-      this.el.append(head);
     }, async play(t){
-      /* Line 1 reveals centred, lifts to the top as the inbox rises under it, the flood plays,
-         and line 2 replaces line 1 as Arjun's email lands. */
-      /* Opening stays 2840ms. Stream stays 3340ms. Hard stop at 6180ms.
-         2840 + 3340 stream + 520 Arjun + 2400 hold = 9100. */
-      const PANEL_MS = 400, SLIDE = 420, ARJUN_MS = 520, DIM_MS = 300;
-      const HOLDS = [500, 380, 300];
-      const RAMP = [300, 220, 150, 100, 70];
-      const FAST = 50, FAST_COUNT = 50;
-      const GAPS = RAMP.concat(Array.from({ length: FAST_COUNT }, () => FAST));
-      const BUMPS = GAPS.map((_, i) => i < 5 ? [12, 24, 40, 70, 110][i] : 16);
-      const PATTERN = GAPS.map((_, i) => i % 10 < 7 ? 1 : 0);
-      const STOP = PANEL_MS + (SLIDE + HOLDS[0]) + (SLIDE + HOLDS[1]) + (SLIDE + HOLDS[2]) + GAPS.reduce((a, b) => a + b, 0);
-      const HOLD = S3.HOLD;
+      /* Line 1 reveals centred and lifts as the tracker rises under it. The finalists fill in, their
+         questions pop up as cards, Arjun's lands last, and the camera pushes in on it. */
+      const PANEL_MS = 400, ROW_IN = 380, POP = 360, BIG_IN = 520, DIM_MS = 300, HEAD_OUT = 500;
       const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
       let at = 0;
       const burn = async ms => {
@@ -1326,28 +1247,22 @@ const SCENES = [
         const left = at - clock.elapsed;
         if (left > 0) await t(left);
       };
-      const panel = mountFlood(this);
-      const head = FloodHead();
-      head.style.transform = S3.HEAD_START;
-      this.el.append(head);
+      const c = COPY.s3;
+      const { panel, head, zoomer } = mountTracker(this);
       const line1 = [...head.querySelectorAll('.l1 .w')];
+      const [openA, openB] = [...head.querySelectorAll('.l1 .row')].map(r => [...r.querySelectorAll('.w')]);
       const [rowA, rowB] = [...head.querySelectorAll('.l2 .row')];
-      const haze = this.el.querySelector('.haze');
-      t.animate(haze, [
+      t.animate(this.el.querySelector('.haze'), [
         { backgroundPosition: '0% 0%' },
         { backgroundPosition: '4% 3%' }
       ], { duration: this.plannedMs, easing: 'linear' }).catch(swallow);
-      panel.setCount('0');
       panel.el.style.opacity = '0';
       panel.el.style.transform = 'translateY(16px)';
-      let count = 0;
-      const showCount = () => panel.setCount(Math.min(count, 1199).toLocaleString('en-US'));
-      const personRow = (i, preview) => {
-        const p = INBOX_PEOPLE[i % INBOX_PEOPLE.length];
-        return EmailNotification({ sender: p[0], photo: p[1], photoLabel: p[0], preview, time: 'now' });
-      };
-      /* Line 1 centred, then it lifts while the inbox rises underneath. */
-      revealWords(t, line1, { stagger: P1_WORD_STAGGER_MS, payoff: P1_PAYOFF_EXTRA_MS }, swallow);
+      panel.rows.forEach(row => { row.style.opacity = '0'; });
+
+      /* Line 1 centred, then it lifts while the tracker rises underneath. */
+      revealWords(t, openA, { stagger: P1_WORD_STAGGER_MS }, swallow);
+      revealWords(t, openB, { stagger: P1_LINE2_STAGGER_MS, delay: S3.OPEN_B_AT, payoff: P1_PAYOFF_EXTRA_MS }, swallow);
       await burn(S3.INTRO);
       line1.forEach(w => { w.style.opacity = '1'; w.style.color = 'var(--ink)'; });
       t.animate(head, [{ transform: S3.HEAD_START }, { transform: 'none' }],
@@ -1361,204 +1276,179 @@ const SCENES = [
       head.style.transform = 'none';
       panel.el.style.opacity = '1';
       panel.el.style.transform = 'none';
-      const opening = [COPY.s3.incoming, COPY.s3.incoming, COPY.s3.questions[0]];
-      const openingTime = ['now', '1m', '2m'];
-      for (let i = 0; i < opening.length; i++){
-        const row = personRow(i, opening[i]);
-        row.querySelector('.time').textContent = openingTime[i];
-        row.style.opacity = '0';
-        row.style.transform = 'translateY(16px)';
-        panel.list.append(row);
-        count += 1; showCount();
-        t.animate(row, [
-          { opacity: 0, transform: 'translateY(16px)' },
-          { opacity: 1, transform: 'translateY(0px)' }
-        ], { duration: SLIDE, easing: EASE_OUT }).catch(swallow);
-        await burn(SLIDE);
-        await burn(HOLDS[i]);
-      }
-      let qn = 1, blurred = false;
-      for (let i = 0; i < GAPS.length; i++){
-        if (!blurred && GAPS[i] <= FAST){
-          blurred = true;
-          t.animate(panel.list, [
-            { filter: 'blur(0px)' },
-            { filter: 'blur(1.5px)' }
-          ], { duration: 180, easing: EASE_OUT }).catch(swallow);
+
+      /* Daniel's finalists fill in, top to bottom. */
+      panel.rows.forEach((row, i) => t.animate(row, [
+        { opacity: 0, transform: 'translateY(10px)' },
+        { opacity: 1, transform: 'translateY(0px)' }
+      ], { duration: ROW_IN, delay: i * S3.ROW_STAGGER, easing: EASE_OUT }).catch(swallow));
+      await burn(S3.ROWS);
+      panel.rows.forEach(row => { row.style.opacity = '1'; });
+
+      /* Questions pop up, interleaved across the rows, while every other role's badge climbs too. */
+      const order = [];
+      for (let j = 0; j < 2; j++) [0, 3, 1, 4, 2].forEach(i => { if (c.people[i].asks[j]) order.push([i, j]); });
+      const rand = rng(5);
+      const perRow = c.people.map(() => 0);
+      const cards = [];
+      let total = 0;
+      for (let k = 0; k < order.length; k++){
+        await burn(S3.POPS[k]);
+        if (k === S3.L2_AT){
+          /* Line 2 replaces line 1 while the pile grows, so both rows land before Arjun's question. */
+          const l1 = head.querySelector('.l1');
+          t.animate(l1, [
+            { opacity: 1, transform: 'translateY(0px)' },
+            { opacity: 0, transform: 'translateY(-12px)' }
+          ], { duration: 220, easing: EASE_IN }).then(() => { l1.style.opacity = '0'; }).catch(swallow);
+          revealWords(t, [...rowA.querySelectorAll('.w')], { stagger: S3.L2_STAGGER, delay: S3.L2A_AT }, swallow);
+          revealWords(t, [...rowB.querySelectorAll('.w')], { stagger: S3.L2_STAGGER, delay: S3.L2B_AT }, swallow);
         }
-        const preview = PATTERN[i] ? COPY.s3.incoming : COPY.s3.questions[qn++ % COPY.s3.questions.length];
-        const row = personRow(3 + i, preview);
-        row.style.marginTop = '-' + ROW_H + 'px';
-        row.style.opacity = '0';
-        panel.list.prepend(row);
-        panel.stamp();
-        count += BUMPS[i]; showCount();
-        t.animate(row, [
-          { marginTop: '-' + ROW_H + 'px', opacity: 0, transform: 'translateY(-10px)' },
-          { marginTop: '0px', opacity: 1, transform: 'translateY(0px)' }
-        ], { duration: GAPS[i], easing: EASE_OUT }).catch(swallow);
-        await burn(GAPS[i]);
+        const [i, j] = order[k];
+        const card = QuestionCard(c.people[i], c.people[i].asks[j]);
+        const rot = (j ? 1 : -1) * (0.4 + rand() * 0.6);
+        card.style.left = (S3.CARD_X + j * 36 + Math.round(rand() * 12)) + 'px';
+        card.style.top = (panel.rows[i].offsetTop + (j ? 50 : 4)) + 'px';
+        panel.main.append(card);
+        cards.push(card);
+        t.animate(card, [
+          { opacity: 0, transform: `translateY(8px) scale(.6) rotate(${rot}deg)` },
+          { opacity: 1, transform: `translateY(0px) scale(1.04) rotate(${rot}deg)`, offset: .6 },
+          { opacity: 1, transform: `translateY(0px) scale(1) rotate(${rot}deg)` }
+        ], { duration: POP, easing: EASE_OUT }).catch(swallow);
+        perRow[i]++; total++;
+        panel.setRow(i, perRow[i]);
+        panel.setTotal(total);
+        c.roles.forEach(([, n], r) => { if (r) panel.setRole(r, Math.round(n * (k + 1) / order.length)); });
       }
-      panel.list.getAnimations().forEach(a => a.cancel());
-      panel.list.style.filter = 'none';
-      panel.list.querySelectorAll('.in-row').forEach(row => {
-        row.getAnimations().forEach(a => a.cancel());
-        row.style.marginTop = '0px';
-        row.style.opacity = '1';
-        row.style.transform = 'none';
-      });
-      panel.setCount(COPY.s3.countFinal);
-      const prior = [...panel.list.children];
-      Promise.all(prior.map(row => t.animate(row, [
+
+      /* Once line 2 has fully landed, Arjun's real question lands on top of his row; everyone else steps back. */
+      await burn(S3.PRE_BIG);
+      const ai = c.people.findIndex(p => p.arjun);
+      const arow = panel.rows[ai];
+      const big = QuestionCard(c.people[ai], c.final, true);
+      big.style.left = S3.BIG_X + 'px';
+      panel.main.append(big);
+      big.style.top = Math.round(arow.offsetTop + arow.offsetHeight / 2 - big.offsetHeight / 2) + 'px';
+      t.animate(big, [
+        { opacity: 0, transform: 'translateY(14px) scale(.8)' },
+        { opacity: 1, transform: 'translateY(0px) scale(1.03)', offset: .6 },
+        { opacity: 1, transform: 'translateY(0px) scale(1)' }
+      ], { duration: BIG_IN, easing: EASE_OUT }).catch(swallow);
+      arow.classList.add('focus');
+      panel.rows.filter(row => row !== arow).concat(cards).forEach(el => t.animate(el, [
         { opacity: 1, filter: 'blur(0px)' },
         { opacity: 0.4, filter: 'blur(1.5px)' }
-      ], { duration: DIM_MS, easing: EASE_OUT }))).catch(swallow);
-      const arjun = EmailNotification({
-        sender: COPY.arjunName, preview: COPY.s3.final, time: 'now',
-        photo: ASSETS.arjun, photoLabel: COPY.arjunName, accent: true
-      });
-      arjun.style.marginTop = '-' + ROW_H + 'px';
-      arjun.style.opacity = '0';
-      panel.list.prepend(arjun);
-      panel.stamp();
-      t.animate(arjun, [
-        { marginTop: '-' + ROW_H + 'px', opacity: 0, transform: 'translateY(-12px)', boxShadow: 'inset 3px 0 0 #3B1A6B, 0 0 0 rgba(59,26,107,0)' },
-        { marginTop: '0px', opacity: 1, transform: 'translateY(-4px)', boxShadow: 'inset 3px 0 0 #3B1A6B, 0 12px 32px rgba(59,26,107,.16)' }
-      ], { duration: ARJUN_MS, easing: EASE_OUT }).catch(swallow);
-      /* Line 2 replaces line 1: "best fit" lands with Arjun, the question follows. */
-      t.animate(head.querySelector('.l1'), [
-        { opacity: 1, transform: 'translateY(0px)' },
-        { opacity: 0, transform: 'translateY(-12px)' }
-      ], { duration: 220, easing: EASE_IN }).catch(swallow);
-      revealWords(t, [...rowA.querySelectorAll('.w')], { stagger: S3.L2_STAGGER, delay: S3.L2A_AT }, swallow);
-      revealWords(t, [...rowB.querySelectorAll('.w')], { stagger: S3.L2_STAGGER, delay: S3.L2B_AT }, swallow);
-      await burn(ARJUN_MS);
-      head.querySelector('.l1').style.opacity = '0';
-      arjun.style.marginTop = '0px';
-      arjun.style.opacity = '1';
-      arjun.style.transform = 'translateY(-4px)';
-      await burn(HOLD);
+      ], { duration: DIM_MS, easing: EASE_OUT }).catch(swallow));
+      perRow[ai]++; total++;
+      panel.setRow(ai, perRow[ai]);
+      panel.setTotal(total);
+      await burn(S3.BIG);
+      await burn(S3.READ);
+
+      /* Push in on Arjun's question. The tracker's right edge never comes into frame. */
+      const r = stageRect(big), w = stageRect(panel.el), S = S3.ZOOM_SCALE;
+      const tx = Math.max(960 - (r.x + r.w / 2) * S, 1920 - (w.x + w.w) * S);
+      const ty = 540 - (r.y + r.h / 2) * S;
+      t.animate(head, [{ opacity: 1 }, { opacity: 0 }], { duration: HEAD_OUT, easing: EASE_IN }).catch(swallow);
+      t.animate(zoomer, [
+        { transform: 'translate(0px, 0px) scale(1)' },
+        { transform: `translate(${tx}px, ${ty}px) scale(${S})` }
+      ], { duration: S3.ZOOM, easing: 'cubic-bezier(.65,0,.35,1)' }).catch(swallow);
+      await burn(S3.ZOOM);
+      await burn(S3.HOLD);
     } },
-  { id: 's4', name: 'Some answers only you know', plannedMs: titleMs(5, 5), build(){ blank(this); this.el.append(TitleCard(COPY.s4[0], COPY.s4[1])); }, play(t){ return playTitle(this, t); } },
-  { id: 's6', name: 'Meet the hiring team', plannedMs: 6900, build(){
+  { id: 's4', name: 'Send your Digital Twin', plannedMs: titleMs(5, 4), dimFirst: true, build(){ blank(this); this.el.append(TitleCard(COPY.s4[0], COPY.s4[1])); }, play(t){ return playTitle(this, t); } },
+  { id: 'mail', name: 'Sarah sends her Twin', get plannedMs(){ return MAIL.total(); }, build(){
       blank(this);
-      this.el.append(node('div', 'haze drift'), JobPage());
+      this.el.classList.add('desk');
+      this.el.append(node('div', 'haze drift'), MailCompose());
+      this.el.querySelectorAll('.mw').forEach(w => { w.style.opacity = '1'; });
+      this.el.querySelector('.twin-slot').style.height = 'auto';
     }, async play(t){
-      /* Page rises. "Meet the hiring team" is struck out and collapses. The JD pops up,
-         its bars shift down for the Twin line, and the cursor clicks the link.
-         460 + 800 + 520 + 300 + 220 + 380 + 600 + 150 + 420 + 300 + 200 + 840 + 240 + 600 + 870 hold = 6900. */
-      const RISE = 460, READ = 800, STRIKE = 520, STRUCK = 300, FADE = 220, COLLAPSE = 380;
-      const LIFT = 600, BEAT = 150, GROW = 420, LINK = 300, PRE = 200, MOVE = 840, HOVER = 240, CLICK = 600;
-      const TAIL = this.plannedMs - (RISE + READ + STRIKE + STRUCK + FADE + COLLAPSE + LIFT + BEAT + GROW + LINK + PRE + MOVE + HOVER + CLICK);
-      const STRIKE_EACH = 280, STRIKE_STAGGER = 60, LINE_FADE_AT = 160, LINE_FADE = 360;
-      const LIFT_SCALE = 1.16, LIFT_Y = 540, SLOT_H = 76, SLOT_GAP = 20, MAIN_GAP = 16;
+      /* Sarah's email rises with To and Subject filled. The note reveals word by word, her Twin card
+         drops in under it, it holds for a beat, and the cursor hits Send. */
       const swallow = err => { if (err !== CANCEL && err?.name !== 'AbortError') console.error(err); };
-      const win = this.el.querySelector('.li-win');
-      const team = this.el.querySelector('.li-team');
-      const card = this.el.querySelector('.li-jd');
-      const dim = this.el.querySelector('.li-dim');
-      const line = card.querySelector('.twin-line');
-      const link = line.querySelector('.twin-link');
       let at = 0;
       const burn = async ms => {
         at += ms;
         const left = at - clock.elapsed;
         if (left > 0) await t(left);
       };
+      const win = this.el.querySelector('.mail');
+      const [hi, body, sign] = [...win.querySelectorAll('.mail-text > p')].map(p => [...p.querySelectorAll('.mw')]);
+      const slot = win.querySelector('.twin-slot');
+      const att = slot.querySelector('.twin-att');
+      const send = win.querySelector('.send');
       t.animate(this.el.querySelector('.haze'), [
         { backgroundPosition: '0% 0%' },
         { backgroundPosition: '4% 3%' }
       ], { duration: this.plannedMs, easing: 'linear' }).catch(swallow);
-      link.style.opacity = '0';
+      [...hi, ...body, ...sign].forEach(w => { w.style.opacity = '0'; });
+      slot.style.height = '0px';
+      att.style.opacity = '0';
       win.style.opacity = '0';
-      win.style.transform = 'translateY(18px)';
       t.animate(win, [
         { opacity: 0, transform: 'translateY(18px)' },
         { opacity: 1, transform: 'translateY(0px)' }
-      ], { duration: RISE, easing: EASE_OUT }).catch(swallow);
-      await burn(RISE);
+      ], { duration: MAIL.RISE, easing: EASE_OUT }).catch(swallow);
+      await burn(MAIL.RISE);
       win.style.opacity = '1';
-      win.style.transform = 'none';
-      await burn(READ);
+      await burn(MAIL.PAUSE);
 
-      /* Strike every line of the hiring card, top to bottom. */
-      const marks = [...team.querySelectorAll('.strike > .x')];
-      marks.forEach((x, i) => {
-        t.animate(x, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
-          { duration: STRIKE_EACH, delay: i * STRIKE_STAGGER, easing: EASE_OUT }).catch(swallow);
-      });
-      await burn(STRIKE);
-      marks.forEach(x => { x.style.transform = 'scaleX(1)'; });
-      await burn(STRUCK);
-      t.animate(team, [
-        { opacity: 1, transform: 'translateY(0px)' },
-        { opacity: 0, transform: 'translateY(-6px)' }
-      ], { duration: FADE, easing: EASE_IN }).catch(swallow);
-      await burn(FADE);
-      team.style.opacity = '0';
-      const th = team.offsetHeight;
-      t.animate(team, [
-        { height: th + 'px', paddingTop: '22px', paddingBottom: '24px', marginBottom: '0px' },
-        { height: '0px', paddingTop: '0px', paddingBottom: '0px', marginBottom: -MAIN_GAP + 'px' }
-      ], { duration: COLLAPSE, easing: EASE_OUT }).catch(swallow);
-      await burn(COLLAPSE);
-      team.getAnimations().forEach(a => a.cancel());
-      team.style.display = 'none';
+      const wordIn = (w, delay) => t.animate(w, [{ opacity: 0 }, { opacity: 1 }],
+        { duration: 160, delay, easing: EASE_OUT }).catch(swallow);
+      hi.forEach(w => wordIn(w, 0));
+      await burn(MAIL.HI);
+      body.forEach((w, i) => wordIn(w, i * MAIL.WORD));
+      await burn(body.length * MAIL.WORD + MAIL.BODY_TAIL);
 
-      /* Lift the JD. Aim for its final height so it ends centred once the slot opens. */
-      const r = stageRect(card);
-      const grownH = r.h + SLOT_H + SLOT_GAP;
-      const lifted = `translate(${960 - (r.x + r.w / 2)}px, ${LIFT_Y - (r.y + grownH / 2)}px) scale(${LIFT_SCALE})`;
-      const liftedShadow = '0 0 0 1px rgba(0,0,0,.04), 0 32px 80px rgba(22,20,26,.20)';
-      t.animate(dim, [{ opacity: 0 }, { opacity: 1 }], { duration: LIFT, easing: EASE_OUT }).catch(swallow);
-      t.animate(card, [
-        { transform: 'none', boxShadow: '0 0 0 1px rgba(0,0,0,.08)' },
-        { transform: lifted, boxShadow: liftedShadow }
-      ], { duration: LIFT, easing: EASE_OUT }).catch(swallow);
-      await burn(LIFT);
-      dim.style.opacity = '1';
-      card.style.transform = lifted;
-      card.style.boxShadow = liftedShadow;
-      await burn(BEAT);
+      /* Open the slot (the signature slides down), then the Twin card drops in. */
+      const h = slot.scrollHeight;
+      t.animate(slot, [{ height: '0px' }, { height: h + 'px' }], { duration: MAIL.SLOT, easing: EASE_OUT }).catch(swallow);
+      t.animate(att, [
+        { opacity: 0, transform: 'translateY(-10px) scale(.94)' },
+        { opacity: 1, transform: 'translateY(0px) scale(1)' }
+      ], { duration: MAIL.SLOT, delay: 120, easing: EASE_OUT }).catch(swallow);
+      await burn(MAIL.SLOT);
+      slot.style.height = h + 'px';
+      sign.forEach(w => wordIn(w, 0));
+      await burn(MAIL.SIGN);
 
-      /* Open the slot under the heading (bars shift down), then the line and link land. */
-      t.animate(line, [
-        { height: '0px', marginBottom: '0px' },
-        { height: SLOT_H + 'px', marginBottom: SLOT_GAP + 'px' }
-      ], { duration: GROW, easing: EASE_OUT }).catch(swallow);
-      await burn(LINE_FADE_AT);
-      t.animate(line, [
-        { opacity: 0, transform: 'translateY(-6px)' },
-        { opacity: 1, transform: 'translateY(0px)' }
-      ], { duration: LINE_FADE, easing: EASE_OUT }).catch(swallow);
-      await burn(GROW - LINE_FADE_AT);
-      line.style.height = SLOT_H + 'px';
-      line.style.marginBottom = SLOT_GAP + 'px';
-      t.animate(link, [
-        { opacity: 0, transform: 'translateX(-8px)' },
-        { opacity: 1, transform: 'translateX(0px)' }
-      ], { duration: LINK, easing: EASE_OUT }).catch(swallow);
-      await burn(LINK);
-      line.style.opacity = '1';
-      link.style.opacity = '1';
-      await burn(PRE);
+      /* A beat on the card so it registers that Sarah is sending her Twin. */
+      const rest = 'inset 0 0 0 2px #3B1A6B, 0 0 0 0 rgba(139,92,246,0), 0 16px 40px rgba(59,26,107,.16)';
+      t.animate(att, [
+        { boxShadow: rest },
+        { boxShadow: 'inset 0 0 0 2px #3B1A6B, 0 0 0 8px rgba(139,92,246,.18), 0 22px 54px rgba(59,26,107,.26)', offset: .5 },
+        { boxShadow: rest }
+      ], { duration: MAIL.BEAT, easing: 'ease-in-out' }).catch(swallow);
+      await burn(MAIL.BEAT);
 
-      const lr = stageRect(link);
+      const sr = stageRect(send);
       Cursor.place(1700, 960);
       Cursor.show();
       t.animate(Cursor.el, [{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: EASE_OUT }).catch(swallow);
-      await Cursor.move(t, lr.x + lr.w * 0.42, lr.y + lr.h * 0.6, MOVE - STAGGER_MS);
-      await burn(MOVE);
+      await Cursor.move(t, sr.x + sr.w * 0.45, sr.y + sr.h * 0.6, MAIL.MOVE - STAGGER_MS);
+      await burn(MAIL.MOVE);
       Cursor.pointer(true);
-      link.classList.add('hover');
-      await burn(HOVER);
-      link.classList.add('pressed');
-      t.animate(link, [
-        { transform: 'scale(1)' }, { transform: 'scale(.96)', offset: .35 }, { transform: 'scale(1)' }
+      send.classList.add('hover');
+      await burn(MAIL.HOVER);
+      t.animate(send, [
+        { transform: 'scale(1)' }, { transform: 'scale(.95)', offset: .35 }, { transform: 'scale(1)' }
       ], { duration: 240, easing: EASE_OUT }).catch(swallow);
       await Cursor.click(t);
-      await burn(CLICK);
-      await burn(TAIL);
+      await burn(MAIL.CLICK);
+
+      /* Sent: the window lifts away and the cursor goes with it. */
+      t.animate(win, [
+        { opacity: 1, transform: 'translateY(0px) scale(1)' },
+        { opacity: 0, transform: 'translateY(-60px) scale(.97)' }
+      ], { duration: MAIL.OUT, easing: EASE_IN }).catch(swallow);
+      t.animate(Cursor.el, [{ opacity: 1 }, { opacity: 0 }], { duration: MAIL.OUT, easing: EASE_IN }).catch(swallow);
+      await burn(MAIL.OUT);
+      win.style.opacity = '0';
+      Cursor.hide();
+      await burn(MAIL.TAIL);
     } },
   /* handoff: scene 7 opens on this scene's last frame, so there's no fade between them. */
   { id: 's8', name: "Sarah's Twin answers", get plannedMs(){ return S8.total(); }, dark: true, handoff: true, build(){
@@ -1928,7 +1818,7 @@ const SCENES = [
       emoji.forEach(e => { e.style.opacity = '1'; });
       await burn(this.plannedMs - at);
     } },
-  { id: 's12', name: 'End card', get plannedMs(){ return titleMs(3, 5) + END.OUT + END.IN + END.HOLD; },
+  { id: 's12', name: 'End card', get plannedMs(){ return titleMs(COPY.s12.line.split(' ').length) + END.OUT + END.IN + END.HOLD; },
     build(){ blank(this); this.el.append(EndCard()); },
     async play(t){
       /* Beat 1: the tagline reveals like the other title cards. Beat 2: it lifts away and the
