@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAFT Placements Film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   AAFT Placements Space — 2:00 film for Screen Studio (16:9, 1920×1080)
+   Voices play from this page (narrator + interview); music is added in Canva.
+   Controls: Space start · P pause · R restart · 1–8 jump · H hide hints/debug
+   URL: ?bars=black|white|ground · ?debug=1 · ?flash=0 · ?t=SECONDS · #scene-N
+   ===================================================================== */
+:root{
+  --g-base:#F6E6E0; --g-peach:#EC9A64; --g-pink:#EE93B6; --g-peri:#A6A3EA; --g-rose:#F2A6BC;
+  --ground: radial-gradient(62% 70% at 0% 0%, var(--g-peach) 0%, rgba(236,154,100,0) 72%),
+            radial-gradient(42% 62% at 100% 42%, var(--g-pink) 0%, rgba(238,147,182,0) 72%),
+            radial-gradient(58% 62% at 100% 100%, var(--g-peri) 0%, rgba(166,163,234,0) 76%),
+            radial-gradient(46% 56% at 0% 100%, var(--g-rose) 0%, rgba(242,166,188,0) 72%),
+            var(--g-base);
+  --ink:#16141A; --accent:#E44D86;
+  --ui-ink:#111827; --ui-ink-2:#4B5563; --ui-ink-3:#9CA3AF; --ui-line:#E7E7EA; --ui-chip:rgba(15,23,42,.05);
+  --plum:#3B0964;
+  --f-head:'Instrument Serif',Georgia,serif; --f-ui:'Geist',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
+body.bars-white{background:#fff}
+body.bars-ground{background:var(--ground)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+       font-family:var(--f-ui);color:var(--ink);-webkit-font-smoothing:antialiased;background:var(--g-base)}
+.ground{position:absolute;inset:0;background:var(--ground)}
+#world{position:absolute;inset:0}
+.abs{position:absolute}
+
+/* type */
+.head{position:absolute;left:0;right:0;top:78px;height:90px;text-align:center;font:400 76px/1 var(--f-head);z-index:20}
+.head .h{position:absolute;left:0;right:0;top:0}
+em,.em{font-style:italic;color:var(--accent)}
+.w{display:inline-block;opacity:0}
+.big{font:400 92px/1.08 var(--f-head)}
+.logo-tr{position:absolute;right:64px;top:42px;width:206px;opacity:0;z-index:30}
+
+/* AAFT Space tile (shared element: 1B → 2 → 8) */
+.tile{position:absolute;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:30px;
+      background:#fff url(assets/aaft-logo.jpg) center/112% no-repeat;box-shadow:0 16px 40px rgba(80,30,80,.16);opacity:0;z-index:12}
+.tile .bdg{position:absolute;right:-10px;top:-10px;width:44px;height:44px;border-radius:12px;background:var(--plum);
+           display:flex;align-items:center;justify-content:center;border:3px solid #fff}
+
+/* scene 2 Space card */
+.s2card{position:absolute;left:480px;top:250px;width:960px;height:620px;border-radius:32px;background:rgba(255,255,255,.9);
+        box-shadow:0 30px 80px rgba(80,30,80,.12);opacity:0;z-index:5}
+.s2mem{position:absolute;left:52px;top:34px;display:flex;align-items:center}
+.s2mem img{width:46px;height:46px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08);opacity:0}
+.s2mem span{font-size:18px;color:#6B7280;margin-left:14px;opacity:0}
+.doc{position:absolute;width:230px;background:#fff;border:1px solid var(--ui-line);border-radius:18px;padding:18px 20px;box-shadow:0 1px 2px rgba(0,0,0,.03);opacity:0;color:var(--ui-ink)}
+.doc b{display:block;font-size:19px;font-weight:600;margin-top:10px}.doc span{font-size:14px;color:var(--ui-ink-3)}
+.twincap{position:absolute;left:405px;top:385px;width:150px;text-align:center;font-size:17px;font-weight:600;color:var(--ui-ink);opacity:0}
+.agent{position:absolute;left:640px;top:480px;display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--ui-line);border-radius:16px;padding:16px 20px;box-shadow:0 12px 30px rgba(0,0,0,.08);opacity:0;color:var(--ui-ink)}
+.agent img{width:48px;height:48px;border-radius:50%}
+.agent b{display:block;font-size:19px;font-weight:600}.agent span{font-size:14px;color:#6B7280}
+.s2lines path{fill:none;stroke:#C9B6E4;stroke-width:2.5;stroke-linecap:round}
+
+/* browser window (persistent from 0:18 to 1:52) */
+.bw{position:absolute;left:210px;top:186px;width:1500px;height:780px;border-radius:18px;background:#fff;
+    box-shadow:0 2px 8px rgba(60,20,60,.06),0 40px 90px rgba(80,30,80,.16);overflow:hidden;opacity:0;z-index:8}
+.bw-bar{height:46px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid #EFEDEB}
+.bw-bar .dots{position:absolute;left:20px;top:17px;display:flex;gap:8px}.bw-bar .dots i{width:12px;height:12px;border-radius:50%}
+.bw-bar .url{font:500 14px var(--f-ui);color:#3f3a44;background:#F3F1EE;border-radius:8px;padding:5px 82px}
+.bw-body{position:absolute;left:0;right:0;top:46px;bottom:0;overflow:hidden}
+/* placeholder slate for scenes built at later checkpoints */
+.slate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+       background:repeating-linear-gradient(135deg,#FBFAFC 0 18px,#F6F4F8 18px 36px);color:var(--ui-ink-2);text-align:center}
+.slate b{font:400 64px/1 var(--f-head);color:var(--ink)}
+.slate span{font-size:20px;max-width:900px;line-height:1.5}
+.slate small{font:600 13px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#9a3412;background:#FFEDD5;border:1px solid #FDBA74;border-radius:6px;padding:7px 10px}
+
+/* scene 1 + 8 */
+.s1a{position:absolute;left:300px;top:400px;z-index:10}
+.s1lab{position:absolute;left:0;right:0;top:575px;text-align:center;font:400 40px var(--f-head);opacity:0;z-index:10}
+.s1on{position:absolute;left:0;right:0;top:680px;text-align:center;opacity:0;z-index:10;font:500 22px var(--f-ui);color:#3f3a44}
+.s1on img{width:170px;vertical-align:middle;margin-left:10px}
+.s8l1{position:absolute;left:0;right:0;top:494px;text-align:center;font:400 56px var(--f-head);z-index:10}
+.s8l2{position:absolute;left:0;right:0;top:618px;text-align:center;font:400 68px var(--f-head);z-index:10}
+.disc{position:absolute;left:0;right:0;bottom:56px;text-align:center;font:500 18px var(--f-ui);color:rgba(22,20,26,.55);opacity:0;z-index:10}
+
+/* ---------- product UI inside the window (native px, enlarged 1.32× like the storyboard) ---------- */
+.app{position:absolute;inset:0;zoom:1.32;font-family:var(--f-ui);color:var(--ui-ink);background:#fff}
+.sp-top{position:relative;z-index:3;background:#fff;height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--ui-line)}
+.sp-top .back{color:var(--ui-ink-2);display:flex}
+.sav{position:relative;width:36px;height:36px;flex:none;border-radius:8px;background:#fff url(assets/aaft-logo.jpg) center/112% no-repeat;box-shadow:0 0 0 1px var(--ui-line)}
+.sav .bdg{position:absolute;right:-5px;bottom:-5px;width:18px;height:18px;border-radius:50%;background:var(--plum);border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.sp-top .nm b{display:block;font-size:14px;font-weight:600}.sp-top .nm span{font-size:12px;color:var(--ui-ink-3)}
+.agbtn{margin-left:auto;display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:999px;border:1px solid var(--ui-line);font-size:14px;font-weight:600;position:relative;background:#fff}
+.agbtn .dot{position:absolute;right:6px;top:2px;width:7px;height:7px;border-radius:50%;background:#F59E0B}
+.agbtn.on{background:#F3F1F6}
+.more{width:36px;height:36px;border-radius:50%;border:1px solid var(--ui-line);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.tv{position:absolute;left:0;right:0;top:64px;bottom:104px;overflow:hidden}
+.tc{width:680px;margin:0 auto;padding:22px 0 10px}
+.msg{margin-bottom:22px}
+.other{display:flex;gap:12px;align-items:flex-start}
+.other img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none}
+.other .nm{font-size:14px;font-weight:600;margin:6px 0 6px}
+.bub{display:inline-block;background:var(--ui-chip);border-radius:22px;padding:10px 16px;font-size:14px;line-height:22px;max-width:480px}
+.bub .t{font-size:11px;color:var(--ui-ink-3);margin-left:8px}
+.mine{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.mine .t{font-size:11px;color:var(--ui-ink-3)}
+.mention{background:rgba(59,9,100,.12);color:var(--plum);font-weight:500;border-radius:4px;padding:0 2px}
+.twin{display:flex;gap:12px}
+.twin .nm{font-size:14px;font-weight:600;margin:6px 0 8px}
+.acard{position:relative;background:#fff;border:1px solid var(--ui-line);border-radius:18px;padding:16px 20px;font-size:14px;line-height:22px;box-shadow:0 1px 2px rgba(0,0,0,.03);min-height:56px}
+.acard ul{margin:8px 0 8px 18px}.acard li{margin-bottom:4px}.acard li::marker{color:#C9CBD1}.acard strong{font-weight:600}
+.think{display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.think .ln{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ui-ink-2);opacity:0}
+.think .ic{width:16px;height:16px;flex:none;display:flex;align-items:center;justify-content:center}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid #E4DCF0;border-top-color:var(--plum);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ok{width:16px;height:16px;border-radius:50%;background:#E7F3EC;display:flex;align-items:center;justify-content:center}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;opacity:0}
+.srcp{display:inline-flex;align-items:center;gap:6px;background:var(--ui-chip);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--ui-ink-2)}
+.gbtn{background:var(--ui-chip);border-radius:999px;height:32px;padding:0 14px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+.ph{position:absolute;right:10px;top:-9px;font:600 9px/1 var(--f-ui);letter-spacing:.1em;color:#9a3412;background:#FFEDD5;border:1px solid #FDBA74;border-radius:4px;padding:3px 5px}
+body.noph .ph{display:none}
+.composer{position:absolute;left:50%;bottom:16px;width:680px;margin-left:-340px;border:1px solid var(--ui-line);border-radius:18px;background:#fff;padding:12px 16px 10px;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+.composer .tx{font-size:14px;line-height:22px;min-height:22px;color:var(--ui-ink)}
+.composer .tx .phd{color:var(--ui-ink-3)}
+.caret{display:inline-block;width:1.5px;height:17px;background:var(--plum);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.composer .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:var(--ui-ink-3)}
+.composer .send{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-3);transition:background .2s,color .2s}
+.composer .send.live{background:var(--plum);color:#fff}
+/* Agents panel + Placement prep page */
+.agpanel{position:absolute;top:0;right:0;bottom:0;width:400px;background:#fff;border-left:1px solid var(--ui-line);box-shadow:-24px 0 48px rgba(17,24,39,.06);padding:20px;z-index:4;transform:translateX(105%)}
+.agpanel .ph1{display:flex;justify-content:space-between;align-items:flex-start}
+.agpanel .ph1 b{display:block;font-size:16px;font-weight:600}.agpanel .ph1 span{font-size:13px;color:var(--ui-ink-2)}
+.agrow{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-top:22px;background:var(--ui-chip)}
+.agrow img{width:40px;height:40px;border-radius:50%}
+.agrow b{display:block;font-size:14px;font-weight:600}.agrow span{font-size:13px;color:var(--ui-ink-2)}
+.agrow .chev{margin-left:auto;color:var(--ui-ink-3);display:flex}
+.pp{position:absolute;inset:0;background:#fff;z-index:5;opacity:0}
+.pp-top{display:flex;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid var(--ui-line)}
+.pp-top img{width:36px;height:36px;border-radius:50%}
+.pp-top b{display:block;font-size:15px;font-weight:600}.pp-top span{font-size:13px;color:var(--ui-ink-2)}
+.pp-top .search{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--ui-line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ui-ink-3);width:220px}
+.pp-list{width:680px;margin:22px auto 0}
+.pp-list h5{font-size:15px;font-weight:600;margin-bottom:10px}
+.pp-row{display:flex;align-items:center;gap:14px;padding:10px;border-radius:12px;opacity:0;transition:background .18s}
+.pp-row.hover{background:var(--ui-chip)}
+.pp-row.pressed{background:rgba(59,9,100,.08)}
+.pp-row .ic{width:36px;height:36px;border-radius:10px;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.pp-row b{display:block;font-size:14px;font-weight:500}.pp-row span{font-size:12px;color:var(--ui-ink-2)}
+.pp-row .chev{margin-left:auto;color:var(--ui-ink-3);display:flex}
+/* ---------- call layout: left column ---------- */
+.side-head{position:absolute;left:150px;top:200px;width:640px;height:200px;font:400 84px/1.05 var(--f-head);z-index:10}
+.side-head .h{position:absolute;left:0;top:0}
+.leftcol{position:absolute;inset:0;z-index:10;pointer-events:none}
+.ecard{position:absolute;left:150px;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(80,30,80,.14);padding:30px 34px}
+.ecard .eb{font:600 15px/1 var(--f-ui);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}
+.ecard .q{font:500 30px/1.32 var(--f-ui);color:var(--ink);margin-top:16px}
+.ecard table{border-collapse:collapse;margin-top:18px;font-size:22px;width:100%}
+.ecard th{font-size:14px;font-weight:600;color:#8b8592;text-align:right;padding:0 0 10px 18px;line-height:1.25;vertical-align:bottom}
+.ecard th:first-child,.ecard td:first-child{text-align:left;padding-left:0}
+.ecard td{text-align:right;padding:16px 0 16px 18px;border-top:1px solid #EFEBEF;font-variant-numeric:tabular-nums}
+.ecard td:first-child b{display:block}.ecard td:first-child span{font-size:15px;color:#8b8592}
+.ecard .hl{color:#157F45;font-weight:600}
+.chip{position:absolute;left:150px;display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.78);border-radius:999px;padding:7px 18px 7px 8px;font:500 18px var(--f-ui);color:#3f3a44}
+.chip img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+
+/* ---------- task page + How it works (5a) ---------- */
+.task{position:absolute;inset:0;background:#fff}
+.task .body{position:absolute;left:170px;top:96px;font-size:14px}
+.task .role{display:flex;align-items:center;gap:10px}
+.task .role i{width:36px;height:36px;border-radius:50%;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:#6B7280}
+.task .pill{font-size:12px;font-weight:600;background:var(--ui-chip);border-radius:6px;padding:3px 7px}
+.task .lbl{font-weight:600;margin-top:22px}.task .val{margin-top:8px}
+.scrim{position:absolute;inset:0;background:rgba(17,24,39,.42);opacity:0}
+.modal{position:absolute;left:50%;top:50%;width:520px;margin:-150px 0 0 -260px;background:#fff;border-radius:16px;padding:20px 22px;box-shadow:0 30px 80px rgba(0,0,0,.25);opacity:0}
+.modal .mh{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
+.modal .hw{font-size:13px;font-weight:600;margin:18px 0 10px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.steps .st{background:var(--ui-chip);border-radius:12px;height:96px;display:flex;align-items:center;justify-content:center}
+.steps .lb{font-size:12px;color:var(--ui-ink-2);margin-top:8px}.steps .lb b{font-weight:600;color:var(--ui-ink);margin-right:4px}
+.crit-row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ui-line);margin-top:16px;padding-top:14px;font-size:13px;font-weight:600}
+.crit-row span{color:var(--ui-ink-2);font-weight:500}
+.mfoot{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:16px;min-height:36px}
+.file{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;background:var(--ui-chip);border-radius:8px;padding:8px 10px;opacity:0}
+.btn-sec{font-size:13px;font-weight:600;border:1px solid var(--ui-line);border-radius:8px;padding:8px 12px;opacity:0}
+.btn-pri{display:inline-flex;align-items:center;gap:8px;background:var(--plum);color:#fff;font-size:13px;font-weight:600;border-radius:8px;padding:9px 14px;transition:background .25s}
+.btn-pri.busy{background:#9C86B8}
+
+/* ---------- call screen (5b–6), native px inside .app ---------- */
+.call{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%,#fff 0%,#FBF9FC 55%,#F6F2F8 100%)}
+.call .who{position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:10px;background:var(--ui-chip);border-radius:999px;padding:6px 16px 6px 6px}
+.call .who i{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.call .who b{display:block;font-size:13px;font-weight:500}.call .who span{font-size:11px;color:var(--ui-ink-2)}
+.call .res{position:absolute;right:58px;top:18px;display:flex;align-items:center;gap:6px;border:1px solid var(--ui-line);border-radius:10px;padding:7px 12px;font-size:13px;color:var(--plum);font-weight:500;background:#fff}
+.call .mo{position:absolute;right:18px;top:18px;width:32px;height:32px;border:1px solid var(--ui-line);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2);background:#fff}
+.call .orbw{position:absolute;left:50%;top:205px;width:0;height:0;transform:scale(.76)}
+.call .left{position:absolute;left:0;right:0;top:362px;text-align:center;font-size:12px;color:var(--ui-ink-3);font-variant-numeric:tabular-nums}
+.call .prompt{position:absolute;left:50%;top:388px;width:520px;margin-left:-260px;text-align:center;font-size:15px;line-height:23px;color:var(--ui-ink);min-height:46px}
+.call .ctrls{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:16px}
+.call .ctrls .end{width:42px;height:42px;border-radius:50%;background:#E5383B;display:flex;align-items:center;justify-content:center}
+.call .ctrls .mic{width:60px;height:60px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 calc(var(--lvl,0) * 14px) rgba(59,9,100,calc(.08 + var(--lvl,0) * .14))}
+/* orb — geometry and colours from prototypes/orb-parts.html (approved against the SPJIMR still) */
+.orb .halo{position:absolute;left:-250px;top:-250px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(170,140,205,.10) 0%,rgba(170,140,205,.05) 50%,rgba(170,140,205,0) 72%)}
+.orb .wash{position:absolute;left:-112px;top:-112px;width:224px;height:224px;border-radius:50%;background:radial-gradient(circle,rgba(234,228,242,.9) 45%,rgba(222,212,236,.5) 72%,rgba(222,212,236,0) 100%);filter:blur(6px)}
+.orb .rot{position:absolute;left:-175px;top:-175px;width:350px;height:350px;border-radius:50%}
+.orb .ring{background:conic-gradient(from 0deg,#4B1D75 0deg,#57277F 20deg,rgba(120,85,165,.82) 45deg,rgba(175,150,205,.62) 78deg,rgba(200,186,222,.50) 112deg,rgba(200,186,222,.50) 228deg,rgba(160,132,196,.66) 268deg,rgba(112,74,160,.86) 308deg,#57277F 340deg,#4B1D75 360deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);
+          mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);filter:blur(12px)}
+.orb .rays{background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg .7deg,rgba(255,255,255,0) .7deg 2.1deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);filter:blur(1px)}
+.orb .core{position:absolute;left:-55px;top:-55px;width:110px;height:110px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B7280;box-shadow:0 2px 14px rgba(59,9,100,.10)}
+
+/* fake cursor (stage px) */
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;z-index:700;opacity:0;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25));transform-origin:4px 2px}
+
+/* overlays */
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:900}
+#gate{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:800;background:rgba(246,230,224,.55);backdrop-filter:blur(2px)}
+#gate div{background:#fff;border-radius:22px;padding:34px 46px;text-align:center;box-shadow:0 30px 80px rgba(80,30,80,.18)}
+#gate b{display:block;font:400 54px/1 var(--f-head)}
+#gate span{display:block;margin-top:14px;font-size:17px;color:#5b5560;line-height:1.6}
+#hints{position:absolute;left:24px;top:20px;z-index:850;font:500 13px var(--f-ui);color:#3f3a44;background:rgba(255,255,255,.8);border-radius:999px;padding:8px 14px}
+#dbg{position:absolute;left:24px;bottom:18px;z-index:850;font:500 14px ui-monospace,Menlo,monospace;color:#2b2830;background:rgba(255,255,255,.82);border-radius:10px;padding:8px 12px;max-width:1300px;line-height:1.5}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="ground"></div>
+  <div id="world"></div>
+  <div id="flash"></div>
+  <div id="gate"><div><b>Loading voices…</b><span>P pause · R restart · 1–8 jump to a scene · H hide hints<br>Voices play from this page; add music in Canva.</span></div></div>
+  <div id="hints">Space start · P pause · R restart · 1–8 scenes · H hide</div>
+  <div id="dbg" class="hidden"></div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG — all retiming and on-screen copy lives here
+   ===================================================================== */
+const NAMES = {                // guardrail 3: real stage names → names shown on screen
+  'Pocket FM':'Kissa Audio', 'Deloitte':'Meridian Analytics', 'Dharma Productions':'Saffron Frame Studios',
+  'ZARA':'Northline Retail', 'Aaj Tak':'Desh Live News', 'Taj Hotels (IHCL)':'Ambrosia Hotels',
+  'Wizcraft':'Spotlight Live Events', 'Hindustan Times':'The Capital Daily', 'JioStar':'Starlight Broadcast',
+};
+const REAL_NAMES_IN_INTERVIEWS = false;
+const SPACE_NAME = 'AAFT Placements';        // stage says "AAFT Placement Prep" — one-line switch
+
+const TIMELINE = {
+  gap: 0.5,                   // seconds between speakers
+  lead: 0.3,                  // first clip starts this far into its scene
+  // [scene start, clips in order]  — mirrors tools/mix_preview.py
+  voice: [
+    [0.0,['narr_01']], [8.0,['narr_02']], [18.0,['narr_03a']], [22.0,['narr_03b']], [34.0,['narr_03d']],
+    [46.0,['narr_04']], [53.0,['narr_05a']], [56.0,['int_05b_q','riya_05b_a']], [68.0,['int_05c_q']],
+    [79.5,['riya_05d_a']], [85.2,['narr_06']], [91.0,['int_06_q','arjun_06_a']], [103.0,['narr_07']], [112.0,['narr_08']],
+  ],
+  scenes: [   // key → jump target. sub-beats (3a…5d) are cues inside a scene.
+    {key:1, id:'s1', name:'Title',              start:0,     end:8},
+    {key:2, id:'s2', name:'What is a Space',    start:8,     end:18},
+    {key:3, id:'s3', name:'Space Q&A',          start:18,    end:46},
+    {key:4, id:'s4', name:'Placement prep',     start:46,    end:53},
+    {key:5, id:'s5', name:'Riya\'s interview',  start:53,    end:85.3},
+    {key:6, id:'s6', name:'Bridge + Arjun',     start:85.3,  end:103},
+    {key:7, id:'s7', name:'Scorecard',          start:103,   end:112},
+    {key:8, id:'s8', name:'End card',           start:112,   end:120},
+  ],
+  // placeholder slates for scenes built at later checkpoints: [time, headline html, slate title, slate note, checkpoint]
+  slates: [
+    [18,   'One Space, <em>the whole batch</em>',      '3a · Space overview',   'The real AAFT Space opens in this window.', 3],
+    [22,   'Answers from <em>your own documents</em>',  '3b–c · December drives','"@space Which companies are coming in December?" is typed, then the answer streams.', 3],
+    [34,   'Prepare for <em>every drive</em>',          '3d–e · Meridian Analytics','"@space Meridian Analytics is coming for Data & AI. What do they ask, and how do I prepare?"', 3],
+    [46,   'Every recruiter, its own <em>mock interview</em>','4 · Placement prep','Cursor: Agents → Placement prep → list → Kissa Audio · Case interview.', 3],
+    [53,   'Practise with <em>your own CV</em>',       '5a · CV upload',        'How it works → Riya\'s CV chip → Start interview.', 4],
+    [56,   'Pushed on <em>your own numbers</em>',      '5b · CV probe',         'Call layout: orb reacts to the interviewer; Riya\'s answer card.', 4],
+    [68,   'A real case, <em>not a quiz</em>',         '5c · The case',         'Week-1 table slides in beside the call.', 4],
+    [79.5, 'A real case, <em>not a quiz</em>',         '5d · Riya answers',     '"B. ₹229 per paying listener, against ₹500 for A."', 4],
+    [85.3, 'Every school, <em>every role</em>',        'Bridge',                'Back to the list → Saffron Frame Studios · Situational interview.', 4],
+    [91,   'Every school, <em>every role</em>',        '6 · Cinema interview',  'Arjun Sethi · B.A. Cinema. Interviewer asks → Arjun answers.', 4],
+    [103,  'Every attempt, <em>a scorecard</em>',      '7 · Arjun\'s scorecard','3/4 · recording · What went well → By criteria.', 5],
+  ],
+  copy: {
+    s1a: ['Placement', 'season,', '<em>reimagined.</em>'],
+    s1head: ['Meet', '<em>AAFT</em>', '<em>Placements</em>'],
+    s2head: 'A Space has its own',
+    s2words: ['Twin', 'people', 'knowledge', 'agents'],
+    docs: [['Placement Policy','2026–27'],['Placement Calendar','2026–27'],['Recruiter Profiles','and debriefs']],
+    members: ['riya','m1','m2','m3','m4','m5','m6','arjun'],
+    memberCount: '412 members',
+    agent: ['Placement prep','Agent · mock interviews'],
+    s8l1: ['Ask','<em>anything.</em>','Practise','<em>anything.</em>'],
+    s8l2: ['Placement-ready,','<em>around</em>','<em>the</em>','<em>clock.</em>'],
+    disclosure: 'Dramatisation · AI-generated voices and faces',
+    // scene 3 — Space Q&A (answers: content/answers.md; 3c is the §8 placeholder until asked on stage)
+    seed: { who:'m2', name:'Rohan Verma', q:'@space How long do I have to decline an offer?', time:'16h',
+            a:'You have 48 hours from the result to decline an offer, and the decline must be submitted in writing to your CRM. After that, the offer is treated as accepted.',
+            sources:'2 Sources' },
+    q1: '@space Which companies are coming in December?',
+    a1: { placeholder:true, sources:'2 Sources', think:['Searching Placement Calendar 2026–27','Checking Recruiter Profiles'],
+          html:'Eight drives are scheduled in December:<ul><li><strong>Northline Retail</strong> on 2 Dec (Fashion Design)</li><li><strong>Desh Live News</strong> on 4 Dec (Journalism)</li><li><strong>Saffron Frame Studios</strong> on 8 Dec (Cinema)</li><li><strong>Brightlane Media</strong> on 10 Dec (Digital Marketing)</li><li><strong>Ambrosia Hotels</strong> on 11 Dec (Hospitality)</li><li><strong>The Capital Daily</strong> on 15 Dec (Photography)</li><li><strong>Hearth &amp; Hue Interiors</strong> on 17 Dec (Interior Design)</li><li><strong>Pulse News Network</strong> on 18 Dec (tentative)</li></ul>Apply on the CRC portal by the deadline, usually three days before each drive.' },
+    q2: '@space Meridian Analytics is coming for Data & AI. What do they ask, and how do I prepare?',
+    a2: { placeholder:false, sources:'3 Sources', think:['Searching Recruiter Profiles and Debriefs','Checking Interview Preparation Guide'],
+          html:'Meridian Analytics\' online round tests <strong>SQL, Python, and aptitude</strong> for the Analyst – Data &amp; AI role.<ul><li><strong>SQL:</strong> practise joins, aggregations, CTEs, and especially window functions. Be able to solve ranking questions such as finding the top three products by revenue in each region.</li><li><strong>Python:</strong> revise pandas—filtering, merges, missing-value handling, and grouping.</li><li><strong>Aptitude:</strong> practise timed quantitative and logical-reasoning questions.</li></ul>A practical 7-day split: 3 days SQL, 2 days Python/pandas, 1 day aptitude, and 1 full mock plus revision.' },
+    // scene 4 — Placement prep list (real list style: "Company · Interview type", status)
+    // scene 5a — task page + How it works (real SPJIMR flow, compressed)
+    task: { title:'Kissa Audio · Case interview', sub:'Growth Marketing Associate at Kissa Audio.', role:'Senior executive',
+            dur:'20 minutes', about:'<b>Kissa Audio.</b> Growth Marketing Associate.', cv:'Riya_Malhotra_CV.pdf', criteria:'6 criteria' },
+    // scenes 5b–6 — calls. On-screen prompt text uses ₹ and digits; the voice clips say them in words.
+    callRiya:  { who:'Senior executive at Kissa Audio' },
+    callArjun: { who:'Line producer at Saffron Frame Studios' },
+    p5b: 'You cut cost per install from ₹38 to ₹24. Were those listeners worth keeping?',
+    p5c: 'Week one. A costs ₹20 an install, and 4% reach a paid episode. B costs ₹32, and 14% do. Which do you scale?',
+    p6:  'Your lead actor is 90 minutes late, and you lose the light at 5:30. What do you do?',
+    s5b: 'Pushed on<br><em>your own numbers</em>',
+    s5c: 'A real case,<br><em>not a quiz</em>',
+    s6:  'Every school,<br><em>every role</em>',
+    chipRiya:  ['riya', 'From Riya\'s CV · Kahaani Audio · CPI ₹38 → ₹24'],
+    chipArjun: ['arjun', 'Arjun Sethi · B.A. Cinema · Assistant Director Trainee'],
+    riya5b: '"Not at first. So I started judging creatives on day-seven retention."',
+    riya5d: '"B. ₹229 per paying listener, against ₹500 for A."',
+    arjun6: '"First, I tell the first AD to reshuffle to the scenes we can shoot without him, so we don\'t lose the light."',
+    caseTable: `<div class="eb">The case · Week 1</div><table>
+      <tr><th></th><th>Cost per<br>install</th><th>Installs</th><th>Day-1<br>retention</th><th>Reached<br>ep. 9</th></tr>
+      <tr><td><b>A</b><span>Static poster</span></td><td>₹20</td><td>2,000</td><td>22%</td><td>4%</td></tr>
+      <tr><td><b>B</b><span>Audio cliffhanger</span></td><td>₹32</td><td>1,250</td><td>41%</td><td class="hl">14%</td></tr></table>`,
+    rows: [['Kissa Audio · Case interview','2 attempts'],['Saffron Frame Studios · Situational interview','Not started'],
+           ['Northline Retail · Resume discussion','Not started'],['Desh Live News · Case interview','1 attempt'],
+           ['Ambrosia Hotels · HR interview','Not started'],['Meridian Analytics · Case interview','Not started'],
+           ['Spotlight Live Events · Resume discussion','Not started']],
+  },
+};
+const EASE_OUT = 'cubic-bezier(.16,1,.3,1)', EASE_IN = 'cubic-bezier(.7,0,.84,0)', EASE_IO = 'cubic-bezier(.65,0,.35,1)';
+
+/* =====================================================================
+   ENGINE — film clock = AudioContext time, so voices and visuals never drift
+   ===================================================================== */
+const Q = new URLSearchParams(location.search);
+const stage = document.getElementById('stage'), world = document.getElementById('world');
+const $ = id => document.getElementById(id);
+const S = { ctx:null, base:0, started:false, paused:false, clips:{}, buffers:{}, voice:[], cues:[], ci:0,
+            sources:[], debug: Q.get('debug')==='1', hints:true, singleEnd:null, words:{}, tickers:[] };
+
+// letterbox: fixed 1920×1080 stage, scaled to fit, centred
+document.body.classList.add('bars-' + (Q.get('bars') || 'black'));
+if (Q.get('ph') === '0') document.body.classList.add('noph');        // hide PLACEHOLDER tags for a recording take
+function fit(){ const k = Math.min(innerWidth/1920, innerHeight/1080);
+  stage.style.transform = `translate(${(innerWidth-1920*k)/2}px,${(innerHeight-1080*k)/2}px) scale(${k})`; }
+addEventListener('resize', fit); fit();
+
+const T = () => S.ctx ? S.ctx.currentTime - S.base : (S.seekT || 0);
+const A = (el, kf, ms, o={}) => el.animate(kf, {duration:ms, easing:o.ease||EASE_OUT, fill:'forwards', delay:o.delay||0});
+const el = (tag, cls, html, parent=world) => { const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; parent.appendChild(e); return e; };
+const show = e => { e.getAnimations().forEach(a=>a.cancel()); e.style.opacity=1; };
+const fmt = t => `${Math.floor(Math.max(0,t)/60)}:${(Math.max(0,t)%60).toFixed(1).padStart(4,'0')}`;
+
+// absolute start of every voice clip, chained from the scene starts
+function layoutVoice(){
+  S.voice = [];
+  for (const [start, ids] of TIMELINE.voice){
+    let t = start + TIMELINE.lead;
+    for (const id of ids){ const c = S.clips[id]; S.voice.push({id, t, dur:c.duration, speaker:c.speaker, text:c.text}); t += c.duration + TIMELINE.gap; }
+  }
+  for (const v of S.voice) S.words[v.id] = (S.clips[v.id].words||[]).map(w => ({w:w[0], t:v.t + w[1]}));
+}
+// absolute time of the nth word of a clip (fallback: clip start)
+const wt = (id, n) => (S.words[id]?.[n]?.t) ?? S.voice.find(v=>v.id===id).t;
+
+/* ---------- cue scheduling ---------- */
+function cue(t, fn){                       // keeps the queue time-sorted, even for cues added mid-play
+  let i = S.cues.length;
+  while (i > S.ci && S.cues[i-1].t > t) i--;
+  S.cues.splice(i, 0, {t, fn});
+}
+function tick(){
+  const t = T();
+  while (S.ctx && S.ci < S.cues.length && S.cues[S.ci].t <= t){ try{ S.cues[S.ci].fn(); }catch(e){ console.error(e); } S.ci++; }
+  if (S.ctx) S.tickers = S.tickers.filter(f => { try { return !f(t); } catch(e){ console.error(e); return false; } });
+  if (S.ctx && !S.paused){
+    for (const v of S.voice){
+      if (v.sched || v.t > t + 0.25 || v.t + v.dur < t) continue;
+      v.sched = true;
+      const src = S.ctx.createBufferSource(); src.buffer = S.buffers[v.id];
+      src.connect(v.speaker === 'INT' ? S.anInt : (v.speaker === 'RIYA' || v.speaker === 'ARJUN') ? S.anStu : S.ctx.destination);
+      const when = S.base + v.t, off = Math.max(0, t - v.t);
+      src.start(Math.max(S.ctx.currentTime, when), off);
+      S.sources.push(src);
+    }
+    if (S.singleEnd != null && t >= S.singleEnd) togglePause(true);
+  }
+  if (S.debug){
+    const sc = sceneAt(t), now = S.voice.filter(v => t >= v.t && t <= v.t + v.dur);
+    $('dbg').innerHTML = `${fmt(t)} · ${sc.key} ${sc.name}${S.paused?' · ⏸':''}` + (now.length ? `<br>${now.map(v=>`<b>${v.speaker}</b> ${v.text}`).join('<br>')}` : '');
+  }
+  requestAnimationFrame(tick);
+}
+const sceneAt = t => [...TIMELINE.scenes].reverse().find(s => t >= s.start) || TIMELINE.scenes[0];
+
+/* ---------- build, seek, pause ---------- */
+function build(fromT){
+  world.innerHTML = ''; S.cues = []; S.tickers = []; S.sources.forEach(s=>{try{s.stop()}catch(e){}}); S.sources = [];
+  S.voice.forEach(v => v.sched = false);
+  E.build();                                   // all persistent elements
+  for (const sc of SCENES) sc.cues();          // register every cue
+  S.cues.sort((a,b)=>a.t-b.t);
+  const sc = sceneAt(fromT);
+  SCENES[TIMELINE.scenes.indexOf(sc)].setup(); // static state at that scene's start
+  S.ci = S.cues.findIndex(c => c.t >= sc.start); if (S.ci < 0) S.ci = S.cues.length;
+  return sc.start;
+}
+function seek(t){
+  const start = build(t);
+  if (S.ctx){ S.base = S.ctx.currentTime - start; S.paused = false; S.ctx.resume(); }
+  else S.seekT = start;
+}
+function togglePause(force){
+  if (!S.ctx) return;
+  S.paused = force ?? !S.paused;
+  if (S.paused){ S.ctx.suspend(); document.getAnimations().forEach(a=>a.pause()); }
+  else { S.ctx.resume(); document.getAnimations().forEach(a=>{ if(a.playState==='paused') a.play(); }); }
+}
+async function start(){
+  if (S.started || !S.ready) return; S.started = true;
+  S.ctx = new AudioContext();
+  // level meters: the orb follows the interviewer, the mic button follows the student
+  for (const k of ['anInt','anStu']){ const a = S.ctx.createAnalyser(); a.fftSize = 1024; a.connect(S.ctx.destination); S[k] = a; }
+  S.lvBuf = new Float32Array(1024); S.lvInt = 0; S.lvStu = 0;
+  A($('gate'), [{opacity:1},{opacity:0}], 250, {ease:EASE_IN}).finished.then(()=>$('gate').classList.add('hidden'));
+  setHints(S.debug);
+  const from = S.seekT || 0;
+  S.base = S.ctx.currentTime + 0.15 - from;          // film time `from` lands 150ms from now
+  if (Q.get('flash') !== '0' && from === 0){          // sync slate: 1-frame flash + 50ms beep at 0:00
+    cue(0, () => { $('flash').style.opacity = 1; setTimeout(()=>$('flash').style.opacity = 0, 50); });
+    S.cues.sort((a,b)=>a.t-b.t); S.ci = S.cues.findIndex(c => c.t >= 0);
+    const o = S.ctx.createOscillator(), g = S.ctx.createGain(); o.frequency.value = 1000; g.gain.value = .25;
+    o.connect(g).connect(S.ctx.destination); o.start(S.base); o.stop(S.base + 0.05);
+  }
+}
+function setHints(on){ S.hints = on; $('hints').classList.toggle('hidden', !on); $('dbg').classList.toggle('hidden', !(on && S.debug)); }
+
+addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (!S.ready && k !== 'r') return;
+  if (k === ' ' ){ e.preventDefault(); if (!S.started) start(); else togglePause(); }
+  else if (k === 'p') togglePause();
+  else if (k === 'r') location.reload();
+  else if (k === 'h') setHints(!S.hints);
+  else if (/^[1-8]$/.test(k)){ const sc = TIMELINE.scenes[+k-1]; S.singleEnd = null; seek(sc.start); if (!S.started) start(); }
+});
+$('gate').addEventListener('click', start);
+
+/* =====================================================================
+   PERSISTENT ELEMENTS
+   ===================================================================== */
+const E = {
+  build(){
+    const C = TIMELINE.copy;
+    E.logo = el('img','logo-tr'); E.logo.src = '../assets/twincafe/twincafe-logo.svg';
+    E.head = el('div','head');
+    // scene 1
+    E.s1a = el('div','s1a big', `${C.s1a.slice(0,2).map(w=>`<span class="w">${w}</span>`).join(' ')}<br>${`<span class="w">${C.s1a[2]}</span>`}`);
+    E.tile = el('div','tile', `<span class="bdg">${ICON.group(26)}</span>`); E.tile.style.left='960px'; E.tile.style.top='465px';
+    E.s1lab = el('div','s1lab', SPACE_NAME);
+    E.s1on = el('div','s1on', `a Space on<img src="../assets/twincafe/twincafe-logo.svg" alt="TwinCafe">`);
+    // scene 2 card
+    E.card = el('div','s2card');
+    E.lines = el('div', null, `<svg class="s2lines" width="960" height="620" style="position:absolute;inset:0">
+      <path pathLength="1" d="M432 272 L 230 226"/>
+      <path pathLength="1" d="M480 250 L 480 198"/>
+      <path pathLength="1" d="M528 272 L 730 226"/>
+      <path pathLength="1" d="M524 352 L 640 516"/></svg>`, E.card).querySelector('svg');
+    E.lines.querySelectorAll('path').forEach(p=>{ p.style.strokeDasharray='1'; p.style.strokeDashoffset='1'; });
+    E.mem = el('div','s2mem', C.members.map(p=>`<img src="assets/people/avatar/${p}.jpg" alt="">`).join('') + `<span>${C.memberCount}</span>`, E.card);
+    E.docs = C.docs.map(([b,s],i)=>{ const d = el('div','doc', `${ICON.doc}<b>${b}</b><span>${s}</span>`, E.card);
+      d.style.left = [80,365,650][i]+'px'; d.style.top = [110,80,110][i]+'px'; return d; });
+    E.twincap = el('div','twincap','Space Twin', E.card);
+    E.agent = el('div','agent', `<img src="assets/people/agent.svg" alt=""><div><b>${C.agent[0]}</b><span>${C.agent[1]}</span></div>`, E.card);
+    // browser window
+    E.bw = el('div','bw', `<div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"></div>`);
+    E.body = E.bw.querySelector('.bw-body');
+    // scene 8
+    E.s8l1 = el('div','s8l1', C.s8l1.map(w=>`<span class="w">${w}</span>`).join(' '));
+    E.s8l2 = el('div','s8l2', C.s8l2.map(w=>`<span class="w">${w}</span>`).join(' '));
+    E.disc = el('div','disc', C.disclosure);
+    // call layout: left column (headline + chip + speaker cards)
+    E.side = el('div','side-head');
+    E.left = el('div','leftcol');
+  },
+};
+const ICON = {
+  back: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>`,
+  agent: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="2.5"/><path d="M12 7V4M9 12h.01M15 12h.01M9.5 16h5"/></svg>`,
+  book: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>`,
+  check: `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#157F45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`,
+  chev: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>`,
+  x: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+  plus: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
+  mic: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>`,
+  send: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-6 16-3-7z"/></svg>`,
+  brief: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg>`,
+  search: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  user: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg>`,
+  userL: `<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg>`,
+  doc16: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>`,
+  arrow: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+  hangup: `<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg>`,
+  micL: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>`,
+  cursor: `<svg viewBox="0 0 24 24" width="34" height="34"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  group: s => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg>`,
+  doc: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>`,
+};
+
+/* ---------- shared moves ---------- */
+const reveal = (span, ms=220) => A(span, [{opacity:0},{opacity:1}], ms, {ease:'ease-out'});
+const fadeOut = (e, ms=350, y=-10) => A(e, [{opacity:getComputedStyle(e).opacity, transform:getComputedStyle(e).transform==='none'?'none':getComputedStyle(e).transform},{opacity:0, transform:`translateY(${y}px)`}], ms, {ease:EASE_IN});
+const fadeIn = (e, ms=600, y=12) => A(e, [{opacity:0, transform:`translateY(${y}px)`},{opacity:1, transform:'none'}], ms);
+/* Headline grammar (one rule for every scene):
+   1. the old line lifts out (opacity → 0, −10px, slight blur, ease-in)
+   2. a short beat
+   3. the new line rises in word by word (70ms apart), so the italic accent word lands last.
+   The two never overlap on screen. */
+const HEAD = { out: 240, beat: 120, step: 70, wordIn: 460 };
+function headExit(o, ms = HEAD.out){
+  const op = +getComputedStyle(o).opacity;
+  if (op === 0){ o.remove(); return 0; }
+  A(o, [{opacity:op, transform:'none', filter:'blur(0px)'},{opacity:0, transform:'translateY(-10px)', filter:'blur(3px)'}], ms, {ease:EASE_IN})
+    .finished.then(() => o.remove());
+  return ms;
+}
+// wrap each word of an HTML headline in an inline-block span, keeping <em> styling
+function wrapWords(root){
+  const walk = n => [...n.childNodes].forEach(c => {
+    if (c.nodeType === 3){
+      const frag = document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(p => {
+        if (!p) return;
+        if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(p));
+        else { const s = document.createElement('span'); s.className = 'hw'; s.style.display = 'inline-block'; s.textContent = p; frag.appendChild(s); }
+      });
+      c.replaceWith(frag);
+    } else if (c.nodeType === 1 && !c.classList.contains('slot')) walk(c);
+  });
+  walk(root);
+  return [...root.querySelectorAll('.hw')];
+}
+function setHead(html, {words=null, instant=false, box=E.head}={}){
+  let wait = 0;
+  [...box.children].forEach(o => { wait = Math.max(wait, headExit(o)); });
+  const h = el('div','h', html, box);
+  if (instant || words) return h;                     // `words`: the caller reveals words itself (scene 1, synced to VO)
+  const ws = wrapWords(h), delay = wait ? wait + HEAD.beat : 0;
+  ws.forEach((w, i) => { w.style.opacity = 0;
+    A(w, [{opacity:0, transform:'translateY(12px)'},{opacity:1, transform:'none'}], HEAD.wordIn, {delay: delay + i*HEAD.step}); });
+  h.dataset.revealEnd = delay + ws.length*HEAD.step;  // when the last word starts (for slots that follow)
+  return h;
+}
+function clearHead(ms = HEAD.out){ [...E.head.children].forEach(o => headExit(o, ms)); }
+// call layout: the headline lives in the left column and follows the same grammar
+const setSide = (html, o={}) => setHead(html, {...o, box:E.side});
+const clearSide = (ms = HEAD.out) => [...E.side.children].forEach(o => headExit(o, ms));
+
+/* window morph — the only layout move in the film: browse (centred) ⇄ call (right) */
+const RECT = { browse:{left:210, top:186, width:1500, height:780}, call:{left:830, top:150, width:940, height:830} };
+function morph(to, ms = 700, instant = false){
+  const r = RECT[to], from = {left:E.bw.offsetLeft, top:E.bw.offsetTop, width:E.bw.offsetWidth, height:E.bw.offsetHeight};
+  E.bw.getAnimations().forEach(a => { if (a.effect.getKeyframes().some(k => 'width' in k)) a.cancel(); });
+  Object.assign(E.bw.style, {left:r.left+'px', top:r.top+'px', width:r.width+'px', height:r.height+'px'});
+  if (instant) return;
+  A(E.bw, [{left:from.left+'px', top:from.top+'px', width:from.width+'px', height:from.height+'px'},
+           {left:r.left+'px', top:r.top+'px', width:r.width+'px', height:r.height+'px'}], ms, {ease:EASE_OUT});
+}
+// swap what the window shows: quick dip to white, new content fades up
+function swapBody(build, ms = 260){
+  const body = E.body;
+  A(body, [{opacity:1},{opacity:0}], ms/2, {ease:EASE_IN}).finished.then(() => { build(); A(body, [{opacity:0},{opacity:1}], ms, {ease:'ease-out'}); });
+}
+// left-column cards: speaker turns slide up and out, the next card rises in
+function leftCard(html, {top=500, width=600, instant=false}={}){
+  [...E.left.querySelectorAll('.ecard')].forEach(c => { A(c, [{opacity:1, transform:'none'},{opacity:0, transform:'translateY(-18px)'}], 300, {ease:EASE_IN}).finished.then(()=>c.remove()); });
+  const c = el('div','ecard', html, E.left); c.style.top = top+'px'; c.style.width = width+'px';
+  if (instant) return c;
+  c.style.opacity = 0; A(c, [{opacity:0, transform:'translateY(18px)'},{opacity:1, transform:'none'}], 460, {delay:220});
+  return c;
+}
+function leftChip(html, {top=432, instant=false}={}){
+  [...E.left.querySelectorAll('.chip')].forEach(c => { A(c, [{opacity:1},{opacity:0}], 250, {ease:EASE_IN}).finished.then(()=>c.remove()); });
+  if (!html) return;
+  const c = el('div','chip', html, E.left); c.style.top = top+'px';
+  if (!instant){ c.style.opacity = 0; A(c, [{opacity:0, transform:'translateY(10px)'},{opacity:1, transform:'none'}], 420, {delay:120}); }
+  return c;
+}
+function clearLeft(){ clearSide(); [...E.left.children].forEach(c => A(c, [{opacity:+getComputedStyle(c).opacity},{opacity:0}], 260, {ease:EASE_IN}).finished.then(()=>c.remove())); }
+function showWindow(instant){
+  if (instant){ show(E.bw); return; }
+  A(E.bw, [{opacity:0, transform:'scale(.94)'},{opacity:1, transform:'scale(1)'}], 700);
+}
+function slate(i, instant){
+  const [t, head, title, note, cp] = TIMELINE.slates[i];
+  setHead(head, {instant});
+  E.body.innerHTML = `<div class="slate"><small>Built at checkpoint ${cp}</small><b>${title}</b><span>${note}</span></div>`;
+}
+
+/* =====================================================================
+   SCENES — setup(): static state at scene start (for jumps) · cues(): timed moves
+   ===================================================================== */
+/* =====================================================================
+   PRODUCT UI — the AAFT Space inside the window (scenes 3–4)
+   ===================================================================== */
+const U = {};                                   // refs into the current app DOM
+const mention = txt => txt.replace(/^@space/, '<span class="mention">@space</span>');
+const avatar = p => `assets/people/avatar/${p}.jpg`;
+function buildSpace(){
+  E.body.innerHTML = `<div class="app">
+    <div class="sp-top"><span class="back">${ICON.back}</span><span class="sav"><span class="bdg">${ICON.group(11)}</span></span>
+      <div class="nm"><b>${SPACE_NAME} ›</b><span>412 members · You're a member</span></div>
+      <span class="agbtn">${ICON.agent}Agents<i class="dot"></i></span><span class="more">···</span></div>
+    <div class="tv"><div class="tc"></div></div>
+    <div class="composer"><div class="tx"><span class="phd">Ask a follow-up question…</span></div>
+      <div class="row"><span>${ICON.plus}</span><span style="display:flex;gap:12px;align-items:center">${ICON.mic}<span class="send">${ICON.send}</span></span></div></div>
+    <div class="agpanel"><div class="ph1"><div><b>Agents</b><span>${SPACE_NAME}</span></div><span style="color:#9CA3AF">${ICON.x}</span></div>
+      <div class="agrow"><img src="assets/people/agent.svg" alt=""><div><b>Placement prep</b><span>3 open</span></div><span class="chev">${ICON.chev}</span></div></div>
+    <div class="pp"><div class="pp-top"><span style="color:#4B5563;display:flex">${ICON.back}</span><img src="assets/people/agent.svg" alt="">
+      <div><b>Placement prep</b><span>Role-play an interview, get coaching right away</span></div><span class="search">${ICON.search}Search</span></div>
+      <div class="pp-list"><h5>Interviews</h5>${TIMELINE.copy.rows.map(([t,st])=>`<div class="pp-row"><span class="ic">${ICON.brief}</span><div><b>${t}</b><span>${st}</span></div><span class="chev">${ICON.chev}</span></div>`).join('')}</div></div>
+  </div>`;
+  const q = sel => E.body.querySelector(sel);
+  Object.assign(U, { app:q('.app'), tv:q('.tv'), tc:q('.tc'), tx:q('.composer .tx'), send:q('.composer .send'),
+                     agbtn:q('.agbtn'), panel:q('.agpanel'), agrow:q('.agrow'), pp:q('.pp'), rows:[...E.body.querySelectorAll('.pp-row')], scroll:0 });
+  // keep the newest message in view: thread eases up as content grows
+  ticker(() => { if (!U.tc || !U.tc.isConnected) return true;
+    const target = Math.max(0, U.tc.scrollHeight - U.tv.clientHeight);
+    U.scroll += (target - U.scroll) * 0.12; U.tc.style.transform = `translateY(${-U.scroll}px)`; return false; });
+}
+function snapScroll(){ U.scroll = Math.max(0, U.tc.scrollHeight - U.tv.clientHeight); U.tc.style.transform = `translateY(${-U.scroll}px)`; }
+const rise = (n, ms=450) => A(n, [{opacity:0, transform:'translateY(10px)'},{opacity:1, transform:'none'}], ms);
+
+function otherMsg(m, instant){
+  const n = el('div','msg other', `<img src="${avatar(m.who)}" alt=""><div><div class="nm">${m.name}</div><span class="bub">${mention(m.q)}<span class="t">${m.time}</span></span></div>`, U.tc);
+  if (!instant) rise(n); return n;
+}
+function mineMsg(q, instant){
+  const n = el('div','msg mine', `<span class="bub">${mention(q)}</span><span class="t">now</span>`, U.tc);
+  if (!instant) rise(n, 380); return n;
+}
+// Twin reply: name + card (thinking lines → streamed answer → sources + button)
+function twinMsg(a, own, instant){
+  const n = el('div','msg twin', `<span class="sav"><span class="bdg">${ICON.group(11)}</span></span><div style="flex:1">
+    <div class="nm">AAFT Placement Prep's Twin</div>
+    <div class="acard">
+      <div class="think">${(a.think||[]).map(l=>`<div class="ln"><span class="ic"><span class="spin"></span></span>${l}…</div>`).join('')}</div>
+      <div class="ans"></div>
+      <div class="foot"><span class="srcp">${ICON.book}${a.sources}</span><span class="gbtn">${own ? 'Request review' : 'Chime in'}</span></div></div></div>`, U.tc);
+  const r = { n, think:n.querySelector('.think'), lines:[...n.querySelectorAll('.think .ln')], ans:n.querySelector('.ans'), foot:n.querySelector('.foot') };
+  if (instant){ r.think.remove(); r.ans.innerHTML = a.html; r.foot.style.opacity = 1; }
+  else rise(n);
+  return r;
+}
+// thinking lines (P7): appear, spin, tick — then fold away as the answer starts
+function thinkLine(r, i){ const ln = r.lines[i]; A(ln, [{opacity:0, transform:'translateX(-6px)'},{opacity:1, transform:'none'}], 300); }
+function thinkDone(r, i){ const ln = r.lines[i]; ln.querySelector('.ic').innerHTML = `<span class="ok">${ICON.check}</span>`;
+  ln.lastChild.textContent = ln.lastChild.textContent.replace('…',''); }
+function thinkFold(r){ const h = r.think.offsetHeight;
+  A(r.think, [{height:h+'px', opacity:1, marginBottom:'0px'},{height:'0px', opacity:0, marginBottom:'0px'}], 320, {ease:EASE_IN}); }
+
+// film-clock tickers: deterministic, so P pauses them and seeks restart them cleanly
+function ticker(fn){ S.tickers.push(fn); }
+function typeInto(text, t0, perChar=0.035){
+  U.send.classList.remove('live');
+  ticker(t => { if (!U.tx.isConnected) return true;
+    const n = Math.max(0, Math.min(text.length, Math.floor((t - t0) / perChar)));
+    U.tx.innerHTML = n === 0 ? '<span class="caret"></span>' : mention(text.slice(0, n)) + '<span class="caret"></span>';
+    if (n > 0) U.send.classList.add('live');
+    return n >= text.length; });
+}
+function clearComposer(){ U.tx.innerHTML = '<span class="phd">Ask a follow-up question…</span>'; U.send.classList.remove('live'); }
+// stream an HTML answer one visible character at a time (tags/entities count as one)
+function htmlSlice(html, n){ let out = '', seen = 0, i = 0;
+  while (i < html.length && seen < n){
+    if (html[i] === '<'){ const j = html.indexOf('>', i); out += html.slice(i, j+1); i = j+1; continue; }
+    if (html[i] === '&'){ const j = html.indexOf(';', i); out += html.slice(i, j+1); i = j+1; seen++; continue; }
+    out += html[i++]; seen++; }
+  return out; }
+const visLen = html => html.replace(/<[^>]+>/g,'').replace(/&[^;]+;/g,'x').length;
+function streamInto(r, html, t0, cps){
+  const total = visLen(html);
+  ticker(t => { if (!r.ans.isConnected) return true;
+    const n = Math.max(0, Math.min(total, Math.floor((t - t0) * cps)));
+    r.ans.innerHTML = htmlSlice(html, n); return n >= total; });
+  return t0 + total / cps;                       // when the stream finishes
+}
+
+/* ---------- 5a · task page + How it works ---------- */
+function buildTask(){
+  const T5 = TIMELINE.copy.task;
+  E.body.innerHTML = `<div class="app"><div class="task">
+      <div class="pp-top"><span style="color:#4B5563;display:flex">${ICON.back}</span><div><b>${T5.title}</b><span>${T5.sub}</span></div></div>
+      <div class="body"><div class="role"><i>${ICON.user}</i><b style="font-weight:600">${T5.role}</b><span class="pill">AI role-play</span></div>
+        <div class="lbl">Duration</div><div class="val">${T5.dur}</div><div class="lbl">About the role</div><div class="val">${T5.about}</div></div></div>
+    <div class="scrim"></div>
+    <div class="modal"><div class="mh">${T5.title}<span style="color:#9CA3AF;display:flex">${ICON.x}</span></div>
+      <div class="hw">How it works</div>
+      <div class="steps">
+        <div><div class="st"><span style="width:44px;height:56px;border-radius:6px;background:#fff;border:1px solid #E7E7EA;display:block;position:relative"><i style="position:absolute;left:9px;right:9px;top:14px;height:2px;background:#D1D5DB;box-shadow:0 7px 0 #D1D5DB,0 14px 0 #D1D5DB,0 21px 0 #D1D5DB"></i></span></div><div class="lb"><b>1</b>Upload CV</div></div>
+        <div><div class="st"><span style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B7280">${ICON.user}</span></div><div class="lb"><b>2</b>20 min call</div></div>
+        <div><div class="st"><span style="display:flex;gap:5px"><i style="width:16px;height:6px;border-radius:3px;background:#16A34A"></i><i style="width:16px;height:6px;border-radius:3px;background:#16A34A"></i><i style="width:16px;height:6px;border-radius:3px;background:#D1D5DB"></i></span></div><div class="lb"><b>3</b>Get results</div></div>
+      </div>
+      <div class="crit-row">What gets scored <span>${T5.criteria} ⌄</span></div>
+      <div class="mfoot"><span class="file">${ICON.doc16}${T5.cv}</span><span class="btn-sec">Change</span><span class="btn-pri">Start interview ${ICON.arrow}</span></div>
+    </div></div>`;
+  const q = s => E.body.querySelector(s);
+  Object.assign(U, { scrim:q('.scrim'), modal:q('.modal'), file:q('.file'), change:q('.btn-sec'), start:q('.btn-pri') });
+}
+
+/* ---------- 5b–6 · call screen: orb follows the interviewer, mic follows the student ---------- */
+function buildCall(cfg, {prompt='', timer=1200}={}){
+  E.body.innerHTML = `<div class="app"><div class="call">
+      <div class="who"><i>${ICON.user}</i><div><b>${cfg.who}</b><span>AI role-play</span></div></div>
+      <span class="res">${ICON.book}Resources</span><span class="mo">···</span>
+      <div class="orbw"><div class="orb"><div class="halo"></div><div class="wash"></div><div class="rot ring"></div><div class="rot rays"></div>
+        <div class="core">${ICON.userL}</div></div></div>
+      <div class="left"></div><div class="prompt">${prompt}</div>
+      <div class="ctrls"><span class="end">${ICON.hangup}</span><span class="mic">${ICON.micL}</span></div></div></div>`;
+  const q = s => E.body.querySelector(s);
+  Object.assign(U, { call:q('.call'), rots:[...E.body.querySelectorAll('.orb .rot')], ring:q('.orb .ring'), halo:q('.orb .halo'),
+                     left:q('.call .left'), prompt:q('.call .prompt'), mic:q('.ctrls .mic'), end:q('.ctrls .end'),
+                     angle:180, lastT:null, timer0:timer, timerT:null });
+  const rms = an => { an.getFloatTimeDomainData(S.lvBuf); let s = 0; for (const v of S.lvBuf) s += v*v; return Math.min(1, Math.sqrt(s/S.lvBuf.length)*5); };
+  ticker(t => { if (!U.call || !U.call.isConnected) return true;
+    const dt = U.lastT == null ? 0 : Math.max(0, Math.min(.05, t - U.lastT)); U.lastT = t;
+    if (S.anInt){ const a = rms(S.anInt), b = rms(S.anStu);
+      S.lvInt += (a - S.lvInt) * (a > S.lvInt ? .35 : .07); S.lvStu += (b - S.lvStu) * (b > S.lvStu ? .35 : .07); }
+    const talk = S.lvInt > .02, lv = S.lvInt;
+    U.angle = (U.angle + (talk ? 34 + lv*40 : 18) * dt) % 360;     // ~one turn per 8s while speaking, as recorded
+    const sc = 1 + lv*.07;
+    U.rots.forEach(r => r.style.transform = `rotate(${U.angle}deg) scale(${sc})`);
+    U.ring.style.opacity = .82 + lv*.18; U.halo.style.transform = `scale(${1 + lv*.12})`;
+    U.mic.style.setProperty('--lvl', S.lvStu.toFixed(3));
+    if (U.timerT != null){ const r = Math.max(0, Math.round(U.timer0 - (t - U.timerT))); U.left.textContent = `${Math.floor(r/60)}:${String(r%60).padStart(2,'0')} left`; }
+    return false; });
+}
+function setTimer(sec, t0){ U.timer0 = sec; U.timerT = t0; }
+// interviewer transcript appears as it's spoken (linear over the clip; ₹ text differs from the spoken words)
+function setPrompt(text, t0, dur){
+  U.prompt.textContent = '';
+  ticker(t => { if (!U.prompt || !U.prompt.isConnected) return true;
+    const n = Math.max(0, Math.min(text.length, Math.ceil(text.length * (t - t0) / (dur * .92))));
+    U.prompt.textContent = text.slice(0, n); return n >= text.length; });
+}
+const clipAt = id => S.voice.find(v => v.id === id);
+const askCard = q => `<div class="eb">The interviewer asks</div><div class="q">"${q}"</div>`;
+const ansCard = (who, a) => `<div class="eb">${who} answers</div><div class="q">${a}</div>`;
+const chipHtml = ([p, txt]) => `<img src="${avatar(p)}" alt="">${txt}`;
+
+/* fake cursor — stage coordinates, aimed at real elements */
+function cursorEl(){ if (!E.cur || !E.cur.isConnected){ E.cur = el('div','cursor', ICON.cursor); E.cur.style.transform = 'translate(960px,640px)'; E.curPos = [960,640]; } return E.cur; }
+function stagePt(node, fx=.5, fy=.5){ const r = node.getBoundingClientRect(), s = stage.getBoundingClientRect(), k = s.width/1920;
+  return [ (r.left - s.left + r.width*fx)/k, (r.top - s.top + r.height*fy)/k ]; }
+function cursorTo(node, ms=650, fx=.5, fy=.5){ const c = cursorEl(), [x,y] = stagePt(node, fx, fy), [x0,y0] = E.curPos;
+  A(c, [{transform:`translate(${x0}px,${y0}px)`},{transform:`translate(${x}px,${y}px)`}], ms, {ease:EASE_IO}); E.curPos = [x,y]; }
+function cursorClick(){ const c = cursorEl(), [x,y] = E.curPos;
+  A(c, [{transform:`translate(${x}px,${y}px) scale(1)`},{transform:`translate(${x}px,${y}px) scale(.82)`,offset:.4},{transform:`translate(${x}px,${y}px) scale(1)`}], 240, {ease:'ease-out'}); }
+
+const SCENES = [
+  { // 1 · Title — words land as Ranbir says them
+    setup(){},
+    cues(){
+      const w = [...E.s1a.querySelectorAll('.w')];
+      w.forEach((s,i) => cue(wt('narr_01', i), () => reveal(s)));                 // Placement · season, · reimagined.
+      cue(wt('narr_01', 3) - 0.35, () => fadeOut(E.s1a, 380));
+      cue(wt('narr_01', 3), () => {                                                // Meet
+        const h = setHead(TIMELINE.copy.s1head.map(x=>`<span class="w">${x}</span>`).join(' '), {words:true});
+        const ws = [...h.querySelectorAll('.w')];
+        reveal(ws[0]);
+        cue(wt('narr_01', 4), () => reveal(ws[1]));                                 // A-A-F-T
+        cue(wt('narr_01', 5), () => reveal(ws[2]));                                 // Placements
+      });
+      cue(wt('narr_01', 4), () => A(E.tile, [{opacity:0, transform:'scale(.85)'},{opacity:1, transform:'scale(1)'}], 650));
+      cue(wt('narr_01', 5) + .1, () => fadeIn(E.s1lab, 500, 8));
+      cue(wt('narr_01', 6), () => fadeIn(E.s1on, 600, 10));                        // a Space on TwinCafe
+    },
+  },
+  { // 2 · What is a Space — the tile becomes the Space Twin; card builds on the VO's nouns
+    setup(){                                      // = end state of scene 1
+      setHead(TIMELINE.copy.s1head.join(' '), {instant:true});
+      show(E.tile); show(E.s1lab); show(E.s1on);
+    },
+    cues(){
+      const t0 = 8.0, C = TIMELINE.copy;
+      cue(t0, () => {
+        clearHead(300);
+        fadeOut(E.s1lab, 300); fadeOut(E.s1on, 300);
+        A(E.logo, [{opacity:0},{opacity:1}], 700);
+        A(E.card, [{opacity:0, transform:'scale(.96)'},{opacity:1, transform:'scale(1)'}], 700, {delay:120});
+        A(E.tile, [{transform:'translate(0,0) scale(1)'},{transform:'translate(0,95px) scale(.8)'}], 800, {ease:EASE_IO, delay:80});
+      });
+      // Word swap: the italic word sits in a slot whose width eases to each new word,
+      // so the centred line re-centres smoothly instead of jumping; old word lifts out, new rises in.
+      let slot = null;
+      const measure = (txt) => { const m = el('em', null, txt, E.head); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
+        const w = m.getBoundingClientRect().width / (stage.getBoundingClientRect().width / 1920); m.remove(); return w; };
+      const swapWord = (txt) => {
+        const w = measure(txt);
+        if (!slot){
+          const h = setHead(`${C.s2head} <span class="slot" style="display:inline-block;position:relative;vertical-align:top;height:1em;width:${w}px"></span>`);
+          slot = h.querySelector('.slot');
+          const n = el('em', null, txt, slot); n.style.cssText = 'position:absolute;left:0;top:0;white-space:nowrap;opacity:0';
+          A(n, [{opacity:0, transform:'translateY(12px)'},{opacity:1, transform:'none'}], HEAD.wordIn, {delay: +h.dataset.revealEnd});   // accent word lands last
+          return;
+        }
+        const old = slot.lastElementChild;
+        A(old, [{opacity:1, transform:'none'},{opacity:0, transform:'translateY(-14px)'}], 240, {ease:EASE_IN}).finished.then(()=>old.remove());
+        A(slot, [{width: slot.style.width},{width: w+'px'}], 520, {ease:EASE_IO}).finished.then(()=>{ slot.style.width = w+'px'; });
+        const n = el('em', null, txt, slot); n.style.cssText = 'position:absolute;left:0;top:0;white-space:nowrap;opacity:0';
+        A(n, [{opacity:0, transform:'translateY(14px)'},{opacity:1, transform:'none'}], 420, {delay:170});
+      };
+      // Twin
+      cue(wt('narr_02', 7), () => { swapWord(C.s2words[0]); fadeIn(E.twincap, 500, 6);
+        A(E.tile, [{boxShadow:'0 16px 40px rgba(80,30,80,.16)'},{boxShadow:'0 0 0 14px rgba(59,9,100,.10),0 20px 50px rgba(59,9,100,.28)'}], 600); });
+      // members
+      cue(wt('narr_02', 11), () => { swapWord(C.s2words[1]);
+        [...E.mem.children].forEach((m,i) => A(m, [{opacity:0, transform:'scale(.6)'},{opacity:1, transform:'scale(1)'}], 450, {delay:i*80})); });
+      // documents
+      cue(wt('narr_02', 15), () => { swapWord(C.s2words[2]);
+        E.docs.forEach((d,i) => A(d, [{opacity:0, transform:'translateY(-22px)'},{opacity:1, transform:'none'}], 550, {delay:i*120}));
+        [...E.lines.querySelectorAll('path')].slice(0,3).forEach((p,i) => A(p, [{strokeDashoffset:1},{strokeDashoffset:0}], 700, {delay:250+i*120, ease:EASE_IO})); });
+      // agents
+      cue(wt('narr_02', 17), () => { swapWord(C.s2words[3]);
+        A(E.agent, [{opacity:0, transform:'translateX(60px)'},{opacity:1, transform:'none'}], 650);
+        A(E.lines.querySelectorAll('path')[3], [{strokeDashoffset:1},{strokeDashoffset:0}], 600, {delay:200, ease:EASE_IO}); });
+      // push into the card → the browser window
+      cue(16.7, () => {
+        clearHead(400);
+        A(E.card, [{transform:'scale(1)', opacity:1},{transform:'scale(1.7)', opacity:0}], 1200, {ease:EASE_IO});
+        A(E.tile, [{transform:'translate(0,95px) scale(.8)', opacity:1},{transform:'translate(0,160px) scale(1.36)', opacity:0}], 1200, {ease:EASE_IO});
+      });
+      cue(17.25, () => buildSpace());                 // the window opens on the real Space
+      cue(17.3, () => showWindow());
+    },
+  },
+  { // 3 · Space Q&A — two questions typed, thinking lines, answers streamed with sources
+    setup(){ show(E.logo); showWindow(true); buildSpace(); },
+    cues(){
+      const C = TIMELINE.copy, H = i => TIMELINE.slates[i][1];
+      cue(18.0, () => setHead(H(0)));
+      cue(18.25, () => otherMsg(C.seed));
+      cue(18.75, () => { const r = twinMsg({html:C.seed.a, sources:C.seed.sources, think:[]}, false, true); rise(r.n); });
+      const ask = (q, a, tHead, head, tType, cps) => {
+        const tSend = tType + q.length*0.035 + 0.15, tReply = tSend + 0.4;
+        let r;
+        cue(tHead, () => setHead(head));
+        cue(tType - 0.05, () => typeInto(q, tType));
+        cue(tSend, () => { clearComposer(); mineMsg(q); });
+        cue(tReply, () => { r = twinMsg(a, true); });
+        cue(tReply + 0.1, () => thinkLine(r, 0));
+        cue(tReply + 0.6, () => { thinkDone(r, 0); thinkLine(r, 1); });
+        cue(tReply + 1.1, () => thinkDone(r, 1));
+        cue(tReply + 1.3, () => thinkFold(r));
+        const tStream = tReply + 1.4, tEnd = tStream + visLen(a.html) / cps;
+        cue(tStream, () => streamInto(r, a.html, tStream, cps));
+        cue(tEnd + 0.15, () => A(r.foot, [{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], 400));
+      };
+      ask(C.q1, C.a1, 22.0, H(1), 22.3, 80);                // 3b–c · December drives
+      ask(C.q2, C.a2, 34.0, H(2), 34.3, 95);                // 3d–e · Meridian Analytics
+    },
+  },
+  { // 4 · Placement prep — cursor: Agents → Placement prep → glide the list → click Kissa Audio
+    setup(){
+      const C = TIMELINE.copy;
+      show(E.logo); showWindow(true); buildSpace();
+      otherMsg(C.seed, true); twinMsg({html:C.seed.a, sources:C.seed.sources, think:[]}, false, true);
+      mineMsg(C.q1, true); twinMsg(C.a1, true, true); mineMsg(C.q2, true); twinMsg(C.a2, true, true);
+      requestAnimationFrame(snapScroll);
+      setHead(TIMELINE.slates[2][1], {instant:true});
+    },
+    cues(){
+      const hover = i => U.rows.forEach((r,j) => r.classList.toggle('hover', j === i));
+      const tPick = wt('narr_04', 8), tStart = wt('narr_04', 11);         // "Pick a company." · "Start practising."
+      cue(46.0, () => setHead(TIMELINE.slates[3][1]));
+      cue(46.05, () => { const c = cursorEl(), [x,y] = stagePt(U.send, .2, 1.6); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 250); });
+      cue(46.3, () => cursorTo(U.agbtn, 700, .45, .6));
+      cue(47.05, () => { cursorClick(); U.agbtn.classList.add('on');
+        A(U.panel, [{transform:'translateX(105%)'},{transform:'none'}], 480); });
+      cue(47.55, () => cursorTo(U.agrow, 600, .4, .55));
+      cue(48.15, () => { cursorClick(); U.agrow.style.background = 'rgba(15,23,42,.08)'; });
+      cue(48.3, () => A(U.pp, [{opacity:0},{opacity:1}], 320, {ease:'ease-out'}));
+      cue(48.4, () => U.rows.forEach((r,i) => A(r, [{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'none'}], 380, {delay:i*60})));
+      cue(48.7, () => cursorTo(U.rows[0], 450, .55, .55));
+      cue(49.15, () => hover(0));
+      // glide down three rows on "Pick a company", come back up, click Kissa Audio on "Start"
+      const g0 = Math.max(49.25, tPick - 0.15), step = 0.26;
+      [1,2,3].forEach((i,k) => { const t = g0 + k*step;
+        cue(t, () => cursorTo(U.rows[i], 240, .55, .55)); cue(t + .2, () => hover(i)); });
+      const tBack = g0 + 3*step + 0.05, tClick = Math.max(tStart, tBack + 0.5);
+      cue(tBack, () => cursorTo(U.rows[0], 440, .55, .55));
+      cue(tBack + 0.4, () => hover(0));
+      cue(tClick, () => { cursorClick(); U.rows[0].classList.remove('hover'); U.rows[0].classList.add('pressed'); });
+      cue(52.8, () => A(cursorEl(), [{opacity:1},{opacity:0}], 200));
+    },
+  },
+  { // 5 · Riya: task page → How it works → CV → Start interview → call (5b CV probe · 5c case · 5d answer)
+    setup(){
+      show(E.logo); showWindow(true); buildSpace();
+      show(U.pp); U.rows.forEach(r => show(r)); U.rows[0].classList.add('pressed');
+      setHead(TIMELINE.slates[3][1], {instant:true});
+    },
+    cues(){
+      const C = TIMELINE.copy;
+      // 5a · task page + How it works
+      cue(53.0, () => { setHead(TIMELINE.slates[4][1]); swapBody(buildTask, 300); });
+      cue(53.45, () => { A(U.scrim, [{opacity:0},{opacity:1}], 300); A(U.modal, [{opacity:0, transform:'scale(.96)'},{opacity:1, transform:'none'}], 420); });
+      cue(wt('narr_05a', 3), () => { A(U.file, [{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], 380);   // "…their own CV"
+                                     A(U.change, [{opacity:0},{opacity:1}], 300, {delay:120}); });
+      cue(54.15, () => { const c = cursorEl(); const [x,y] = stagePt(U.modal, .5, .5); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 220); });
+      cue(54.4, () => cursorTo(U.start, 650, .45, .55));
+      cue(55.1, () => { cursorClick(); U.start.classList.add('busy'); U.start.innerHTML = 'Starting your round…'; });
+      cue(55.55, () => A(cursorEl(), [{opacity:1},{opacity:0}], 180));
+      // 5a → 5b · morph into the call layout
+      cue(55.75, () => { clearHead(); morph('call');
+        swapBody(() => { buildCall(C.callRiya); setTimer(1198, 56.0); }, 300); });
+      cue(56.25, () => setSide(C.s5b));
+      cue(56.55, () => leftChip(chipHtml(C.chipRiya)));
+      cue(56.6, () => leftCard(askCard(C.p5b)));
+      const q5b = clipAt('int_05b_q'), r5b = clipAt('riya_05b_a'), q5c = clipAt('int_05c_q'), r5d = clipAt('riya_05d_a');
+      cue(q5b.t - 0.02, () => setPrompt(C.p5b, q5b.t, q5b.dur));
+      cue(r5b.t, () => leftCard(ansCard('Riya', C.riya5b)));
+      // 5c · the case (time jump: later in the same interview)
+      cue(68.0, () => { setSide(C.s5c); leftChip(null); setTimer(910, 68.0); });
+      cue(68.15, () => leftCard(C.caseTable, {top:430}));
+      cue(q5c.t - 0.02, () => setPrompt(C.p5c, q5c.t, q5c.dur));
+      // 5d · Riya answers
+      cue(r5d.t, () => { leftCard(ansCard('Riya', C.riya5d)); setTimer(884, r5d.t); });
+    },
+  },
+  { // 6 · Bridge back to the list → Arjun's call → end call (hands off to the scorecard)
+    setup(){
+      const C = TIMELINE.copy;
+      show(E.logo); showWindow(true); morph('call', 0, true);
+      buildCall(C.callRiya, {prompt:C.p5c}); setTimer(882, 85.3);
+      setSide(C.s5c, {instant:true}); leftCard(ansCard('Riya', C.riya5d), {instant:true});
+    },
+    cues(){
+      const C = TIMELINE.copy, hover = i => U.rows.forEach((r,j) => r.classList.toggle('hover', j === i));
+      // bridge · back to the same list as scene 4
+      cue(85.3, () => { clearLeft(); morph('browse');
+        swapBody(() => { buildSpace(); show(U.pp); U.rows.forEach(r => show(r)); U.rows[0].querySelector(':scope > div > span').textContent = '3 attempts'; }, 300); });
+      cue(85.45, () => setHead(C.s6.replace('<br>', ' ')));
+      cue(85.95, () => { const c = cursorEl(), [x,y] = stagePt(U.rows[0], .55, .55); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 220); hover(0); });
+      const tCin = wt('narr_06', 3), tSchool = wt('narr_06', 5), tRoles = wt('narr_06', 10);   // "cinema," · "school" · "roles."
+      cue(tCin - 0.25, () => cursorTo(U.rows[1], 380, .55, .55));
+      cue(tCin + 0.1, () => hover(1));
+      [2,3,4,5].forEach((i,k) => { const t = tSchool - 0.2 + k*0.3;
+        cue(t, () => cursorTo(U.rows[i], 260, .55, .55)); cue(t + .2, () => hover(i)); });
+      const tBack = tSchool - 0.2 + 4*0.3 + 0.05, tClick = Math.max(tRoles - 0.1, tBack + 0.5);
+      cue(tBack, () => cursorTo(U.rows[1], 450, .55, .55));
+      cue(tBack + 0.4, () => hover(1));
+      cue(tClick, () => { cursorClick(); U.rows[1].classList.remove('hover'); U.rows[1].classList.add('pressed'); });
+      // into Arjun's call — the same morph as 5a → 5b
+      cue(tClick + 0.35, () => { A(cursorEl(), [{opacity:1},{opacity:0}], 180); clearHead(); morph('call');
+        swapBody(() => { buildCall(C.callArjun); setTimer(1191, 91.0); }, 300); });
+      cue(90.95, () => setSide(C.s6));
+      cue(91.05, () => leftChip(chipHtml(C.chipArjun)));
+      cue(91.15, () => leftCard(askCard(C.p6)));
+      const q6 = clipAt('int_06_q'), a6 = clipAt('arjun_06_a');
+      cue(q6.t - 0.02, () => setPrompt(C.p6, q6.t, q6.dur));
+      cue(a6.t, () => leftCard(ansCard('Arjun', C.arjun6)));
+      // end the call → scorecard (scene 7)
+      cue(102.15, () => { const c = cursorEl(), [x,y] = stagePt(U.mic, .5, -.6); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 200); });
+      cue(102.3, () => cursorTo(U.end, 480, .5, .5));
+      cue(102.8, () => cursorClick());
+      cue(102.95, () => { A(cursorEl(), [{opacity:1},{opacity:0}], 180); clearLeft(); morph('browse'); });
+    },
+  },
+  ...[6].map(n => ({   // 7 · placeholder until checkpoint 5 (voices already play)
+    setup(){
+      show(E.logo); showWindow(true);
+      const sc = TIMELINE.scenes[n]; const i = TIMELINE.slates.findIndex(s => s[0] >= sc.start - 0.01);
+      slate(i, true);
+    },
+    cues(){
+      const sc = TIMELINE.scenes[n];
+      TIMELINE.slates.forEach((s, i) => { if (s[0] >= sc.start - 0.01 && s[0] < sc.end - 0.01 && s[0] > 18) cue(s[0], () => slate(i)); });
+      if (n === 2) cue(18, () => slate(0));
+    },
+  })),
+  { // 8 · End card — window shrinks into the AAFT tile (bookend with 1B)
+    setup(){ show(E.logo); showWindow(true); slate(TIMELINE.slates.length-1, true); },
+    cues(){
+      const t0 = 112.0;
+      cue(t0, () => {
+        clearHead(350);
+        E.bw.style.transformOrigin = '50% 17.8%';                     // the tile's centre (y 325)
+        A(E.bw, [{opacity:1, transform:'scale(1)'},{opacity:0, transform:'scale(.1)'}], 750, {ease:EASE_IN});
+        E.tile.style.top = '325px';
+        A(E.tile, [{opacity:0, transform:'scale(.6)'},{opacity:1, transform:'scale(1)'}], 700, {delay:420});
+      });
+      const l1 = [...E.s8l1.querySelectorAll('.w')], l2 = [...E.s8l2.querySelectorAll('.w')];
+      l1.forEach((s,i) => cue(wt('narr_08', i), () => reveal(s, 260)));
+      l2.forEach((s,i) => cue(wt('narr_08', 4+i), () => reveal(s, 260)));
+      cue(117.2, () => A(E.disc, [{opacity:0},{opacity:1}], 900));
+    },
+  },
+];
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+(async function boot(){
+  const m = await (await fetch('assets/audio/clips.json')).json();
+  S.clips = m; layoutVoice();
+  const ctxTmp = new OfflineAudioContext(1, 1, 44100);
+  const load = async (v, tries=4) => {                 // retry: the local dev server drops parallel requests
+    for (let i = 0; i < tries; i++){
+      try { const r = await fetch(S.clips[v.id].file, {cache:'no-store'}); if (!r.ok) throw new Error(r.status);
+            S.buffers[v.id] = await ctxTmp.decodeAudioData(await r.arrayBuffer()); return; }
+      catch(e){ await new Promise(r => setTimeout(r, 250*(i+1))); }
+    }
+    throw new Error('could not load ' + v.id);
+  };
+  for (let i = 0; i < S.voice.length; i += 4) await Promise.all(S.voice.slice(i, i+4).map(v => load(v)));
+  await document.fonts.ready;
+  let from = +(Q.get('t') || 0);
+  const m2 = location.hash.match(/^#scene-(\d)$/);
+  if (m2){ const sc = TIMELINE.scenes[+m2[1]-1]; from = sc.start; S.singleEnd = sc.end; }
+  seek(from);
+  setHints(true);
+  S.ready = true;                                   // Space works only once every clip is decoded
+  $('gate').querySelector('b').textContent = 'Press Space to start';
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<title>Orb Compare</title>
+<style>
+/* Side-by-side: original still (left) vs our orb (right), same scale (core = 110px). */
+html,body{margin:0;background:#FBFAFC;font:13px system-ui;color:#555}
+.row{display:flex;gap:40px;padding:30px;align-items:center}
+.cell{position:relative;width:472px;height:410px;background:#FBFAFC}
+.cell img{display:block}
+.lab{position:absolute;left:8px;top:6px}
+
+/* Speaking orb, matched to the TwinCafe call screen. Geometry is in units of the core (110px).
+   .rot layers rotate together: the wedge's dark centre sits at 0deg (top) before rotation. */
+.orb{width:0;height:0}
+.orb .halo{position:absolute;left:-250px;top:-250px;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(170,140,205,.10) 0%,rgba(170,140,205,.05) 50%,rgba(170,140,205,0) 72%)}
+.orb .wash{position:absolute;left:-112px;top:-112px;width:224px;height:224px;border-radius:50%;
+  background:radial-gradient(circle,rgba(234,228,242,.9) 45%,rgba(222,212,236,.5) 72%,rgba(222,212,236,0) 100%);filter:blur(6px)}
+.orb .rot{position:absolute;left:-175px;top:-175px;width:350px;height:350px;border-radius:50%}
+.orb .ring{background:conic-gradient(from 0deg,
+    #4B1D75 0deg, #57277F 20deg, rgba(120,85,165,.82) 45deg, rgba(175,150,205,.62) 78deg,
+    rgba(200,186,222,.50) 112deg, rgba(200,186,222,.50) 228deg,
+    rgba(160,132,196,.66) 268deg, rgba(112,74,160,.86) 308deg, #57277F 340deg, #4B1D75 360deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);
+          mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);
+  filter:blur(12px)}
+.orb .rays{background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg .7deg,rgba(255,255,255,0) .7deg 2.1deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);
+          mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);
+  filter:blur(1px)}
+.orb .core{position:absolute;left:-55px;top:-55px;width:110px;height:110px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#6B7280;box-shadow:0 2px 14px rgba(59,9,100,.10)}
+
+.cell .orb{position:absolute;left:220px;top:215px}
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="cell"><img src="../reference/spaces-flow/orb-original.png" width="472" height="410"><span class="lab">original</span></div>
+  <div class="cell"><div class="orb"><div class="halo"></div><div class="wash"></div><div class="rot ring"></div><div class="rot rays"></div><div class="core"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></div></div><span class="lab">ours</span></div>
+</div>
+<script>
+const a = +(new URLSearchParams(location.search).get('a') ?? 180);
+document.querySelectorAll('.orb .rot').forEach(e=>e.style.transform=`rotate(${a}deg)`);
+</script>
+</body>
+</html>

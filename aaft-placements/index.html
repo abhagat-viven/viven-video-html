@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAFT Placements Film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   AAFT Placements Space — 2:00 film for Screen Studio (16:9, 1920×1080)
+   Voices play from this page (narrator + interview); music is added in Canva.
+   Controls: Space start · P pause · R restart · 1–8 jump · H hide hints/debug
+   URL: ?bars=black|white|ground · ?debug=1 · ?flash=0 · ?t=SECONDS · #scene-N
+   ===================================================================== */
+:root{
+  --g-base:#F6E6E0; --g-peach:#EC9A64; --g-pink:#EE93B6; --g-peri:#A6A3EA; --g-rose:#F2A6BC;
+  --ground: radial-gradient(62% 70% at 0% 0%, var(--g-peach) 0%, rgba(236,154,100,0) 72%),
+            radial-gradient(42% 62% at 100% 42%, var(--g-pink) 0%, rgba(238,147,182,0) 72%),
+            radial-gradient(58% 62% at 100% 100%, var(--g-peri) 0%, rgba(166,163,234,0) 76%),
+            radial-gradient(46% 56% at 0% 100%, var(--g-rose) 0%, rgba(242,166,188,0) 72%),
+            var(--g-base);
+  --ink:#16141A; --accent:#E44D86;
+  --ui-ink:#111827; --ui-ink-2:#4B5563; --ui-ink-3:#9CA3AF; --ui-line:#E7E7EA; --ui-chip:rgba(15,23,42,.05);
+  --plum:#3B0964;
+  --f-head:'Instrument Serif',Georgia,serif; --f-ui:'Geist',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
+body.bars-white{background:#fff}
+body.bars-ground{background:var(--ground)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+       font-family:var(--f-ui);color:var(--ink);-webkit-font-smoothing:antialiased;background:var(--g-base)}
+.ground{position:absolute;inset:0;background:var(--ground)}
+#world{position:absolute;inset:0}
+.abs{position:absolute}
+
+/* type */
+.head{position:absolute;left:0;right:0;top:78px;height:90px;text-align:center;font:400 76px/1 var(--f-head);z-index:20}
+.head .h{position:absolute;left:0;right:0;top:0}
+em,.em{font-style:italic;color:var(--accent)}
+.w{display:inline-block;opacity:0}
+.big{font:400 92px/1.08 var(--f-head)}
+.logo-tr{position:absolute;right:64px;top:42px;width:206px;opacity:0;z-index:30}
+
+/* AAFT Space tile (shared element: 1B → 2 → 8) */
+.tile{position:absolute;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:30px;
+      background:#fff url(assets/aaft-logo.jpg) center/84% no-repeat;box-shadow:0 16px 40px rgba(80,30,80,.16);opacity:0;z-index:12}
+.tile .bdg{position:absolute;right:-10px;bottom:-10px;width:44px;height:44px;border-radius:50%;background:var(--plum);   /* bottom-right, as on the Twin's avatar */
+           display:flex;align-items:center;justify-content:center;border:3px solid #fff}
+
+/* scene 2 Space card */
+.s2card{position:absolute;left:480px;top:250px;width:960px;height:620px;border-radius:32px;background:rgba(255,255,255,.9);
+        box-shadow:0 30px 80px rgba(80,30,80,.12);opacity:0;z-index:5}
+.s2mem{position:absolute;left:52px;top:34px;display:flex;align-items:center}
+.s2mem img{width:46px;height:46px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08);opacity:0}
+.s2mem span{font-size:18px;color:#6B7280;margin-left:14px;opacity:0}
+.doc{position:absolute;width:230px;background:#fff;border:1px solid var(--ui-line);border-radius:18px;padding:18px 20px;box-shadow:0 1px 2px rgba(0,0,0,.03);opacity:0;color:var(--ui-ink)}
+.doc b{display:block;font-size:19px;font-weight:600;margin-top:10px}.doc span{font-size:14px;color:var(--ui-ink-3)}
+.twincap{position:absolute;left:405px;top:385px;width:150px;text-align:center;font-size:17px;font-weight:600;color:var(--ui-ink);opacity:0}
+.agent{position:absolute;left:640px;top:480px;display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--ui-line);border-radius:16px;padding:16px 20px;box-shadow:0 12px 30px rgba(0,0,0,.08);opacity:0;color:var(--ui-ink)}
+.agent img{width:48px;height:48px;border-radius:50%}
+.agent b{display:block;font-size:19px;font-weight:600}.agent span{font-size:14px;color:#6B7280}
+.s2lines path{fill:none;stroke:#C9B6E4;stroke-width:2.5;stroke-linecap:round}
+
+/* browser window (persistent from 0:18 to 1:52) */
+.bw{position:absolute;left:210px;top:186px;width:1500px;height:780px;border-radius:18px;background:#fff;
+    box-shadow:0 2px 8px rgba(60,20,60,.06),0 40px 90px rgba(80,30,80,.16);overflow:hidden;opacity:0;z-index:8}
+.bw-bar{height:46px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid #EFEDEB}
+.bw-bar .dots{position:absolute;left:20px;top:17px;display:flex;gap:8px}.bw-bar .dots i{width:12px;height:12px;border-radius:50%}
+.bw-bar .url{font:500 14px var(--f-ui);color:#3f3a44;background:#F3F1EE;border-radius:8px;padding:5px 82px}
+.bw-body{position:absolute;left:0;right:0;top:46px;bottom:0;overflow:hidden}
+/* scene 1 + 8 */
+.s1a{position:absolute;left:300px;top:400px;z-index:10}
+.s1lab{position:absolute;left:0;right:0;top:575px;text-align:center;font:400 40px var(--f-head);opacity:0;z-index:10}
+.s1on{position:absolute;left:0;right:0;top:680px;text-align:center;opacity:0;z-index:10;font:500 22px var(--f-ui);color:#3f3a44}
+.s1on img{width:170px;vertical-align:middle;margin-left:10px}
+.s8l1{position:absolute;left:0;right:0;top:494px;text-align:center;font:400 56px var(--f-head);z-index:10}
+.s8l2{position:absolute;left:0;right:0;top:618px;text-align:center;font:400 68px var(--f-head);z-index:10}
+.disc{position:absolute;left:0;right:0;bottom:56px;text-align:center;font:500 18px var(--f-ui);color:rgba(22,20,26,.55);opacity:0;z-index:10}
+
+/* ---------- product UI inside the window (native px, enlarged 1.32× like the storyboard) ---------- */
+.app{position:absolute;inset:0;zoom:1.32;font-family:var(--f-ui);color:var(--ui-ink);background:#fff}
+.sp-top{position:relative;z-index:3;background:#fff;height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--ui-line)}
+.sp-top .back{color:var(--ui-ink-2);display:flex}
+.sav{position:relative;width:36px;height:36px;flex:none;border-radius:8px;background:#fff url(assets/aaft-logo.jpg) center/84% no-repeat;box-shadow:0 0 0 1px var(--ui-line)}
+.sav .bdg{position:absolute;right:-5px;bottom:-5px;width:18px;height:18px;border-radius:50%;background:var(--plum);border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.sp-top .nm b{display:block;font-size:14px;font-weight:600}.sp-top .nm span{font-size:12px;color:var(--ui-ink-3)}
+.agbtn{margin-left:auto;display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:999px;border:1px solid var(--ui-line);font-size:14px;font-weight:600;position:relative;background:#fff}
+.agbtn .dot{position:absolute;right:6px;top:2px;width:7px;height:7px;border-radius:50%;background:#F59E0B}
+.agbtn.on{background:#F3F1F6}
+.more{width:36px;height:36px;border-radius:50%;border:1px solid var(--ui-line);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.tv{position:absolute;left:0;right:0;top:64px;bottom:104px;overflow:hidden}
+.tc{width:680px;margin:0 auto;padding:22px 0 10px}
+.msg{margin-bottom:22px}
+.other{display:flex;gap:12px;align-items:flex-start}
+.other img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none}
+.other .nm{font-size:14px;font-weight:600;margin:6px 0 6px}
+.bub{display:inline-block;background:var(--ui-chip);border-radius:22px;padding:10px 16px;font-size:14px;line-height:22px;max-width:480px}
+.bub .t{font-size:11px;color:var(--ui-ink-3);margin-left:8px}
+.mine{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.mine .t{font-size:11px;color:var(--ui-ink-3)}
+.mention{background:rgba(59,9,100,.12);color:var(--plum);font-weight:500;border-radius:4px;padding:0 2px}
+.twin{display:flex;gap:12px}
+.twin .nm{font-size:14px;font-weight:600;margin:6px 0 8px}
+.acard{position:relative;background:#fff;border:1px solid var(--ui-line);border-radius:18px;padding:16px 20px;font-size:14px;line-height:22px;box-shadow:0 1px 2px rgba(0,0,0,.03);min-height:56px}
+.acard ul{margin:8px 0 8px 18px}.acard li{margin-bottom:4px}.acard li::marker{color:#C9CBD1}.acard strong{font-weight:600}
+.think{display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.think .ln{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ui-ink-2);opacity:0}
+.think .ic{width:16px;height:16px;flex:none;display:flex;align-items:center;justify-content:center}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid #E4DCF0;border-top-color:var(--plum);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ok{width:16px;height:16px;border-radius:50%;background:#E7F3EC;display:flex;align-items:center;justify-content:center}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;opacity:0}
+.srcp{display:inline-flex;align-items:center;gap:6px;background:var(--ui-chip);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--ui-ink-2)}
+.gbtn{background:var(--ui-chip);border-radius:999px;height:32px;padding:0 14px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+.ph{position:absolute;right:10px;top:-9px;font:600 9px/1 var(--f-ui);letter-spacing:.1em;color:#9a3412;background:#FFEDD5;border:1px solid #FDBA74;border-radius:4px;padding:3px 5px}
+body.noph .ph{display:none}
+.composer{position:absolute;left:50%;bottom:16px;width:680px;margin-left:-340px;border:1px solid var(--ui-line);border-radius:18px;background:#fff;padding:12px 16px 10px;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+.composer .tx{font-size:14px;line-height:22px;min-height:22px;color:var(--ui-ink)}
+.composer .tx .phd{color:var(--ui-ink-3)}
+.caret{display:inline-block;width:1.5px;height:17px;background:var(--plum);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.composer .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:var(--ui-ink-3)}
+.composer .send{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-3);transition:background .2s,color .2s}
+.composer .send.live{background:var(--plum);color:#fff}
+/* Agents panel + Placement prep page */
+.agpanel{position:absolute;top:0;right:0;bottom:0;width:400px;background:#fff;border-left:1px solid var(--ui-line);box-shadow:-24px 0 48px rgba(17,24,39,.06);padding:20px;z-index:4;transform:translateX(105%)}
+.agpanel .ph1{display:flex;justify-content:space-between;align-items:flex-start}
+.agpanel .ph1 b{display:block;font-size:16px;font-weight:600}.agpanel .ph1 span{font-size:13px;color:var(--ui-ink-2)}
+.agrow{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-top:22px;background:var(--ui-chip)}
+.agrow img{width:40px;height:40px;border-radius:50%}
+.agrow b{display:block;font-size:14px;font-weight:600}.agrow span{font-size:13px;color:var(--ui-ink-2)}
+.agrow .chev{margin-left:auto;color:var(--ui-ink-3);display:flex}
+.pp{position:absolute;inset:0;background:#fff;z-index:5;opacity:0}
+.pp-top{display:flex;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid var(--ui-line)}
+.pp-top img{width:36px;height:36px;border-radius:50%}
+.pp-top b{display:block;font-size:15px;font-weight:600}.pp-top span{font-size:13px;color:var(--ui-ink-2)}
+.pp-top .search{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--ui-line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ui-ink-3);width:220px}
+.pp-list{width:680px;margin:22px auto 0}
+.pp-list h5{font-size:15px;font-weight:600;margin-bottom:10px}
+.pp-row{display:flex;align-items:center;gap:14px;padding:10px;border-radius:12px;opacity:0;transition:background .18s}
+.pp-row.hover{background:var(--ui-chip)}
+.pp-row.pressed{background:rgba(59,9,100,.08)}
+.pp-row .ic{width:36px;height:36px;border-radius:10px;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.pp-row b{display:block;font-size:14px;font-weight:500}.pp-row span{font-size:12px;color:var(--ui-ink-2)}
+.pp-row .chev{margin-left:auto;color:var(--ui-ink-3);display:flex}
+/* ---------- call layout: left column ---------- */
+.side-head{position:absolute;left:150px;top:200px;width:640px;height:200px;font:400 84px/1.05 var(--f-head);z-index:10}
+.side-head .h{position:absolute;left:0;top:0}
+.leftcol{position:absolute;inset:0;z-index:10;pointer-events:none}
+/* student answer card (pass 3): only the student gets a card, only while they answer — no side borders */
+.scard{position:absolute;left:150px;top:430px;width:600px;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(80,30,80,.14);padding:22px 30px 26px}
+.scard .th{display:flex;align-items:center;gap:12px;font:600 20px var(--f-ui);color:var(--ink)}
+.scard .th img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.scard .role{font-weight:500;color:#8b8592;font-size:16px}
+.scard .live{margin-left:auto;display:flex;align-items:center;gap:8px;font:600 12px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--accent);border-radius:999px;padding:6px 12px 6px 14px}
+.scard .bars{display:flex;gap:3px;align-items:center;height:20px}
+.scard .bars i{display:block;width:4px;height:6px;border-radius:2px;background:currentColor}
+.scard .q{font:500 28px/1.32 var(--f-ui);color:var(--ink);margin-top:14px}
+
+/* ---------- task page + How it works (5a) ---------- */
+.task{position:absolute;inset:0;background:#fff}
+.task .body{position:absolute;left:170px;top:96px;font-size:14px}
+.task .role{display:flex;align-items:center;gap:10px}
+.task .role i{width:36px;height:36px;border-radius:50%;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:#6B7280}
+.task .pill{font-size:12px;font-weight:600;background:var(--ui-chip);border-radius:6px;padding:3px 7px}
+.task .lbl{font-weight:600;margin-top:22px}.task .val{margin-top:8px}
+.scrim{position:absolute;inset:0;background:rgba(17,24,39,.42);opacity:0}
+.modal{position:absolute;left:50%;top:50%;width:520px;margin:-150px 0 0 -260px;background:#fff;border-radius:16px;padding:20px 22px;box-shadow:0 30px 80px rgba(0,0,0,.25);opacity:0}
+.modal .mh{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
+.modal .hw{font-size:13px;font-weight:600;margin:18px 0 10px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.steps .st{background:var(--ui-chip);border-radius:12px;height:96px;display:flex;align-items:center;justify-content:center}
+.steps .lb{font-size:12px;color:var(--ui-ink-2);margin-top:8px}.steps .lb b{font-weight:600;color:var(--ui-ink);margin-right:4px}
+.crit-row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ui-line);margin-top:16px;padding-top:14px;font-size:13px;font-weight:600}
+.crit-row span{color:var(--ui-ink-2);font-weight:500}
+.mfoot{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:16px;min-height:36px}
+.file{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;background:var(--ui-chip);border-radius:8px;padding:8px 10px;opacity:0}
+.btn-sec{font-size:13px;font-weight:600;border:1px solid var(--ui-line);border-radius:8px;padding:8px 12px;opacity:0}
+.btn-pri{display:inline-flex;align-items:center;gap:8px;background:var(--plum);color:#fff;font-size:13px;font-weight:600;border-radius:8px;padding:9px 14px;transition:background .25s}
+.btn-pri.busy{background:#9C86B8}
+
+/* ---------- New interview page (5t), native px inside .app — matches the shipped page ---------- */
+.ni{position:absolute;inset:0;background:#fff}
+.ni-top{display:flex;align-items:center;gap:12px;padding:18px 24px}
+.ni-top b{display:block;font-size:15px;font-weight:600}
+.ni-sub{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ui-ink-2)}
+.ni-sub i{width:18px;height:18px;border-radius:50%;background:var(--plum) url(assets/people/agent.svg) center/cover no-repeat;display:block}
+.ni-col{width:820px;margin:22px auto 0}
+.ni-lb{font-size:15px;font-weight:600;color:var(--ui-ink)}
+.ni-chips{display:flex;align-items:center;gap:10px;margin-top:16px}
+.ni-chip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 18px 0 14px;border:1px solid #E5E7EB;border-radius:999px;font-size:14px;font-weight:500;color:#4B5563;background:#fff;transition:background .18s,border-color .18s,color .18s}
+.ni-chip svg{color:#6B7280}
+.ni-chip.hv{background:#F3F4F6}
+.ni-chip.sel{border-color:var(--ui-ink);color:var(--ui-ink);box-shadow:inset 0 0 0 .6px var(--ui-ink)}
+.ni-mw{position:relative}
+.ni-more{display:inline-flex;align-items:center;gap:10px;height:38px;padding:0 12px 0 16px;border:1px solid #D1D5DB;border-radius:10px;font-size:15px;font-weight:500;color:var(--ui-ink);background:#fff}
+.ni-dd{position:absolute;top:46px;right:0;width:280px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.09);padding:6px;z-index:3;opacity:0}
+.ni-dd div{display:flex;align-items:center;gap:12px;height:38px;padding:0 12px;border-radius:8px;font-size:15px;color:var(--ui-ink);transition:background .15s}
+.ni-dd div.hv{background:#F3F4F6}.ni-dd svg{color:#6B7280}
+.ni-ta{margin-top:16px;height:250px;border:1px solid #D1D5DB;border-radius:22px;position:relative;padding:18px 22px;font-size:15px;color:#6B7280}
+.ni-ta .up{position:absolute;left:22px;bottom:16px;display:flex;align-items:center;gap:8px;font-weight:600;color:#4B5563}
+.ni-ta .mc{position:absolute;right:22px;bottom:16px;color:#6B7280;display:flex}
+
+/* ---------- scorecard (7), native px inside .app — the shipped attempt page ---------- */
+.scp{position:absolute;inset:0;background:#fff}
+.sc-hd{position:relative;z-index:2;background:#fff;display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--ui-line)}
+.sc-hd .bk{width:32px;height:32px;border-radius:50%;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.sc-hd .av{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.sc-hd b{display:block;font-size:15px;font-weight:600}
+.sc-hd .sub{font-size:13px;color:var(--ui-ink-2)}
+.sc-vp{position:absolute;left:0;right:0;top:65px;bottom:0;overflow:hidden}
+.sc2{position:absolute;left:50%;margin-left:-300px;top:22px;width:600px}
+.sc2-row{display:flex;justify-content:space-between;align-items:center}
+.sc2 .file{opacity:1;border-radius:999px}
+.att{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:500;color:var(--ui-ink)}
+.att svg{color:var(--ui-ink-3)}
+.sc2-lbl{font-size:13px;color:var(--ui-ink-2);margin-top:22px}
+.sc2-score{display:flex;align-items:center;gap:12px;font-size:30px;font-weight:600;letter-spacing:-.01em;margin-top:2px;min-height:40px}
+.dots4{display:inline-flex;gap:4px;align-items:center}
+.dots4 i{width:9px;height:9px;border-radius:50%;border:1.3px solid #111827;display:block;transition:background .25s}
+.dots4 i.f{background:#111827}
+.player{display:flex;align-items:center;gap:12px;background:var(--ui-chip);border-radius:14px;padding:10px 16px;margin-top:18px}
+.player .pl{width:34px;height:34px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center}
+.player .sk{width:20px;height:20px;border-radius:50%;border:1.5px solid #6B7280;font-size:8px;display:flex;align-items:center;justify-content:center;color:#6B7280}
+.player .track{flex:1;height:3px;background:#E3E1E8;border-radius:2px;position:relative}
+.player .track::before{content:"";position:absolute;left:0;top:-4px;width:11px;height:11px;border-radius:50%;background:#111}
+.player .tm{font-size:12px;color:var(--ui-ink-2)}
+.sc2 h6{font-size:14px;font-weight:600;margin:22px 0 10px}
+.sc2 ul{margin-left:18px;font-size:14px;line-height:22px;color:var(--ui-ink)}
+.sc2 li{margin-bottom:10px}.sc2 li::marker{color:#6B7280}
+.crit2{display:flex;align-items:center;padding:12px 10px;border-radius:10px;font-size:14px;margin:0 -10px;transition:background .18s}
+.crit2.hover{background:var(--ui-chip)}
+.crit2 .nm{flex:1}
+.crit2 .sv{color:var(--ui-ink-2);margin-right:8px}.crit2 .sv b{color:var(--ui-ink);font-weight:600}
+.crit2 .dots4 i{width:7px;height:7px}
+.crit2 .chev{margin-left:10px;color:var(--ui-ink-3);display:flex}
+
+/* ---------- call screen (5b–6), native px inside .app ---------- */
+.call{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%,#fff 0%,#FBF9FC 55%,#F6F2F8 100%)}
+.call .who{position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:10px;background:var(--ui-chip);border-radius:999px;padding:6px 16px 6px 6px}
+.call .who i{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.call .who b{display:block;font-size:13px;font-weight:500}.call .who span{font-size:11px;color:var(--ui-ink-2)}
+.call .res{position:absolute;right:58px;top:18px;display:flex;align-items:center;gap:6px;border:1px solid var(--ui-line);border-radius:10px;padding:7px 12px;font-size:13px;color:var(--plum);font-weight:500;background:#fff}
+.call .mo{position:absolute;right:18px;top:18px;width:32px;height:32px;border:1px solid var(--ui-line);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2);background:#fff}
+.call .orbw{position:absolute;left:50%;top:205px;width:0;height:0;transform:scale(.76)}
+.call .left{position:absolute;left:0;right:0;top:362px;text-align:center;font-size:12px;color:var(--ui-ink-3);font-variant-numeric:tabular-nums}
+.call .prompt{position:absolute;left:50%;top:388px;width:520px;margin-left:-260px;text-align:center;font-size:15px;line-height:23px;color:var(--ui-ink);min-height:46px}
+.call .ctrls{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:16px}
+.call .ctrls .end{width:42px;height:42px;border-radius:50%;background:#E5383B;display:flex;align-items:center;justify-content:center}
+.call .ctrls .mic{width:60px;height:60px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 calc(var(--lvl,0) * 14px) rgba(59,9,100,calc(.08 + var(--lvl,0) * .14))}
+/* orb — geometry and colours from prototypes/orb-parts.html (approved against the SPJIMR still) */
+.orb .halo{position:absolute;left:-250px;top:-250px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(170,140,205,.10) 0%,rgba(170,140,205,.05) 50%,rgba(170,140,205,0) 72%)}
+.orb .wash{position:absolute;left:-112px;top:-112px;width:224px;height:224px;border-radius:50%;background:radial-gradient(circle,rgba(234,228,242,.9) 45%,rgba(222,212,236,.5) 72%,rgba(222,212,236,0) 100%);filter:blur(6px)}
+.orb .rot{position:absolute;left:-175px;top:-175px;width:350px;height:350px;border-radius:50%}
+.orb .ring{background:conic-gradient(from 0deg,#4B1D75 0deg,#57277F 20deg,rgba(120,85,165,.82) 45deg,rgba(175,150,205,.62) 78deg,rgba(200,186,222,.50) 112deg,rgba(200,186,222,.50) 228deg,rgba(160,132,196,.66) 268deg,rgba(112,74,160,.86) 308deg,#57277F 340deg,#4B1D75 360deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);
+          mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);filter:blur(12px)}
+.orb .rays{background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg .7deg,rgba(255,255,255,0) .7deg 2.1deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);filter:blur(1px)}
+.orb .core{position:absolute;left:-55px;top:-55px;width:110px;height:110px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B7280;box-shadow:0 2px 14px rgba(59,9,100,.10)}
+
+/* fake cursor (stage px) */
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;z-index:700;opacity:0;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25));transform-origin:4px 2px}
+
+/* overlays */
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:900}
+#gate{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:800;background:rgba(246,230,224,.55);backdrop-filter:blur(2px)}
+#gate div{background:#fff;border-radius:22px;padding:34px 46px;text-align:center;box-shadow:0 30px 80px rgba(80,30,80,.18)}
+#gate b{display:block;font:400 54px/1 var(--f-head)}
+#gate span{display:block;margin-top:14px;font-size:17px;color:#5b5560;line-height:1.6}
+#hints{position:absolute;left:24px;top:20px;z-index:850;font:500 13px var(--f-ui);color:#3f3a44;background:rgba(255,255,255,.8);border-radius:999px;padding:8px 14px}
+#dbg{position:absolute;left:24px;bottom:18px;z-index:850;font:500 14px ui-monospace,Menlo,monospace;color:#2b2830;background:rgba(255,255,255,.82);border-radius:10px;padding:8px 12px;max-width:1300px;line-height:1.5}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="ground"></div>
+  <div id="world"></div>
+  <div id="flash"></div>
+  <div id="gate"><div><b>Loading voices…</b><span>P pause · R restart · 1–8 jump to a scene · H hide hints<br><i id="musicNote">Voices only (the recording mode). Add ?music=1 to preview with the music bed.</i></span></div></div>
+  <div id="hints">Space start · P pause · R restart · 1–8 scenes · H hide</div>
+  <div id="dbg" class="hidden"></div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG — all retiming and on-screen copy lives here
+   ===================================================================== */
+const NAMES = {                // guardrail 3: real stage names → names shown on screen
+  'Pocket FM':'Kissa Audio', 'Deloitte':'Meridian Analytics', 'Dharma Productions':'Saffron Frame Studios',
+  'ZARA':'Northline Retail', 'Aaj Tak':'Desh Live News', 'Taj Hotels (IHCL)':'Ambrosia Hotels',
+  'Wizcraft':'Spotlight Live Events', 'Hindustan Times':'The Capital Daily', 'JioStar':'Starlight Broadcast',
+};
+const REAL_NAMES_IN_INTERVIEWS = false;
+const SPACE_NAME = 'AAFT Placements';        // stage says "AAFT Placement Prep" — one-line switch
+
+const TIMELINE = {
+  // Timing (beats, clips, keys) is loaded from content/timeline.json at boot — the one source of truth,
+  // shared with tools/mix_preview.py and prototypes/soundtrack.html. Cues below are relative to beats or tied to spoken words.
+  beats: [], lead: 0.3, gap: 0.5, end: 125, scenes: [],
+  sceneNames: {1:'Title', 2:'What is a Space', 3:'Space Q&A', 4:'Placement prep', 5:'Riya\'s interview', 6:'Bridge + Arjun', 7:'Scorecard', 8:'End card'},
+  copy: {
+    s1a: ['Placement', 'season,', '<em>reimagined.</em>'],
+    s1head: ['Meet', '<em>AAFT</em>', '<em>Placements</em>'],
+    s2head: 'A Space has its own',
+    s2words: ['Twin', 'people', 'knowledge', 'agents'],
+    docs: [['Placement Policy','2026–27'],['Placement Calendar','2026–27'],['Recruiter Profiles','and debriefs']],
+    members: ['riya','m1','m2','m3','m4','m5','m6','arjun'],
+    memberCount: '412 members',
+    agent: ['Placement prep','Agent · mock interviews'],
+    heads: { '3a':'One Space, <em>the whole batch</em>', '3b':'Answers from <em>AAFT\'s own documents</em>', '3d':'Prepare for <em>every drive</em>',
+             '4':'Every recruiter, its own <em>mock interview</em>', '5a':'Practise with <em>their own CV</em>',
+             '5t':'Every kind of <em>interview round</em>', '7':'Every attempt, <em>a scorecard</em>' },
+    // scene 7 — Arjun's attempt page. PLACEHOLDER: scores and feedback text until copied from a real scored attempt.
+    score: { name:'Arjun Sethi', sub:'Assistant Director Trainee · Situational interview · Sat, Nov 14', cv:'Arjun_Sethi_CV.pdf', attempt:'Attempt 2 of 2',
+             value:3, of:4, rec:'0:10 / 16:20',
+             well:['You protected the shooting day first. Reshuffling to the scenes you could shoot without the lead kept the light and the crew working. Keep leading with the decision that saves the schedule.',
+                   'You spoke the language of a set: first AD, scene order, light. That made the answer credible. Keep using the crew\'s terms.'],
+             improve:['You didn\'t say who else needs to know. Next time, name the producer and the actor\'s team, and say when you\'d escalate if he isn\'t on set by a fixed time.'],
+             crit:[['Prioritisation under pressure',4],['Production knowledge',3],['Communication with crew',3],['Problem solving',3],['Composure',4]] },
+    people: { riya:{img:'riya', name:'Riya Malhotra', role:'B.Sc. Digital Marketing'}, arjun:{img:'arjun', name:'Arjun Sethi', role:'B.A. Cinema'} },
+    // 5t — the shipped New interview page: Interview type chips + More dropdown (labels as in the product)
+    types: ['HR interview','Resume discussion','Case interview'],
+    moreTypes: ['Technical interview','Situational interview','Analytics test','Guesstimate round','Other'],
+    s8l1: ['Every','question','<em>answered.</em>','Every','interview','<em>practised.</em>'],
+    s8l2: ['Placement-ready,','<em>around</em>','<em>the</em>','<em>clock.</em>'],
+    disclosure: 'Dramatisation · AI-generated voices and faces',
+    // scene 3 — Space Q&A (answers: content/answers.md; 3c is the §8 placeholder until asked on stage)
+    seed: { who:'m2', name:'Rohan Verma', q:'@space How long do I have to decline an offer?', time:'16h',
+            a:'You have 48 hours from the result to decline an offer, and the decline must be submitted in writing to your CRM. After that, the offer is treated as accepted.',
+            sources:'2 Sources' },
+    q1: '@space Which companies are coming in December?',
+    a1: { placeholder:true, sources:'2 Sources', think:['Searching Placement Calendar 2026–27','Checking Recruiter Profiles'],
+          html:'Eight drives are scheduled in December:<ul><li><strong>Northline Retail</strong> on 2 Dec (Fashion Design)</li><li><strong>Desh Live News</strong> on 4 Dec (Journalism)</li><li><strong>Saffron Frame Studios</strong> on 8 Dec (Cinema)</li><li><strong>Brightlane Media</strong> on 10 Dec (Digital Marketing)</li><li><strong>Ambrosia Hotels</strong> on 11 Dec (Hospitality)</li><li><strong>The Capital Daily</strong> on 15 Dec (Photography)</li><li><strong>Hearth &amp; Hue Interiors</strong> on 17 Dec (Interior Design)</li><li><strong>Pulse News Network</strong> on 18 Dec (tentative)</li></ul>Apply on the CRC portal by the deadline, usually three days before each drive.' },
+    q2: '@space Meridian Analytics is coming for Data & AI. What do they ask, and how do I prepare?',
+    a2: { placeholder:false, sources:'3 Sources', think:['Searching Recruiter Profiles and Debriefs','Checking Interview Preparation Guide'],
+          html:'Meridian Analytics\' online round tests <strong>SQL, Python, and aptitude</strong> for the Analyst – Data &amp; AI role.<ul><li><strong>SQL:</strong> practise joins, aggregations, CTEs, and especially window functions. Be able to solve ranking questions such as finding the top three products by revenue in each region.</li><li><strong>Python:</strong> revise pandas—filtering, merges, missing-value handling, and grouping.</li><li><strong>Aptitude:</strong> practise timed quantitative and logical-reasoning questions.</li></ul>A practical 7-day split: 3 days SQL, 2 days Python/pandas, 1 day aptitude, and 1 full mock plus revision.' },
+    // scene 4 — Placement prep list (real list style: "Company · Interview type", status)
+    // scene 5a — task page + How it works (real SPJIMR flow, compressed)
+    task: { title:'Kissa Audio · Case interview', sub:'Growth Marketing Associate at Kissa Audio.', role:'Senior executive',
+            dur:'20 minutes', about:'<b>Kissa Audio.</b> Growth Marketing Associate.', cv:'Riya_Malhotra_CV.pdf', criteria:'6 criteria' },
+    // scenes 5b–6 — calls. On-screen prompt text uses ₹ and digits; the voice clips say them in words.
+    callRiya:  { who:'Senior executive at Kissa Audio' },
+    callArjun: { who:'Line producer at Saffron Frame Studios' },
+    p5b: 'You cut cost per install from ₹38 to ₹24. Were those listeners worth keeping?',
+    p5c: 'Week one. Option A costs ₹20 an install, and 4% reach a paid episode. Option B costs ₹32, and 14% do. Which do you scale?',
+    p6:  'Your lead actor is 90 minutes late, and you lose the light at 5:30. What do you do?',
+    s5b: 'Pushed on<br><em>their own numbers</em>',
+    s5c: 'A real case,<br><em>not a quiz</em>',
+    s6:  'Every school,<br><em>every role</em>',
+    riya5b: '"Not at first. So I started judging creatives on day-seven retention."',
+    riya5d: '"B. ₹229 per paying listener, against ₹500 for A."',
+    arjun6: '"First, I tell the first AD to reshuffle to the scenes we can shoot without him, so we don\'t lose the light."',
+    rows: [['Kissa Audio · Case interview','2 attempts'],['Saffron Frame Studios · Situational interview','Not started'],
+           ['Northline Retail · Resume discussion','Not started'],['Desh Live News · Case interview','1 attempt'],
+           ['Ambrosia Hotels · HR interview','Not started'],['Meridian Analytics · Case interview','Not started'],
+           ['Spotlight Live Events · Resume discussion','Not started']],
+  },
+};
+const EASE_OUT = 'cubic-bezier(.16,1,.3,1)', EASE_IN = 'cubic-bezier(.7,0,.84,0)', EASE_IO = 'cubic-bezier(.65,0,.35,1)';
+
+/* =====================================================================
+   ENGINE — film clock = AudioContext time, so voices and visuals never drift
+   ===================================================================== */
+const Q = new URLSearchParams(location.search);
+const stage = document.getElementById('stage'), world = document.getElementById('world');
+const $ = id => document.getElementById(id);
+const S = { ctx:null, base:0, started:false, paused:false, clips:{}, buffers:{}, voice:[], cues:[], ci:0,
+            sources:[], debug: Q.get('debug')==='1', hints:true, singleEnd:null, words:{}, tickers:[],
+            musicOn: !!Q.get('music') && Q.get('music') !== '0', musicBuf:null, musicSched:false, musicOut:null };
+
+// letterbox: fixed 1920×1080 stage, scaled to fit, centred
+document.body.classList.add('bars-' + (Q.get('bars') || 'black'));
+if (Q.get('ph') === '0') document.body.classList.add('noph');        // hide PLACEHOLDER tags for a recording take
+function fit(){ const k = Math.min(innerWidth/1920, innerHeight/1080);
+  stage.style.transform = `translate(${(innerWidth-1920*k)/2}px,${(innerHeight-1080*k)/2}px) scale(${k})`; }
+addEventListener('resize', fit); fit();
+
+const T = () => S.ctx ? S.ctx.currentTime - S.base : (S.seekT || 0);
+const A = (el, kf, ms, o={}) => el.animate(kf, {duration:ms, easing:o.ease||EASE_OUT, fill:'forwards', delay:o.delay||0});
+const el = (tag, cls, html, parent=world) => { const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; parent.appendChild(e); return e; };
+const show = e => { e.getAnimations().forEach(a=>a.cancel()); e.style.opacity=1; };
+const fmt = t => `${Math.floor(Math.max(0,t)/60)}:${(Math.max(0,t)%60).toFixed(1).padStart(4,'0')}`;
+
+// absolute start of every voice clip, chained from the scene starts
+function layoutVoice(){
+  S.voice = [];
+  for (const {start, clips: ids} of TIMELINE.beats){
+    let t = start + TIMELINE.lead;
+    for (const id of ids){ const c = S.clips[id]; S.voice.push({id, t, dur:c.duration, speaker:c.speaker, text:c.text}); t += c.duration + TIMELINE.gap; }
+  }
+  for (const v of S.voice) S.words[v.id] = (S.clips[v.id].words||[]).map(w => ({w:w[0], t:v.t + w[1]}));
+}
+// absolute time of the nth word of a clip (fallback: clip start)
+const wt = (id, n) => (S.words[id]?.[n]?.t) ?? S.voice.find(v=>v.id===id).t;
+// absolute time a word ends · start / end of a beat (by id from content/timeline.json)
+const we = (id, n) => { const v = S.voice.find(v=>v.id===id), w = S.clips[id].words?.[n]; return w ? v.t + w[2] : v.t + v.dur; };
+const B  = id => TIMELINE.beats.find(b => b.id === id).start;
+const BE = id => { const i = TIMELINE.beats.findIndex(b => b.id === id); return TIMELINE.beats[i+1]?.start ?? TIMELINE.end; };
+
+/* ---------- cue scheduling ---------- */
+function cue(t, fn){                       // keeps the queue time-sorted, even for cues added mid-play
+  let i = S.cues.length;
+  while (i > S.ci && S.cues[i-1].t > t) i--;
+  S.cues.splice(i, 0, {t, fn});
+}
+function tick(){
+  const t = T();
+  while (S.ctx && S.ci < S.cues.length && S.cues[S.ci].t <= t){ try{ S.cues[S.ci].fn(); }catch(e){ console.error(e); } S.ci++; }
+  if (S.ctx) S.tickers = S.tickers.filter(f => { try { return !f(t); } catch(e){ console.error(e); return false; } });
+  if (S.ctx && !S.paused){
+    for (const v of S.voice){
+      if (v.sched || v.t > t + 0.25 || v.t + v.dur < t) continue;
+      v.sched = true;
+      const src = S.ctx.createBufferSource(); src.buffer = S.buffers[v.id];
+      src.connect(v.speaker === 'INT' ? S.anInt : (v.speaker === 'RIYA' || v.speaker === 'ARJUN') ? S.anStu : S.ctx.destination);
+      const when = S.base + v.t, off = Math.max(0, t - v.t);
+      src.start(Math.max(S.ctx.currentTime, when), off);
+      S.sources.push(src);
+    }
+    if (S.musicBuf && !S.musicSched){ S.musicSched = true; scheduleMusic(t); }
+    if (S.singleEnd != null && t >= S.singleEnd) togglePause(true);
+  }
+  if (S.debug){
+    const sc = sceneAt(t), now = S.voice.filter(v => t >= v.t && t <= v.t + v.dur);
+    $('dbg').innerHTML = `${fmt(t)} · ${sc.key} ${sc.name}${S.paused?' · ⏸':''}` + (now.length ? `<br>${now.map(v=>`<b>${v.speaker}</b> ${v.text}`).join('<br>')}` : '');
+  }
+  requestAnimationFrame(tick);
+}
+const sceneAt = t => [...TIMELINE.scenes].reverse().find(s => t >= s.start) || TIMELINE.scenes[0];
+
+// music bed (preview only, ?music=1): per-beat level from timeline.json, ramped across each beat change, faded in and out
+function scheduleMusic(t){
+  const M = TIMELINE.music, beats = TIMELINE.beats, at = ft => S.base + ft, now = S.ctx.currentTime;
+  const lv = id => Math.pow(10, M.db[id] / 20);
+  const levelAt = ft => lv([...beats].reverse().find(b => ft >= b.start)?.id ?? beats[0].id);
+  const src = S.ctx.createBufferSource(), g = S.ctx.createGain();
+  src.buffer = S.musicBuf; src.connect(g).connect(S.musicOut);
+  const t0 = Math.max(0, t), from = Math.max(now, at(0));
+  const ev = [];                                                    // [film time, gain]
+  if (t0 < M.fade_in){ ev.push([t0, 0.0001], [M.fade_in, levelAt(M.fade_in)]); } else ev.push([t0, levelAt(t0)]);
+  beats.slice(1).forEach((b, i) => { const a = b.start - M.ramp/2, z = b.start + M.ramp/2;
+    if (a > ev.at(-1)[0] + 0.01) ev.push([a, lv(beats[i].id)], [z, lv(b.id)]); });
+  const fo = TIMELINE.end - M.fade_out;
+  if (fo > ev.at(-1)[0]) ev.push([fo, levelAt(fo)]);
+  ev.push([TIMELINE.end, 0.0001]);
+  g.gain.setValueAtTime(ev[0][1], from);
+  ev.slice(1).forEach(([ft, v]) => g.gain.linearRampToValueAtTime(v, at(ft)));
+  src.start(from, t0);
+  S.sources.push(src); S.musicGain = g;
+}
+
+/* ---------- build, seek, pause ---------- */
+function build(fromT){
+  world.innerHTML = ''; S.cues = []; S.tickers = []; S.sources.forEach(s=>{try{s.stop()}catch(e){}}); S.sources = [];
+  S.voice.forEach(v => v.sched = false); S.musicSched = false;
+  E.build();                                   // all persistent elements
+  for (const sc of SCENES) sc.cues();          // register every cue
+  S.cues.sort((a,b)=>a.t-b.t);
+  const sc = sceneAt(fromT);
+  SCENES[TIMELINE.scenes.indexOf(sc)].setup(); // static state at that scene's start
+  S.ci = S.cues.findIndex(c => c.t >= sc.start); if (S.ci < 0) S.ci = S.cues.length;
+  return sc.start;
+}
+function seek(t){
+  const start = build(t);
+  if (S.ctx){ S.base = S.ctx.currentTime - start; S.paused = false; S.ctx.resume(); }
+  else S.seekT = start;
+}
+function togglePause(force){
+  if (!S.ctx) return;
+  S.paused = force ?? !S.paused;
+  if (S.paused){ S.ctx.suspend(); document.getAnimations().forEach(a=>a.pause()); }
+  else { S.ctx.resume(); document.getAnimations().forEach(a=>{ if(a.playState==='paused') a.play(); }); }
+}
+async function start(){
+  if (S.started || !S.ready) return; S.started = true;
+  S.ctx = new AudioContext();
+  // level meters: the orb follows the interviewer, the mic button follows the student
+  for (const k of ['anInt','anStu']){ const a = S.ctx.createAnalyser(); a.fftSize = 1024; a.connect(S.ctx.destination); S[k] = a; }
+  S.lvBuf = new Float32Array(1024); S.lvInt = 0; S.lvStu = 0;
+  if (S.musicBuf){ S.musicOut = S.ctx.createGain(); S.musicOut.connect(S.ctx.destination); }
+  A($('gate'), [{opacity:1},{opacity:0}], 250, {ease:EASE_IN}).finished.then(()=>$('gate').classList.add('hidden'));
+  setHints(S.debug);
+  const from = S.seekT || 0;
+  S.base = S.ctx.currentTime + 0.15 - from;          // film time `from` lands 150ms from now
+  if (Q.get('flash') !== '0' && from === 0){          // sync slate: 1-frame flash + 50ms beep at 0:00
+    cue(0, () => { $('flash').style.opacity = 1; setTimeout(()=>$('flash').style.opacity = 0, 50); });
+    S.cues.sort((a,b)=>a.t-b.t); S.ci = S.cues.findIndex(c => c.t >= 0);
+    const o = S.ctx.createOscillator(), g = S.ctx.createGain(); o.frequency.value = 1000; g.gain.value = .25;
+    o.connect(g).connect(S.ctx.destination); o.start(S.base); o.stop(S.base + 0.05);
+  }
+}
+function setHints(on){ S.hints = on; $('hints').classList.toggle('hidden', !on); $('dbg').classList.toggle('hidden', !(on && S.debug)); }
+
+addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (!S.ready && k !== 'r') return;
+  if (k === ' ' ){ e.preventDefault(); if (!S.started) start(); else togglePause(); }
+  else if (k === 'p') togglePause();
+  else if (k === 'r') location.reload();
+  else if (k === 'h') setHints(!S.hints);
+  else if (k === 'm' && S.musicOut){ S.musicOut.gain.value = S.musicOut.gain.value > 0 ? 0 : 1; }
+  else if (/^[1-8]$/.test(k)){ const sc = TIMELINE.scenes[+k-1]; S.singleEnd = null; seek(sc.start); if (!S.started) start(); }
+});
+$('gate').addEventListener('click', start);
+
+/* =====================================================================
+   PERSISTENT ELEMENTS
+   ===================================================================== */
+const E = {
+  build(){
+    const C = TIMELINE.copy;
+    E.logo = el('img','logo-tr'); E.logo.src = '../assets/twincafe/twincafe-logo.svg';
+    E.head = el('div','head');
+    // scene 1
+    E.s1a = el('div','s1a big', `${C.s1a.slice(0,2).map(w=>`<span class="w">${w}</span>`).join(' ')}<br>${`<span class="w">${C.s1a[2]}</span>`}`);
+    E.tile = el('div','tile', `<span class="bdg">${ICON.group(26)}</span>`); E.tile.style.left='960px'; E.tile.style.top='465px';
+    E.s1lab = el('div','s1lab', SPACE_NAME);
+    E.s1on = el('div','s1on', `a Space on<img src="../assets/twincafe/twincafe-logo.svg" alt="TwinCafe">`);
+    // scene 2 card
+    E.card = el('div','s2card');
+    E.lines = el('div', null, `<svg class="s2lines" width="960" height="620" style="position:absolute;inset:0">
+      <path pathLength="1" d="M432 272 L 230 226"/>
+      <path pathLength="1" d="M480 250 L 480 198"/>
+      <path pathLength="1" d="M528 272 L 730 226"/>
+      <path pathLength="1" d="M524 352 L 640 516"/></svg>`, E.card).querySelector('svg');
+    E.lines.querySelectorAll('path').forEach(p=>{ p.style.strokeDasharray='1'; p.style.strokeDashoffset='1'; });
+    E.mem = el('div','s2mem', C.members.map(p=>`<img src="assets/people/avatar/${p}.jpg" alt="">`).join('') + `<span>${C.memberCount}</span>`, E.card);
+    E.docs = C.docs.map(([b,s],i)=>{ const d = el('div','doc', `${ICON.doc}<b>${b}</b><span>${s}</span>`, E.card);
+      d.style.left = [80,365,650][i]+'px'; d.style.top = [110,80,110][i]+'px'; return d; });
+    E.twincap = el('div','twincap','Space Twin', E.card);
+    E.agent = el('div','agent', `<img src="assets/people/agent.svg" alt=""><div><b>${C.agent[0]}</b><span>${C.agent[1]}</span></div>`, E.card);
+    // browser window
+    E.bw = el('div','bw', `<div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"></div>`);
+    E.body = E.bw.querySelector('.bw-body');
+    // scene 8
+    E.s8l1 = el('div','s8l1', C.s8l1.map(w=>`<span class="w">${w}</span>`).join(' '));
+    E.s8l2 = el('div','s8l2', C.s8l2.map(w=>`<span class="w">${w}</span>`).join(' '));
+    E.disc = el('div','disc', C.disclosure);
+    // call layout: left column (headline + chip + speaker cards)
+    E.side = el('div','side-head');
+    E.left = el('div','leftcol');
+  },
+};
+const ICON = {
+  back: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>`,
+  agent: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="2.5"/><path d="M12 7V4M9 12h.01M15 12h.01M9.5 16h5"/></svg>`,
+  book: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>`,
+  check: `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#157F45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`,
+  chev: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>`,
+  x: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+  plus: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
+  mic: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>`,
+  send: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-6 16-3-7z"/></svg>`,
+  brief: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg>`,
+  search: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  user: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg>`,
+  userL: `<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg>`,
+  doc16: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>`,
+  arrow: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+  hangup: `<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg>`,
+  micL: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>`,
+  cursor: `<svg viewBox="0 0 24 24" width="34" height="34"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  group: s => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg>`,
+  doc: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>`,
+};
+
+/* ---------- shared moves ---------- */
+const reveal = (span, ms=220) => A(span, [{opacity:0},{opacity:1}], ms, {ease:'ease-out'});
+const fadeOut = (e, ms=350, y=-10) => A(e, [{opacity:getComputedStyle(e).opacity, transform:getComputedStyle(e).transform==='none'?'none':getComputedStyle(e).transform},{opacity:0, transform:`translateY(${y}px)`}], ms, {ease:EASE_IN});
+const fadeIn = (e, ms=600, y=12) => A(e, [{opacity:0, transform:`translateY(${y}px)`},{opacity:1, transform:'none'}], ms);
+/* Headline grammar (one rule for every scene):
+   1. the old line lifts out (opacity → 0, −10px, slight blur, ease-in)
+   2. a short beat
+   3. the new line rises in word by word (70ms apart), so the italic accent word lands last.
+   The two never overlap on screen. */
+const HEAD = { out: 240, beat: 120, step: 70, wordIn: 460 };
+function headExit(o, ms = HEAD.out){
+  const op = +getComputedStyle(o).opacity;
+  if (op === 0){ o.remove(); return 0; }
+  A(o, [{opacity:op, transform:'none', filter:'blur(0px)'},{opacity:0, transform:'translateY(-10px)', filter:'blur(3px)'}], ms, {ease:EASE_IN})
+    .finished.then(() => o.remove());
+  return ms;
+}
+// wrap each word of an HTML headline in an inline-block span, keeping <em> styling
+function wrapWords(root){
+  const walk = n => [...n.childNodes].forEach(c => {
+    if (c.nodeType === 3){
+      const frag = document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(p => {
+        if (!p) return;
+        if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(p));
+        else { const s = document.createElement('span'); s.className = 'hw'; s.style.display = 'inline-block'; s.textContent = p; frag.appendChild(s); }
+      });
+      c.replaceWith(frag);
+    } else if (c.nodeType === 1 && !c.classList.contains('slot')) walk(c);
+  });
+  walk(root);
+  return [...root.querySelectorAll('.hw')];
+}
+function setHead(html, {words=null, instant=false, box=E.head}={}){
+  let wait = 0;
+  [...box.children].forEach(o => { wait = Math.max(wait, headExit(o)); });
+  const h = el('div','h', html, box);
+  if (instant || words) return h;                     // `words`: the caller reveals words itself (scene 1, synced to VO)
+  const ws = wrapWords(h), delay = wait ? wait + HEAD.beat : 0;
+  ws.forEach((w, i) => { w.style.opacity = 0;
+    A(w, [{opacity:0, transform:'translateY(12px)'},{opacity:1, transform:'none'}], HEAD.wordIn, {delay: delay + i*HEAD.step}); });
+  h.dataset.revealEnd = delay + ws.length*HEAD.step;  // when the last word starts (for slots that follow)
+  return h;
+}
+function clearHead(ms = HEAD.out){ [...E.head.children].forEach(o => headExit(o, ms)); }
+// call layout: the headline lives in the left column and follows the same grammar
+const setSide = (html, o={}) => setHead(html, {...o, box:E.side});
+const clearSide = (ms = HEAD.out) => [...E.side.children].forEach(o => headExit(o, ms));
+
+/* window morph — the only layout move in the film: browse (centred) ⇄ call (right) */
+const RECT = { browse:{left:210, top:186, width:1500, height:780}, call:{left:830, top:150, width:940, height:830} };
+function morph(to, ms = 700, instant = false){
+  const r = RECT[to], from = {left:E.bw.offsetLeft, top:E.bw.offsetTop, width:E.bw.offsetWidth, height:E.bw.offsetHeight};
+  E.bw.getAnimations().forEach(a => { if (a.effect.getKeyframes().some(k => 'width' in k)) a.cancel(); });
+  Object.assign(E.bw.style, {left:r.left+'px', top:r.top+'px', width:r.width+'px', height:r.height+'px'});
+  if (instant) return;
+  A(E.bw, [{left:from.left+'px', top:from.top+'px', width:from.width+'px', height:from.height+'px'},
+           {left:r.left+'px', top:r.top+'px', width:r.width+'px', height:r.height+'px'}], ms, {ease:EASE_OUT});
+}
+// swap what the window shows: quick dip to white, new content fades up
+// The rebuild is a cue on the film clock (not a promise), so a later cue that uses the new page can never run first.
+function swapBody(build, ms = 260){
+  const body = E.body;
+  A(body, [{opacity:1},{opacity:0}], ms/2, {ease:EASE_IN});
+  cue(T() + ms/2000, () => { build(); A(body, [{opacity:0},{opacity:1}], ms, {ease:'ease-out'}); });
+}
+function clearLeft(){ clearSide(); [...E.left.children].forEach(c => A(c, [{opacity:+getComputedStyle(c).opacity},{opacity:0}], 260, {ease:EASE_IN}).finished.then(()=>c.remove())); }
+function showWindow(instant){
+  if (instant){ show(E.bw); return; }
+  A(E.bw, [{opacity:0, transform:'scale(.94)'},{opacity:1, transform:'scale(1)'}], 700);
+}
+
+/* =====================================================================
+   SCENES — setup(): static state at scene start (for jumps) · cues(): timed moves
+   ===================================================================== */
+/* =====================================================================
+   PRODUCT UI — the AAFT Space inside the window (scenes 3–4)
+   ===================================================================== */
+const U = {};                                   // refs into the current app DOM
+const mention = txt => txt.replace(/^@space/, '<span class="mention">@space</span>');
+const avatar = p => `assets/people/avatar/${p}.jpg`;
+function buildSpace(){
+  E.body.innerHTML = `<div class="app">
+    <div class="sp-top"><span class="back">${ICON.back}</span><span class="sav"></span>
+      <div class="nm"><b>${SPACE_NAME} ›</b><span>412 members · You're a member</span></div>
+      <span class="agbtn">${ICON.agent}Agents<i class="dot"></i></span><span class="more">···</span></div>
+    <div class="tv"><div class="tc"></div></div>
+    <div class="composer"><div class="tx"><span class="phd">Ask a follow-up question…</span></div>
+      <div class="row"><span>${ICON.plus}</span><span style="display:flex;gap:12px;align-items:center">${ICON.mic}<span class="send">${ICON.send}</span></span></div></div>
+    <div class="agpanel"><div class="ph1"><div><b>Agents</b><span>${SPACE_NAME}</span></div><span style="color:#9CA3AF">${ICON.x}</span></div>
+      <div class="agrow"><img src="assets/people/agent.svg" alt=""><div><b>Placement prep</b><span>3 open</span></div><span class="chev">${ICON.chev}</span></div></div>
+    <div class="pp"><div class="pp-top"><span style="color:#4B5563;display:flex">${ICON.back}</span><img src="assets/people/agent.svg" alt="">
+      <div><b>Placement prep</b><span>Role-play an interview, get coaching right away</span></div><span class="search">${ICON.search}Search</span></div>
+      <div class="pp-list"><h5>Interviews</h5>${TIMELINE.copy.rows.map(([t,st])=>`<div class="pp-row"><span class="ic">${ICON.brief}</span><div><b>${t}</b><span>${st}</span></div><span class="chev">${ICON.chev}</span></div>`).join('')}</div></div>
+  </div>`;
+  const q = sel => E.body.querySelector(sel);
+  Object.assign(U, { app:q('.app'), tv:q('.tv'), tc:q('.tc'), tx:q('.composer .tx'), send:q('.composer .send'),
+                     agbtn:q('.agbtn'), panel:q('.agpanel'), agrow:q('.agrow'), pp:q('.pp'), rows:[...E.body.querySelectorAll('.pp-row')], scroll:0 });
+  // keep the newest message in view: thread eases up as content grows
+  ticker(() => { if (!U.tc || !U.tc.isConnected) return true;
+    const target = Math.max(0, U.tc.scrollHeight - U.tv.clientHeight);
+    U.scroll += (target - U.scroll) * 0.12; U.tc.style.transform = `translateY(${-U.scroll}px)`; return false; });
+}
+function snapScroll(){ U.scroll = Math.max(0, U.tc.scrollHeight - U.tv.clientHeight); U.tc.style.transform = `translateY(${-U.scroll}px)`; }
+const rise = (n, ms=450) => A(n, [{opacity:0, transform:'translateY(10px)'},{opacity:1, transform:'none'}], ms);
+
+function otherMsg(m, instant){
+  const n = el('div','msg other', `<img src="${avatar(m.who)}" alt=""><div><div class="nm">${m.name}</div><span class="bub">${mention(m.q)}<span class="t">${m.time}</span></span></div>`, U.tc);
+  if (!instant) rise(n); return n;
+}
+function mineMsg(q, instant){
+  const n = el('div','msg mine', `<span class="bub">${mention(q)}</span><span class="t">now</span>`, U.tc);
+  if (!instant) rise(n, 380); return n;
+}
+// Twin reply: name + card (thinking lines → streamed answer → sources + button)
+function twinMsg(a, own, instant){
+  const n = el('div','msg twin', `<span class="sav"><span class="bdg">${ICON.group(11)}</span></span><div style="flex:1">
+    <div class="nm">${SPACE_NAME}${SPACE_NAME.endsWith('s') ? "'" : "'s"} Twin</div>
+    <div class="acard">
+      <div class="think">${(a.think||[]).map(l=>`<div class="ln"><span class="ic"><span class="spin"></span></span>${l}…</div>`).join('')}</div>
+      <div class="ans"></div>
+      <div class="foot"><span class="srcp">${ICON.book}${a.sources}</span><span class="gbtn">${own ? 'Request review' : 'Chime in'}</span></div></div></div>`, U.tc);
+  const r = { n, think:n.querySelector('.think'), lines:[...n.querySelectorAll('.think .ln')], ans:n.querySelector('.ans'), foot:n.querySelector('.foot') };
+  if (instant){ r.think.remove(); r.ans.innerHTML = a.html; r.foot.style.opacity = 1; }
+  else rise(n);
+  return r;
+}
+// thinking lines (P7): appear, spin, tick — then fold away as the answer starts
+function thinkLine(r, i){ const ln = r.lines[i]; A(ln, [{opacity:0, transform:'translateX(-6px)'},{opacity:1, transform:'none'}], 300); }
+function thinkDone(r, i){ const ln = r.lines[i]; ln.querySelector('.ic').innerHTML = `<span class="ok">${ICON.check}</span>`;
+  ln.lastChild.textContent = ln.lastChild.textContent.replace('…',''); }
+function thinkFold(r){ const h = r.think.offsetHeight;
+  A(r.think, [{height:h+'px', opacity:1, marginBottom:'0px'},{height:'0px', opacity:0, marginBottom:'0px'}], 320, {ease:EASE_IN}); }
+
+// film-clock tickers: deterministic, so P pauses them and seeks restart them cleanly
+function ticker(fn){ S.tickers.push(fn); }
+function typeInto(text, t0, perChar=0.035){
+  U.send.classList.remove('live');
+  ticker(t => { if (!U.tx.isConnected) return true;
+    const n = Math.max(0, Math.min(text.length, Math.floor((t - t0) / perChar)));
+    U.tx.innerHTML = n === 0 ? '<span class="caret"></span>' : mention(text.slice(0, n)) + '<span class="caret"></span>';
+    if (n > 0) U.send.classList.add('live');
+    return n >= text.length; });
+}
+function clearComposer(){ U.tx.innerHTML = '<span class="phd">Ask a follow-up question…</span>'; U.send.classList.remove('live'); }
+// stream an HTML answer one visible character at a time (tags/entities count as one)
+function htmlSlice(html, n){ let out = '', seen = 0, i = 0;
+  while (i < html.length && seen < n){
+    if (html[i] === '<'){ const j = html.indexOf('>', i); out += html.slice(i, j+1); i = j+1; continue; }
+    if (html[i] === '&'){ const j = html.indexOf(';', i); out += html.slice(i, j+1); i = j+1; seen++; continue; }
+    out += html[i++]; seen++; }
+  return out; }
+const visLen = html => html.replace(/<[^>]+>/g,'').replace(/&[^;]+;/g,'x').length;
+function streamInto(r, html, t0, cps){
+  const total = visLen(html);
+  ticker(t => { if (!r.ans.isConnected) return true;
+    const n = Math.max(0, Math.min(total, Math.floor((t - t0) * cps)));
+    r.ans.innerHTML = htmlSlice(html, n); return n >= total; });
+  return t0 + total / cps;                       // when the stream finishes
+}
+
+/* ---------- 5a · task page + How it works ---------- */
+function buildTask(){
+  const T5 = TIMELINE.copy.task;
+  E.body.innerHTML = `<div class="app"><div class="task">
+      <div class="pp-top"><span style="color:#4B5563;display:flex">${ICON.back}</span><div><b>${T5.title}</b><span>${T5.sub}</span></div></div>
+      <div class="body"><div class="role"><i>${ICON.user}</i><b style="font-weight:600">${T5.role}</b><span class="pill">AI role-play</span></div>
+        <div class="lbl">Duration</div><div class="val">${T5.dur}</div><div class="lbl">About the role</div><div class="val">${T5.about}</div></div></div>
+    <div class="scrim"></div>
+    <div class="modal"><div class="mh">${T5.title}<span style="color:#9CA3AF;display:flex">${ICON.x}</span></div>
+      <div class="hw">How it works</div>
+      <div class="steps">
+        <div><div class="st"><span style="width:44px;height:56px;border-radius:6px;background:#fff;border:1px solid #E7E7EA;display:block;position:relative"><i style="position:absolute;left:9px;right:9px;top:14px;height:2px;background:#D1D5DB;box-shadow:0 7px 0 #D1D5DB,0 14px 0 #D1D5DB,0 21px 0 #D1D5DB"></i></span></div><div class="lb"><b>1</b>Upload CV</div></div>
+        <div><div class="st"><span style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B7280">${ICON.user}</span></div><div class="lb"><b>2</b>20 min call</div></div>
+        <div><div class="st"><span style="display:flex;gap:5px"><i style="width:16px;height:6px;border-radius:3px;background:#16A34A"></i><i style="width:16px;height:6px;border-radius:3px;background:#16A34A"></i><i style="width:16px;height:6px;border-radius:3px;background:#D1D5DB"></i></span></div><div class="lb"><b>3</b>Get results</div></div>
+      </div>
+      <div class="crit-row">What gets scored <span>${T5.criteria} ⌄</span></div>
+      <div class="mfoot"><span class="file">${ICON.doc16}${T5.cv}</span><span class="btn-sec">Change</span><span class="btn-pri">Start interview ${ICON.arrow}</span></div>
+    </div></div>`;
+  const q = s => E.body.querySelector(s);
+  Object.assign(U, { scrim:q('.scrim'), modal:q('.modal'), file:q('.file'), change:q('.btn-sec'), start:q('.btn-pri') });
+}
+
+/* ---------- 5b–6 · call screen: orb follows the interviewer, mic follows the student ---------- */
+function buildCall(cfg, {prompt='', timer=1200}={}){
+  E.body.innerHTML = `<div class="app"><div class="call">
+      <div class="who"><i>${ICON.user}</i><div><b>${cfg.who}</b><span>AI role-play</span></div></div>
+      <span class="res">${ICON.book}Resources</span><span class="mo">···</span>
+      <div class="orbw"><div class="orb"><div class="halo"></div><div class="wash"></div><div class="rot ring"></div><div class="rot rays"></div>
+        <div class="core">${ICON.userL}</div></div></div>
+      <div class="left"></div><div class="prompt">${prompt}</div>
+      <div class="ctrls"><span class="end">${ICON.hangup}</span><span class="mic">${ICON.micL}</span></div></div></div>`;
+  const q = s => E.body.querySelector(s);
+  Object.assign(U, { call:q('.call'), rots:[...E.body.querySelectorAll('.orb .rot')], ring:q('.orb .ring'), halo:q('.orb .halo'),
+                     left:q('.call .left'), prompt:q('.call .prompt'), mic:q('.ctrls .mic'), end:q('.ctrls .end'),
+                     angle:180, lastT:null, timer0:timer, timerT:null });
+  const rms = an => { an.getFloatTimeDomainData(S.lvBuf); let s = 0; for (const v of S.lvBuf) s += v*v; return Math.min(1, Math.sqrt(s/S.lvBuf.length)*5); };
+  ticker(t => { if (!U.call || !U.call.isConnected) return true;
+    const dt = U.lastT == null ? 0 : Math.max(0, Math.min(.05, t - U.lastT)); U.lastT = t;
+    if (S.anInt){ const a = rms(S.anInt), b = rms(S.anStu);
+      S.lvInt += (a - S.lvInt) * (a > S.lvInt ? .35 : .07); S.lvStu += (b - S.lvStu) * (b > S.lvStu ? .35 : .07); }
+    const talk = S.lvInt > .02, lv = S.lvInt;
+    U.angle = (U.angle + (talk ? 34 + lv*40 : 18) * dt) % 360;     // ~one turn per 8s while speaking, as recorded
+    const sc = 1 + lv*.07;
+    U.rots.forEach(r => r.style.transform = `rotate(${U.angle}deg) scale(${sc})`);
+    U.ring.style.opacity = .82 + lv*.18; U.halo.style.transform = `scale(${1 + lv*.12})`;
+    U.mic.style.setProperty('--lvl', S.lvStu.toFixed(3));
+    if (U.timerT != null){ const r = Math.max(0, Math.round(U.timer0 - (t - U.timerT))); U.left.textContent = `${Math.floor(r/60)}:${String(r%60).padStart(2,'0')} left`; }
+    return false; });
+}
+function setTimer(sec, t0){ U.timer0 = sec; U.timerT = t0; }
+// interviewer transcript appears as it's spoken (linear over the clip; ₹ text differs from the spoken words)
+function setPrompt(text, t0, dur){
+  U.prompt.textContent = '';
+  ticker(t => { if (!U.prompt || !U.prompt.isConnected) return true;
+    const n = Math.max(0, Math.min(text.length, Math.ceil(text.length * (t - t0) / (dur * .92))));
+    U.prompt.textContent = text.slice(0, n); return n >= text.length; });
+}
+/* ---------- 5t · New interview page (Interview type chips + More dropdown) ---------- */
+const ic = (d, size=16, sw=1.7) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const NI_ICON = {
+  'HR interview': '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18.2c1.2-2 3-3 5.2-3s4 1 5.2 3"/>',
+  'Resume discussion': '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',
+  'Case interview': '<rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/>',
+  'Technical interview': '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
+  'Situational interview': '<path d="M4 5h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M15 9h5a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1v3l-4-3h-3a1 1 0 0 1-1-1v-1"/>',
+  'Analytics test': '<path d="M4 20h16M7 20v-6M12 20V8M17 20v-9"/>',
+  'Guesstimate round': '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/>',
+  'Other': '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+};
+function buildNewInterview(){
+  const C = TIMELINE.copy;
+  E.body.innerHTML = `<div class="app"><div class="ni">
+      <div class="ni-top"><span style="color:#4B5563;display:flex">${ICON.back}</span><div><b>New interview</b><span class="ni-sub"><i></i>Placement prep</span></div></div>
+      <div class="ni-col">
+        <div class="ni-lb">Interview type</div>
+        <div class="ni-chips">${C.types.map(t => `<span class="ni-chip">${ic(NI_ICON[t], 15)}${t}</span>`).join('')}
+          <span class="ni-mw"><span class="ni-more">More ${ic('<path d="m6 9 6 6 6-6"/>', 16, 1.8)}</span>
+            <div class="ni-dd">${C.moreTypes.map(t => `<div>${ic(NI_ICON[t], 17)}${t}</div>`).join('')}</div></span></div>
+        <div class="ni-lb" style="margin-top:34px">Job description and notes</div>
+        <div class="ni-ta">Paste a note or type what you know…
+          <span class="up">${ic('<path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>', 16, 1.8)}Upload</span>
+          <span class="mc">${ic('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>', 18)}</span></div>
+      </div></div></div>`;
+  const chips = [...E.body.querySelectorAll('.ni-chip')];
+  U.ni = { hr:chips[0], res:chips[1], cs:chips[2], more:E.body.querySelector('.ni-more'), dd:E.body.querySelector('.ni-dd'),
+           items:[...E.body.querySelectorAll('.ni-dd div')], ta:E.body.querySelector('.ni-ta') };
+}
+const openDD  = () => A(U.ni.dd, [{opacity:0, transform:'translateY(-4px)'},{opacity:1, transform:'none'}], 200, {ease:'ease-out'});
+const closeDD = () => A(U.ni.dd, [{opacity:+getComputedStyle(U.ni.dd).opacity},{opacity:0}], 150, {ease:EASE_IN});
+
+/* ---------- student answer card: fades in on their first word, "Speaking" bars follow their voice ---------- */
+function dropCards(){ [...E.left.querySelectorAll('.scard')].forEach(c =>
+  A(c, [{opacity:+getComputedStyle(c).opacity, transform:'none'},{opacity:0, transform:'translateY(-12px)'}], 300, {ease:EASE_IN}).finished.then(()=>c.remove())); }
+function stuCard(who, quote, clip, {instant=false}={}){
+  dropCards();
+  const P = TIMELINE.copy.people[who];
+  const c = el('div','scard', `<div class="th"><img src="${avatar(P.img)}" alt="">${P.name}<span class="role">${P.role}</span>`
+    + `<span class="live">Speaking<span class="bars">${'<i></i>'.repeat(5)}</span></span></div><div class="q">${quote}</div>`, E.left);
+  const bars = [...c.querySelectorAll('.bars i')], live = c.querySelector('.live'), k = [1, 1.7, 1.25, 2.1, 1.45];
+  const end = clip ? clip.t + clip.dur : -1;
+  if (instant || T() > end) live.style.opacity = 0;
+  else ticker(t => { if (!c.isConnected) return true;
+    const lv = Math.min(1, S.lvStu * 1.6);
+    bars.forEach((b, i) => b.style.height = (5 + lv*15*(.55 + .45*Math.abs(Math.sin(t*6*k[i] + i)))).toFixed(1) + 'px');
+    if (t > end + 0.15){ A(live, [{opacity:1},{opacity:0}], 400, {ease:EASE_IN}); return true; }
+    return false; });
+  if (!instant){ c.style.opacity = 0; A(c, [{opacity:0, transform:'translateY(18px)'},{opacity:1, transform:'none'}], 460); }
+  return c;
+}
+/* ---------- 7 · scorecard (the shipped attempt page) ---------- */
+const dots = (n, of=4) => `<span class="dots4">${[...Array(of)].map((_, i) => `<i${i < n ? ' class="f"' : ''}></i>`).join('')}</span>`;
+function buildScore({filled=false}={}){
+  const K = TIMELINE.copy.score, chev = d => ic(d, 14, 1.8);
+  E.body.innerHTML = `<div class="app"><div class="scp">
+      <div class="sc-hd"><span class="bk">${ICON.back}</span><img class="av" src="${avatar('arjun')}" alt=""><div><b>${K.name}</b><span class="sub">${K.sub}</span></div></div>
+      <div class="sc-vp"><div class="sc2">
+        <div class="sc2-row"><span class="file">${ICON.doc16}${K.cv}</span><span class="att">${chev('<path d="m15 6-6 6 6 6"/>')} ${K.attempt} ${chev('<path d="m9 6 6 6-6 6"/>')}</span></div>
+        <div class="sc2-lbl">Score</div>
+        <div class="sc2-score"><span class="num">${K.value}/${K.of}</span>${dots(filled ? K.value : 0, K.of)}</div>
+        <div class="player"><span class="pl"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z" fill="#fff"/></svg></span><span class="sk">10</span><span class="sk">10</span><span class="track"></span><span class="tm">${K.rec}</span></div>
+        <h6 class="ww">What went well</h6><ul class="wwl">${K.well.map(x => `<li>${x}</li>`).join('')}</ul>
+        <h6 class="ai">Areas of improvement</h6><ul class="ail">${K.improve.map(x => `<li>${x}</li>`).join('')}</ul>
+        <h6 class="bc">By criteria</h6>
+        ${K.crit.map(([n, v]) => `<div class="crit2"><span class="nm">${n}</span><span class="sv">Score: <b>${v}/${K.of}</b></span>${dots(filled ? v : 0, K.of)}<span class="chev">${chev('<path d="m9 6 6 6-6 6"/>')}</span></div>`).join('')}
+      </div></div></div></div>`;
+  const q = s => E.body.querySelector(s), qa = s => [...E.body.querySelectorAll(s)];
+  U.sc = { inner:q('.sc2'), num:q('.sc2-score .num'), dots:qa('.sc2-score .dots4 i'), player:q('.player'), ww:[q('.ww'), q('.wwl')],
+           ai:q('.ai'), ail:q('.ail'), bc:q('.bc'), rows:qa('.crit2'), rowDots:qa('.crit2').map(r => [...r.querySelectorAll('.dots4 i')]), y:0 };
+  // nothing below the score shows until the narrator gets to it
+  if (!filled){ [U.sc.num, U.sc.player, ...U.sc.ww, U.sc.ai, U.sc.ail, U.sc.bc, ...U.sc.rows].forEach(n => n.style.opacity = 0); }
+}
+// scroll the attempt page so `node` sits near the top of the view
+function scoreScroll(node, ms = 900, instant = false){
+  const y = Math.max(0, node.offsetTop - 14);
+  if (instant){ U.sc.inner.style.transform = `translateY(${-y}px)`; U.sc.y = y; return; }
+  A(U.sc.inner, [{transform:`translateY(${-U.sc.y}px)`},{transform:`translateY(${-y}px)`}], ms, {ease:EASE_IO}); U.sc.y = y;
+}
+// dots fill through CSS transitions (delayed), so pausing the film pauses them too
+const fillDots = (ds, n, step = 110, delay0 = 0) => ds.slice(0, n).forEach((d, i) => { d.style.transitionDelay = (delay0 + i*step) + 'ms'; d.classList.add('f'); });
+const clipAt = id => S.voice.find(v => v.id === id);
+
+/* fake cursor — stage coordinates, aimed at real elements */
+function cursorEl(){ if (!E.cur || !E.cur.isConnected){ E.cur = el('div','cursor', ICON.cursor); E.cur.style.transform = 'translate(960px,640px)'; E.curPos = [960,640]; } return E.cur; }
+function stagePt(node, fx=.5, fy=.5){ const r = node.getBoundingClientRect(), s = stage.getBoundingClientRect(), k = s.width/1920;
+  return [ (r.left - s.left + r.width*fx)/k, (r.top - s.top + r.height*fy)/k ]; }
+function cursorTo(node, ms=650, fx=.5, fy=.5){ const c = cursorEl(), [x,y] = stagePt(node, fx, fy), [x0,y0] = E.curPos;
+  A(c, [{transform:`translate(${x0}px,${y0}px)`},{transform:`translate(${x}px,${y}px)`}], ms, {ease:EASE_IO}); E.curPos = [x,y]; }
+function cursorClick(){ const c = cursorEl(), [x,y] = E.curPos;
+  A(c, [{transform:`translate(${x}px,${y}px) scale(1)`},{transform:`translate(${x}px,${y}px) scale(.82)`,offset:.4},{transform:`translate(${x}px,${y}px) scale(1)`}], 240, {ease:'ease-out'}); }
+
+const SCENES = [
+  { // 1 · Title — words land as Ranbir says them
+    setup(){},
+    cues(){
+      const w = [...E.s1a.querySelectorAll('.w')];
+      w.forEach((s,i) => cue(wt('narr_01', i), () => reveal(s)));                 // Placement · season, · reimagined.
+      cue(wt('narr_01', 3) - 0.35, () => fadeOut(E.s1a, 380));
+      cue(wt('narr_01', 3), () => {                                                // Meet
+        const h = setHead(TIMELINE.copy.s1head.map(x=>`<span class="w">${x}</span>`).join(' '), {words:true});
+        const ws = [...h.querySelectorAll('.w')];
+        reveal(ws[0]);
+        cue(wt('narr_01', 4), () => reveal(ws[1]));                                 // A-A-F-T
+        cue(wt('narr_01', 5), () => reveal(ws[2]));                                 // Placements
+      });
+      cue(wt('narr_01', 4), () => A(E.tile, [{opacity:0, transform:'scale(.85)'},{opacity:1, transform:'scale(1)'}], 650));
+      cue(wt('narr_01', 5) + .1, () => fadeIn(E.s1lab, 500, 8));
+      cue(wt('narr_01', 6), () => fadeIn(E.s1on, 600, 10));                        // a Space on TwinCafe
+    },
+  },
+  { // 2 · What is a Space — the tile becomes the Space Twin; card builds on the VO's nouns
+    setup(){                                      // = end state of scene 1
+      setHead(TIMELINE.copy.s1head.join(' '), {instant:true});
+      show(E.tile); show(E.s1lab); show(E.s1on);
+    },
+    cues(){
+      const t0 = B('2'), C = TIMELINE.copy;
+      cue(t0, () => {
+        clearHead(300);
+        fadeOut(E.s1lab, 300); fadeOut(E.s1on, 300);
+        A(E.logo, [{opacity:0},{opacity:1}], 700);
+        A(E.card, [{opacity:0, transform:'scale(.96)'},{opacity:1, transform:'scale(1)'}], 700, {delay:120});
+        A(E.tile, [{transform:'translate(0,0) scale(1)'},{transform:'translate(0,95px) scale(.8)'}], 800, {ease:EASE_IO, delay:80});
+      });
+      // Word swap: the italic word sits in a slot whose width eases to each new word,
+      // so the centred line re-centres smoothly instead of jumping; old word lifts out, new rises in.
+      let slot = null;
+      const measure = (txt) => { const m = el('em', null, txt, E.head); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
+        const w = m.getBoundingClientRect().width / (stage.getBoundingClientRect().width / 1920); m.remove(); return w; };
+      const swapWord = (txt) => {
+        const w = measure(txt);
+        if (!slot){
+          const h = setHead(`${C.s2head} <span class="slot" style="display:inline-block;position:relative;vertical-align:top;height:1em;width:${w}px"></span>`);
+          slot = h.querySelector('.slot');
+          const n = el('em', null, txt, slot); n.style.cssText = 'position:absolute;left:0;top:0;white-space:nowrap;opacity:0';
+          A(n, [{opacity:0, transform:'translateY(12px)'},{opacity:1, transform:'none'}], HEAD.wordIn, {delay: +h.dataset.revealEnd});   // accent word lands last
+          return;
+        }
+        const old = slot.lastElementChild;
+        A(old, [{opacity:1, transform:'none'},{opacity:0, transform:'translateY(-14px)'}], 240, {ease:EASE_IN}).finished.then(()=>old.remove());
+        A(slot, [{width: slot.style.width},{width: w+'px'}], 520, {ease:EASE_IO}).finished.then(()=>{ slot.style.width = w+'px'; });
+        const n = el('em', null, txt, slot); n.style.cssText = 'position:absolute;left:0;top:0;white-space:nowrap;opacity:0';
+        A(n, [{opacity:0, transform:'translateY(14px)'},{opacity:1, transform:'none'}], 420, {delay:170});
+      };
+      // Twin
+      cue(wt('narr_02', 7), () => { swapWord(C.s2words[0]); fadeIn(E.twincap, 500, 6);
+        A(E.tile, [{boxShadow:'0 16px 40px rgba(80,30,80,.16)'},{boxShadow:'0 0 0 14px rgba(59,9,100,.10),0 20px 50px rgba(59,9,100,.28)'}], 600); });
+      // members
+      cue(wt('narr_02', 11), () => { swapWord(C.s2words[1]);
+        [...E.mem.children].forEach((m,i) => A(m, [{opacity:0, transform:'scale(.6)'},{opacity:1, transform:'scale(1)'}], 450, {delay:i*80})); });
+      // documents
+      cue(wt('narr_02', 15), () => { swapWord(C.s2words[2]);
+        E.docs.forEach((d,i) => A(d, [{opacity:0, transform:'translateY(-22px)'},{opacity:1, transform:'none'}], 550, {delay:i*120}));
+        [...E.lines.querySelectorAll('path')].slice(0,3).forEach((p,i) => A(p, [{strokeDashoffset:1},{strokeDashoffset:0}], 700, {delay:250+i*120, ease:EASE_IO})); });
+      // agents
+      cue(wt('narr_02', 17), () => { swapWord(C.s2words[3]);
+        A(E.agent, [{opacity:0, transform:'translateX(60px)'},{opacity:1, transform:'none'}], 650);
+        A(E.lines.querySelectorAll('path')[3], [{strokeDashoffset:1},{strokeDashoffset:0}], 600, {delay:200, ease:EASE_IO}); });
+      // push into the card on "…built in" (the window itself opens in scene 3)
+      cue(B('3a') - 0.45, () => {
+        clearHead(400);
+        A(E.card, [{transform:'scale(1)', opacity:1},{transform:'scale(1.7)', opacity:0}], 1200, {ease:EASE_IO});
+        A(E.tile, [{transform:'translate(0,95px) scale(.8)', opacity:1},{transform:'translate(0,160px) scale(1.36)', opacity:0}], 1200, {ease:EASE_IO});
+      });
+    },
+  },
+  { // 3 · Space Q&A — the window opens on the real Space; two questions typed, thinking lines, answers streamed with sources
+    setup(){ show(E.logo); },
+    cues(){
+      const C = TIMELINE.copy, H = C.heads, b = B('3a');
+      cue(b + 0.1, () => { buildSpace(); showWindow(); });
+      cue(b + 0.6, () => setHead(H['3a']));
+      cue(b + 0.75, () => otherMsg(C.seed));
+      cue(b + 1.25, () => { const r = twinMsg({html:C.seed.a, sources:C.seed.sources, think:[]}, false, true); rise(r.n); });
+      // The narrator reports the question ("A student asks…") while it types, then names the source while the answer streams.
+      // The stream is paced to finish just before `endWord`, so the Sources pill lands on it.
+      const ask = ({q, a, beat, clip, typeWord, endWord, perChar = 0.03}) => {
+        const tType = wt(clip, typeWord), tSend = tType + q.length*perChar + 0.15, tReply = tSend + 0.35;
+        let r;
+        cue(B(beat), () => setHead(H[beat]));
+        cue(tType - 0.05, () => typeInto(q, tType, perChar));
+        cue(tSend, () => { clearComposer(); mineMsg(q); });
+        cue(tReply, () => { r = twinMsg(a, true); });
+        cue(tReply + 0.1, () => thinkLine(r, 0));
+        cue(tReply + 0.5, () => { thinkDone(r, 0); thinkLine(r, 1); });
+        cue(tReply + 0.85, () => thinkDone(r, 1));
+        cue(tReply + 1.0, () => thinkFold(r));
+        const tStream = tReply + 1.1, tEnd = wt(clip, endWord) - 0.1, cps = visLen(a.html) / (tEnd - tStream);
+        cue(tStream, () => streamInto(r, a.html, tStream, cps));
+        cue(tEnd + 0.15, () => A(r.foot, [{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], 400));
+      };
+      ask({q:C.q1, a:C.a1, beat:'3b', clip:'narr_03b', typeWord:2, endWord:18});    // "asks" … Sources on "calendar"
+      ask({q:C.q2, a:C.a2, beat:'3d', clip:'narr_03d', typeWord:1, endWord:20});    // "asks" … Sources on "interviews"
+    },
+  },
+  { // 4 · Placement prep — cursor: Agents → Placement prep → glide the list → click Kissa Audio
+    setup(){
+      const C = TIMELINE.copy;
+      show(E.logo); showWindow(true); buildSpace();
+      otherMsg(C.seed, true); twinMsg({html:C.seed.a, sources:C.seed.sources, think:[]}, false, true);
+      mineMsg(C.q1, true); twinMsg(C.a1, true, true); mineMsg(C.q2, true); twinMsg(C.a2, true, true);
+      requestAnimationFrame(snapScroll);
+      setHead(C.heads['3d'], {instant:true});
+    },
+    cues(){
+      const b = B('4'), hover = i => U.rows.forEach((r,j) => r.classList.toggle('hover', j === i));
+      const tPick = wt('narr_04', 9), tStart = wt('narr_04', 13);         // "…pick a company" · "…and start practising"
+      cue(b, () => setHead(TIMELINE.copy.heads['4']));
+      cue(b + 0.05, () => { const c = cursorEl(), [x,y] = stagePt(U.send, .2, 1.6); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 250); });
+      cue(b + 0.3, () => cursorTo(U.agbtn, 700, .45, .6));
+      cue(b + 1.05, () => { cursorClick(); U.agbtn.classList.add('on');
+        A(U.panel, [{transform:'translateX(105%)'},{transform:'none'}], 480); });
+      cue(b + 1.55, () => cursorTo(U.agrow, 600, .4, .55));
+      cue(b + 2.15, () => { cursorClick(); U.agrow.style.background = 'rgba(15,23,42,.08)'; });
+      cue(b + 2.3, () => A(U.pp, [{opacity:0},{opacity:1}], 320, {ease:'ease-out'}));
+      cue(b + 2.4, () => U.rows.forEach((r,i) => A(r, [{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'none'}], 380, {delay:i*60})));
+      cue(b + 2.7, () => cursorTo(U.rows[0], 450, .55, .55));
+      cue(b + 3.15, () => hover(0));
+      // glide down three rows on "pick a company", come back up, click Kissa Audio on "start"
+      const g0 = Math.max(b + 3.25, tPick - 0.15), step = 0.26;
+      [1,2,3].forEach((i,k) => { const t = g0 + k*step;
+        cue(t, () => cursorTo(U.rows[i], 240, .55, .55)); cue(t + .2, () => hover(i)); });
+      const tBack = g0 + 3*step + 0.05, tClick = Math.max(tStart, tBack + 0.5);
+      cue(tBack, () => cursorTo(U.rows[0], 440, .55, .55));
+      cue(tBack + 0.4, () => hover(0));
+      cue(tClick, () => { cursorClick(); U.rows[0].classList.remove('hover'); U.rows[0].classList.add('pressed'); });
+      cue(B('5a') - 0.2, () => A(cursorEl(), [{opacity:1},{opacity:0}], 200));
+    },
+  },
+  { // 5 · Riya: 5a task page → How it works → CV → Start interview → call · 5b CV probe · 5t every kind of round · 5c case · 5d answer
+    setup(){
+      show(E.logo); showWindow(true); buildSpace();
+      show(U.pp); U.rows.forEach(r => show(r)); U.rows[0].classList.add('pressed');
+      setHead(TIMELINE.copy.heads['4'], {instant:true});
+    },
+    cues(){
+      const C = TIMELINE.copy, b = B('5a'), b5 = B('5b'), bt = B('5t'), bc = B('5c');
+      // 5a · task page + How it works; CV chip lands on "…their CV"; Start interview as the line ends
+      cue(b, () => { setHead(C.heads['5a']); swapBody(buildTask, 300); });
+      cue(b + 0.45, () => { A(U.scrim, [{opacity:0},{opacity:1}], 300); A(U.modal, [{opacity:0, transform:'scale(.96)'},{opacity:1, transform:'none'}], 420); });
+      cue(wt('narr_05a', 3), () => { A(U.file, [{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], 380);
+                                     A(U.change, [{opacity:0},{opacity:1}], 300, {delay:120}); });
+      cue(b5 - 2.0, () => { const c = cursorEl(); const [x,y] = stagePt(U.modal, .5, .5); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 220); });
+      cue(b5 - 1.75, () => cursorTo(U.start, 650, .45, .55));
+      cue(b5 - 1.05, () => { cursorClick(); U.start.classList.add('busy'); U.start.innerHTML = 'Starting your round…'; });
+      cue(b5 - 0.6, () => A(cursorEl(), [{opacity:1},{opacity:0}], 180));
+      // 5a → 5b · morph into the call. The interviewer lives in the call (orb + prompt); only Riya gets a card, while she answers.
+      cue(b5 - 0.45, () => { clearHead(); morph('call');
+        swapBody(() => { buildCall(C.callRiya); setTimer(1198, b5); }, 300); });
+      cue(b5 + 0.05, () => setSide(C.s5b));
+      const q5b = clipAt('int_05b_q'), r5b = clipAt('riya_05b_a'), q5c = clipAt('int_05c_q'), r5d = clipAt('riya_05d_a');
+      cue(q5b.t - 0.02, () => setPrompt(C.p5b, q5b.t, q5b.dur));
+      cue(r5b.t - 0.05, () => stuCard('riya', C.riya5b, r5b));
+      // 5t · the shipped New interview page; picks follow the narrator: case → technical (More) → HR
+      const w = n => wt('narr_05t', n);
+      cue(bt, () => { clearLeft(); morph('browse'); swapBody(buildNewInterview, 300); });
+      cue(bt + 0.35, () => setHead(C.heads['5t']));
+      cue(bt + 1.0, () => { const c = cursorEl(), [x,y] = stagePt(U.ni.ta, .55, .4); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 250); });
+      cue(w(8) - 0.55, () => cursorTo(U.ni.cs, 520, .5, .55));                               // "case
+      cue(w(8) + 0.02, () => { cursorClick(); U.ni.cs.classList.add('sel'); });              //  interviews"
+      cue(w(10) - 0.42, () => cursorTo(U.ni.more, 400, .45, .55));                           // "technical
+      cue(w(10), () => { cursorClick(); openDD(); });
+      cue(w(10) + 0.25, () => cursorTo(U.ni.items[0], 380, .3, .5));
+      cue(w(10) + 0.6, () => U.ni.items[0].classList.add('hv'));                             //  rounds"
+      cue(w(12) - 0.42, () => cursorTo(U.ni.hr, 460, .5, .55));                              // "HR
+      cue(w(12) - 0.25, () => U.ni.items[0].classList.remove('hv'));
+      cue(w(12) + 0.05, () => U.ni.hr.classList.add('hv'));                                  //  discussions"
+      // → a fresh case call
+      cue(bc - 0.35, () => { A(cursorEl(), [{opacity:1},{opacity:0}], 180); closeDD(); clearHead(); morph('call');
+        swapBody(() => { buildCall(C.callRiya); setTimer(1196, bc); }, 300); });
+      // 5c · the case: the question is read from the call's own prompt — no card, no table on the left
+      cue(bc + 0.05, () => setSide(C.s5c));
+      cue(q5c.t - 0.02, () => setPrompt(C.p5c, q5c.t, q5c.dur));
+      // 5d · Riya answers
+      cue(r5d.t - 0.05, () => stuCard('riya', C.riya5d, r5d));
+    },
+  },
+  { // 6 · Bridge back to the list → Arjun's call (Situational interview, Saffron Frame Studios)
+    setup(){                                      // = end of scene 5
+      const C = TIMELINE.copy;
+      show(E.logo); showWindow(true); morph('call', 0, true);
+      buildCall(C.callRiya, {prompt:C.p5c}); setTimer(1196 - (B('bridge') - B('5c')), B('bridge'));
+      setSide(C.s5c, {instant:true}); stuCard('riya', C.riya5d, null, {instant:true});
+    },
+    cues(){
+      const C = TIMELINE.copy, b = B('bridge'), b6 = B('6'), hover = i => U.rows.forEach((r,j) => r.classList.toggle('hover', j === i));
+      // bridge · back to the same list as scene 4; the glide follows "From marketing to cinema, every school…"
+      cue(b, () => { clearLeft(); morph('browse');
+        swapBody(() => { buildSpace(); show(U.pp); U.rows.forEach(r => show(r)); U.rows[0].querySelector(':scope > div > span').textContent = '3 attempts'; }, 300); });
+      cue(b + 0.15, () => setHead(C.s6.replace('<br>', ' ')));
+      cue(b + 0.65, () => { const c = cursorEl(), [x,y] = stagePt(U.rows[0], .55, .55); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 220); hover(0); });
+      const tCin = wt('narr_06', 3), tSchool = wt('narr_06', 5), tRoles = wt('narr_06', 10);   // "cinema," · "school" · "roles."
+      cue(tCin - 0.25, () => cursorTo(U.rows[1], 380, .55, .55));
+      cue(tCin + 0.1, () => hover(1));
+      [2,3,4,5].forEach((i,k) => { const t = tSchool - 0.2 + k*0.3;
+        cue(t, () => cursorTo(U.rows[i], 260, .55, .55)); cue(t + .2, () => hover(i)); });
+      const tBack = tSchool - 0.2 + 4*0.3 + 0.05, tClick = Math.min(b6 - 0.5, Math.max(tRoles - 0.1, tBack + 0.5));
+      cue(tBack, () => cursorTo(U.rows[1], 450, .55, .55));
+      cue(tBack + 0.4, () => hover(1));
+      cue(tClick, () => { cursorClick(); U.rows[1].classList.remove('hover'); U.rows[1].classList.add('pressed'); });
+      // into Arjun's call — the same morph as 5a → 5b. The interviewer lives in the call; Arjun gets a card only while he answers.
+      cue(tClick + 0.35, () => { A(cursorEl(), [{opacity:1},{opacity:0}], 180); clearHead(); morph('call');
+        swapBody(() => { buildCall(C.callArjun); setTimer(1191, b6); }, 300); });
+      cue(b6 - 0.05, () => setSide(C.s6));
+      const q6 = clipAt('int_06_q'), a6 = clipAt('arjun_06_a');
+      cue(q6.t - 0.02, () => setPrompt(C.p6, q6.t, q6.dur));
+      cue(a6.t - 0.05, () => stuCard('arjun', C.arjun6, a6));
+    },
+  },
+  { // 7 · End the call (after Arjun finishes) → Arjun's scorecard, paced to "Every attempt ends with a scorecard, a recording and what to practise next."
+    setup(){                                      // = end of scene 6
+      const C = TIMELINE.copy;
+      show(E.logo); showWindow(true); morph('call', 0, true);
+      buildCall(C.callArjun, {prompt:C.p6}); setTimer(1191 - (B('7') - B('6')), B('7'));
+      setSide(C.s6, {instant:true}); stuCard('arjun', C.arjun6, null, {instant:true});
+    },
+    cues(){
+      const C = TIMELINE.copy, b = B('7'), w = n => wt('narr_07', n);
+      const tEnds = Math.max(b + 0.8, w(2) - 0.05);                      // the click lands on "Every attempt ends…"
+      cue(b + 0.05, () => { const c = cursorEl(), [x,y] = stagePt(U.mic, .5, -.6); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 220); });
+      cue(tEnds - 0.6, () => cursorTo(U.end, 480, .5, .5));
+      cue(tEnds, () => cursorClick());
+      cue(tEnds + 0.15, () => { A(cursorEl(), [{opacity:1},{opacity:0}], 180); clearLeft(); morph('browse');
+        swapBody(() => buildScore(), 300); });
+      cue(tEnds + 0.3, () => setHead(C.heads['7']));
+      // "…a scorecard," → the score lands and its dots fill
+      cue(w(5), () => { A(U.sc.num, [{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], 380); fillDots(U.sc.dots, C.score.value, 130); });
+      // "…a recording" → the recording row slides in, then What went well
+      cue(w(7), () => A(U.sc.player, [{opacity:0, transform:'translateY(10px)'},{opacity:1, transform:'none'}], 420));
+      cue(w(7) + 0.45, () => U.sc.ww.forEach((n, i) => A(n, [{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'none'}], 420, {delay:i*120})));
+      // "…and what to practise next." → scroll to Areas of improvement
+      cue(w(9) - 0.1, () => { scoreScroll(U.sc.ai, 900);
+        [U.sc.ai, U.sc.ail].forEach((n, i) => A(n, [{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'none'}], 420, {delay:250 + i*120})); });
+      // "Students practise again…" → By criteria; rows stagger in with their dots
+      cue(w(13) - 0.2, () => { scoreScroll(U.sc.bc, 800); A(U.sc.bc, [{opacity:0},{opacity:1}], 360, {delay:150}); });
+      cue(w(13) - 0.05, () => U.sc.rows.forEach((r, i) => { A(r, [{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'none'}], 360, {delay:i*90});
+                                                             fillDots(U.sc.rowDots[i], C.score.crit[i][1], 70, 200 + i*90); }));
+      cue(w(16), () => { const c = cursorEl(), [x,y] = stagePt(U.sc.rows[0], .75, 1.6); E.curPos = [x,y];
+        c.style.transform = `translate(${x}px,${y}px)`; A(c, [{opacity:0},{opacity:1}], 220); });
+      cue(w(16) + 0.15, () => cursorTo(U.sc.rows[0], 520, .72, .55));
+      cue(w(16) + 0.6, () => U.sc.rows[0].classList.add('hover'));
+      cue(B('8') - 0.25, () => A(cursorEl(), [{opacity:1},{opacity:0}], 200));
+    },
+  },
+  { // 8 · End card — window shrinks into the AAFT tile (bookend with 1B); lines land on the narrator's words
+    setup(){                                      // = end of scene 7
+      show(E.logo); showWindow(true); buildScore({filled:true}); requestAnimationFrame(() => scoreScroll(U.sc.bc, 0, true));
+      U.sc.rows[0].classList.add('hover'); setHead(TIMELINE.copy.heads['7'], {instant:true});
+    },
+    cues(){
+      const t0 = B('8');
+      cue(t0, () => {
+        clearHead(350);
+        E.bw.style.transformOrigin = '50% 17.8%';                     // the tile's centre (y 325)
+        A(E.bw, [{opacity:1, transform:'scale(1)'},{opacity:0, transform:'scale(.1)'}], 750, {ease:EASE_IN});
+        E.tile.style.top = '325px';
+        E.tile.querySelector('.bdg')?.remove();                     // end card: the AAFT logo alone, no Space badge
+        A(E.tile, [{opacity:0, transform:'scale(.6)'},{opacity:1, transform:'scale(1)'}], 700, {delay:420});
+      });
+      const l1 = [...E.s8l1.querySelectorAll('.w')], l2 = [...E.s8l2.querySelectorAll('.w')];
+      l1.forEach((s,i) => cue(wt('narr_08', i), () => reveal(s, 260)));            // Every question answered. Every interview practised.
+      l2.forEach((s,i) => cue(wt('narr_08', l1.length + i), () => reveal(s, 260))); // Placement-ready, around the clock.
+      cue(we('narr_08', 9) + 0.2, () => A(E.disc, [{opacity:0},{opacity:1}], 700));
+    },
+  },
+];
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+(async function boot(){
+  const [tl, m] = await Promise.all(['content/timeline.json', 'assets/audio/clips.json'].map(async u => (await fetch(u, {cache:'no-store'})).json()));
+  Object.assign(TIMELINE, {beats: tl.beats, lead: tl.lead, gap: tl.gap, end: tl.end, music: tl.music});
+  const keys = Object.entries(tl.keys).map(([k, id]) => [+k, id]).sort((a,b) => a[0]-b[0]);
+  TIMELINE.scenes = keys.map(([k, id], i) => ({key:k, id, name:TIMELINE.sceneNames[k], start:B(id), end: keys[i+1] ? B(keys[i+1][1]) : tl.end}));
+  S.clips = m; layoutVoice();
+  const ctxTmp = new OfflineAudioContext(1, 1, 44100);
+  const load = async (v, tries=4) => {                 // retry: the local dev server drops parallel requests
+    for (let i = 0; i < tries; i++){
+      try { const r = await fetch(S.clips[v.id].file, {cache:'no-store'}); if (!r.ok) throw new Error(r.status);
+            S.buffers[v.id] = await ctxTmp.decodeAudioData(await r.arrayBuffer()); return; }
+      catch(e){ await new Promise(r => setTimeout(r, 250*(i+1))); }
+    }
+    throw new Error('could not load ' + v.id);
+  };
+  for (let i = 0; i < S.voice.length; i += 4) await Promise.all(S.voice.slice(i, i+4).map(v => load(v)));
+  if (S.musicOn){                                   // preview only: the bed under the voices, levels from content/timeline.json
+    // ?music=1 → the bed named in timeline.json; ?music=c (or d, e, b…) → assets/music/bed_<x>_fit.mp3, for comparing beds
+    const pick = Q.get('music'), file = /^[a-z]$/.test(pick) ? `assets/music/bed_${pick}_fit.mp3` : TIMELINE.music.file;
+    const r = await fetch(file, {cache:'no-store'}); S.musicBuf = await ctxTmp.decodeAudioData(await r.arrayBuffer()); S.musicFile = file;
+    $('hints').innerHTML += ' · M music on/off';
+    $('musicNote').textContent = `Music preview ON: ${S.musicFile.split('/').pop()} under the voices (M turns it off). Do not record in this mode.`;
+  }
+  await document.fonts.ready;
+  let from = +(Q.get('t') || 0);
+  const m2 = location.hash.match(/^#scene-(\d)$/);
+  if (m2){ const sc = TIMELINE.scenes[+m2[1]-1]; from = sc.start; S.singleEnd = sc.end; }
+  seek(from);
+  setHints(true);
+  S.ready = true;                                   // Space works only once every clip is decoded
+  $('gate').querySelector('b').textContent = 'Press Space to start';
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

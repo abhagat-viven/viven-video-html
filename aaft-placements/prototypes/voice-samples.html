@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voice Picker</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16141A;--ink2:#5b5560;--line:#E4DFD9;--plum:#3B0964;--accent:#E44D86;--bg:#F4F1EE}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,sans-serif;padding:48px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+h1{font:400 48px/1 'Instrument Serif',serif}
+h1 em{color:var(--accent)}
+.sub{color:var(--ink2);margin:10px 0 36px;line-height:1.5}
+.role{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-bottom:18px}
+.role h2{font-size:17px;font-weight:600}
+.role .dir{font-size:14px;color:var(--ink2);margin-top:4px}
+.role .line{font:400 22px/1.35 'Instrument Serif',serif;margin:14px 0 16px}
+.cands{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cand{border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .2s,background .2s}
+.cand.on{border-color:var(--plum);background:#F6F1FA}
+.cand b{font-size:15px;font-weight:600}
+.cand span{display:block;font-size:13px;color:var(--ink2);margin:2px 0 10px}
+.cand audio{width:100%;height:36px}
+.pick{font-size:12px;font-weight:600;color:var(--plum);margin-top:8px;display:none}
+.cand.on .pick{display:block}
+.out{margin-top:28px;background:#fff;border:1px dashed var(--line);border-radius:12px;padding:16px;font:13px ui-monospace,monospace;white-space:pre-wrap}
+@media (max-width:640px){.cands{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Pick the <em>voices</em></h1>
+  <p class="sub">Each sample is a real line from the script, so the one you pick becomes the final clip. Click a card to choose it; your picks show at the bottom. Narrator and interviewer were matched to the reference videos with ElevenLabs voice-similarity search.</p>
+  <div id="roles"></div>
+  <div class="out" id="out">Your picks will appear here.</div>
+</div>
+<script>
+const ROLES = [
+  {id:'NARR', name:'Narrator', dir:'Matched to the Dr Marwah video. ElevenLabs similarity search ranks the "Ranbir" family first.', line:'Ask anything. Practise anything. Placement-ready, around the clock.', file:'narr_08',
+   c:[['RanbirWarm','Ranbir – Warm and Friendly · deep, soothing · closest match to Dr Marwah'],['RanbirDeep','Ranbir – Deep, Magnetic and Engaging · neutral accent'],
+      ['Ziina','Earlier option · female, premium storytelling'],['Aaditya','Earlier option · male, calm baritone']]},
+  {id:'INT_KA', name:'AI interviewer (both interviews)', dir:'Matched to the SPJIMR interviewer: crisp, conversational, more "AI" than Indian. One voice for Kissa Audio and Saffron Frame.', line:"Good. Your CFO only sees B's higher cost. Convince her in one line.", file:'int_05d_f',
+   c:[['Briggs','Briggs – Optimistic, crisp · American · closest match to SPJIMR'],['Taylor','Taylor – Undertone Positive · American, gentle']]},
+  {id:'RIYA', name:'Riya Malhotra', dir:'Picked.', line:'Not at first. So I started judging creatives on day-seven retention.', file:'riya_05b_a', locked:'Zara',
+   c:[['Zara','Picked · young, Indian English']]},
+  {id:'ARJUN', name:'Arjun Sethi', dir:'Picked.', line:'First, I call the first AD, and—', file:'arjun_06_a', locked:'Aashish',
+   c:[['Aashish','Picked · young, Indian English']]},
+];
+const picks = {};
+const root = document.getElementById('roles');
+ROLES.forEach(r=>{
+  const el = document.createElement('div'); el.className='role';
+  el.innerHTML = `<h2>${r.name}</h2><div class="dir">${r.dir}</div><div class="line">“${r.line}”</div><div class="cands"></div>`;
+  const cs = el.querySelector('.cands');
+  r.c.forEach(([n,d])=>{
+    const c = document.createElement('div'); c.className='cand';
+    c.innerHTML = `<b>${n.replace('TiaMirza','Tia Mirza')}</b><span>${d}</span><audio controls preload="none" src="voice-samples/${r.id}__${n}__${r.file}.mp3"></audio><div class="pick">Picked</div>`;
+    c.addEventListener('click', e=>{ if(e.target.tagName==='AUDIO') return;
+      cs.querySelectorAll('.cand').forEach(x=>x.classList.remove('on')); c.classList.add('on'); picks[r.id]=n; show(); });
+    if (r.locked===n){ c.classList.add('on'); picks[r.id]=n; }
+    cs.appendChild(c);
+  });
+  root.appendChild(el);
+});
+show();
+function show(){
+  document.getElementById('out').textContent = ROLES.map(r=>`${r.id}: ${picks[r.id]||'—'}`).join('\n');
+}
+</script>
+</body>
+</html>

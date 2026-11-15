@@ -1,0 +1,165 @@
+{
+ "_note": "Single source of truth for timing. Read by index.html, tools/mix_preview.py and prototypes/soundtrack.html. Each beat's first clip starts `lead` s in; clips inside a beat are `gap` s apart. Keys 1-8 are the jump targets. Pauses between beats (14 Nov): ~1s where the film changes idea.",
+ "lead": 0.3,
+ "gap": 0.5,
+ "end": 135.1,
+ "beats": [
+  {
+   "id": "1",
+   "start": 0.0,
+   "clips": [
+    "narr_01"
+   ],
+   "name": "Title"
+  },
+  {
+   "id": "2",
+   "start": 8.0,
+   "clips": [
+    "narr_02"
+   ],
+   "name": "What is a Space"
+  },
+  {
+   "id": "3a",
+   "start": 17.2,
+   "clips": [
+    "narr_03a"
+   ],
+   "name": "Space overview"
+  },
+  {
+   "id": "3b",
+   "start": 21.2,
+   "clips": [
+    "narr_03b"
+   ],
+   "name": "December drives"
+  },
+  {
+   "id": "3d",
+   "start": 29.6,
+   "clips": [
+    "narr_03d"
+   ],
+   "name": "Meridian Analytics"
+  },
+  {
+   "id": "4",
+   "start": 40.7,
+   "clips": [
+    "narr_04"
+   ],
+   "name": "Placement prep"
+  },
+  {
+   "id": "5a",
+   "start": 48.5,
+   "clips": [
+    "narr_05a"
+   ],
+   "name": "Upload your CV"
+  },
+  {
+   "id": "5b",
+   "start": 56.3,
+   "clips": [
+    "int_05b_q",
+    "riya_05b_a"
+   ],
+   "name": "CV probe"
+  },
+  {
+   "id": "5t",
+   "start": 68.9,
+   "clips": [
+    "narr_05t"
+   ],
+   "name": "Every kind of round"
+  },
+  {
+   "id": "5c",
+   "start": 77.7,
+   "clips": [
+    "int_05c_q"
+   ],
+   "name": "The case"
+  },
+  {
+   "id": "5d",
+   "start": 91.5,
+   "clips": [
+    "riya_05d_a"
+   ],
+   "name": "Riya answers"
+  },
+  {
+   "id": "bridge",
+   "start": 97.8,
+   "clips": [
+    "narr_06"
+   ],
+   "name": "Every school"
+  },
+  {
+   "id": "6",
+   "start": 103.6,
+   "clips": [
+    "int_06_q",
+    "arjun_06_a"
+   ],
+   "name": "Arjun's interview"
+  },
+  {
+   "id": "7",
+   "start": 116.4,
+   "clips": [
+    "narr_07"
+   ],
+   "name": "Scorecard"
+  },
+  {
+   "id": "8",
+   "start": 126.9,
+   "clips": [
+    "narr_08"
+   ],
+   "name": "End card"
+  }
+ ],
+ "keys": {
+  "1": "1",
+  "2": "2",
+  "3": "3a",
+  "4": "4",
+  "5": "5a",
+  "6": "bridge",
+  "7": "7",
+  "8": "8"
+ },
+ "music": {
+  "_note": "Preview only (index.html?music=1, tools/mix_preview.py). The recording stays voices-only; the final music mix is done in Canva. db = gain applied to the bed per beat (bed and voices are both about -16.5 LUFS).",
+  "file": "assets/music/bed_d_fit.mp3",
+  "source": "assets/music/bed_d.mp3 (ElevenLabs Music, modern tech plucks, ~112 BPM, C major) fitted 135.13s -> 135.1s",
+  "fade_in": 1.0,
+  "fade_out": 3.0,
+  "ramp": 0.8,
+  "db": {
+   "1": -5,
+   "2": -10,
+   "3a": -12,
+   "3b": -12,
+   "3d": -12,
+   "4": -8,
+   "5a": -10,
+   "5b": -14,
+   "5t": -10,
+   "5c": -14,
+   "5d": -14,
+   "bridge": -8,
+   "6": -14,
+   "7": -10,
+   "8": -5
+  }
+ }
+}

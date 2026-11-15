@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAFT Placements Storyboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   AAFT Placements — Storyboard v2 (Checkpoint 1, revised)
+   Look: matched to Dr_Marwah_TwinCafe_Demo_v2 (sunset gradient,
+   serif headline with one italic pink word, logo top-right,
+   UI inside a twincafe.com browser window).
+   UI: matched to the stage AAFT Space + SPJIMR Spaces recording.
+   Click any frame to view it full size. #frame-N = one frame at 1:1.
+   ============================================================ */
+:root{
+  --g-base:#F6E6E0;
+  --g-peach:#EC9A64;
+  --g-pink:#EE93B6;
+  --g-peri:#A6A3EA;
+  --g-rose:#F2A6BC;
+  --ink:#16141A;
+  --accent:#E44D86;
+  --ground: radial-gradient(62% 70% at 0% 0%, var(--g-peach) 0%, rgba(236,154,100,0) 72%),
+            radial-gradient(42% 62% at 100% 42%, var(--g-pink) 0%, rgba(238,147,182,0) 72%),
+            radial-gradient(58% 62% at 100% 100%, var(--g-peri) 0%, rgba(166,163,234,0) 76%),
+            radial-gradient(46% 56% at 0% 100%, var(--g-rose) 0%, rgba(242,166,188,0) 72%),
+            var(--g-base);
+  --ui-ink:#111827;
+  --ui-ink-2:#4B5563;
+  --ui-ink-3:#9CA3AF;
+  --ui-line:#E7E7EA;
+  --ui-chip:rgba(15,23,42,.05);
+  --plum:#3B0964;
+  --plum-chip:rgba(59,9,100,.12);
+  --ui-red:#E5383B;
+  --f-head:'Instrument Serif',Georgia,serif;
+  --f-ui:'Geist',system-ui,-apple-system,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#EEEAE6;color:var(--ink);font-family:var(--f-ui);-webkit-font-smoothing:antialiased}
+.board{max-width:1920px;margin:0 auto;padding:72px 64px 120px}
+.board-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid #D9D3CC;padding-bottom:28px;margin-bottom:56px;gap:24px;flex-wrap:wrap}
+.board-head h1{font:400 56px/1 var(--f-head)}
+.board-head h1 em{color:var(--accent)}
+.board-head p{color:#5b5560;font-size:16px;margin-top:10px}
+.board-head .meta{font-size:13px;color:#5b5560;text-align:right;line-height:1.7}
+.sec{margin-bottom:72px}
+.sec-title{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6b6570;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.note{background:#fff;border:1px solid #E4DFD9;border-radius:16px;padding:28px}
+.note h3{font:400 28px/1.1 var(--f-head);margin-bottom:12px}
+.note li{font-size:15px;line-height:1.6;color:#4b4650;margin:0 0 6px 18px}
+.note li b{color:var(--ink);font-weight:600}
+.sw-row{display:flex;flex-wrap:wrap;gap:12px}
+.sw{width:118px}
+.sw i{display:block;height:64px;border-radius:12px;border:1px solid rgba(0,0,0,.06)}
+.sw b{display:block;font-size:13px;font-weight:600;margin-top:8px}
+.sw span{display:block;font-size:12px;color:#6b6570}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:44px 48px}
+.frame-wrap h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.frame-wrap h4 small{font-weight:500;color:#8a838f;margin-left:6px}
+.frame-wrap p{font-size:13px;color:#5b5560;margin-bottom:12px;line-height:1.5}
+.frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 40px rgba(0,0,0,.08);cursor:zoom-in;background:var(--g-base)}
+.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden}
+.ph-tag{position:absolute;left:24px;bottom:20px;z-index:60;font:600 12px/1 var(--f-ui);letter-spacing:.1em;color:#9a3412;background:#FFEDD5;border:1px solid #FDBA74;border-radius:6px;padding:7px 9px}
+table.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid #E4DFD9;border-radius:16px;overflow:hidden}
+table.tbl th,table.tbl td{text-align:left;padding:13px 18px;border-bottom:1px solid #F0ECE7;font-size:14px;vertical-align:top;line-height:1.5}
+table.tbl th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b6570;font-weight:600;background:#FAF8F6}
+table.tbl td:first-child{font-weight:600;white-space:nowrap}
+table.tbl em{font-family:var(--f-head);font-size:19px;color:var(--accent)}
+.flag{display:inline-block;font-size:11px;font-weight:600;color:#9a3412;background:#FFEDD5;border-radius:4px;padding:2px 6px;margin-left:4px}
+.btn-replay{font:600 13px var(--f-ui);border:1px solid #D9D3CC;background:#fff;border-radius:999px;padding:8px 16px;cursor:pointer;letter-spacing:0;text-transform:none;color:var(--ink)}
+.lightbox{position:fixed;inset:0;background:rgba(20,18,24,.86);display:none;align-items:center;justify-content:center;z-index:1000;cursor:zoom-out}
+.lightbox.open{display:flex}
+.lightbox .lb-frame{position:relative;overflow:hidden;border-radius:6px}
+
+/* ============ SCENE PRIMITIVES (carry into index.html) ============ */
+.ground{position:absolute;inset:0;background:var(--ground)}
+.white{position:absolute;inset:0;background:#FDFDFD}
+.tc-corner{position:absolute;right:64px;top:42px;width:206px;color:var(--ink);z-index:20}
+.head{position:absolute;left:0;right:0;top:78px;text-align:center;font:400 76px/1 var(--f-head);color:var(--ink);letter-spacing:-.005em;z-index:10}
+.head em,.big em{font-style:italic;color:var(--accent)}
+.big{font:400 92px/1.08 var(--f-head);color:var(--ink)}
+.w{display:inline-block}
+.p1 .w{opacity:0;transition:opacity 220ms ease-out}
+.p1 .w.on{opacity:1}
+
+.bw{position:absolute;left:210px;top:186px;width:1500px;height:780px;border-radius:18px;background:#fff;box-shadow:0 2px 8px rgba(60,20,60,.06),0 40px 90px rgba(80,30,80,.16);overflow:hidden;z-index:5}
+.bw-bar{height:46px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid #EFEDEB;background:#fff}
+.bw-bar .dots{position:absolute;left:20px;top:17px;display:flex;gap:8px}
+.bw-bar .dots i{width:12px;height:12px;border-radius:50%}
+.bw-bar .url{font:500 14px var(--f-ui);color:#3f3a44;background:#F3F1EE;border-radius:8px;padding:5px 82px}
+.bw-body{position:absolute;left:0;right:0;top:46px;bottom:0;overflow:hidden;background:#fff}
+.app{position:absolute;left:0;top:0;width:100%;height:100%;zoom:1.32;font-family:var(--f-ui);color:var(--ui-ink)}
+
+.sav{position:relative;width:36px;height:36px;flex:none;border-radius:8px;background:#fff url(assets/aaft-logo.jpg) center/84% no-repeat}
+.sav .bdg{position:absolute;right:-5px;bottom:-5px;width:18px;height:18px;border-radius:50%;background:var(--plum);border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+
+.sp-top{position:relative;z-index:2;background:#fff;height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--ui-line)}
+.sp-top .back{color:var(--ui-ink-2)}
+.sp-top .nm b{display:block;font-size:14px;font-weight:600}
+.sp-top .nm span{font-size:12px;color:var(--ui-ink-3)}
+.sp-top .agents{margin-left:auto;display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:999px;border:1px solid var(--ui-line);font-size:14px;font-weight:600;position:relative}
+.sp-top .agents .dot{position:absolute;right:6px;top:2px;width:7px;height:7px;border-radius:50%;background:#F59E0B}
+.sp-top .more{width:36px;height:36px;border-radius:50%;border:1px solid var(--ui-line);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.thread{position:absolute;left:50%;transform:translateX(-50%);width:640px;top:84px}
+.mine{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:22px}
+.mine .bub{background:var(--ui-chip);border-radius:22px;padding:10px 16px;font-size:14px;line-height:22px;max-width:470px}
+.mine .t{font-size:11px;color:var(--ui-ink-3)}
+.mention{background:var(--plum-chip);color:var(--plum);font-weight:500;border-radius:4px;padding:0 2px}
+.twin-row{display:flex;gap:12px}
+.twin-row .nm{font-size:14px;font-weight:600;margin:6px 0 8px}
+.acard{background:#fff;border:1px solid var(--ui-line);border-radius:18px;padding:18px 20px;font-size:14px;line-height:22px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.acard ul{margin:8px 0 8px 18px}
+.acard li{margin-bottom:5px}
+.acard li::marker{color:#C9CBD1}
+.acard strong{font-weight:600}
+.acard .foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.srcp{display:inline-flex;align-items:center;gap:6px;background:var(--ui-chip);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--ui-ink-2)}
+.ghost-btn{background:var(--ui-chip);border-radius:999px;height:32px;padding:0 14px;display:inline-flex;align-items:center;font-size:13px;font-weight:600}
+.think{display:flex;flex-direction:column;gap:6px;margin:2px 0 10px}
+.think .ln{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ui-ink-2)}
+.think .ln .ck{width:16px;height:16px;border-radius:50%;background:#E7F3EC;display:flex;align-items:center;justify-content:center}
+
+.pp-top{display:flex;align-items:center;gap:12px;padding:20px 24px}
+.pp-top .ag{width:36px;height:36px;border-radius:50%;background:#3B0964 url(assets/people/agent.svg) center/cover no-repeat}
+.pp-top b{display:block;font-size:15px;font-weight:600}
+.pp-top span{font-size:13px;color:var(--ui-ink-2)}
+.pp-top .search{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--ui-line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ui-ink-3);width:220px}
+.pp-list{position:absolute;left:50%;transform:translateX(-50%);top:92px;width:640px}
+.pp-list h5{font-size:15px;font-weight:600;margin-bottom:10px}
+.pp-row{display:flex;align-items:center;gap:14px;padding:10px 10px;border-radius:12px}
+.pp-row.hover{background:var(--ui-chip)}
+.pp-row .ic{width:36px;height:36px;border-radius:10px;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.pp-row b{display:block;font-size:14px;font-weight:500}
+.pp-row span{font-size:12px;color:var(--ui-ink-2)}
+.pp-row .chev{margin-left:auto;color:var(--ui-ink-3)}
+
+.scrim{position:absolute;inset:0;background:rgba(17,24,39,.42)}
+.modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;background:#fff;border-radius:16px;padding:20px 22px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.modal .mh{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
+.modal .hw{font-size:13px;font-weight:600;margin:18px 0 10px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.steps .st{background:var(--ui-chip);border-radius:12px;height:96px;display:flex;align-items:center;justify-content:center}
+.steps .lb{font-size:12px;color:var(--ui-ink-2);margin-top:8px}
+.steps .lb b{font-weight:600;color:var(--ui-ink);margin-right:4px}
+.crit-row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ui-line);margin-top:16px;padding-top:14px;font-size:13px;font-weight:600}
+.crit-row span{color:var(--ui-ink-2);font-weight:500}
+.mfoot{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:16px}
+.file{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;background:var(--ui-chip);border-radius:8px;padding:8px 10px}
+.btn-sec{font-size:13px;font-weight:600;border:1px solid var(--ui-line);border-radius:8px;padding:8px 12px}
+.btn-pri{display:inline-flex;align-items:center;gap:8px;background:var(--plum);color:#fff;font-size:13px;font-weight:600;border-radius:8px;padding:9px 14px}
+
+.call{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%,#fff 0%,#FBF9FC 55%,#F6F2F8 100%)}
+.call .who{position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:10px;background:var(--ui-chip);border-radius:999px;padding:6px 16px 6px 6px}
+.call .who .pi{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.call .who b{display:block;font-size:13px;font-weight:500}
+.call .who span{font-size:11px;color:var(--ui-ink-2)}
+.call .res{position:absolute;right:58px;top:18px;display:flex;align-items:center;gap:6px;border:1px solid var(--ui-line);border-radius:10px;padding:7px 12px;font-size:13px;color:var(--plum);font-weight:500;background:#fff}
+.call .mo{position:absolute;right:18px;top:18px;width:32px;height:32px;border:1px solid var(--ui-line);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2);background:#fff}
+.orb{position:absolute;left:50%;top:120px;width:250px;height:250px;margin-left:-125px;border-radius:50%;
+     background:conic-gradient(from 210deg,#3B0964 0deg,#7A4FA8 70deg,rgba(203,183,226,.6) 160deg,rgba(236,226,245,.5) 250deg,#5B2A8C 330deg,#3B0964 360deg);
+     -webkit-mask:radial-gradient(circle,transparent 26%,rgba(0,0,0,.55) 36%,#000 46%,#000 56%,transparent 71%);mask:radial-gradient(circle,transparent 26%,rgba(0,0,0,.55) 36%,#000 46%,#000 56%,transparent 71%);filter:blur(7px)}
+.orb-core{position:absolute;left:50%;top:203px;width:84px;height:84px;margin-left:-42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B7280;box-shadow:0 4px 18px rgba(59,9,100,.18)}
+.call .left{position:absolute;left:0;right:0;top:392px;text-align:center;font-size:11px;color:var(--ui-ink-3)}
+.call .prompt{position:absolute;left:50%;transform:translateX(-50%);top:416px;width:470px;text-align:center;font-size:13px;line-height:20px;color:var(--ui-ink)}
+.capt{position:absolute;left:50%;transform:translateX(-50%);bottom:30px;background:#000;color:#fff;font:500 24px/1.2 var(--f-ui);border-radius:8px;padding:8px 14px;box-shadow:0 0 0 5px rgba(0,0,0,.08);white-space:nowrap;z-index:3}
+.capt .fresh{color:rgba(255,255,255,.45)}
+.ctrls{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;display:flex;align-items:center;gap:16px}
+.ctrls i{border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ctrls .end{width:42px;height:42px;background:var(--ui-red)}
+.ctrls .mic{width:60px;height:60px;background:var(--plum)}
+
+.ecard{position:absolute;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(80,30,80,.14);padding:30px 34px;z-index:8}
+.ecard .eb{font:600 15px/1 var(--f-ui);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}
+.ecard .q{font:500 30px/1.32 var(--f-ui);color:var(--ink);margin-top:16px}
+.ecard table{border-collapse:collapse;margin-top:18px;font-size:22px;width:100%}
+.ecard th{font-size:14px;font-weight:600;color:#8b8592;text-align:right;padding:0 0 10px 18px;line-height:1.25;vertical-align:bottom}
+.ecard th:first-child,.ecard td:first-child{text-align:left;padding-left:0}
+.ecard td{text-align:right;padding:16px 0 16px 18px;border-top:1px solid #EFEBEF;font-variant-numeric:tabular-nums}
+.ecard td:first-child b{display:block}
+.ecard td:first-child span{font-size:15px;color:#8b8592}
+.ecard .hl{color:#157F45;font-weight:600}
+.side-head{position:absolute;font:400 84px/1.05 var(--f-head);color:var(--ink);z-index:8}
+.side-head em{font-style:italic;color:var(--accent)}
+
+.res-page{position:absolute;inset:0;background:#fff}
+.res-page .rt{padding:18px 22px}
+.res-page .rt b{display:block;font-size:15px;font-weight:600}
+.res-page .rt span{font-size:12px;color:var(--ui-ink-2)}
+.res-col{position:absolute;left:50%;transform:translateX(-50%);top:64px;width:600px}
+.score-box{background:var(--ui-chip);border-radius:14px;padding:12px 16px;margin-top:12px}
+.score-box .sr{display:flex;align-items:center;gap:10px;font-size:13px;padding:4px 0}
+.score-box .sr .nm{flex:1}
+.score-box .bar{width:120px;height:6px;border-radius:3px;background:#E3E1E8;overflow:hidden}
+.score-box .bar i{display:block;height:100%;background:var(--plum)}
+.score-box .sr b{width:36px;text-align:right;font-weight:600}
+.player{display:flex;align-items:center;gap:12px;background:var(--ui-chip);border-radius:14px;padding:10px 16px;margin-top:12px}
+.player .pl{width:34px;height:34px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center}
+.player .sk{width:20px;height:20px;border-radius:50%;border:1.5px solid #6B7280;font-size:8px;display:flex;align-items:center;justify-content:center;color:#6B7280}
+.player .track{flex:1;height:3px;background:#E3E1E8;border-radius:2px;position:relative}
+.player .track::before{content:"";position:absolute;left:0;top:-4px;width:11px;height:11px;border-radius:50%;background:#111}
+.player .tm{font-size:12px;color:var(--ui-ink-2)}
+.res-col h6{font-size:13px;font-weight:600;margin:16px 0 8px}
+.res-col ul{margin-left:16px;font-size:13px;line-height:20px;color:var(--ui-ink)}
+.res-col li{margin-bottom:6px}
+
+
+/* Scorecard (stage, rich interview) */
+.sc-hd{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--ui-line)}
+.sc-hd .bk{width:32px;height:32px;border-radius:50%;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:var(--ui-ink-2)}
+.sc-hd .av{width:28px;height:28px;border-radius:50%;background:#B4572B;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sc-hd b{display:block;font-size:15px;font-weight:600}
+.sc-hd span.sub{font-size:13px;color:var(--ui-ink-2)}
+.sc2{position:absolute;left:50%;transform:translateX(-50%);top:84px;width:600px}
+.sc2-row{display:flex;justify-content:space-between;align-items:center}
+.sc2-row .file{border-radius:999px}
+.att{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:500;color:var(--ui-ink)}
+.att svg{color:var(--ui-ink-3)}
+.sc2-lbl{font-size:13px;color:var(--ui-ink-2);margin-top:22px}
+.sc2-score{display:flex;align-items:center;gap:12px;font-size:30px;font-weight:600;letter-spacing:-.01em;margin-top:2px}
+.dots4{display:inline-flex;gap:4px;align-items:center}
+.dots4 i{width:9px;height:9px;border-radius:50%;border:1.3px solid #111827;display:block}
+.dots4 i.f{background:#111827}
+.sc2 .player{margin-top:18px}
+.sc2 h6{font-size:14px;font-weight:600;margin:22px 0 10px}
+.sc2 ul{margin-left:18px;font-size:14px;line-height:22px;color:var(--ui-ink)}
+.sc2 li{margin-bottom:10px}
+.sc2 li::marker{color:#6B7280}
+.crit2{display:flex;align-items:center;padding:12px 10px;border-radius:10px;font-size:14px;margin:0 -10px}
+.crit2.hover{background:var(--ui-chip)}
+.crit2 .nm{flex:1}
+.crit2 .sc{color:var(--ui-ink-2);margin-right:8px}
+.crit2 .sc b{color:var(--ui-ink);font-weight:600}
+.crit2 .dots4 i{width:7px;height:7px}
+.crit2 .chev{margin-left:10px;color:var(--ui-ink-3)}
+.showall{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ui-ink-2);margin-top:12px}
+
+/* student answer cards (pass 3e): only the student gets a card, only while they answer */
+.turn{position:absolute;left:150px;width:600px;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(80,30,80,.14);padding:22px 30px 26px;z-index:8}
+.turn.prev{opacity:.45;transform:scale(.92);transform-origin:left top;box-shadow:0 6px 18px rgba(80,30,80,.06)}
+.turn .th{display:flex;align-items:center;gap:12px;font:600 19px var(--f-ui);color:#16141A}
+.turn .tav{width:42px;height:42px;border-radius:50%;flex:none;object-fit:cover}
+.turn .tav.orbi{background:radial-gradient(circle at 50% 50%,#fff 0 30%,transparent 31%),conic-gradient(from 200deg,#3B0964,#7A4FA8,#D8CCEA,#3B0964)}
+.turn .role{font-weight:500;color:#8b8592;font-size:16px}
+.turn .live{margin-left:auto;display:flex;align-items:center;gap:8px;font:600 12px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#fff;background:#3B0964;border-radius:999px;padding:6px 12px 6px 14px}
+.turn.stu .live{background:#E44D86}
+.turn .live i{display:block;width:4px;border-radius:2px;background:currentColor}
+.turn .tq{font:500 28px/1.32 var(--f-ui);color:#16141A;margin-top:14px}
+.turn table{border-collapse:collapse;margin-top:16px;font-size:20px;width:100%}
+.turn th{font-size:13px;font-weight:600;color:#8b8592;text-align:right;padding:0 0 8px 16px;line-height:1.25;vertical-align:bottom}
+.turn th:first-child,.turn td:first-child{text-align:left;padding-left:0}
+.turn td{text-align:right;padding:12px 0 12px 16px;border-top:1px solid #EFEBEF;font-variant-numeric:tabular-nums}
+.turn td:first-child b{display:block}.turn td:first-child span{font-size:14px;color:#8b8592}
+.turn .hl{color:#157F45;font-weight:600}
+.rounds{position:absolute;left:150px;top:430px;display:flex;flex-direction:column;gap:14px;z-index:8}
+.rounds span{display:inline-flex;align-items:center;gap:12px;align-self:flex-start;background:rgba(255,255,255,.82);border-radius:999px;padding:12px 24px 12px 14px;font:500 26px var(--f-ui);color:#3f3a44;box-shadow:0 6px 18px rgba(80,30,80,.06)}
+.rounds span i{width:34px;height:34px;border-radius:50%;background:#F1ECF8;display:flex;align-items:center;justify-content:center}
+.rounds span.on{background:#3B0964;color:#fff}.rounds span.on i{background:rgba(255,255,255,.18)}
+.rounds span.more{background:none;box-shadow:none;color:#8b8592;font-size:22px;padding-left:4px}
+
+/* 5a CV card (pass 3b) */
+.cvcard{position:absolute;left:150px;top:400px;width:600px;background:#fff;border-radius:16px;box-shadow:0 20px 50px rgba(80,30,80,.14);padding:26px 30px;z-index:8;font-family:var(--f-ui);color:#16141A}
+.cvcard .cvh{display:flex;align-items:center;gap:14px}
+.cvcard .cvh img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.cvcard .cvh b{display:block;font-size:24px;font-weight:600}.cvcard .cvh span{font-size:16px;color:#8b8592}
+.cvcard .apply{margin-top:18px;display:flex;align-items:center;gap:10px;font-size:17px;color:#3f3a44;background:#F1ECF8;border-radius:10px;padding:10px 14px}
+.cvcard .apply b{color:#3B0964;font-weight:600}
+.cvcard .cvsec{margin-top:18px;font:600 13px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#8b8592}
+.cvcard .job{margin-top:8px;font-size:18px;font-weight:600}.cvcard .job span{font-weight:500;color:#8b8592}
+.cvcard ul{margin:8px 0 0 20px;font-size:17px;line-height:1.5;color:#3f3a44}
+.cvcard li{margin-bottom:4px}
+.cvcard mark{background:rgba(228,77,134,.16);color:#16141A;border-radius:6px;padding:2px 6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.rounds span small{font-size:17px;color:#8b8592;margin-left:6px}
+.rounds span.on small{color:rgba(255,255,255,.7)}
+
+/* real New interview page (pass 3e) */
+.ni-sub{display:flex;align-items:center;gap:6px}.ni-sub i{width:18px;height:18px;border-radius:50%;background:#3B0964 url(assets/people/agent.svg) center/cover no-repeat;display:block}
+.ni-col{width:820px;margin:22px auto 0}
+.ni-lb{font-size:15px;font-weight:600;color:#111827}
+.ni-chips{display:flex;align-items:center;gap:10px;margin-top:16px}
+.ni-chip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 18px 0 14px;border:1px solid #E5E7EB;border-radius:999px;font-size:14px;font-weight:500;color:#4B5563;background:#fff}
+.ni-chip svg{color:#6B7280}
+.ni-chip.sel{border-color:#111827;color:#111827;box-shadow:inset 0 0 0 .6px #111827}
+.ni-mw{position:relative}
+.ni-more{display:inline-flex;align-items:center;gap:10px;height:38px;padding:0 12px 0 16px;border:1px solid #D1D5DB;border-radius:10px;font-size:15px;font-weight:500;color:#111827;background:#fff}
+.ni-dd{position:absolute;top:46px;right:0;width:280px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.09);padding:6px;z-index:3}
+.ni-dd div{display:flex;align-items:center;gap:12px;height:38px;padding:0 12px;border-radius:8px;font-size:15px;color:#111827}
+.ni-dd div.hv{background:#F3F4F6}.ni-dd svg{color:#6B7280}
+.ni-ta{margin-top:16px;height:250px;border:1px solid #D1D5DB;border-radius:22px;position:relative;padding:18px 22px;font-size:15px;color:#6B7280}
+.ni-ta .up{position:absolute;left:22px;bottom:16px;display:flex;align-items:center;gap:8px;font-weight:600;color:#4B5563}
+.ni-ta .mc{position:absolute;right:22px;bottom:16px;color:#6B7280}
+.tile{width:150px;height:150px;border-radius:30px;background:#fff url(assets/aaft-logo.jpg) center/84% no-repeat;box-shadow:0 16px 40px rgba(80,30,80,.16);position:relative;margin:0 auto}
+.tile .bdg{position:absolute;right:-10px;top:-10px;width:44px;height:44px;border-radius:12px;background:var(--plum);display:flex;align-items:center;justify-content:center;border:3px solid #fff}
+.p10{opacity:0;transform:translateX(-80px);filter:blur(16px)}
+.p10.on{opacity:1;transform:none;filter:blur(0);transition:transform 700ms var(--ease-out),filter 700ms var(--ease-out),opacity 300ms ease-out}
+.cursor{position:absolute;width:34px;height:34px;z-index:40;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+
+@media (max-width:1200px){.frames,.cols3{grid-template-columns:1fr}.board{padding:40px 16px 80px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="tc-logo" viewBox="0 0 615.82 120">
+  <g transform="scale(0.254777) translate(-45 -45)"><defs><linearGradient id="knot" gradientUnits="userSpaceOnUse" x1="46" y1="516" x2="497" y2="52"><stop offset="0" stop-color="#e6855e"/><stop offset="0.5" stop-color="#e83e6a"/><stop offset="1" stop-color="#7a5dd6"/></linearGradient></defs><path fill="url(#knot)" fill-rule="evenodd" d="M209.1 515.4C199.0 512.7 190.9 508.0 183.5 500.5C164.9 481.9 160.9 456.3 172.7 432.0C175.6 426.2 178.5 422.5 185.3 415.6L194.2 406.8L204.4 416.9L214.5 427.0L207.3 433.8C198.2 442.3 194.7 449.2 194.7 458.9C194.6 473.3 204.2 484.8 219.0 488.0C223.7 489.0 225.6 489.0 231.0 487.6C234.6 486.7 238.9 484.9 240.6 483.7C242.3 482.5 260.7 464.9 281.4 444.5C302.1 424.1 319.4 407.4 319.9 407.2C320.3 407.1 324.8 411.4 329.8 416.8L338.9 426.7L298.2 467.2C254.0 511.3 253.7 511.5 238.4 515.4C230.7 517.4 216.4 517.4 209.1 515.4ZM326.0 514.6C321.9 513.4 316.5 511.3 314.0 510.1C309.2 507.6 291.0 490.5 291.0 488.4C291.0 487.8 295.5 483.1 301.0 478.0L311.1 468.7L318.8 476.2C329.5 486.6 331.4 487.5 343.0 487.5C351.5 487.5 353.0 487.2 357.1 484.8C366.6 479.2 371.1 471.8 371.8 460.8C372.7 446.3 370.7 443.9 311.1 383.7L290.5 363.0L300.3 353.2L310.1 343.5L350.1 383.9C388.2 422.4 390.2 424.6 394.0 432.4C402.8 450.1 403.1 467.6 395.0 484.2C382.3 510.2 353.5 522.9 326.0 514.6ZM213.7 413.2C190.8 390.3 172.0 371.0 172.0 370.4C172.0 369.8 176.3 365.1 181.6 360.0L191.1 350.6L233.8 393.4L276.5 436.2L266.6 445.6C261.1 450.8 256.4 455.0 256.1 455.0C255.8 455.0 236.7 436.2 213.7 413.2ZM89.5 398.6C80.4 396.4 71.6 391.6 64.4 384.7C44.7 366.2 39.9 339.4 51.8 315.0C54.6 309.3 57.7 305.1 64.9 297.7L74.4 287.9L84.7 298.2L95.0 308.5L87.5 316.0C78.0 325.6 75.0 331.7 75.0 341.5C75.1 353.1 80.7 362.1 91.5 367.8C95.7 370.0 97.9 370.4 104.6 370.5C117.9 370.5 118.4 370.2 161.9 326.8C182.6 306.0 200.1 289.0 200.6 289.0C201.1 289.0 205.8 293.3 211.0 298.5L220.5 308.0L179.5 349.1C142.1 386.5 137.9 390.4 131.5 393.5C127.7 395.4 121.8 397.7 118.5 398.5C111.5 400.3 96.6 400.3 89.5 398.6ZM447.8 398.4C437.2 395.9 428.5 390.6 418.1 380.5L408.5 371.1L418.8 360.8L429.0 350.5L436.1 357.8C445.4 367.5 451.6 370.5 462.0 370.4C467.8 370.4 470.5 369.9 473.8 368.1C489.5 360.0 495.6 343.7 488.6 328.5C486.2 323.3 481.2 317.8 449.5 286.0C429.5 265.9 412.2 248.3 411.1 246.9L409.1 244.3L419.1 234.4L429.1 224.5L447.8 243.5C505.4 301.8 509.5 306.2 513.3 314.1C515.3 318.2 517.7 324.2 518.5 327.5C520.5 335.2 520.4 348.6 518.4 356.4C513.2 376.5 495.8 393.8 475.9 398.5C468.1 400.3 455.4 400.3 447.8 398.4ZM237.6 383.1L227.7 373.1L270.3 330.3L313.0 287.5L322.5 297.5C327.7 302.9 332.0 307.7 332.0 308.0C332.0 308.3 313.0 327.5 289.7 350.8L247.5 393.0L237.6 383.1ZM363.2 383.7C358.2 378.6 354.0 374.0 354.0 373.5C354.1 372.9 373.0 353.4 396.0 330.0L438.0 287.5L447.6 297.2C452.9 302.5 457.0 307.3 456.8 307.9C456.4 309.0 373.7 393.0 373.0 393.0C372.7 393.0 368.3 388.8 363.2 383.7ZM96.4 296.8C57.9 258.1 55.0 255.0 51.6 248.0C42.9 230.1 43.1 213.4 52.1 195.1C59.3 180.4 73.0 169.2 89.4 164.5C94.0 163.1 97.9 162.9 106.9 163.2C120.1 163.8 125.9 165.5 135.8 172.0C142.4 176.2 157.0 189.6 157.0 191.4C157.0 192.0 152.6 196.8 147.3 202.2L137.7 211.9L129.9 204.5C119.3 194.6 114.8 192.5 104.5 192.6C98.2 192.6 95.6 193.1 92.2 194.8C85.7 198.2 80.4 203.6 77.4 209.6C75.0 214.5 74.8 215.9 75.2 223.4C75.5 230.2 76.1 232.6 78.5 236.6C80.2 239.6 96.1 256.4 119.3 279.7L157.3 317.9L147.4 328.0L137.5 338.1L96.4 296.8ZM332.3 294.1L290.1 251.5L300.1 241.5L310.1 231.5L352.0 273.6C375.1 296.8 394.0 316.4 394.0 317.2C394.0 318.5 376.0 337.1 375.0 336.9C374.7 336.8 355.5 317.6 332.3 294.1ZM213.6 287.4L171.7 244.9L179.1 237.4C183.2 233.2 187.7 229.0 189.1 228.0L191.6 226.1L233.9 268.4L276.2 310.7L266.8 320.4C261.6 325.7 256.9 330.0 256.4 330.0C255.9 330.0 236.6 310.8 213.6 287.4ZM118.5 265.0L108.6 255.0L129.5 234.0C141.1 222.4 158.6 204.7 168.5 194.6C178.4 184.5 188.2 174.8 190.3 173.0L194.0 169.8L197.3 172.7C199.0 174.3 203.5 178.7 207.2 182.6L213.9 189.6L171.2 232.3L128.5 275.0L118.5 265.0ZM244.1 264.6L234.6 255.1L250.0 239.3C288.0 200.4 304.1 184.3 311.8 177.3L320.2 169.7L329.8 179.3L339.4 188.9L297.5 231.2C274.4 254.5 255.1 273.6 254.5 273.8C253.9 273.9 249.3 269.8 244.1 264.6ZM481.2 264.6C476.1 259.5 472.0 254.9 472.0 254.4C472.0 253.9 475.1 250.2 479.0 246.2C488.2 236.5 491.4 229.8 491.3 221.1C491.2 212.9 488.6 206.6 483.1 201.1C476.4 194.4 471.8 192.5 462.0 192.5C447.1 192.5 447.3 192.3 404.0 235.5C383.3 256.1 366.0 273.0 365.4 273.0C364.8 273.0 360.4 268.9 355.6 264.0L346.7 255.0L351.0 250.2C362.8 237.1 426.1 174.5 430.3 171.8C438.9 166.3 447.3 163.8 459.2 163.2C468.2 162.8 470.9 163.1 477.2 165.0C492.1 169.5 502.7 177.4 510.8 189.9C517.5 200.2 519.5 207.5 519.5 221.5C519.5 235.1 517.7 241.8 511.3 251.9C508.2 256.9 492.4 274.0 491.0 274.0C490.6 274.0 486.2 269.8 481.2 264.6ZM216.7 178.8C195.4 157.2 176.9 137.9 175.6 135.9C174.3 134.0 172.1 129.7 170.7 126.4C161.1 103.6 166.8 77.6 185.2 60.6C203.1 43.9 228.2 40.5 250.8 51.6C256.2 54.2 260.7 57.6 267.6 64.3L277.1 73.5L267.1 83.4L257.1 93.3L249.6 86.2C240.7 78.0 235.2 75.0 227.2 74.3C218.3 73.5 210.9 76.0 204.5 82.1C197.6 88.6 194.6 95.3 194.7 104.0C194.7 116.1 194.9 116.3 237.8 159.2L276.5 198.0L266.5 208.0C261.0 213.5 256.3 218.0 256.0 218.0C255.7 218.0 238.0 200.3 216.7 178.8ZM333.0 168.5L290.5 126.0L300.7 115.8L310.8 105.7L350.3 145.6C372.0 167.5 390.9 186.9 392.3 188.6L394.9 191.7L385.2 201.3L375.5 211.0L333.0 168.5ZM238.1 145.6C230.2 137.6 228.9 136.0 229.8 134.4C230.4 133.3 248.3 115.2 269.7 94.0C312.1 51.8 313.3 50.9 328.6 47.0C342.3 43.5 355.7 44.9 368.8 51.2C377.9 55.5 389.6 67.1 394.3 76.6C407.3 102.5 401.0 130.2 377.2 151.5L372.9 155.3L365.4 147.9C361.2 143.8 357.0 139.3 355.9 137.7L353.9 135.0L361.0 127.1C365.5 122.1 368.8 117.3 370.1 114.1C377.0 95.8 365.3 76.4 346.1 74.4C338.8 73.6 331.7 75.2 326.0 79.0C323.6 80.6 305.2 98.3 285.1 118.4C264.9 138.5 248.2 155.0 247.9 155.0C247.7 155.0 243.3 150.8 238.1 145.6Z"/></g>
+  <path fill="currentColor" d="M186.438 94.987L176.548 94.987Q168.072 94.987 164.010 91.102Q159.948 87.216 159.948 78.975L159.948 78.975L159.948 41.299L150.764 41.299L150.764 32.587L159.948 32.587L159.948 17.988L169.838 17.988L169.838 32.587L186.438 32.587L186.438 41.299L169.838 41.299L169.838 78.739Q169.838 82.978 171.721 84.626Q173.605 86.275 177.490 86.275L177.490 86.275L186.438 86.275L186.438 94.987Z M223.290 94.987L210.927 94.987L191.619 32.587L202.450 32.587L217.050 84.626L231.884 32.587L242.481 32.587L257.315 84.626L272.032 32.587L282.864 32.587L263.555 94.987L251.075 94.987L237.182 47.539L223.290 94.987Z M303.350 94.987L293.460 94.987L293.460 32.587L303.350 32.587L303.350 94.987ZM303.585 22.815L293.225 22.815L293.225 11.277L303.585 11.277L303.585 22.815Z M330.665 94.987L320.775 94.987L320.775 32.587L329.841 32.587L330.076 43.772Q332.548 37.296 337.670 34.235Q342.792 31.174 349.267 31.174L349.267 31.174Q356.449 31.174 361.099 34.353Q365.750 37.532 368.046 42.889Q370.342 48.246 370.342 54.839L370.342 54.839L370.342 94.987L360.452 94.987L360.452 57.665Q360.452 48.952 357.332 44.419Q354.212 39.887 347.148 39.887L347.148 39.887Q339.966 39.887 335.315 44.419Q330.665 48.952 330.665 57.665L330.665 57.665L330.665 94.987Z M412.138 96.400L412.138 96.400Q403.425 96.400 397.009 92.397Q390.592 88.394 387.060 81.035Q383.528 73.677 383.528 63.787L383.528 63.787Q383.528 53.897 387.060 46.598Q390.592 39.298 397.009 35.236Q403.425 31.174 412.138 31.174L412.138 31.174Q422.970 31.174 430.034 36.767Q437.098 42.359 438.629 52.838L438.629 52.838L428.268 53.544Q427.208 47.304 422.852 43.948Q418.496 40.593 412.138 40.593L412.138 40.593Q403.543 40.593 398.716 46.774Q393.889 52.955 393.889 63.787L393.889 63.787Q393.889 74.619 398.716 80.800Q403.543 86.981 412.138 86.981L412.138 86.981Q418.496 86.981 422.852 83.449Q427.208 79.917 428.268 72.853L428.268 72.853L438.629 73.559Q437.098 83.920 430.034 90.160Q422.970 96.400 412.138 96.400Z M467.474 96.400L467.474 96.400Q457.819 96.400 452.109 91.926Q446.399 87.452 446.399 79.446L446.399 79.446Q446.399 71.440 451.109 66.848Q455.818 62.256 466.061 60.373L466.061 60.373L488.195 56.252Q488.195 40.593 473.361 40.593L473.361 40.593Q466.885 40.593 463.118 43.478Q459.350 46.362 457.937 51.778L457.937 51.778L447.459 50.954Q449.225 42.124 455.995 36.649Q462.764 31.174 473.361 31.174L473.361 31.174Q485.370 31.174 491.727 37.944Q498.085 44.714 498.085 56.605L498.085 56.605L498.085 82.389Q498.085 86.275 501.382 86.275L501.382 86.275L503.854 86.275L503.854 94.987Q502.441 95.222 500.087 95.222L500.087 95.222Q494.671 95.222 491.904 93.044Q489.137 90.866 488.431 85.921L488.431 85.921L488.313 85.333Q485.958 90.160 480.189 93.280Q474.420 96.400 467.474 96.400ZM468.416 87.687L468.416 87.687Q477.835 87.687 483.015 82.389Q488.195 77.091 488.195 69.321L488.195 69.321L488.195 64.847L467.945 68.614Q461.587 69.792 459.173 72.205Q456.760 74.619 456.760 78.504L456.760 78.504Q456.760 82.860 459.880 85.274Q463.000 87.687 468.416 87.687Z M530.109 94.987L520.219 94.987L520.219 41.299L511.742 41.299L511.742 32.587L520.219 32.587L520.219 26.936Q520.219 19.989 524.222 15.692Q528.225 11.395 536.702 11.395L536.702 11.395L546.592 11.395L546.592 20.107L537.409 20.107Q533.759 20.107 531.934 22.108Q530.109 24.110 530.109 27.642L530.109 27.642L530.109 32.587L545.768 32.587L545.768 41.299L530.109 41.299L530.109 94.987Z M583.561 96.400L583.561 96.400Q574.731 96.400 568.315 92.397Q561.898 88.394 558.425 81.035Q554.952 73.677 554.952 63.787L554.952 63.787Q554.952 53.897 558.425 46.598Q561.898 39.298 568.197 35.236Q574.496 31.174 583.090 31.174L583.090 31.174Q591.214 31.174 597.454 35.001Q603.694 38.827 607.167 46.127Q610.641 53.426 610.641 63.905L610.641 63.905L610.641 66.848L565.312 66.848Q565.901 76.856 570.669 81.918Q575.438 86.981 583.561 86.981L583.561 86.981Q589.684 86.981 593.628 84.096Q597.572 81.212 599.102 76.502L599.102 76.502L609.699 77.327Q607.226 85.686 600.339 91.043Q593.451 96.400 583.561 96.400ZM565.312 58.136L565.312 58.136L599.809 58.136Q599.102 49.070 594.570 44.832Q590.037 40.593 583.090 40.593L583.090 40.593Q575.909 40.593 571.258 45.008Q566.607 49.423 565.312 58.136Z"/>
+</symbol></svg>
+<div class="board">
+
+  <header class="board-head">
+    <div>
+      <h1>AAFT Placements · <em>storyboard</em></h1>
+      <p>Checkpoint 1, revised. Look matched to the Dr Marwah video; UI matched to the stage Space and the SPJIMR flow. Click a frame for full size.</p>
+    </div>
+    <div class="meta">2:05 · 8 scenes · storyboard pass 3<br>Orange tags = waiting on a stage input</div>
+  </header>
+
+  <section class="sec">
+    <div class="sec-title">What changed from v1</div>
+    <div class="cols3">
+      <div class="note">
+        <h3>Look, from the Dr Marwah video</h3>
+        <ul>
+          <li><b>Sunset gradient ground</b> (peach top-left, pink right, periwinkle bottom-right) on every scene except the final logo.</li>
+          <li><b>Instrument Serif headline</b> at the top centre, with <b>one italic pink word</b>, as in "Start a <i>conversation</i>".</li>
+          <li><b>TwinCafe logo top-right</b> from scene 2 onwards.</li>
+          <li><b>The UI sits in a twincafe.com browser window</b>, enlarged 1.32x so it reads at a distance.</li>
+          <li>Editorial cards (YOU ASK style) sit outside the window for anything the product doesn't show.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>UI, from the stage Space</h3>
+        <ul>
+          <li><b>Geist</b>, ink #111827, plum #3B0964, 5% grey chips, 18px cards, pill buttons.</li>
+          <li>The Space avatar is the <b>AAFT logo with a plum group badge</b>, and the Twin is "<b>AAFT Placement Prep's Twin</b>".</li>
+          <li>Questions use an <b>@space</b> mention chip. Your own message sits right-aligned in a grey bubble.</li>
+          <li>The answer card has a "<b>N Sources</b>" pill and a "<b>Request review</b>" button.</li>
+          <li>The interview path is <b>Agents → Placement prep → list → task page</b>; there's no Apps grid.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>Interview, from the SPJIMR flow</h3>
+        <ul>
+          <li><b>How it works</b> modal: 1 Upload CV · 2 20 min call · 3 Get results, followed by 6 criteria.</li>
+          <li><b>White call screen</b>: plum orb, "19:52 left", and the interviewer's prompt centred. <b>Captions are added in post</b>, not on screen.</li>
+          <li><b>Results page</b>: resume chip, audio player, What went well, Areas of improvement, Your answers.</li>
+          <li><b>Practice again</b> on the task page replaces "Retry".</li>
+          <li>The speaker goes on an outside card (YOU ASK style).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-title">Palette</div>
+    <div class="note">
+      <div class="sw-row">
+        <div class="sw"><i style="background:var(--ground)"></i><b>Sunset ground</b><span>sampled from ref</span></div>
+        <div class="sw"><i style="background:#EC9A64"></i><b>Peach</b><span>#EC9A64</span></div>
+        <div class="sw"><i style="background:#EE93B6"></i><b>Pink</b><span>#EE93B6</span></div>
+        <div class="sw"><i style="background:#A6A3EA"></i><b>Periwinkle</b><span>#A6A3EA</span></div>
+        <div class="sw"><i style="background:#E44D86"></i><b>Accent word</b><span>#E44D86</span></div>
+        <div class="sw"><i style="background:#16141A"></i><b>Headline ink</b><span>#16141A</span></div>
+        <div class="sw"><i style="background:#3B0964"></i><b>UI plum</b><span>#3B0964 (stage)</span></div>
+        <div class="sw"><i style="background:#111827"></i><b>UI ink</b><span>#111827 (stage)</span></div>
+        <div class="sw"><i style="background:#F1F1F3"></i><b>UI chip</b><span>5% ink (stage)</span></div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-title">Storyboard · key frames <button class="btn-replay" id="replay">Replay reveals</button></div>
+    <div class="frames">
+
+      <div class="frame-wrap">
+        <h4>1 · Title, beat A <small>0:00–0:02.6</small></h4>
+        <p>This mirrors the reference opener ("One visionary. One institution."): serif type on the gradient, left of centre, revealed at P1 label speed.</p>
+        <div class="frame"><div class="stage">
+          <div class="ground"></div>
+          <div class="big p1" data-p1 style="position:absolute;left:300px;top:400px">
+            <span class="w">Placement</span> <span class="w">season,</span><br><em><span class="w">reimagined.</span></em>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>1 · Title, beat B <small>0:02.6–0:07.4</small></h4>
+        <p>This mirrors "Meet the Digital <i>Twins</i>": the Space tile (AAFT logo plus the plum Space badge) pops in, with "a Space on twincafe" beneath.</p>
+        <div class="frame"><div class="stage">
+          <div class="ground"></div>
+          <div class="head">Meet <em>AAFT Placements</em></div>
+          <div style="position:absolute;left:0;right:0;top:390px;text-align:center">
+            <div class="tile"><span class="bdg"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg></span></div>
+            <div style="font:400 40px var(--f-head);margin-top:28px">AAFT Placements</div>
+            <div style="display:inline-flex;align-items:center;gap:12px;margin-top:70px;font:500 22px var(--f-ui);color:#3f3a44">a Space on <svg viewBox="0 0 615.82 120" style="width:170px;color:var(--ink)"><use href="#tc-logo"/></svg></div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>2 · What is a Space <small>0:07.4–0:15.8</small></h4>
+        <p>Four beats build one white Space card: members, then documents, then the Space Twin, then agents. The headline word swaps each beat (People → Knowledge → Twin → <i>Agents</i>), then the camera pushes into the card.</p>
+        <div class="frame"><div class="stage">
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">A Space has its own <em>Agents</em></div>
+          <div style="position:absolute;left:480px;top:230px;width:960px;height:660px;border-radius:32px;background:rgba(255,255,255,.88);box-shadow:0 30px 80px rgba(80,30,80,.12);font-family:var(--f-ui)">
+            <svg width="960" height="660" style="position:absolute;inset:0"><g stroke="#C9B6E4" stroke-width="2.5" fill="none" stroke-dasharray="5 7">
+              <path d="M440 330 C 360 300, 300 270, 240 250"/><path d="M480 300 C 480 260, 480 240, 480 220"/><path d="M520 330 C 600 300, 660 270, 720 250"/><path d="M540 400 C 620 440, 680 470, 720 490"/></g></svg>
+            <div style="position:absolute;left:40px;top:34px;display:flex;align-items:center;gap:10px"><img src="assets/people/avatar/riya.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/m1.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/m2.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/m3.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/m4.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/m5.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/m6.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><img src="assets/people/avatar/arjun.jpg" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;margin-left:-12px;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.08)"><span style="font-size:18px;color:#6B7280;margin-left:8px">412 members</span></div>
+            <div style="position:absolute;left:80px;top:130px;width:230px" class="acard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><div style="font-size:18px;font-weight:600;margin-top:10px">Placement Policy</div><div style="font-size:14px;color:#9CA3AF">2026–27</div></div>
+            <div style="position:absolute;left:365px;top:100px;width:230px" class="acard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><div style="font-size:18px;font-weight:600;margin-top:10px">Placement Calendar</div><div style="font-size:14px;color:#9CA3AF">2026–27</div></div>
+            <div style="position:absolute;left:650px;top:130px;width:230px" class="acard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><div style="font-size:18px;font-weight:600;margin-top:10px">Recruiter Profiles</div><div style="font-size:14px;color:#9CA3AF">and debriefs</div></div>
+            <div style="position:absolute;left:405px;top:300px;text-align:center;width:150px">
+              <div class="tile" style="width:120px;height:120px;border-radius:26px"><span class="bdg" style="width:38px;height:38px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg></span></div>
+              <div style="font-size:16px;font-weight:600;margin-top:14px">Space Twin</div>
+            </div>
+            <div style="position:absolute;left:640px;top:480px;display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #E7E7EA;border-radius:16px;padding:16px 20px;box-shadow:0 12px 30px rgba(0,0,0,.08)">
+              <img src="assets/people/agent.svg" alt="" style="width:46px;height:46px;border-radius:50%;flex:none">
+              <div><div style="font-size:18px;font-weight:600">Placement prep</div><div style="font-size:14px;color:#6B7280">Agent · mock interviews</div></div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>3e · Space Q&amp;A, answer landed <small>0:31–0:37.6</small></h4>
+        <p>The real Space UI: the @space question in your own bubble, P7 "Checking…" lines that collapse as the answer starts, then the real Deloitte answer (renamed and trimmed) with its 3 Sources pill. The headline swaps from 3c's line to this one. <b>VO (new):</b> "Another asks what Meridian Analytics will ask, and how to prepare. The answer draws on seniors' debriefs from past Meridian interviews." The question is said while it types; "seniors' debriefs" lands on the "Searching Recruiter Profiles and Debriefs" line. The film plays on an event screen, so the voice carries what the text can't.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">MERGED FROM 2 REAL ANSWERS · re-ask on stage for one verbatim</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Prepare for <em>every drive</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app">
+            <div class="sp-top"><span class="back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><span class="sav"><span class="bdg"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg></span></span><div class="nm"><b>AAFT Placements ›</b><span>412 members · You're a member</span></div><span class="agents"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="2.5"/><path d="M12 7V4M9 12h.01M15 12h.01M9.5 16h5"/></svg>Agents<i class="dot"></i></span><span class="more">···</span></div>
+            <div class="thread" style="top:80px">
+              <div class="mine"><div class="bub"><span class="mention">@space</span> Meridian Analytics is coming for Data &amp; AI. What do they ask, and how do I prepare?</div><span class="t">9:43</span></div>
+              <div class="twin-row"><span class="sav"><span class="bdg"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg></span></span><div style="flex:1">
+                <div class="nm">AAFT Placement Prep's Twin</div>
+                <div class="acard">
+                                    Meridian Analytics' online round tests <strong>SQL, Python, and aptitude</strong> for the Analyst – Data &amp; AI role.
+                  <ul>
+                    <li><strong>SQL:</strong> practise joins, aggregations, CTEs, and especially window functions. Be able to solve ranking questions such as finding the top three products by revenue in each region.</li>
+                    <li><strong>Python:</strong> revise pandas—filtering, merges, missing-value handling, and grouping.</li>
+                    <li><strong>Aptitude:</strong> practise timed quantitative and logical-reasoning questions.</li>
+                  </ul>
+                  A practical 7-day split: 3 days SQL, 2 days Python/pandas, 1 day aptitude, and 1 full mock plus revision.
+                  <div class="foot"><span class="srcp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>3 Sources</span><span class="ghost-btn">Request review</span></div>
+                </div>
+              </div></div>
+            </div>
+          </div></div></div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>4 · Placement prep list, cursor gliding <small>0:37.6–0:44.9</small></h4>
+        <p>The cursor clicks <b>Agents</b> → <b>Placement prep</b> (the real panel), and the interview list fades in row by row. It glides down past 3–4 rows with a hover tint, then clicks <b>Kissa Audio · Case interview</b>.</p>
+        <div class="frame"><div class="stage">
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Every recruiter, its own <em>mock interview</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app">
+            <div class="pp-top"><span style="color:#4B5563"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><span class="ag"></span><div><b>Placement prep</b><span>Role-play an interview, get coaching right away</span></div><span class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search</span></div>
+            <div class="pp-list">
+              <h5>Interviews</h5>
+              <div class="pp-row hover"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Kissa Audio · Case interview</b><span>2 attempts</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Saffron Frame Studios · Situational interview</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Northline Retail · Resume discussion</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Desh Live News · Case interview</b><span>1 attempt</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Ambrosia Hotels · HR interview</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Meridian Analytics · Case interview</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Spotlight Live Events · Resume discussion</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div>
+            </div>
+          </div></div></div>
+          <svg class="cursor" style="left:1150px;top:470px" viewBox="0 0 24 24"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>5a · Upload your CV <small>0:44.9–0:52.2</small></h4>
+        <p>Unchanged visual (the real task page + How it works modal). New VO: "Students upload their CV, and get asked about their experience for the role they're applying to." Riya's CV chip lands in the modal on "upload their CV", the cursor clicks Start interview → "Starting your round…", then the window slides into the call.</p>
+        <div class="frame"><div class="stage">
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Practise with <em>their own CV</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app">
+            <div class="pp-top"><span style="color:#4B5563"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><div><b>Kissa Audio · Case interview</b><span>Growth Marketing Associate at Kissa Audio.</span></div></div>
+            <div style="position:absolute;left:220px;top:96px;font-size:14px">
+              <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;border-radius:50%;background:var(--ui-chip);display:flex;align-items:center;justify-content:center;color:#6B7280"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></span><b style="font-weight:600">Senior executive</b><span style="font-size:12px;font-weight:600;background:var(--ui-chip);border-radius:6px;padding:3px 7px">AI role-play</span></div>
+              <div class="btn-pri" style="margin-top:16px">Practice again <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+              <div style="font-weight:600;margin-top:22px">Duration</div><div style="margin-top:8px">20 minutes</div>
+              <div style="font-weight:600;margin-top:22px">About the role</div><div style="margin-top:8px"><b style="font-weight:600">Kissa Audio.</b> Growth Marketing Associate.</div>
+            </div>
+            <div class="scrim"></div>
+            <div class="modal">
+              <div class="mh">Kissa Audio · Case interview <span style="color:#9CA3AF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+              <div class="hw">How it works</div>
+              <div class="steps">
+                <div><div class="st"><span style="width:44px;height:56px;border-radius:6px;background:#fff;border:1px solid #E7E7EA;display:block;position:relative"><i style="position:absolute;left:9px;right:9px;top:14px;height:2px;background:#D1D5DB;box-shadow:0 7px 0 #D1D5DB,0 14px 0 #D1D5DB,0 21px 0 #D1D5DB"></i></span></div><div class="lb"><b>1</b>Upload CV</div></div>
+                <div><div class="st"><span style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B7280"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></span></div><div class="lb"><b>2</b>20 min call</div></div>
+                <div><div class="st"><span style="display:flex;gap:5px"><i style="width:16px;height:6px;border-radius:3px;background:#16A34A"></i><i style="width:16px;height:6px;border-radius:3px;background:#16A34A"></i><i style="width:16px;height:6px;border-radius:3px;background:#D1D5DB"></i></span></div><div class="lb"><b>3</b>Get results</div></div>
+              </div>
+              <div class="crit-row">What gets scored <span>6 criteria ⌄</span></div>
+              <div class="mfoot"><span class="file"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Riya_Malhotra_CV.pdf</span><span class="btn-sec">Change</span><span class="btn-pri">Start interview <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+            </div>
+          </div></div></div>
+          <svg class="cursor" style="left:1352px;top:770px" viewBox="0 0 24 24"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>5b · CV probe, Riya answering <small>0:52.2–1:03.8</small></h4>
+        <p><b>No interviewer card.</b> The call window already shows the interviewer's question (the real prompt) and the orb moves with the voice, so a card on the left would say it twice. While the interviewer asks, the left column holds only the headline. When Riya answers, <b>her card fades in</b> (her face, name and a pink "Speaking" pill) and the mic in the call pulses. It <b>fades out</b> as soon as the interviewer speaks again or the scene changes.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">AUDIO READY</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="side-head" style="left:150px;top:180px">Pushed on<br><em>their own numbers</em></div>
+          <div class="turn stu" style="top:400px"><div class="th"><img class="tav" src="assets/people/avatar/riya.jpg" alt="">Riya Malhotra<span class="role">B.Sc. Digital Marketing</span><span class="live">Speaking<span style="display:flex;gap:3px;align-items:center;height:20px"><i style="height:8px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:9px"></i></span></span></div><div class="tq">"Not at first. So I started judging creatives on day-seven retention."</div></div>
+          <div class="bw" style="left:830px;top:150px;width:940px;height:830px"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app"><div class="call"><div class="who"><span class="pi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></span><div><b>Senior executive at Kissa Audio</b><span>AI role-play</span></div></div><span class="res"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>Resources</span><span class="mo">···</span><div class="orb"></div><div class="orb-core"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></div><div class="left">19:52 left</div><div class="prompt">You cut cost per install from ₹38 to ₹24. Were those listeners worth keeping?</div><div class="ctrls"><i class="end"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg></i><i class="mic"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></i></div></div></div></div></div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>New · Every kind of round <small>1:03.8–1:11.8</small></h4>
+        <p><b>The real New interview page</b> (Placement prep → New interview). VO: "They can practise all types of interviews, like case interviews, technical rounds, HR discussions and more." On "all types of interviews", the window morphs back to full width and the page loads with the <b>Interview type</b> chips. On "case interviews", the cursor clicks <b>Case interview</b>. On "technical rounds", it clicks <b>More</b> and the real dropdown opens with <b>Technical interview</b> highlighted. On "HR discussions", it glides back to the <b>HR interview</b> chip (hover tint). On "and more", the rest of the open list (Situational interview, Analytics test, Guesstimate round, Other) says it, and the window morphs into a fresh case call (5c). The selected-chip look here is a stand-in until it matches the product's own selected state.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">AUDIO READY · narr_05t (re-voiced, 7.3s)</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Every kind of <em>interview round</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app"><div class="pp-top"><span style="color:#4B5563"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><div><b>New interview</b><span class="ni-sub"><i></i>Placement prep</span></div></div><div class="ni-col"><div class="ni-lb">Interview type</div><div class="ni-chips"><span class="ni-chip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18.2c1.2-2 3-3 5.2-3s4 1 5.2 3"/></svg>HR interview</span><span class="ni-chip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Resume discussion</span><span class="ni-chip sel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg>Case interview</span><span class="ni-mw"><span class="ni-more">More <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><div class="ni-dd"><div class="hv"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg>Technical interview</div><div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M15 9h5a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1v3l-4-3h-3a1 1 0 0 1-1-1v-1"/></svg>Situational interview</div><div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-9"/></svg>Analytics test</div><div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></svg>Guesstimate round</div><div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Other</div></div></span></div><div class="ni-lb" style="margin-top:34px">Job description and notes</div><div class="ni-ta">Paste a note or type what you know…<span class="up"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>Upload</span><span class="mc"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span></div></div></div></div></div>
+          <svg class="cursor" style="left:985px;top:508px" viewBox="0 0 24 24"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>5c · The case, interviewer speaking <small>1:11.8–1:25.4</small></h4>
+        <p>A fresh case call (timer reset). The interviewer's case is read from the call window's own prompt, which carries every number (₹20 and 4% for A, ₹32 and 14% for B). The left column holds only the headline: <b>no interviewer card and no separate table</b>, so nothing is said twice.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">AUDIO READY</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="side-head" style="left:150px;top:180px">A real case,<br><em>not a quiz</em></div>
+          <div class="bw" style="left:830px;top:150px;width:940px;height:830px"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app"><div class="call"><div class="who"><span class="pi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></span><div><b>Senior executive at Kissa Audio</b><span>AI role-play</span></div></div><span class="res"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>Resources</span><span class="mo">···</span><div class="orb"></div><div class="orb-core"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></div><div class="left">19:54 left</div><div class="prompt">Week one. Option A costs ₹20 an install, and 4% reach a paid episode. Option B costs ₹32, and 14% do. Which do you scale?</div><div class="ctrls"><i class="end"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg></i><i class="mic"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></i></div></div></div></div></div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>5d · Riya answers <small>1:25.4–1:30.7</small></h4>
+        <p>Riya's card fades in under the headline as she answers. It holds for a second after she finishes, then fades as the window morphs back for the bridge.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">AUDIO READY</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="side-head" style="left:150px;top:180px">A real case,<br><em>not a quiz</em></div>
+          <div class="turn stu" style="top:400px"><div class="th"><img class="tav" src="assets/people/avatar/riya.jpg" alt="">Riya Malhotra<span class="role">B.Sc. Digital Marketing</span><span class="live">Speaking<span style="display:flex;gap:3px;align-items:center;height:20px"><i style="height:8px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:9px"></i></span></span></div><div class="tq">"B. ₹229 per paying listener, against ₹500 for A."</div></div>
+          <div class="bw" style="left:830px;top:150px;width:940px;height:830px"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app"><div class="call"><div class="who"><span class="pi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></span><div><b>Senior executive at Kissa Audio</b><span>AI role-play</span></div></div><span class="res"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>Resources</span><span class="mo">···</span><div class="orb"></div><div class="orb-core"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></div><div class="left">19:27 left</div><div class="prompt">Week one. Option A costs ₹20 an install, and 4% reach a paid episode. Option B costs ₹32, and 14% do. Which do you scale?</div><div class="ctrls"><i class="end"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg></i><i class="mic"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></i></div></div></div></div></div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>Bridge · every school <small>1:30.7–1:36</small></h4>
+        <p>The call window morphs back to full width, using the same move as in 5b in reverse, and lands on the Placement prep list from scene 4. The highlight glides down the rows and clicks <b>Saffron Frame Studios · Situational interview</b>, then the window morphs into the call layout again. The narrator line plays over the glide.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">AUDIO READY · narr_06</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Every school, <em>every role</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app">
+            <div class="pp-top"><span style="color:#4B5563"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><span class="ag"></span><div><b>Placement prep</b><span>Role-play an interview, get coaching right away</span></div><span class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search</span></div>
+            <div class="pp-list">
+              <h5>Interviews</h5>
+              <div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Kissa Audio · Case interview</b><span>2 attempts</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row hover"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Saffron Frame Studios · Situational interview</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Northline Retail · Resume discussion</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Desh Live News · Case interview</b><span>1 attempt</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Ambrosia Hotels · HR interview</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Meridian Analytics · Case interview</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="pp-row"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><div><b>Spotlight Live Events · Resume discussion</b><span>Not started</span></div><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div>
+            </div>
+          </div></div></div>
+          <svg class="cursor" style="left:1150px;top:528px" viewBox="0 0 24 24"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <div style="position:absolute;left:0;right:0;bottom:30px;text-align:center;font:500 20px var(--f-ui);color:rgba(22,20,26,.6);z-index:9">VO: "From marketing to cinema, every school practises for its own roles."</div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>6 · Cinema interview, Arjun answering <small>1:36–1:47.8</small></h4>
+        <p>The same pattern for Saffron Frame Studios: while the interviewer asks, the left column holds only the headline, and the question sits in the call window. Arjun's card fades in when he answers and fades as the call ends.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">AUDIO READY</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="side-head" style="left:150px;top:180px">Every school,<br><em>every role</em></div>
+          <div class="turn stu" style="top:400px"><div class="th"><img class="tav" src="assets/people/avatar/arjun.jpg" alt="">Arjun Sethi<span class="role">B.A. Cinema</span><span class="live">Speaking<span style="display:flex;gap:3px;align-items:center;height:20px"><i style="height:8px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:9px"></i></span></span></div><div class="tq">"First, I tell the first AD to reshuffle to the scenes we can shoot without him, so we don't lose the light."</div></div>
+          <div class="bw" style="left:830px;top:150px;width:940px;height:830px"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app"><div class="call"><div class="who"><span class="pi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></span><div><b>Line producer at Saffron Frame Studios</b><span>AI role-play</span></div></div><span class="res"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5V20h-6M16 7l3.5-1L21 19l-3.5 1"/></svg>Resources</span><span class="mo">···</span><div class="orb"></div><div class="orb-core"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></div><div class="left">19:41 left</div><div class="prompt">Your lead actor is 90 minutes late, and you lose the light at 5:30. What do you do?</div><div class="ctrls"><i class="end"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg></i><i class="mic"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></i></div></div></div></div></div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>7 · Arjun's scorecard, top <small>1:47.8–1:51.8</small></h4>
+        <p>The cursor clicks the red end-call button, the window morphs back to full width, and the scorecard loads. The dots fill to 3/4, the recording row slides in, and What went well streams in.</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">PLACEHOLDER · scores + feedback text</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Every attempt, <em>a scorecard</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app">
+            <div class="sc-hd"><span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><img class="av" src="assets/people/avatar/arjun.jpg" alt="" style="object-fit:cover"><div><b>Arjun Sethi</b><span class="sub">Assistant Director Trainee · Situational interview · Sat, Nov 14</span></div></div>
+            <div class="sc2">
+              <div class="sc2-row"><span class="file"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Arjun_Sethi_CV.pdf</span><span class="att"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg> Attempt 2 of 2 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div>
+              <div class="sc2-lbl">Score</div>
+              <div class="sc2-score">3/4 <span class="dots4"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></div>
+              <div class="player"><span class="pl"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z" fill="#fff"/></svg></span><span class="sk">10</span><span class="sk">10</span><span class="track"></span><span class="tm">0:10 / 16:20</span></div>
+              <h6>What went well</h6>
+              <ul>
+                <li>You protected the shooting day first. Reshuffling to the scenes you could shoot without the lead kept the light and the crew working. Keep leading with the decision that saves the schedule.</li>
+                <li>You spoke the language of a set: first AD, scene order, light. That made the answer credible. Keep using the crew's terms.</li>
+              </ul>
+            </div>
+          </div></div></div>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>7 · Arjun's scorecard, by criteria <small>1:51.8–1:57.3</small></h4>
+        <p>The page scrolls through Areas of improvement to <b>By criteria</b>, and the rows stagger in with their dots filling. The window holds there while the narrator finishes "…practise again as often as they like."</p>
+        <div class="frame"><div class="stage">
+          <span class="ph-tag">PLACEHOLDER · scores + feedback text</span>
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div class="head">Every attempt, <em>a scorecard</em></div>
+          <div class="bw"><div class="bw-bar"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">twincafe.com</span></div><div class="bw-body"><div class="app">
+            <div class="sc-hd"><span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><img class="av" src="assets/people/avatar/arjun.jpg" alt="" style="object-fit:cover"><div><b>Arjun Sethi</b><span class="sub">Assistant Director Trainee · Situational interview · Sat, Nov 14</span></div></div>
+            <div class="sc2" style="top:72px">
+              <h6 style="margin-top:0">Areas of improvement</h6>
+              <ul>
+                <li>You didn't say who else needs to know. Next time, name the producer and the actor's team, and say when you'd escalate if he isn't on set by a fixed time.</li>
+              </ul>
+              <h6>By criteria</h6>
+              <div class="crit2 hover"><span class="nm">Prioritisation under pressure</span><span class="sc">Score: <b>4/4</b></span><span class="dots4"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="crit2"><span class="nm">Production knowledge</span><span class="sc">Score: <b>3/4</b></span><span class="dots4"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="crit2"><span class="nm">Communication with crew</span><span class="sc">Score: <b>3/4</b></span><span class="dots4"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="crit2"><span class="nm">Problem solving</span><span class="sc">Score: <b>3/4</b></span><span class="dots4"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="crit2"><span class="nm">Composure</span><span class="sc">Score: <b>4/4</b></span><span class="dots4"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div>
+              <div class="showall">Show all 6 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+            </div>
+          </div></div></div>
+          <svg class="cursor" style="left:1180px;top:505px" viewBox="0 0 24 24"><path d="M4 2 L4 19 L8.5 14.8 L11.5 21.5 L14.2 20.3 L11.3 13.8 L17.5 13.8 Z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div></div>
+      </div>
+
+      <div class="frame-wrap">
+        <h4>8 · End card <small>1:57.3–2:05</small></h4>
+        <p>This mirrors the reference close ("One <i>visionary</i>. One <i>institution</i>. Both <i>always on</i>."): the Space tile, two italic beats, and a serif payoff line.</p>
+        <div class="frame"><div class="stage">
+          <div class="ground"></div>
+          <svg class="tc-corner" viewBox="0 0 615.82 120"><use href="#tc-logo"/></svg>
+          <div style="position:absolute;left:0;right:0;top:250px;text-align:center" class="p1" data-p1>
+            <div class="tile"><span class="bdg"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="10" r="2.6"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M14.5 14.6c2.6-.3 4.8 1.1 5.5 4.4"/></svg></span></div>
+            <div style="font:400 56px var(--f-head);margin-top:44px"><span class="w">Every</span> <span class="w">question</span> <em class="w" style="color:var(--accent)">answered.</em>&nbsp;&nbsp;<span class="w">Every</span> <span class="w">interview</span> <em class="w" style="color:var(--accent)">practised.</em></div>
+            <div style="font:400 68px var(--f-head);margin-top:60px"><span class="w">Placement-ready,</span> <em class="w" style="color:var(--accent)">around the clock.</em></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:56px;text-align:center;font:500 18px var(--f-ui);color:rgba(22,20,26,.55);letter-spacing:.01em">Dramatisation · AI-generated voices and faces</div>
+        </div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-title">Flow · how scenes come and go</div>
+    <div class="cols3" style="margin-bottom:20px">
+      <div class="note"><h3>One window, start to end</h3><ul><li>The twincafe.com window <b>enters once</b> (out of the Space card, 0:15.8) and <b>leaves once</b> (shrinking back into the AAFT tile, 1:57.3). Everything between happens inside it.</li><li>The gradient ground and the top-right logo never cut.</li></ul></div>
+      <div class="note"><h3>Two layouts, one move</h3><ul><li><b>Browse</b>: the window centred, with the headline on top. <b>Call</b>: the window on the right, with the headline and speaker cards on the left.</li><li>Every switch uses the same 700ms ease-out <b>morph</b>, so viewers learn it once. 5a→5b and the bridge→6 go into the call; 5d→bridge and 6→7 come out of it.</li></ul></div>
+      <div class="note"><h3>Who's talking is always clear</h3><ul><li>The interviewer lives in the call (orb and prompt). Only the student gets a card on the left, and only while they answer: it fades in on their first word and out when the interviewer speaks again.</li><li>The orb moves only for the interviewer, and the mic pulses only for the student.</li><li>The headline swaps with a dim-trail: the old line fades to grey first, then the new one arrives.</li></ul></div>
+    </div>
+    <table class="tbl">
+      <tr><th>Cut</th><th>Out</th><th>In</th><th>Why it reads</th></tr>
+      <tr><td>1A → 1B · 0:04</td><td>Serif line fades up and out</td><td>"Meet <em>AAFT Placements</em>" and the AAFT tile pop in</td><td>Name first, then the object</td></tr>
+      <tr><td>1B → 2 · 0:08</td><td>"a Space on twincafe" fades; the tile <b>stays</b></td><td>The tile shrinks into the centre of the Space card as it builds; the logo fades in top-right</td><td>Shared element: the tile becomes the Space Twin</td></tr>
+      <tr><td>2 → 3a · 0:15.8</td><td>Camera pushes into the card (scale 1→1.6)</td><td>The card dissolves into the browser window showing the real Space</td><td>"We've entered the Space"</td></tr>
+      <tr><td>3a → 3b → 3d</td><td>—</td><td>The question is typed into the composer, posts as a bubble, the answer streams, and the thread scrolls up for the next one</td><td>Continuous use of the product, no cuts</td></tr>
+      <tr><td>3e → 4 · 0:37.6</td><td>Cursor moves to <b>Agents</b> in the window</td><td>Agents panel → Placement prep → list rows stagger in</td><td>Cursor journey (P16): every change is caused by a click</td></tr>
+      <tr><td>4 → 5a · 0:44.9</td><td>Click the Kissa Audio row</td><td>Task page and How it works; the CV chip lands; click Start interview → "Starting your round…"</td><td>The real flow, compressed</td></tr>
+      <tr><td>5a → 5b · 0:52.2</td><td><b>Morph</b>: the window slides right; the top headline fades</td><td>The call opens: orb, timer, prompt. The headline arrives on the left</td><td>The layout change marks "now in a call"</td></tr>
+      <tr><td>5b → Rounds → 5c → 5d</td><td>The student's card fades out when the interviewer speaks; after 5b the window <b>morphs back</b> to the New interview page</td><td>Chips are picked as named, Case interview is clicked, More opens; the window <b>morphs</b> into a fresh case call</td><td>Interviewer = orb and prompt in the call. Student = their card on the left. Never both on the left</td></tr>
+      <tr><td>5d → Bridge · 1:30.7</td><td><b>Morph back</b>: the left column fades and the window centres</td><td>The window shows the <b>same list as scene 4</b>; highlight glides to Saffron Frame and clicks</td><td>The return to the list says "new interview"; the narrator names it</td></tr>
+      <tr><td>Bridge → 6 · 1:36</td><td>Click the row</td><td><b>Morph</b> into the call: a new label, the timer reset</td><td>The same move as 5b; the new label carries the change</td></tr>
+      <tr><td>6 → 7 · 1:47.8</td><td>Cursor clicks the red end-call button; <b>morph back</b></td><td>The scorecard page loads, the dots fill, then it scrolls to By criteria</td><td>End the call, get results: cause and effect</td></tr>
+      <tr><td>7 → 8 · 1:57.3</td><td>The window shrinks into the centre and fades</td><td>The AAFT tile reappears, the two lines reveal (P1), and the disclosure line fades in</td><td>Bookend with 1B; the tile opens and closes the film</td></tr>
+    </table>
+  </section>
+
+  <section class="sec">
+    <div class="sec-title">Audio · all voices AI-generated (ElevenLabs)</div>
+    <div class="cols3">
+      <div class="note"><h3>Five voices</h3><ul><li><b>NARR</b>: calm, warm, Indian English.</li><li><b>INT_KA</b>: Kissa Audio senior executive. <b>INT_SF</b>: Saffron Frame line producer.</li><li><b>RIYA</b> and <b>ARJUN</b>: early 20s, Indian English.</li></ul></div>
+      <div class="note"><h3>Who plays what</h3><ul><li><b>Interview clips play in the HTML</b>: the orb follows the interviewer's level, and the mic pulses for Riya and Arjun.</li><li><b>Narrator goes in Descript</b>. <b>?vo=1</b> plays it in the HTML for rehearsal.</li><li>Captions are added in post.</li></ul></div>
+      <div class="note"><h3>Timing follows the clips</h3><ul><li>The HTML reads each clip's real length and lays the scene out from it, so regenerating a line needs no retiming.</li><li>The full line list and TTS text are in <b>content/voice-script.md</b>.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-title">Storyboard · timeline</div>
+    <table class="tbl">
+      <tr><th>#</th><th>Time</th><th>On screen</th><th>Headline</th><th>Notes</th></tr>
+      <tr><td>1</td><td>0:00–0:07.4</td><td>Beat A: serif line. Beat B: Space tile and "a Space on twincafe".</td><td>Placement season, <em>reimagined.</em> → Meet <em>AAFT Placements</em></td><td>narr_01</td></tr>
+      <tr><td>2</td><td>0:07.4–0:15.8</td><td>Space card builds on the VO's nouns, then the camera pushes in.</td><td>A Space has its own <em>Twin / people / knowledge / agents</em></td><td>narr_02</td></tr>
+      <tr><td>3a</td><td>0:15.8–0:19.5</td><td>Window opens on the real Space; seed thread.</td><td>One Space, <em>the whole batch</em></td><td>narr_03a</td></tr>
+      <tr><td>3b–c</td><td>0:19.5–0:27.5</td><td>December question typed, then the answer streams.</td><td>Answers from <em>AAFT's own documents</em></td><td>narr_03b (new): "A student asks which companies are coming in December. The Space answers from the placement cell's own drive calendar." · 3c answer is sample text until asked in the staging Space</td></tr>
+      <tr><td>3d–e</td><td>0:27.5–0:37.6</td><td>Meridian Analytics question typed (28ms a character), then the real answer streams.</td><td>Prepare for <em>every drive</em></td><td>narr_03d (new): "Another asks what Meridian Analytics will ask, and how to prepare. The answer draws on seniors' debriefs from past Meridian interviews."</td></tr>
+      <tr><td>4</td><td>0:37.6–0:44.9</td><td>Agents → Placement prep → list → click Kissa Audio.</td><td>Every recruiter, its own <em>mock interview</em></td><td>narr_04 (new): "Every recruiter comes with its own mock interview. Students pick a company and start practising."</td></tr>
+      <tr><td>5a</td><td>0:44.9–0:52.2</td><td>Task page → How it works → CV chip lands on "upload their CV" → Start interview → "Starting your round…".</td><td>Practise with <em>their own CV</em></td><td>narr_05a (new): "Students upload their CV, and get asked about their experience for the role they're applying to."</td></tr>
+      <tr><td>5b</td><td>0:52.2–1:03.8</td><td>Question in the call; Riya's card fades in for her answer, out after.</td><td>Pushed on <em>their own numbers</em></td><td>int_05b_q · riya_05b_a</td></tr>
+      <tr><td>Rounds</td><td>1:03.8–1:11.8</td><td>Real New interview page: click Case interview → More opens on Technical → HR chip → morph to the case call.</td><td>Every kind of <em>interview round</em></td><td>narr_05t (re-voiced): "They can practise all types of interviews, like case interviews, technical rounds, HR discussions and more."</td></tr>
+      <tr><td>5c</td><td>1:11.8–1:25.4</td><td>Fresh case call; the case is in the call prompt; left column headline only.</td><td>A real case, <em>not a quiz</em></td><td>int_05c_q</td></tr>
+      <tr><td>5d</td><td>1:25.4–1:30.7</td><td>Riya's card fades in for her answer.</td><td>A real case, <em>not a quiz</em></td><td>riya_05d_a</td></tr>
+      <tr><td>Bridge</td><td>1:30.7–1:36</td><td>Back to the list; glide to Saffron Frame; click.</td><td>Every school, <em>every role</em></td><td>narr_06 (re-generated)</td></tr>
+      <tr><td>6</td><td>1:36–1:47.8</td><td>Question in the call; Arjun's card fades in for his answer; then end call.</td><td>Every school, <em>every role</em></td><td>int_06_q · arjun_06_a</td></tr>
+      <tr><td>7</td><td>1:47.8–1:57.3</td><td>Arjun's scorecard: dots, recording, What went well → By criteria.</td><td>Every attempt, <em>a scorecard</em></td><td>narr_07 · scores are placeholders</td></tr>
+      <tr><td>8</td><td>1:57.3–2:05</td><td>Window shrinks into the AAFT tile; two lines; disclosure.</td><td>Every question <em>answered.</em> Every interview <em>practised.</em></td><td>narr_08 (re-voiced): "Every question answered. Every interview practised. Placement-ready, around the clock."</td></tr>
+    </table>
+  </section>
+</div>
+
+<div class="lightbox" id="lb"><div class="lb-frame" id="lbf"></div></div>
+
+<script>
+function fit(){document.querySelectorAll('.frame').forEach(f=>{f.querySelector('.stage').style.transform='scale('+(f.clientWidth/1920)+')'})}
+addEventListener('resize',fit); fit(); document.fonts&&document.fonts.ready.then(fit);
+const lb=document.getElementById('lb'),lbf=document.getElementById('lbf');
+document.querySelectorAll('.frame').forEach(f=>f.addEventListener('click',()=>{
+  const k=Math.min(innerWidth*.96/1920,innerHeight*.96/1080);lbf.innerHTML='';const c=f.querySelector('.stage').cloneNode(true);
+  c.style.transform='scale('+k+')';lbf.style.width=1920*k+'px';lbf.style.height=1080*k+'px';lbf.appendChild(c);lb.classList.add('open');play(lbf)}));
+lb.addEventListener('click',()=>lb.classList.remove('open'));
+addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open')});
+function play(root){
+  root.querySelectorAll('[data-p1]').forEach(g=>{
+    const ws=[...g.querySelectorAll('.w')];ws.forEach(w=>w.classList.remove('on'));
+    ws.forEach((w,i)=>setTimeout(()=>w.classList.add('on'),300+i*180));
+    const p=g.querySelector('[data-p10]');if(p){p.classList.remove('on');setTimeout(()=>p.classList.add('on'),200)}
+  });
+}
+document.getElementById('replay').addEventListener('click',()=>play(document));
+const solo=location.hash.match(/^#frame-(\d+)$/);
+if(solo){
+  const st=document.querySelectorAll('.stage')[+solo[1]-1];
+  document.querySelector('.board').remove();document.body.style.cssText='margin:0;overflow:hidden';
+  const q=new URLSearchParams(location.search),z=+q.get('z')||1;
+  st.style.transform=z===1?'none':`scale(${z}) translate(${-(+q.get('x')||0)}px,${-(+q.get('y')||0)}px)`;
+  document.body.appendChild(st);
+  if(/still/.test(location.search))st.querySelectorAll('.w,.p10').forEach(e=>e.classList.add('on'));else play(document);
+}else play(document);
+</script>
+</body>
+</html>

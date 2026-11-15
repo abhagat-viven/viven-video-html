@@ -1,0 +1,8 @@
+.env
+deliverables/*.wav
+
+# third-party reference material: kept local, not published (public repo)
+reference/
+assets/music/ref_marwah_40s.mp3
+assets/screens/
+__pycache__/

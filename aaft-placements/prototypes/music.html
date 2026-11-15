@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Music Beds</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16141A;--ink2:#5b5560;--line:#E4DFD9;--accent:#E44D86;--plum:#3B0964;--bg:#F4F1EE}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,sans-serif;padding:48px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+h1{font:400 48px/1 'Instrument Serif',serif} h1 em{color:var(--accent)}
+.sub{color:var(--ink2);margin:10px 0 28px;line-height:1.5;max-width:760px}
+h2{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:30px 0 12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:12px}
+.card .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.card b{font-size:17px;font-weight:600}
+.card .meta{font-size:13px;color:var(--ink2)}
+.card p{font-size:14px;color:var(--ink2);margin:6px 0 12px;line-height:1.5}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:4px}
+audio{width:100%;height:36px}
+a.go{display:inline-block;margin-top:12px;font-size:14px;font-weight:600;color:#fff;background:var(--plum);border-radius:999px;padding:8px 16px;text-decoration:none}
+.tag{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--plum);background:#F1ECF8;border-radius:999px;padding:3px 9px}
+@media (max-width:640px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Music beds, <em>a little more upbeat</em></h1>
+  <p class="sub">Three new beds generated in ElevenLabs Music to match the Dr Marwah reference: about 110 BPM, C major, a light steady pulse, nothing fighting the voice. Each is fitted to the film's 2:15. "Full mix" is the bed at the per-scene levels under every voice; "Watch" opens the film with that bed.</p>
+
+  <h2>Reference</h2>
+  <div class="card"><div class="top"><b>Dr Marwah film</b><span class="meta">first 40s · ~108–112 BPM · C major</span></div>
+    <p>The feel we're aiming for (music under narration).</p>
+    <audio controls preload="none" src="../assets/music/ref_marwah_40s.mp3"></audio></div>
+
+  <h2>New beds</h2>
+  <div class="card"><div class="top"><b>C · Acoustic and marimba</b><span class="meta">~117 BPM · C major</span></div>
+    <p>Plucked acoustic guitar and marimba, soft claps on 2 and 4, shaker, warm bass. The most "inspired explainer" of the three. (Generated at 2:25, tightened ~7% to fit.)</p>
+    <div class="row"><div><label>Bed alone</label><audio controls preload="none" src="../assets/music/bed_c_fit.mp3"></audio></div>
+      <div><label>Full mix</label><audio controls preload="none" src="../assets/music/preview_bed_c.mp3"></audio></div></div>
+    <a class="go" href="../index.html?music=c">Watch with bed C</a></div>
+
+  <div class="card"><div class="top"><b>D · Modern tech plucks <span class="tag">in use</span></b><span class="meta">~112 BPM · C major</span></div>
+    <p>Muted guitar and synth plucks, finger snaps, a soft four-on-the-floor kick, airy pads. The busiest pulse; feels like a polished app launch.</p>
+    <div class="row"><div><label>Bed alone</label><audio controls preload="none" src="../assets/music/bed_d_fit.mp3"></audio></div>
+      <div><label>Full mix</label><audio controls preload="none" src="../assets/music/preview_bed_d.mp3"></audio></div></div>
+    <a class="go" href="../index.html?music=d">Watch with bed D</a></div>
+
+  <div class="card"><div class="top"><b>E · Light piano-pop</b><span class="meta">~108 BPM · C major</span></div>
+    <p>Off-beat piano chords, pizzicato strings, ukulele, claps and tambourine. Closest tempo to the reference; hopeful and youthful.</p>
+    <div class="row"><div><label>Bed alone</label><audio controls preload="none" src="../assets/music/bed_e_fit.mp3"></audio></div>
+      <div><label>Full mix</label><audio controls preload="none" src="../assets/music/preview_bed_e.mp3"></audio></div></div>
+    <a class="go" href="../index.html?music=e">Watch with bed E</a></div>
+
+  <h2>Earlier pick</h2>
+  <div class="card"><div class="top"><b>B · Rhodes and mallets</b></div>
+    <p>The calmer bed chosen earlier, stretched to 2:15 (so it now runs ~106 BPM).</p>
+    <div class="row"><div><label>Bed alone</label><audio controls preload="none" src="../assets/music/bed_b_fit.mp3"></audio></div>
+      <div><label>Full mix</label><audio controls preload="none" src="../assets/music/preview_bed_b.mp3"></audio></div></div>
+    <a class="go" href="../index.html?music=b">Watch with bed B</a></div>
+</div>
+</body>
+</html>

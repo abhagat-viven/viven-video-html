@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>TwinCafe · Recruiter · thumbnail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* YouTube thumbnail for twincafe_recruiter.html. 1280×720, three concepts picked with ?v=a|b|c.
+   Tokens, haze, faces and copy come from the film so the thumbnail and the video read as one piece. */
+:root{
+  --canvas:#F5F3F0; --ink:#16141A; --ink-2:#5F5B66; --purple:#3B1A6B; --purple-2:#5B3A94; --purple-tint:#F1ECF8;
+  --lilac:#C9B6F2; --call:#1E1F25; --red:#E5484D; --red-ink:#C4302B;
+  --ui:'Inter',system-ui,sans-serif; --display:'Inter Tight','Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#888}
+body{font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased}
+.thumb{position:relative;width:1280px;height:720px;overflow:hidden;background:var(--canvas)}
+.thumb + .thumb{margin-top:24px}
+/* Same four-corner wash as the film's title cards, scaled to 1280. */
+.haze{position:absolute;inset:0;background:
+  radial-gradient(660px 510px at 0% 0%,#C4B2EE 0%,transparent 68%),
+  radial-gradient(580px 460px at 100% 0%,#E3D8F8 0%,transparent 66%),
+  radial-gradient(600px 480px at 0% 100%,#F5D6C8 0%,transparent 68%),
+  radial-gradient(590px 470px at 100% 100%,#F3BED2 0%,transparent 68%),
+  var(--canvas)}
+.logo{position:absolute;z-index:5;left:64px;top:52px;height:34px}
+.head{position:absolute;z-index:4;margin:0;font-family:var(--display);font-weight:800;letter-spacing:-.045em;line-height:.98;color:var(--ink)}
+.head em{font-style:normal;color:var(--purple)}
+.av{border-radius:50%;object-fit:cover;flex:none;display:block}
+.tag{flex:none;border:2px solid var(--purple);color:var(--purple);font-weight:700;font-size:18px;border-radius:999px;padding:5px 14px}
+
+/* A. Payoff: headline left, Sarah's portrait right, Arjun's question hanging off it, her Twin card under the headline. */
+.a .head{left:64px;top:150px;font-size:118px}
+.a .portrait{position:absolute;z-index:2;right:56px;top:56px;width:470px;height:720px;border-radius:32px;overflow:hidden;
+  background:#0f1a2e url(../assets/sarah.jpg) 50% 28%/520px auto no-repeat;box-shadow:0 30px 80px rgba(22,20,26,.28)}
+.a .ask{position:absolute;z-index:3;right:400px;top:430px;display:flex;align-items:center;gap:14px;padding:12px 26px 12px 12px;background:#fff;border-radius:999px;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 16px 40px rgba(22,20,26,.2);transform:rotate(-2deg)}
+.a .ask p{margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+/* Parked below the question bubble, which overlaps the card's top-right corner. */
+.a .twin{position:absolute;z-index:3;left:64px;top:520px;display:flex;align-items:center;gap:18px;width:520px;padding:16px 20px;border-radius:22px;background:#fff;
+  box-shadow:inset 0 0 0 3px var(--purple),0 18px 44px rgba(59,26,107,.2)}
+.a .twin .nm{font-family:var(--display);font-size:30px;font-weight:700;letter-spacing:-.02em}
+.a .twin .role{margin-top:4px;font-size:19px;color:var(--ink-2)}
+.a .twin > div{flex:1}
+
+/* B. Pain: headline top-left, the tracker sheet below it buried in question cards, Arjun's question in focus. */
+.b .head{left:64px;top:118px;font-size:96px}
+.b .head em{color:var(--red-ink)}
+.b .sheet{position:absolute;z-index:1;left:64px;top:356px;width:1400px;height:420px;background:#fff;border-radius:20px;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 28px 70px rgba(22,20,26,.14)}
+.b .row{display:flex;align-items:center;gap:16px;height:84px;padding:0 28px;border-bottom:1px solid #f0f0f0;opacity:.55}
+.b .row b{font-size:26px;font-weight:600}
+.b .row .q{margin-left:auto;margin-right:780px;font-size:24px;font-weight:700;color:var(--red-ink)}
+.b .row.focus{opacity:1;background:#F6F1FD;box-shadow:inset 4px 0 0 var(--purple)}
+.b .pile{position:absolute;inset:0;z-index:2}
+.b .qc{position:absolute;display:flex;align-items:center;gap:10px;padding:8px 22px 8px 8px;background:#fff;border-radius:999px;white-space:nowrap;
+  box-shadow:0 0 0 .5px rgba(22,20,26,.08),0 10px 26px rgba(22,20,26,.16)}
+.b .qc p{margin:0;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.b .count{position:absolute;z-index:4;right:64px;top:62px;background:var(--red);color:#fff;font-family:var(--display);font-weight:800;font-size:40px;
+  letter-spacing:-.02em;border-radius:999px;padding:10px 28px;box-shadow:0 14px 34px rgba(229,72,77,.35)}
+.b .big{position:absolute;z-index:3;left:560px;top:420px;width:520px;display:flex;align-items:flex-start;gap:16px;padding:20px 24px 22px 20px;border-radius:22px;
+  background:#F6F1FD;box-shadow:inset 0 0 0 3px var(--purple),0 24px 56px rgba(59,26,107,.3);transform:rotate(-1.5deg)}
+.b .big b{display:block;font-size:19px;font-weight:600;color:var(--purple)}
+.b .big p{margin:4px 0 0;font-size:30px;font-weight:700;line-height:1.22;letter-spacing:-.02em}
+
+/* C. Conversation: dark like the call scenes, Sarah full-bleed right, Arjun asks and her Twin answers. */
+/* A faint purple wash top-left echoes the film's haze, so the dark frame still reads as TwinCafe. */
+.c{background:radial-gradient(620px 460px at 0% 0%,rgba(91,58,148,.42) 0%,transparent 70%),var(--call)}
+/* Sarah's photo is lit low and dark; lift it a touch so her face carries at feed size. The ::after fades her
+   into the frame on the left and at the bottom, where YouTube puts the duration badge. */
+.c .face{position:absolute;right:-60px;top:0;width:720px;height:720px}
+.c .face i{position:absolute;inset:0;display:block;background:url(../assets/sarah.jpg) 50% 31%/800px auto no-repeat;
+  filter:brightness(1.12) contrast(1.06) saturate(1.04)}
+.c .face::after{content:'';position:absolute;inset:0;background:
+  linear-gradient(90deg,var(--call) 0%,rgba(30,31,37,.82) 20%,rgba(30,31,37,0) 50%),
+  linear-gradient(0deg,rgba(30,31,37,.55) 0%,rgba(30,31,37,0) 22%)}
+.c .logo{filter:brightness(0) invert(1);opacity:.92}
+/* Three short lines keep the headline clear of her face; two lines put "answers." on her forehead. */
+.c .head{left:64px;top:116px;font-size:108px;line-height:.94;color:#fff}
+.c .head em{color:var(--lilac)}
+.c .chat{position:absolute;z-index:4;left:64px;top:478px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.c .msg{display:flex;align-items:center;gap:16px;padding:10px 30px 10px 10px;border-radius:999px;white-space:nowrap}
+.c .msg p{margin:0;font-size:33px;font-weight:700;letter-spacing:-.02em}
+.c .msg.q{background:rgba(255,255,255,.14);color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.16)}
+.c .msg.a{margin-left:64px;padding-right:14px;background:#fff;color:var(--ink);
+  box-shadow:inset 0 0 0 3px var(--lilac),0 0 0 8px rgba(201,182,242,.16),0 20px 50px rgba(0,0,0,.4)}
+.c .msg.a .tag{font-size:17px;padding:4px 12px}
+/* Green "online" dot on the Twin's avatar: the reply is there even when Sarah isn't. */
+.c .live{position:relative;flex:none}
+.c .live::after{content:'';position:absolute;right:0;bottom:0;width:16px;height:16px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 3px #fff}
+</style>
+</head>
+<body>
+
+<section class="thumb a" id="a">
+  <div class="haze"></div>
+  <img class="logo" src="../assets/twincafe-logo.svg" alt="TwinCafe">
+  <h1 class="head">Send your<br><em>Digital Twin.</em></h1>
+  <div class="portrait" role="img" aria-label="Sarah Lin"></div>
+  <div class="ask"><img class="av" src="../assets/arjun.jpg" width="58" height="58" alt=""><p>Is that a dealbreaker?</p></div>
+  <div class="twin">
+    <img class="av" src="../assets/sarah.jpg" width="72" height="72" style="object-position:50% 38%" alt="">
+    <div><div class="nm">Sarah's Digital Twin</div><div class="role">Recruiter · always on</div></div>
+    <span class="tag">Twin</span>
+  </div>
+</section>
+
+<section class="thumb b" id="b">
+  <div class="haze"></div>
+  <img class="logo" src="../assets/twincafe-logo.svg" alt="TwinCafe">
+  <div class="count">47 unanswered</div>
+  <h1 class="head">Can't answer<br><em>every candidate?</em></h1>
+  <div class="sheet">
+    <div class="row"><img class="av" src="../assets/s2-jenny-peters-portrait.jpg" width="52" height="52" alt=""><b>Jenny Peters</b><span class="q">2</span></div>
+    <div class="row focus"><img class="av" src="../assets/arjun.jpg" width="52" height="52" alt=""><b>Arjun Mehta</b><span class="q">2</span></div>
+    <div class="row"><img class="av" src="../assets/meeting-scene6/victoria.png" width="52" height="52" alt=""><b>Victoria Adeyemi</b><span class="q">2</span></div>
+    <div class="row"><img class="av" src="../assets/meeting-scene6/christopher.png" width="52" height="52" alt=""><b>Christopher Hale</b><span class="q">2</span></div>
+  </div>
+  <div class="pile">
+    <div class="qc" style="left:700px;top:330px;transform:rotate(1.5deg)"><img class="av" src="../assets/s2-raj-portrait.jpg" width="38" height="38" alt=""><p>Is the role hybrid or remote?</p></div>
+    <div class="qc" style="left:930px;top:250px;transform:rotate(-1deg)"><img class="av" src="../assets/s2-jenny-peters-portrait.jpg" width="38" height="38" alt=""><p>How is quota set?</p></div>
+    <div class="qc" style="left:1010px;top:560px;transform:rotate(2deg)"><img class="av" src="../assets/meeting-scene6/victoria.png" width="38" height="38" alt=""><p>First 90 days?</p></div>
+    <div class="qc" style="left:930px;top:640px;transform:rotate(-1.5deg)"><img class="av" src="../assets/meeting-scene6/christopher.png" width="38" height="38" alt=""><p>Is there an equity refresh?</p></div>
+  </div>
+  <div class="big">
+    <img class="av" src="../assets/arjun.jpg" width="60" height="60" alt="">
+    <div><b>Arjun Mehta</b><p>I've sold data infra, not HR tech. Is that a dealbreaker?</p></div>
+  </div>
+</section>
+
+<section class="thumb c" id="c">
+  <div class="face" role="img" aria-label="Sarah Lin"><i></i></div>
+  <img class="logo" src="../assets/twincafe-logo.svg" alt="TwinCafe">
+  <h1 class="head">The recruiter<br>who <em>always<br>answers.</em></h1>
+  <div class="chat">
+    <div class="msg q"><img class="av" src="../assets/arjun.jpg" width="60" height="60" alt=""><p>Is that a dealbreaker?</p></div>
+    <div class="msg a"><span class="live"><img class="av" src="../assets/sarah.jpg" width="60" height="60" style="object-position:50% 38%" alt=""></span><p>Not a dealbreaker.</p><span class="tag">Twin</span></div>
+  </div>
+</section>
+
+<script>
+/* ?v=a|b|c shows one concept alone at 0,0 for the PNG export; no parameter stacks all three for review. */
+const v = new URLSearchParams(location.search).get('v');
+if (v) document.querySelectorAll('.thumb').forEach(t => { if (t.id !== v) t.remove(); });
+</script>
+</body>
+</html>
