@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soundtrack Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16141A;--ink2:#5b5560;--line:#E4DFD9;--accent:#E44D86;--bg:#F4F1EE}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,sans-serif;padding:48px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+h1{font:400 48px/1 'Instrument Serif',serif} h1 em{color:var(--accent)}
+.sub{color:var(--ink2);margin:10px 0 28px;line-height:1.5}
+h2{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:30px 0 12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.card b{font-size:15px;font-weight:600}.card span{display:block;font-size:13px;color:var(--ink2);margin:2px 0 10px}
+audio{width:100%;height:36px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+td,th{padding:10px 14px;border-bottom:1px solid #F0ECE7;font-size:14px;text-align:left;vertical-align:middle}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);background:#FAF8F6}
+td.t{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink2)}
+td audio{min-width:220px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Soundtrack, <em>third pass</em></h1>
+  <p class="sub">Every voice line generated in ElevenLabs and placed at its planned time, with the music bed 14 dB underneath. Voices: Ranbir (narrator), Briggs (interviewer), Zara (Riya), Aashish (Arjun). This is a rough mix for timing and taste; the final mix happens in Descript.</p>
+
+  <h2>Full 2:05 preview · pass 3 · music bed B</h2>
+  <div class="card"><b>Riya's interview → bridge → Arjun's interview → Arjun's scorecard → end</b><span>New 5a line (upload your CV for the role) · new interview-types line · "every school" bridge. Music bed D (modern tech plucks) at the per-scene levels in content/timeline.json, the same mix index.html?music=1 plays.</span><audio controls preload="none" src="../assets/music/preview_bed_d.mp3"></audio></div>
+
+  <h2>Music beds alone</h2>
+  <div class="card"><b>Bed A</b><audio controls preload="none" src="../assets/music/bed_a.mp3"></audio></div>
+  <div class="card"><b>Bed B</b><audio controls preload="none" src="../assets/music/bed_b.mp3"></audio></div>
+
+  <h2>Every line</h2>
+  <table id="lines"><tr><th>Time</th><th>Speaker</th><th>Line</th><th>Listen</th></tr></table>
+</div>
+<script>
+let START = {};
+const WHO = {NARR:'Narrator · Ranbir',INT:'Interviewer · Briggs',RIYA:'Riya · Zara',ARJUN:'Arjun · Aashish'};
+Promise.all(['../content/timeline.json','../assets/audio/clips.json'].map(u=>fetch(u,{cache:'no-store'}).then(r=>r.json()))).then(([tl,m])=>{
+  for (const b of tl.beats){ let t = b.start + tl.lead; for (const id of b.clips){ START[id] = Math.round(t*100)/100; t += m[id].duration + tl.gap; } }
+  const t = document.getElementById('lines');
+  Object.entries(m).sort((a,b)=>START[a[0]]-START[b[0]]).forEach(([id,c])=>{
+    const s = START[id], tr = document.createElement('tr');
+    tr.innerHTML = `<td class="t">${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}</td><td>${WHO[c.speaker]}</td><td>${c.text}<br><small style="color:#8b8592">${id} · ${c.duration.toFixed(2)}s</small></td><td><audio controls preload="none" src="../${c.file}"></audio></td>`;
+    t.appendChild(tr);
+  });
+});
+</script>
+</body>
+</html>

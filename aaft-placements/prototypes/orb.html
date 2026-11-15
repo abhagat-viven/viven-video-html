@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speaking Orb Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Prototype: the AI interviewer orb from the SPJIMR recording, driven by real audio.
+   A dark plum wedge sweeps clockwise around a soft ring (sharp leading edge, fading tail).
+   Speed, size and brightness follow the live voice level (Web Audio AnalyserNode).
+   Placeholder voices are macOS "Rishi" / "Tara"; ElevenLabs clips drop in with the same file names. */
+:root{--plum:#3B0964;--ink:#111827;--ink2:#4B5563;--ink3:#9CA3AF;--line:#E7E7EA;--chip:rgba(15,23,42,.05);--red:#E5383B}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#F2EFF4;font-family:'Geist',system-ui,sans-serif;color:var(--ink);cursor:none;overflow:hidden}
+.win{position:absolute;left:50%;top:50%;width:1200px;height:800px;transform:translate(-50%,-50%);border-radius:22px;overflow:hidden;
+     background:radial-gradient(circle at 50% 38%,#fff 0%,#FBF9FC 55%,#F4F0F7 100%);box-shadow:0 30px 80px rgba(60,20,80,.12)}
+.who{position:absolute;left:24px;top:22px;display:flex;align-items:center;gap:12px;background:var(--chip);border-radius:999px;padding:7px 20px 7px 7px}
+.who i{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink2)}
+.who b{display:block;font-size:16px;font-weight:500}.who span{font-size:13px;color:var(--ink2)}
+.res{position:absolute;right:76px;top:26px;border:1px solid var(--line);border-radius:12px;padding:9px 15px;font-size:16px;color:var(--plum);font-weight:500;background:#fff}
+.more{position:absolute;right:24px;top:26px;width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink2)}
+
+/* orb (from orb-parts.html) */
+/* Speaking orb, matched to the TwinCafe call screen. Geometry is in units of the core (110px).
+   .rot layers rotate together: the wedge's dark centre sits at 0deg (top) before rotation. */
+.orb{width:0;height:0}
+.orb .halo{position:absolute;left:-250px;top:-250px;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(170,140,205,.10) 0%,rgba(170,140,205,.05) 50%,rgba(170,140,205,0) 72%)}
+.orb .wash{position:absolute;left:-112px;top:-112px;width:224px;height:224px;border-radius:50%;
+  background:radial-gradient(circle,rgba(234,228,242,.9) 45%,rgba(222,212,236,.5) 72%,rgba(222,212,236,0) 100%);filter:blur(6px)}
+.orb .rot{position:absolute;left:-175px;top:-175px;width:350px;height:350px;border-radius:50%}
+.orb .ring{background:conic-gradient(from 0deg,
+    #4B1D75 0deg, #57277F 20deg, rgba(120,85,165,.82) 45deg, rgba(175,150,205,.62) 78deg,
+    rgba(200,186,222,.50) 112deg, rgba(200,186,222,.50) 228deg,
+    rgba(160,132,196,.66) 268deg, rgba(112,74,160,.86) 308deg, #57277F 340deg, #4B1D75 360deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);
+          mask:radial-gradient(circle closest-side,transparent 25%,rgba(0,0,0,.45) 31%,rgba(0,0,0,.78) 42%,#000 55%,#000 70%,rgba(0,0,0,.45) 83%,transparent 96%);
+  filter:blur(12px)}
+.orb .rays{background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg .7deg,rgba(255,255,255,0) .7deg 2.1deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);
+          mask:radial-gradient(circle closest-side,transparent 32%,#000 46%,#000 70%,transparent 90%);
+  filter:blur(1px)}
+.orb .core{position:absolute;left:-55px;top:-55px;width:110px;height:110px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#6B7280;box-shadow:0 2px 14px rgba(59,9,100,.10)}
+.orb{position:absolute;left:50%;top:300px}
+.orb .core{width:124px;height:124px;left:-62px;top:-62px}
+.left{position:absolute;left:0;right:0;top:520px;text-align:center;font-size:15px;color:var(--ink3)}
+.prompt{position:absolute;left:50%;transform:translateX(-50%);top:556px;width:640px;text-align:center;font-size:19px;line-height:30px;color:var(--ink)}
+.ctrls{position:absolute;left:50%;transform:translateX(-50%);bottom:34px;display:flex;align-items:center;gap:22px}
+.end{width:60px;height:60px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center}
+.mic{width:86px;height:86px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center;position:relative}
+.mic::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 calc(var(--lvl,0) * 16px) rgba(59,9,100,calc(.10 + var(--lvl,0) * .12))}
+
+.gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(242,239,244,.92);font-size:20px;color:var(--ink2);z-index:10}
+.dbg{position:fixed;left:12px;bottom:10px;font:12px ui-monospace,monospace;color:#6b6575;display:none}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="who"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></i><div><b>Senior executive at Kissa Audio</b><span>AI role-play</span></div></div>
+  <span class="res">Resources</span><span class="more">···</span>
+  <div class="orb" id="orb"><div class="halo" id="halo"></div><div class="wash"></div><div class="rot ring"></div><div class="rot rays"></div><div class="core"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1-3.8 4-5.6 7.5-5.6s6.5 1.8 7.5 5.6"/></svg></div></div>
+  <div class="left" id="left">19:24 left</div>
+  <div class="prompt" id="prompt"></div>
+  <div class="ctrls">
+    <span class="end"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><path d="M3.2 14.6c4.9-4.5 12.7-4.5 17.6 0l-1.9 2.3c-.4.4-1 .5-1.5.2l-2.1-1.2c-.4-.2-.6-.7-.5-1.1l.3-1.6c-2-.6-4.2-.6-6.2 0l.3 1.6c.1.4-.1.9-.5 1.1l-2.1 1.2c-.5.3-1.1.2-1.5-.2z"/></svg></span>
+    <span class="mic" id="mic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
+  </div>
+</div>
+<div class="gate" id="gate">Press Space to play</div>
+<div class="dbg" id="dbg"></div>
+
+<script>
+/* ---- config (moves into TIMELINE in the real build) ---- */
+const LINES = [
+  { id:'int_05b_q',  who:'interviewer', src:'audio/int_05b_q.mp3',
+    text:'You cut cost per install from ₹38 to ₹24. Were those listeners worth keeping?' },
+  { id:'riya_05b_a', who:'candidate',   src:'audio/riya_05b_a.mp3', gapBefore:500 },
+];
+const ORB = {
+  idleSpeed: 18,      // deg/s while listening
+  talkSpeed: 34,      // deg/s base while the interviewer speaks (≈ 45°/s average with level, one turn per ~8s as in the recording)
+  levelSpeed: 40,     // extra deg/s at full level
+  scaleAmp: .07,      // ring grows up to 7% with level
+  attack: .35, release: .07,
+};
+const DEBUG = /debug=1/.test(location.search);
+
+/* ---- audio ---- */
+let ctx, analyser, buf, level = 0, speaker = null;
+async function load(line){
+  const r = await fetch(line.src); return ctx.decodeAudioData(await r.arrayBuffer());
+}
+function play(buffer){
+  return new Promise(res=>{
+    const s = ctx.createBufferSource(); s.buffer = buffer;
+    s.connect(analyser); analyser.connect(ctx.destination);
+    s.onended = res; s.start();
+  });
+}
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+async function run(){
+  ctx = new AudioContext();
+  analyser = ctx.createAnalyser(); analyser.fftSize = 1024; buf = new Float32Array(analyser.fftSize);
+  const buffers = await Promise.all(LINES.map(load));
+  requestAnimationFrame(tick);
+  await sleep(600);
+  for (let i=0;i<LINES.length;i++){
+    const L = LINES[i];
+    if (L.gapBefore) await sleep(L.gapBefore);
+    if (L.text) document.getElementById('prompt').textContent = L.text;
+    speaker = L.who;
+    await play(buffers[i]);
+    speaker = null;
+  }
+}
+
+/* ---- render loop ---- */
+let angle = 180, last = performance.now();
+const rots = [...document.querySelectorAll('.orb .rot')], ringEl = document.querySelector('.orb .ring'),
+      halo = document.getElementById('halo'), mic = document.getElementById('mic'), dbg = document.getElementById('dbg');
+function tick(now){
+  const dt = Math.min(.05,(now-last)/1000); last = now;
+  analyser.getFloatTimeDomainData(buf);
+  let sum = 0; for (const v of buf) sum += v*v;
+  const rms = Math.min(1, Math.sqrt(sum/buf.length) * 5);
+  level += (rms - level) * (rms > level ? ORB.attack : ORB.release);
+
+  const orbLvl = speaker === 'interviewer' ? level : 0;
+  const micLvl = speaker === 'candidate' ? level : 0;
+  const speed = speaker === 'interviewer' ? ORB.talkSpeed + orbLvl*ORB.levelSpeed : ORB.idleSpeed;
+  angle = (angle + speed*dt) % 360;
+  const sc = 1 + orbLvl*ORB.scaleAmp;
+  rots.forEach(r=>r.style.transform = `rotate(${angle}deg) scale(${sc})`);
+  ringEl.style.opacity = .82 + orbLvl*.18;
+  halo.style.transform = `scale(${1 + orbLvl*.12})`;
+  mic.style.setProperty('--lvl', micLvl.toFixed(3));
+  if (DEBUG) dbg.textContent = `speaker=${speaker||'-'} level=${level.toFixed(2)} angle=${angle.toFixed(0)}`;
+  requestAnimationFrame(tick);
+}
+
+if (DEBUG) dbg.style.display = 'block';
+function start(){ if (ctx) return; document.getElementById('gate').remove(); run(); }
+addEventListener('keydown', e=>{ if ((e.code==='Space' || e.key===' ') && !ctx){ e.preventDefault(); start(); } });
+document.getElementById('gate').addEventListener('click', start);
+/* static idle render before Space */
+rots.forEach(r=>r.style.transform='rotate(180deg)'); ringEl.style.opacity=.82;
+</script>
+</body>
+</html>

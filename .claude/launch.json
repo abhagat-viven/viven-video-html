@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "viven-video",
+      "runtimeExecutable": "/usr/bin/python3",
+      "runtimeArgs": ["-m", "http.server", "3456", "--directory", "/Users/akashbhagat/viven-video-html/.claude/worktrees/goofy-liskov"],
+      "port": 3456
+    },
+    {
+      "name": "twincafe",
+      "runtimeExecutable": "/usr/bin/python3",
+      "runtimeArgs": ["-m", "http.server", "3457", "--directory", "/Users/akashbhagat/viven-video-html/viven-video-html"],
+      "port": 3457
+    }
+  ]
+}

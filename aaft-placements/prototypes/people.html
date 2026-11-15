@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>People Contact Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16141A;--ink2:#5b5560;--line:#E4DFD9;--accent:#E44D86;--bg:#F4F1EE;--plum:#3B0964}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,sans-serif;padding:48px 16px 80px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font:400 48px/1 'Instrument Serif',serif} h1 em{color:var(--accent)}
+.sub{color:var(--ink2);margin:10px 0 30px;line-height:1.5}
+h2{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:34px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.p{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.p img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.p div{padding:10px 12px}
+.p b{font-size:14px;font-weight:600}.p span{display:block;font-size:12px;color:var(--ink2);margin-top:2px}
+.hero{outline:2px solid var(--plum)}
+.ui{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:22px}
+.row{display:flex;align-items:center;gap:14px;font-size:14px;color:var(--ink2)}
+.stack{display:flex}
+.stack img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
+.stack img:first-child{margin-left:0}
+.big img{width:52px;height:52px;margin-left:-12px;border-width:3px}
+.chip{display:inline-flex;align-items:center;gap:10px;background:#F3F1F6;border-radius:999px;padding:6px 16px 6px 6px;font-size:15px;color:#3f3a44}
+.chip img{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.hd{display:flex;align-items:center;gap:12px}
+.hd img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.hd b{display:block;font-size:15px;color:var(--ink)}.hd span{font-size:13px}
+@media (max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The <em>people</em></h1>
+  <p class="sub">Eight AI-generated, fictional faces (Nano Banana Pro), one shared style prompt. Riya and Arjun are outlined. Below the grid, each face is shown at the size it will appear in the film.</p>
+
+  <div class="grid">
+    <div class="p hero"><img src="../assets/people/riya.jpg"><div><b>Riya Malhotra</b><span>21 · B.Sc. Digital Marketing</span></div></div>
+    <div class="p hero"><img src="../assets/people/arjun.jpg"><div><b>Arjun Sethi</b><span>22 · B.A. Cinema (Direction)</span></div></div>
+    <div class="p"><img src="../assets/people/m1.jpg"><div><b>m1</b><span>Student · Fashion Design</span></div></div>
+    <div class="p"><img src="../assets/people/m2.jpg"><div><b>m2</b><span>Student · Journalism</span></div></div>
+    <div class="p"><img src="../assets/people/m3.jpg"><div><b>m3</b><span>Student · Hospitality</span></div></div>
+    <div class="p"><img src="../assets/people/m4.jpg"><div><b>m4</b><span>Student · Animation</span></div></div>
+    <div class="p"><img src="../assets/people/m5.jpg"><div><b>m5</b><span>Placement coordinator</span></div></div>
+    <div class="p"><img src="../assets/people/m6.jpg"><div><b>m6</b><span>Placement officer</span></div></div>
+  </div>
+
+  <h2>As they'll appear</h2>
+  <div class="ui">
+    <div class="row"><span class="stack"><img src="../assets/people/riya.jpg"><img src="../assets/people/m2.jpg"><img src="../assets/people/m3.jpg"><img src="../assets/people/arjun.jpg"></span>412 members · Space header (scene 3)</div>
+    <div class="row"><span class="stack big"><img src="../assets/people/riya.jpg"><img src="../assets/people/m1.jpg"><img src="../assets/people/m2.jpg"><img src="../assets/people/m3.jpg"><img src="../assets/people/m4.jpg"><img src="../assets/people/m5.jpg"><img src="../assets/people/m6.jpg"><img src="../assets/people/arjun.jpg"></span>Members strip (scene 2)</div>
+    <div class="row"><span class="chip"><img src="../assets/people/riya.jpg">From Riya's CV · Kahaani Audio · CPI ₹38 → ₹24</span>Scene 5b chip</div>
+    <div class="row"><span class="chip"><img src="../assets/people/arjun.jpg">Arjun Sethi · B.A. Cinema · Assistant Director Trainee</span>Scene 6 chip</div>
+    <div class="row"><span class="hd"><img src="../assets/people/arjun.jpg"><span><b>Arjun Sethi</b>Assistant Director Trainee · Situational interview · Sat, Nov 14</span></span>Scorecard header (scene 7)</div>
+  </div>
+</div>
+</body>
+</html>
